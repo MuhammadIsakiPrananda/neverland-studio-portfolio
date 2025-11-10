@@ -1,4 +1,4 @@
-import { PortfolioItem } from '../types';
+import type { PortfolioItem } from '../component/types';
 
 export const portfolio: PortfolioItem[] = [
   {

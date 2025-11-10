@@ -1,5 +1,5 @@
 import { Target, BookOpen, Palette, Code, Rocket, TrendingUp } from 'lucide-react';
-import { ProcessStep } from '../types';
+import type { ProcessStep } from '../component/types';
 
 export const process: ProcessStep[] = [
   {

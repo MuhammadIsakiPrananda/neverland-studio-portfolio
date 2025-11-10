@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { motion } from 'framer-motion';
 import { User, Globe } from 'lucide-react';
 import { navItems } from '../../data/navItems';

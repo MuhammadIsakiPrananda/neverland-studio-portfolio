@@ -1,4 +1,4 @@
-import { TeamMember } from '../types';
+import type { TeamMember } from '../component/types';
 
 export const team: TeamMember[] = [
   {

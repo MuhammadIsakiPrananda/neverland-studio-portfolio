@@ -1,5 +1,4 @@
-import React from 'react';
-import { Mail, ArrowRight, Facebook, Twitter, Instagram, Linkedin, Github } from 'lucide-react';
+import { Mail, ArrowRight, Twitter, Instagram, Linkedin, Github } from 'lucide-react';
 import Logo from '../ui/Logo'; // Pastikan path ini benar
 
 const Footer = () => {

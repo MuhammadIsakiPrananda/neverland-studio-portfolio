@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Bot, Sparkles, RotateCcw } from 'lucide-react';
+import { Send, Bot, Sparkles, X } from 'lucide-react';
 import { useChat } from './useChat';
 
 interface ChatbotProps {
@@ -23,7 +23,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
     if (!isOpen) {
       setTimeout(reset, 300); // Delay to allow exit animation
     }
-  }, [messages, isOpen, reset]);
+  }, [messages]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,6 +55,9 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
                 </p>
               </div>
             </div>
+            <button onClick={onClose} className="p-2 text-slate-400 hover:text-white transition-colors">
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
           {/* Messages */}

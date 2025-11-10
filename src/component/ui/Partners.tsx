@@ -1,8 +1,8 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { partners } from '../../data/partners';
 
-const marqueeVariants = {
+const marqueeVariants: Variants = {
   animate: {
     x: [0, -1035],
     transition: {

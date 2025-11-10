@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Lock, LogIn, Loader, AlertCircle, Eye, EyeOff, ShieldX } from 'lucide-react';
+import { Mail, Lock, LogIn, Loader, Eye, EyeOff, ShieldX } from 'lucide-react';
 import { useNotification } from './useNotification';
 
 interface LoginFormProps {

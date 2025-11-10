@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { benefits } from '../../data/benefits';
 
 const BenefitsSection = () => {
@@ -18,12 +18,12 @@ const BenefitsSection = () => {
 
     return () => clearInterval(intervalId);
   }, [isInteracting, benefits.length]);
-  const sectionVariants = {
+  const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
   };
 
-  const cardVariants = {
+  const cardVariants: Variants = {
     initial: { opacity: 0, y: 20, scale: 0.95 },
     animate: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
     exit: { opacity: 0, y: -20, scale: 0.95, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } },
@@ -53,7 +53,7 @@ const BenefitsSection = () => {
                   className="w-full max-w-md h-auto bg-slate-900/70 backdrop-blur-lg border border-sky-500/30 rounded-2xl p-8 shadow-2xl shadow-sky-900/30"
                 >
                   <div className="text-sky-400 mb-6">
-                    {React.cloneElement(benefits[hoveredIndex].icon, { className: "w-12 h-12" })}
+                    {benefits[hoveredIndex].icon}
                   </div>
                   <h3 className="text-3xl font-bold mb-4 text-white">{benefits[hoveredIndex].title}</h3>
                   <p className="text-slate-300 text-lg">{benefits[hoveredIndex].desc}</p>
@@ -86,7 +86,7 @@ const BenefitsSection = () => {
                 >
                   <div className="flex items-center gap-4 relative z-10">
                     <div className={`transition-colors duration-300 ${hoveredIndex === idx ? 'text-sky-300' : 'text-slate-500'}`}>
-                      {React.cloneElement(benefit.icon, { className: "w-6 h-6" })}
+                      {benefit.icon}
                     </div>
                     <h4 className={`text-lg font-semibold transition-colors duration-300 ${hoveredIndex === idx ? 'text-white' : 'text-slate-300'}`}>
                       {benefit.title}

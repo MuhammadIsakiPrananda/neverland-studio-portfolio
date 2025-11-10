@@ -1,11 +1,11 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+
+import { motion, type Variants } from "framer-motion";
 import { Rocket, Phone, MessageSquare, Mail, ArrowRight } from 'lucide-react';
 
 const CTASection = () => {
-  const sectionVariants = {
+  const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
   };
 
   return (

@@ -1,13 +1,12 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, MessageSquare, Facebook, Twitter, Instagram, Linkedin, Github } from 'lucide-react';
+import { motion, type Variants } from 'framer-motion';
+import { Mail, Phone, MapPin, Twitter, Instagram, Linkedin, Github } from 'lucide-react';
 
 interface ContactSectionProps {
   setSectionRef: (section: string) => (el: HTMLElement | null) => void;
 }
 
-const ContactSection: React.FC<ContactSectionProps> = ({ setSectionRef }) => {
-  const sectionVariants = {
+const ContactSection: React.FC<ContactSectionProps> = ({ setSectionRef, }) => {
+  const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
   };
@@ -21,7 +20,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ setSectionRef }) => {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
@@ -64,7 +63,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ setSectionRef }) => {
                   { Icon: Linkedin, href: "#" },
                   { Icon: Instagram, href: "#" },
                   { Icon: Twitter, href: "#" },
-                ].map(({ Icon, href }, idx) => (
+              ].map(({ Icon }, idx) => (
                   <button
                     key={idx} 
                     className="w-10 h-10 bg-slate-800/50 border border-slate-700/50 rounded-lg flex items-center justify-center hover:scale-110 hover:bg-sky-500/20 hover:border-sky-500/50 transition-all"

@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+
+import { motion, type Variants } from "framer-motion";
 import { Check } from 'lucide-react';
 import { pricing } from '../../data/pricing';
 import SpotlightCard from '../ui/SpotlightCard';
@@ -10,23 +10,18 @@ interface PricingSectionProps {
 }
 
 const PricingSection: React.FC<PricingSectionProps> = ({ setSectionRef, onGetStartedClick }) => {
-  const sectionVariants = {
+  const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
   };
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: {},
     visible: {
       transition: {
         staggerChildren: 0.1
       }
     }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
   return (
@@ -59,7 +54,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ setSectionRef, onGetSta
                 </div>
                 <p className="text-slate-400 mb-6">{plan.desc}</p>
                 <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature, i) => (
+                  {plan.features.map((feature: string, i: number) => (
                     <li key={i} className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-sky-400 flex-shrink-0 mt-0.5" />
                       <span className="text-gray-300">{feature}</span>

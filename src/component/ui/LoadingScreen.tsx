@@ -1,8 +1,7 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 
 const LoadingScreen = () => {
-  const containerVariants = {
+  const containerVariants: Variants = {
     initial: { opacity: 1 },
     exit: {
       clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)',
@@ -10,17 +9,17 @@ const LoadingScreen = () => {
     },
   };
 
-  const imageVariants = {
+  const imageVariants: Variants = {
     initial: { scale: 0.5, opacity: 0 },
     animate: { scale: 1, opacity: 1, transition: { duration: 0.5, ease: 'easeOut', delay: 0.2 } },
   };
 
-  const textContainer = {
+  const textContainer: Variants = {
     initial: { opacity: 0 },
     animate: { opacity: 1, transition: { staggerChildren: 0.2, delayChildren: 0.5 } },
   };
 
-  const textVariant = {
+  const textVariant: Variants = {
     initial: { y: 20, opacity: 0 },
     animate: { y: 0, opacity: 1, transition: { duration: 0.5, ease: 'easeOut' } },
   };

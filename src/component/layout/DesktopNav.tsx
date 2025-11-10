@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { motion } from 'framer-motion';
 import Logo from '../ui/Logo';
 import NavItems from '../ui/NavItems';
@@ -17,13 +17,10 @@ const DesktopNav: React.FC<DesktopNavProps> = ({ isScrolled, activeSection, hand
       <motion.div
         className="max-w-7xl mx-auto w-full flex justify-between items-center p-2 rounded-full transition-all duration-300"
         animate={{
-          backgroundColor: isScrolled ? 'rgba(15, 23, 42, 0.8)' : 'rgba(15, 23, 42, 0)',
-          borderColor: isScrolled ? 'rgba(51, 65, 85, 1)' : 'rgba(51, 65, 85, 0)',
           backgroundColor: isScrolled ? 'rgba(15, 23, 42, 0.8)' : 'rgba(15, 23, 42, 0.5)',
           borderColor: isScrolled ? 'rgba(51, 65, 85, 0.5)' : 'rgba(51, 65, 85, 0.2)',
         }}
         style={{
-          backdropFilter: isScrolled ? 'blur(16px)' : 'blur(0px)',
           boxShadow: isScrolled ? '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' : 'none',
           borderWidth: '1px',
           border: '1px solid',

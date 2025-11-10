@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { MessageSquare, ChevronDown } from 'lucide-react';
 import { faq } from '../../data/faq';
 
 const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const sectionVariants = {
+  const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
   };
 
   const containerVariants = {
@@ -20,17 +20,17 @@ const FAQSection = () => {
     }
   };
 
-  const answerVariants = {
+  const answerVariants: Variants = {
     hidden: { opacity: 0, height: 0, marginTop: 0 },
     visible: { 
       opacity: 1, 
-      height: 'auto',
-      marginTop: '1rem',
-      transition: { duration: 0.3, ease: 'easeOut' }
+      height: "auto",
+      marginTop: "1rem",
+      transition: { duration: 0.3, ease: "easeOut" },
     },
     exit: {
       opacity: 0, height: 0, marginTop: 0,
-      transition: { duration: 0.2, ease: 'easeIn' }
+      transition: { duration: 0.2, ease: "easeIn" },
     }
   };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Sparkles, ChevronUp, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Chatbot from '../ui/Chatbot';

@@ -1,5 +1,5 @@
 import { Shield, Clock, Heart, Zap, Users, Award } from 'lucide-react';
-import { Benefit } from '../types';
+import type { Benefit } from '../component/types';
 
 export const benefits: Benefit[] = [
   {

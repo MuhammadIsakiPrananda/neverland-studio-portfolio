@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import DesktopNav from './component/layout/DesktopNav';
 import MobileNav from './component/layout/MobileNav';
@@ -71,13 +71,13 @@ const NeverlandStudio = () => {
     sectionRefs.current[section] = el;
   };
 
-  const handleNavClick = useCallback((section: string) => {
+  const handleNavClick = (section: string) => {
     sectionRefs.current[section]?.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
     });
     setActiveSection(section);
-  }, []);
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(

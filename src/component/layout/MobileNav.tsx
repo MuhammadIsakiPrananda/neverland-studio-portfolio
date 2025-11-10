@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import Logo from '../ui/Logo';

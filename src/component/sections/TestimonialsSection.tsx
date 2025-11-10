@@ -1,27 +1,22 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+
+import { motion, type Variants } from 'framer-motion';
 import { Star, Quote } from 'lucide-react';
 import { testimonials } from '../../data/testimonials';
 import SpotlightCard from '../ui/SpotlightCard';
 
 const TestimonialsSection = () => {
-  const sectionVariants = {
+  const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
   };
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: {},
     visible: {
       transition: {
         staggerChildren: 0.1
       }
     }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
   return (

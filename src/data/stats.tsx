@@ -1,5 +1,5 @@
 import { Users, Award, Star, Zap } from 'lucide-react';
-import { Stat } from '../types';
+import type { Stat } from '../component/types';
 
 export const stats: Stat[] = [
   { icon: <Users className="w-8 h-8" />, number: "200+", label: "Happy Clients" },

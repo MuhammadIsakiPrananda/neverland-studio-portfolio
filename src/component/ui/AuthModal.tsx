@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { X } from 'lucide-react';
 import LoginForm from '../ui/LoginForm';
 import RegisterForm from '../ui/RegisterForm';
@@ -26,7 +26,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     hidden: { opacity: 0 },
   };
 
-  const modalVariants = {
+  const modalVariants: Variants = {
     hidden: {
       y: "-100vh",
       opacity: 0,

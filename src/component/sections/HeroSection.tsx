@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+
+import { motion, type Variants } from 'framer-motion';
 import { ChevronRight, Play } from 'lucide-react';
 import StardustBackground from '../ui/StardustBackground';
 import HeroImage from '../ui/HeroImage';
@@ -14,12 +14,12 @@ interface HeroSectionProps {
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, setSectionRef, setShowVideo, onGetStartedClick }) => {
-  const sectionVariants = {
+  const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
   };
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: {},
     visible: {
       transition: {
@@ -28,19 +28,19 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, setSectionRef, set
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
-  const titleContainer = {
+  const titleContainer: Variants = {
     hidden: { opacity: 0 },
     visible: (i = 1) => ({
       opacity: 1,
       transition: { staggerChildren: 0.08, delayChildren: i * 0.08 },
     }),
   };
-  const wordVariant = {
+  const wordVariant: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { type: "spring", damping: 12, stiffness: 100 } },
   };

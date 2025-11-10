@@ -1,40 +1,38 @@
-import { ReactNode } from 'react';
+import type { ReactElement } from 'react';
 
 export interface NavItem {
   name: string;
-  icon: ReactNode;
+  href: string;
+  icon: ReactElement;
+}
+
+export interface Benefit {
+  title: string;
+  desc: string;
+  icon: ReactElement;
 }
 
 export interface Service {
-  icon: ReactNode;
   title: string;
   desc: string;
-  features: string[];
+  icon: ReactElement;
   color: string;
+  features: string[];
+}
+
+export interface ProcessStep {
+  step: string;
+  title: string;
+  desc: string;
+  icon: ReactElement;
 }
 
 export interface PortfolioItem {
   title: string;
+  desc: string;
+  image: string;
   category: string;
-  image: string;
-  desc: string;
   tags: string[];
-}
-
-export interface Testimonial {
-  name: string;
-  role: string;
-  text: string;
-  rating: number;
-  image: string;
-}
-
-export interface PricingPlan {
-  name: string;
-  price: string;
-  desc: string;
-  features: string[];
-  popular: boolean;
 }
 
 export interface TeamMember {
@@ -44,26 +42,29 @@ export interface TeamMember {
   bio: string;
 }
 
-export interface ProcessStep {
-  icon: ReactNode;
-  title: string;
-  desc: string;
-  step: string;
+export interface Testimonial {
+  name: string;
+  role: string;
+  text: string;
+  image: string;
+  rating: number;
 }
 
-export interface Benefit {
-  icon: ReactNode;
-  title: string;
+export interface PricingPlan {
+  name: string;
+  price: string;
   desc: string;
-}
-
-export interface Stat {
-  icon: ReactNode;
-  number: string;
-  label: string;
+  features: string[];
+  popular?: boolean;
 }
 
 export interface FAQ {
   q: string;
   a: string;
+}
+
+export interface Stat {
+  number: string;
+  label: string;
+  icon: ReactElement;
 }

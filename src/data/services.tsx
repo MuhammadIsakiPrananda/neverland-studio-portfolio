@@ -1,5 +1,5 @@
 import { Code, Smartphone, Palette, Globe, Video, Camera, Music, Film } from 'lucide-react';
-import { Service } from '../types';
+import type { Service } from '../component/types';
 
 export const services: Service[] = [
   {

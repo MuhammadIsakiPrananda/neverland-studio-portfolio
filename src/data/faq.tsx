@@ -1,4 +1,4 @@
-import { FAQ } from '../types';
+import type { FAQ } from '../component/types';
 
 export const faq: FAQ[] = [
   {

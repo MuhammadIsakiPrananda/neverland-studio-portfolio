@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+
+import { motion, type Variants } from "framer-motion";
 import { ArrowRight, Check } from 'lucide-react';
 import { services } from '../../data/services';
 import SpotlightCard from '../ui/SpotlightCard';
@@ -9,23 +9,18 @@ interface ServicesSectionProps {
 }
 
 const ServicesSection: React.FC<ServicesSectionProps> = ({ setSectionRef }) => {
-  const sectionVariants = {
+  const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
   };
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: {},
     visible: {
       transition: {
         staggerChildren: 0.1
       }
     }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
   return (
@@ -50,7 +45,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ setSectionRef }) => {
                 <h3 className="text-2xl font-bold mb-4">{service.title}</h3>
                 <p className="text-gray-400 mb-6">{service.desc}</p>
                 <ul className="space-y-2 mb-6"> 
-                  {service.features.map((feature, i) => (
+                  {service.features.map((feature: string, i: number) => (
                     <li key={i} className="flex items-center gap-2 text-sm text-gray-300"> 
                       <Check className="w-4 h-4 text-sky-400" />
                       {feature}

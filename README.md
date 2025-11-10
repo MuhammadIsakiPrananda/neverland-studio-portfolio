@@ -6,9 +6,9 @@
 
   <!-- Badges -->
   <p align="center">
-    <!-- Ganti 'your-username' dengan nama pengguna GitHub Anda -->
-    <a href="https://github.com/your-username/neverland-studio-portfolio/actions"><img src="https://img.shields.io/github/actions/workflow/status/your-username/neverland-studio-portfolio/main.yml?branch=main&style=for-the-badge" alt="Build Status"></a>
-    <a href="LICENSE"><img src="https://img.shields.io/github/license/your-username/neverland-studio-portfolio?style=for-the-badge" alt="License"></a>
+    <!-- Ganti 'MuhammadIsakiPrananda' dengan nama pengguna GitHub Anda jika berbeda -->
+    <a href="https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/actions"><img src="https://img.shields.io/github/actions/workflow/status/MuhammadIsakiPrananda/neverland-studio-portfolio/main.yml?branch=main&style=for-the-badge" alt="Build Status"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/github/license/MuhammadIsakiPrananda/neverland-studio-portfolio?style=for-the-badge" alt="License"></a>
     <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react" alt="React">
     <img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript" alt="TypeScript">
     <img src="https://img.shields.io/badge/Vite-blue?style=for-the-badge&logo=vite" alt="Vite">
@@ -40,12 +40,10 @@
 
 Anda dapat melihat versi live dari portofolio ini di sini:
 
-**➡️ portfolio.neverlandstudio.com**
+**➡️ neverlandstudio.my.id**
 
-*(Ganti URL di atas dengan URL deployment Anda)*
-
+<!-- Ganti URL di bawah dengan screenshot aplikasi Anda -->
 !Screenshot Aplikasi
-*(Ganti `https://via.placeholder.com/800x450?text=Tambahkan+Screenshot+Aplikasi+Anda+Di+Sini` dengan URL atau path gambar screenshot aplikasi Anda)*
 
 ---
 
@@ -87,10 +85,9 @@ Pastikan perangkat Anda telah terinstal perangkat lunak berikut:
 
 1.  **Clone repositori ini:**
     ```bash
-    git clone https://github.com/your-username/neverland-studio-portfolio.git
+    git clone https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio.git
     cd neverland-studio-portfolio
     ```
-    *(Ganti `your-username` dengan nama pengguna GitHub Anda)*
 
 2.  **Instal dependensi proyek:**
     Proyek ini menggunakan `npm` secara default (berdasarkan adanya `package-lock.json`).
@@ -205,7 +202,7 @@ Jika Anda memiliki pertanyaan atau ingin berdiskusi lebih lanjut, jangan ragu un
 
 -   **Nama Anda / Neverland Studio**
 -   **Email**: arlianto032@gmail.com
--   **LinkedIn**: Profil LinkedIn Anda
--   **Website**: neverlandstudio.com (jika ada)
+-   **LinkedIn**: *(Ganti dengan URL profil LinkedIn Anda)*
+-   **Website**: neverlandstudio.my.id
 
 Link Proyek: https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio

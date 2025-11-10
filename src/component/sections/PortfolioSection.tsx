@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { ArrowRight } from 'lucide-react';
 import { portfolio } from '../../data/portfolio';
 import { categories } from '../../data/categories';
@@ -15,12 +15,12 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
   activeFilter, 
   setActiveFilter 
 }) => {
-  const sectionVariants = {
+  const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
   };
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: {},
     visible: {
       transition: {
@@ -29,10 +29,10 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
-    exit: { opacity: 0, transition: { duration: 0.3, ease: 'easeIn' } }
+    visible: { opacity: 1, transition: { duration: 0.4, ease: "easeOut" } },
+    exit: { opacity: 0, transition: { duration: 0.3, ease: "easeIn" } },
   };
 
   const filteredPortfolio = activeFilter === 'All' 
@@ -90,7 +90,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                 <h3 className="text-xl font-bold mt-2 mb-3">{project.title}</h3>
                 <p className="text-slate-400 text-sm mb-4">{project.desc}</p>
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tags.map((tag, i) => (
+                  {project.tags.map((tag: string, i: number) => (
                     <span key={i} className="text-xs bg-slate-800/50 px-3 py-1 rounded-full text-slate-300">
                       {tag}
                     </span>

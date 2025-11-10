@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { User, Mail, Lock, UserPlus, Eye, EyeOff, Loader, ShieldX, AlertCircle } from 'lucide-react';
+import { User, Mail, Lock, UserPlus, Eye, EyeOff, Loader, AlertCircle } from 'lucide-react';
 import { useNotification } from './useNotification';
 import ReCAPTCHA from "react-google-recaptcha";
 
