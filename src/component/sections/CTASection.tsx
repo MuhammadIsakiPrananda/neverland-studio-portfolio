@@ -21,8 +21,8 @@ const CTASection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Column: Text Content */}
           <div>
-            <div className="inline-block p-3 bg-sky-500/20 rounded-xl mb-6">
-              <Rocket className="w-8 h-8 text-sky-300" />
+            <div className="inline-block p-3 bg-teal-500/20 rounded-xl mb-6">
+              <Rocket className="w-8 h-8 text-teal-300" />
             </div>
             <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-white"> 
               Ready to Start Your Project?
@@ -32,7 +32,7 @@ const CTASection = () => {
             </p>
             <button
               onClick={() => document.getElementById('Contact')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-gradient-to-r from-sky-500 to-violet-600 text-white px-8 py-4 rounded-full font-semibold hover:shadow-xl hover:shadow-violet-500/30 transition-all flex items-center justify-center gap-2 group transform hover:scale-105"
+              className="bg-gradient-to-r from-teal-500 to-emerald-600 text-white px-8 py-4 rounded-full font-semibold hover:shadow-xl hover:shadow-emerald-500/30 transition-all flex items-center justify-center gap-2 group transform hover:scale-105"
             >
               Get a Free Quote
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -42,15 +42,15 @@ const CTASection = () => {
           {/* Right Column: Contact Cards */} 
           <div className="space-y-6">
             {[
-              { icon: <Mail className="w-6 h-6 text-sky-400" />, title: "Send us an Email", detail: "arlianto032@gmail.com", action: "Send Now", href: "mailto:arlianto032@gmail.com" },
-              { icon: <Phone className="w-6 h-6 text-sky-400" />, title: "Schedule a Call", detail: "Book a 15-min intro call", action: "Schedule", href: "#" }, // Ganti '#' dengan link penjadwalan
-              { icon: <MessageSquare className="w-6 h-6 text-sky-400" />, title: "Live Chat", detail: "Chat with our AI assistant", action: "Start Chat", onClick: handleChatClick },
+              { icon: <Mail className="w-6 h-6 text-teal-400" />, title: "Send us an Email", detail: "arlianto032@gmail.com", action: "Send Now", href: "mailto:arlianto032@gmail.com" },
+              { icon: <Phone className="w-6 h-6 text-teal-400" />, title: "Schedule a Call", detail: "Book a 15-min intro call", action: "Schedule", href: "#" }, // Ganti '#' dengan link penjadwalan
+              { icon: <MessageSquare className="w-6 h-6 text-teal-400" />, title: "Live Chat", detail: "Chat with our AI assistant", action: "Start Chat", onClick: handleChatClick },
             ].map((item, idx) => (
               <motion.a
                 key={idx}
                 href={item.href}
                 onClick={item.onClick}
-                className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-6 flex items-center justify-between hover:bg-slate-800/80 hover:border-sky-500/50 transition-all cursor-pointer group" 
+                className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-6 flex items-center justify-between hover:bg-slate-800/80 hover:border-teal-500/50 transition-all cursor-pointer group" 
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ delay: idx * 0.1, duration: 0.5 }}
@@ -63,7 +63,7 @@ const CTASection = () => {
                     <p className="text-sm text-slate-400">{item.detail}</p>
                   </div>
                 </div>
-                <span className="text-sm font-semibold text-sky-400 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-0 translate-x-2 transition-all ">
+                <span className="text-sm font-semibold text-teal-400 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-0 translate-x-2 transition-all ">
                   {item.action} <ArrowRight className="inline w-4 h-4" />
                 </span>
               </motion.a>

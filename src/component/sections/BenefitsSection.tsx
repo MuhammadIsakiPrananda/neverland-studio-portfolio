@@ -31,7 +31,7 @@ const BenefitsSection = () => {
 
   return (
     <motion.section 
-      className="py-20 px-4 sm:px-6 lg:px-8 bg-black/30" 
+      className="py-20 px-4 sm:px-6 lg:px-8" 
       initial="hidden" 
       whileInView="visible" 
       viewport={{ once: true, amount: 0.2 }} 
@@ -41,7 +41,7 @@ const BenefitsSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Column - Visual */}
           <div className="relative h-96 lg:h-[500px] flex items-center justify-center">
-            <div className="absolute inset-0 bg-gradient-to-br from-sky-900/20 to-violet-900/20 rounded-3xl blur-2xl"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/20 to-teal-900/20 rounded-3xl blur-2xl"></div>
             <AnimatePresence mode="wait">
               {hoveredIndex !== null && (
                 <motion.div
@@ -50,9 +50,9 @@ const BenefitsSection = () => {
                   initial="initial"
                   animate="animate"
                   exit="exit"
-                  className="w-full max-w-md h-auto bg-slate-900/70 backdrop-blur-lg border border-sky-500/30 rounded-2xl p-8 shadow-2xl shadow-sky-900/30"
+                  className="w-full max-w-md h-auto bg-gray-800/70 backdrop-blur-lg border border-cyan-500/30 rounded-2xl p-8 shadow-2xl shadow-cyan-900/30"
                 >
-                  <div className="text-sky-400 mb-6">
+                  <div className="text-cyan-400 mb-6">
                     {benefits[hoveredIndex].icon}
                   </div>
                   <h3 className="text-3xl font-bold mb-4 text-white">{benefits[hoveredIndex].title}</h3>
@@ -67,7 +67,7 @@ const BenefitsSection = () => {
             onMouseEnter={() => setIsInteracting(true)}
             onMouseLeave={() => setIsInteracting(false)}
           >
-            <span className="text-sky-400 font-semibold text-sm uppercase tracking-wider">Why Choose Us</span>
+            <span className="text-cyan-400 font-semibold text-sm uppercase tracking-wider">Why Choose Us</span>
             <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6 text-white">The Neverland Advantage</h2>
             <p className="text-slate-400 text-lg mb-10">
               Partner with us and benefit from our commitment to excellence, innovation, and your success.
@@ -77,15 +77,14 @@ const BenefitsSection = () => {
               {benefits.map((benefit, idx) => (
                 <motion.div
                   key={idx}
-                  onMouseEnter={() => setHoveredIndex(idx)}
-                  className="p-4 rounded-lg cursor-pointer transition-all duration-300 relative overflow-hidden"
+                  className="p-4 rounded-lg transition-all duration-300 relative overflow-hidden"
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1 }}
                 >
                   <div className="flex items-center gap-4 relative z-10">
-                    <div className={`transition-colors duration-300 ${hoveredIndex === idx ? 'text-sky-300' : 'text-slate-500'}`}>
+                    <div className={`transition-colors duration-300 ${hoveredIndex === idx ? 'text-cyan-300' : 'text-slate-500'}`}>
                       {benefit.icon}
                     </div>
                     <h4 className={`text-lg font-semibold transition-colors duration-300 ${hoveredIndex === idx ? 'text-white' : 'text-slate-300'}`}>
@@ -95,7 +94,7 @@ const BenefitsSection = () => {
                   {hoveredIndex === idx && (
                     <motion.div
                       layoutId="benefit-hover"
-                      className="absolute inset-0 bg-slate-800/50 rounded-lg"
+                      className="absolute inset-0 bg-gray-800/50 rounded-lg"
                       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                     />
                   )}

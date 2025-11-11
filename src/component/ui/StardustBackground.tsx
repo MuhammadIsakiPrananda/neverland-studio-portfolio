@@ -15,7 +15,7 @@ const StardustBackground = () => {
 
   return (
     <div className="absolute inset-0 z-0 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0c001f] via-[#000] to-[#0c001f]"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-950 to-gray-900"></div>
       {stars.map((star) => (
         <motion.div
           key={star.id}

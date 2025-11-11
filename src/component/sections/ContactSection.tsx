@@ -29,7 +29,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ setSectionRef, }) => {
     <motion.section ref={setSectionRef('Contact')} id="Contact" className="py-20 px-4 sm:px-6 lg:px-8" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariants}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16"> 
-          <span className="text-sky-400 font-semibold text-sm uppercase tracking-wider">Contact Us</span>
+          <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">Contact Us</span>
           <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6">Get in Touch</h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto"> 
             We're here to help. Reach out to us with any questions or to start your next project.
@@ -39,18 +39,29 @@ const ContactSection: React.FC<ContactSectionProps> = ({ setSectionRef, }) => {
           {/* Column 1: Contact Info */}
           <motion.div className="space-y-8" variants={itemVariants}>
             {[
-              { icon: <Mail className="w-6 h-6 text-white" />, title: "Email Us", lines: ["General Inquiries:", "arlianto032@gmail.com"], action: "Send an Email" },
-              { icon: <Phone className="w-6 h-6 text-white" />, title: "Call Us", lines: ["Mon-Fri from 9am to 5pm", "+628995257735"], action: "Call Now" },
-              { icon: <MapPin className="w-6 h-6 text-white" />, title: "Visit Us", lines: ["Jl. Ki Ageng Gribig No.28, Madyopuro, Kec. Kedungkandang, Kota Malang, Jawa Timur 65139, Indonesia"], action: "Get Directions" }
+              { icon: <Mail className="w-6 h-6 text-white" />, title: "Email Us", lines: ["General Inquiries:", "arlianto032@gmail.com"], action: "Send an Email", href: "mailto:arlianto032@gmail.com" },
+              { icon: <Phone className="w-6 h-6 text-white" />, title: "Call Us", lines: ["Mon-Fri from 9am to 5pm", "+628995257735"], action: "Call Now", href: "tel:+628995257735" },
+              { 
+                icon: <MapPin className="w-6 h-6 text-white" />, 
+                title: "Visit Us", 
+                lines: ["Jl. Ki Ageng Gribig No.28, Madyopuro, Kec. Kedungkandang, Kota Malang, Jawa Timur 65139, Indonesia"], 
+                action: "Get Directions", 
+                href: "https://www.google.com/maps/search/?api=1&query=SMK+Negeri+6+Kota+Malang"
+              }
             ].map((item, idx) => (
               <div key={idx} className="flex gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-sky-500 to-violet-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-emerald-600 rounded-lg flex items-center justify-center flex-shrink-0">
                   {item.icon}
                 </div>
                 <div className="leading-snug">
                   <h3 className="font-bold mb-1 text-white">{item.title}</h3> 
                   {item.lines.map((line, i) => <p key={i} className="text-slate-400">{line}</p>)}
-                  <button className="text-sky-400 text-sm mt-2 hover:underline">{item.action}</button>
+                  <a 
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-teal-400 text-sm mt-2 hover:underline inline-block"
+                  >{item.action}</a>
                 </div>
               </div>
             ))}
@@ -66,7 +77,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ setSectionRef, }) => {
               ].map(({ Icon }, idx) => (
                   <button
                     key={idx} 
-                    className="w-10 h-10 bg-slate-800/50 border border-slate-700/50 rounded-lg flex items-center justify-center hover:scale-110 hover:bg-sky-500/20 hover:border-sky-500/50 transition-all"
+                    className="w-10 h-10 bg-slate-800/50 border border-slate-700/50 rounded-lg flex items-center justify-center hover:scale-110 hover:bg-teal-500/20 hover:border-teal-500/50 transition-all"
                   >
                     <Icon className="w-5 h-5 text-white" />
                   </button>
@@ -82,20 +93,20 @@ const ContactSection: React.FC<ContactSectionProps> = ({ setSectionRef, }) => {
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium mb-2">First Name</label>
-                  <input type="text" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-sky-500 focus:ring-sky-500/50 focus:outline-none transition-colors" placeholder="John" required />
+                  <input type="text" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-teal-500 focus:ring-teal-500/50 focus:outline-none transition-colors" placeholder="John" required />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Last Name</label>
-                  <input type="text" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-sky-500 focus:ring-sky-500/50 focus:outline-none transition-colors" placeholder="Doe" required />
+                  <input type="text" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-teal-500 focus:ring-teal-500/50 focus:outline-none transition-colors" placeholder="Doe" required />
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Email</label>
-                <input type="email" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-sky-500 focus:ring-sky-500/50 focus:outline-none transition-colors" placeholder="john.doe@example.com" required />
+                <input type="email" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-teal-500 focus:ring-teal-500/50 focus:outline-none transition-colors" placeholder="john.doe@example.com" required />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Service</label>
-                <select className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-sky-500 focus:ring-sky-500/50 focus:outline-none transition-colors appearance-none" required>
+                <select className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-teal-500 focus:ring-teal-500/50 focus:outline-none transition-colors appearance-none" required>
                   <option value="">Select a service</option>
                   <option>Web Development</option>
                   <option>Mobile App Development</option>
@@ -105,11 +116,11 @@ const ContactSection: React.FC<ContactSectionProps> = ({ setSectionRef, }) => {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Message</label>
-                <textarea rows={5} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-sky-500 focus:ring-sky-500/50 focus:outline-none transition-colors resize-none" placeholder="Your message..." required />
+                <textarea rows={5} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-teal-500 focus:ring-teal-500/50 focus:outline-none transition-colors resize-none" placeholder="Your message..." required />
               </div>
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-sky-500 to-violet-600 text-white py-4 rounded-lg font-semibold hover:shadow-xl hover:shadow-violet-500/30 transition-all transform hover:scale-105"
+                className="w-full bg-gradient-to-r from-teal-500 to-emerald-600 text-white py-4 rounded-lg font-semibold hover:shadow-xl hover:shadow-emerald-500/30 transition-all transform hover:scale-105"
               >
                 Send Message
               </button>

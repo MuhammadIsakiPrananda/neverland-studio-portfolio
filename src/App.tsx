@@ -20,7 +20,10 @@ import VideoModal from './component/common/VideoModal';
 import AuthModal from './component/ui/AuthModal';
 import NotificationProvider from './component/ui/NotificationProvider';
 import LoadingScreen from './component/ui/LoadingScreen';
-import { ChatbotProvider } from './component/sections/ChatbotContext';
+import { ChatbotProvider } from './component/sections/ChatbotContext'; 
+import ReviewModal from './component/ui/ReviewModal';
+import AuroraBackground from './component/ui/AuroraBackground';
+import JoinTeamModal from './component/ui/JoinTeamModal';
 
 const NeverlandStudio = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -30,6 +33,8 @@ const NeverlandStudio = () => {
   const [activeFilter, setActiveFilter] = useState('All');
   const [showVideo, setShowVideo] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isJoinTeamModalOpen, setIsJoinTeamModalOpen] = useState(false);
 
   useEffect(() => {
     // Simulasi waktu loading
@@ -44,7 +49,7 @@ const NeverlandStudio = () => {
   }, []);
 
   useEffect(() => {
-    if (isAuthModalOpen || isMenuOpen || isLoading) {
+    if (isAuthModalOpen || isMenuOpen || isLoading || isReviewModalOpen || isJoinTeamModalOpen) {
       document.body.classList.add('overflow-hidden');
     } else {
       document.body.classList.remove('overflow-hidden');
@@ -53,7 +58,7 @@ const NeverlandStudio = () => {
     return () => {
       document.body.classList.remove('overflow-hidden');
     };
-  }, [isAuthModalOpen, isMenuOpen, isLoading]);
+  }, [isAuthModalOpen, isMenuOpen, isLoading, isReviewModalOpen, isJoinTeamModalOpen]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -118,13 +123,9 @@ const NeverlandStudio = () => {
   return (
     <ChatbotProvider>
       <div 
-        className="bg-[#0A0A0A] text-slate-300 min-h-screen"
-        style={{
-          backgroundSize: '30px 30px',
-          backgroundImage:
-            'radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.04) 1px, transparent 0)',
-        }}>
+        className="bg-gray-900 text-slate-300 min-h-screen relative">
         <NotificationProvider>
+          <AuroraBackground />
           <AnimatePresence mode="wait">
             {isLoading && <LoadingScreen />}
           </AnimatePresence>
@@ -147,9 +148,9 @@ const NeverlandStudio = () => {
             <BenefitsSection />
             <ServicesSection setSectionRef={setSectionRef} />
             <ProcessSection setSectionRef={setSectionRef} />
-            <PortfolioSection setSectionRef={setSectionRef} activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
-            <TeamSection setSectionRef={setSectionRef} />
-            <TestimonialsSection />
+            <PortfolioSection setSectionRef={setSectionRef} activeFilter={activeFilter} setActiveFilter={setActiveFilter} setShowVideo={setShowVideo} />
+            <TeamSection setSectionRef={setSectionRef} onJoinTeamClick={() => setIsJoinTeamModalOpen(true)} />
+            <TestimonialsSection onAddReviewClick={() => setIsReviewModalOpen(true)} />
             <PricingSection setSectionRef={setSectionRef} onGetStartedClick={() => handleNavClick('Contact')} />
             <FAQSection />
             <CTASection />
@@ -159,7 +160,9 @@ const NeverlandStudio = () => {
           <Footer />
           <FloatingButtons />
           <VideoModal showVideo={showVideo} setShowVideo={setShowVideo} />
-        <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+          <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+          <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
+          <JoinTeamModal isOpen={isJoinTeamModalOpen} onClose={() => setIsJoinTeamModalOpen(false)} />
 
           {/* Custom Animations */}
           <style>{`

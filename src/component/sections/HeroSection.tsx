@@ -51,20 +51,20 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, setSectionRef, set
 
       <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center relative z-10">
         <motion.div className="text-center lg:text-left z-10" variants={containerVariants} initial="hidden" animate={!isLoading ? "visible" : "hidden"} >
-          <motion.div variants={itemVariants} className="inline-block bg-sky-500/10 border border-sky-500/30 text-sky-300 text-sm font-semibold tracking-wider px-4 py-1.5 rounded-full mb-6 hover:bg-sky-500/20 hover:border-sky-400 hover:shadow-lg hover:shadow-sky-500/20 transition-all duration-500 transform hover:scale-105 cursor-default">
+          <motion.div variants={itemVariants} className="inline-block bg-teal-500/10 border border-teal-500/30 text-teal-300 text-sm font-semibold tracking-wider px-4 py-1.5 rounded-full mb-6 hover:bg-teal-500/20 hover:border-teal-400 hover:shadow-lg hover:shadow-teal-500/20 transition-all duration-500 transform hover:scale-105 cursor-default">
             Welcome to Neverland: Where Ideas Take Flight
           </motion.div>
 
           <motion.h1 variants={titleContainer} className="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tighter text-white balance-text mb-8">
-            <motion.span variants={wordVariant} className="inline-block">Crafting</motion.span>
+            <motion.span variants={wordVariant} className="inline-block">Navigating</motion.span>
             <motion.span variants={wordVariant} className="inline-block ml-4">Digital</motion.span>
             <br />
             <div className="relative inline-block mt-2">
-              <motion.span variants={wordVariant} className="bg-gradient-to-r from-sky-400 via-violet-400 to-sky-400 bg-clip-text text-transparent animate-gradient">
-                  Masterpieces
+              <motion.span variants={wordVariant} className="bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent animate-gradient">
+                  Neverlands
               </motion.span>
               <motion.div
-                className="absolute -bottom-1 left-0 h-1 bg-gradient-to-r from-sky-500 to-violet-500 rounded-full"
+                className="absolute -bottom-3 left-0 h-[3px] bg-gradient-to-r from-teal-500 to-emerald-600 rounded-full"
                 initial={{ width: 0 }}
                 animate={!isLoading ? { width: "100%" } : { width: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut", delay: 0.8 }}
@@ -75,10 +75,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, setSectionRef, set
             Neverland Studio is your partner in digital innovation. We blend creative artistry with technical excellence to build solutions that are not only visually stunning but also deliver measurable results.
           </motion.p>
 
-          <motion.div variants={itemVariants} className="flex justify-center lg:justify-start items-center gap-8 mb-10">
-            {stats.slice(0, 2).map((stat, idx) => (
+          <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-10 mb-10 text-center sm:text-left">
+            {stats.map((stat, idx) => (
               <div key={idx} className="flex items-center gap-3 group">
-                <div className="w-10 h-10 bg-slate-800/50 border border-slate-700 rounded-full flex items-center justify-center text-sky-400 group-hover:border-sky-400/50 group-hover:bg-sky-500/10 transition-all duration-300">
+                <div className="w-10 h-10 bg-slate-800/50 border border-slate-700 rounded-full flex items-center justify-center text-teal-400 group-hover:border-teal-400/50 group-hover:bg-teal-500/10 transition-all duration-300">
                   {stat.icon}
                 </div>
                 <div>
@@ -90,13 +90,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, setSectionRef, set
           </motion.div>
 
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center">
-            <button onClick={onGetStartedClick} className="bg-gradient-to-r from-sky-500 to-violet-600 text-white px-8 py-3 rounded-full font-semibold shadow-lg shadow-violet-900/50 hover:shadow-xl hover:shadow-violet-500/40 transition-all flex items-center justify-center gap-2 group transform hover:-translate-y-1 w-full sm:w-auto text-base ">
+            <button onClick={onGetStartedClick} className="bg-gradient-to-r from-teal-500 to-emerald-600 text-white px-8 py-3 rounded-full font-semibold shadow-lg shadow-emerald-900/50 hover:shadow-xl hover:shadow-emerald-500/40 transition-all flex items-center justify-center gap-2 group transform hover:-translate-y-1 w-full sm:w-auto text-base ">
               Get Started
               <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button> 
             <button 
               onClick={() => setShowVideo(true)}
-              className="bg-slate-800/50 border border-slate-700 backdrop-blur-sm px-8 py-3 rounded-full font-semibold hover:bg-slate-800/80 hover:border-sky-500/50 transition-all flex items-center gap-2 transform hover:-translate-y-1 w-full sm:w-auto text-base text-white"
+              className="bg-slate-800/50 border border-slate-700 backdrop-blur-sm px-8 py-3 rounded-full font-semibold hover:bg-slate-800/80 hover:border-teal-500/50 transition-all flex items-center gap-2 transform hover:-translate-y-1 w-full sm:w-auto text-base text-white"
             >
               <Play className="w-5 h-5" />
               Watch Demo

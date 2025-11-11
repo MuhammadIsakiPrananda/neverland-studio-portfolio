@@ -38,7 +38,7 @@ const FAQSection = () => {
     <motion.section className="py-20 px-4 sm:px-6 lg:px-8" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariants}> 
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-sky-400 font-semibold text-sm uppercase tracking-wider">FAQ</span>
+          <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">FAQ</span>
           <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6">Frequently Asked Questions</h2>
           <p className="text-slate-400 text-lg">
             Find answers to common questions about our services and processes.
@@ -55,7 +55,7 @@ const FAQSection = () => {
                 onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
                 className="w-full text-left p-6 flex justify-between items-center cursor-pointer group"
               > 
-                <h3 className="text-lg font-bold text-white group-hover:text-sky-400 transition-colors">
+                <h3 className="text-lg font-bold text-white group-hover:text-teal-400 transition-colors">
                   {faqItem.q}
                 </h3>
                 <motion.div
@@ -63,7 +63,7 @@ const FAQSection = () => {
                   transition={{ duration: 0.3 }}
                   className="flex-shrink-0 ml-4"
                 >
-                  <ChevronDown className="w-5 h-5 text-slate-400 group-hover:text-sky-400 transition-colors" />
+                  <ChevronDown className="w-5 h-5 text-slate-400 group-hover:text-teal-400 transition-colors" />
                 </motion.div>
               </button>
               <AnimatePresence initial={false}>
@@ -80,7 +80,10 @@ const FAQSection = () => {
         </motion.div>
         <div className="text-center mt-12">
           <p className="text-slate-400 mb-6">Still have questions? We're here to help.</p>
-          <button className="border border-slate-700 px-8 py-4 rounded-full font-semibold hover:bg-slate-800/50 transition-all transform hover:scale-105 flex items-center gap-2 mx-auto ">
+          <button 
+            onClick={() => document.getElementById('Contact')?.scrollIntoView({ behavior: 'smooth' })}
+            className="border border-slate-700 px-8 py-4 rounded-full font-semibold hover:bg-slate-800/50 transition-all transform hover:scale-105 flex items-center gap-2 mx-auto "
+          >
             <MessageSquare className="w-5 h-5" />
             Contact Support
           </button>
