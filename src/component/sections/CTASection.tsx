@@ -1,8 +1,15 @@
 
 import { motion, type Variants } from "framer-motion";
 import { Rocket, Phone, MessageSquare, Mail, ArrowRight } from 'lucide-react';
+import { useChatbot } from "./ChatbotContext";
 
 const CTASection = () => {
+  const { setIsChatOpen } = useChatbot();
+
+  const handleChatClick = () => {
+    setIsChatOpen(true);
+  };
+
   const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
@@ -35,12 +42,14 @@ const CTASection = () => {
           {/* Right Column: Contact Cards */} 
           <div className="space-y-6">
             {[
-              { icon: <Mail className="w-6 h-6 text-sky-400" />, title: "Send us an Email", detail: "arlianto032@gmail.com", action: "Send Now" },
-              { icon: <Phone className="w-6 h-6 text-sky-400" />, title: "Schedule a Call", detail: "Book a 15-min intro call", action: "Schedule" },
-              { icon: <MessageSquare className="w-6 h-6 text-sky-400" />, title: "Live Chat", detail: "Chat with our AI assistant", action: "Start Chat" },
+              { icon: <Mail className="w-6 h-6 text-sky-400" />, title: "Send us an Email", detail: "arlianto032@gmail.com", action: "Send Now", href: "mailto:arlianto032@gmail.com" },
+              { icon: <Phone className="w-6 h-6 text-sky-400" />, title: "Schedule a Call", detail: "Book a 15-min intro call", action: "Schedule", href: "#" }, // Ganti '#' dengan link penjadwalan
+              { icon: <MessageSquare className="w-6 h-6 text-sky-400" />, title: "Live Chat", detail: "Chat with our AI assistant", action: "Start Chat", onClick: handleChatClick },
             ].map((item, idx) => (
-              <motion.div
+              <motion.a
                 key={idx}
+                href={item.href}
+                onClick={item.onClick}
                 className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-6 flex items-center justify-between hover:bg-slate-800/80 hover:border-sky-500/50 transition-all cursor-pointer group" 
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -57,7 +66,7 @@ const CTASection = () => {
                 <span className="text-sm font-semibold text-sky-400 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-0 translate-x-2 transition-all ">
                   {item.action} <ArrowRight className="inline w-4 h-4" />
                 </span>
-              </motion.div>
+              </motion.a>
             ))}
           </div>
         </div>

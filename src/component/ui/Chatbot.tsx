@@ -1,35 +1,31 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Bot, Sparkles, X } from 'lucide-react';
+import { Bot, Headset } from 'lucide-react';
 import { useChat } from './useChat';
+import BotMessage from './BotMessage';
+import ChatInput from './ChatInput';
 
-interface ChatbotProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+interface ChatbotProps { isOpen: boolean; }
 
-const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
+const Chatbot: React.FC<ChatbotProps> = ({ isOpen }) => {
   const { messages, addMessage, isLoading, reset } = useChat();
-  const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  }, []);
 
   useEffect(() => {
+    // Always scroll to bottom when messages change
     scrollToBottom();
-    // Reset chat when it's closed
+  }, [messages]);
+
+  useEffect(() => {
+    // Reset chat state only when the chatbot is closed
     if (!isOpen) {
       setTimeout(reset, 300); // Delay to allow exit animation
     }
-  }, [messages]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    addMessage(inputValue);
-    setInputValue('');
-  };
+  }, [isOpen, reset]);
 
   return (
     <AnimatePresence>
@@ -45,7 +41,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
           <div className="flex items-center justify-between p-4 border-b border-slate-700/50 flex-shrink-0">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg shadow-cyan-500/30">
-                <Sparkles className="w-6 h-6 text-white" />
+                <Headset className="w-6 h-6 text-white" />
               </div>
               <div>
                 <h3 className="font-bold text-white">AI Assistant</h3>
@@ -55,37 +51,37 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
                 </p>
               </div>
             </div>
-            <button onClick={onClose} className="p-2 text-slate-400 hover:text-white transition-colors">
-              <X className="w-5 h-5" />
-            </button>
           </div>
 
           {/* Messages */}
           <div className="flex-grow p-4 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#2dd4bf #1e293b' }}>
-            <div className="space-y-4">
-              {messages.map((msg) => (
+            <div className="space-y-5">
+              {messages.map((msg) => {
+                const isBot = msg.sender === 'bot';
+
+                return (
                 <motion.div
                   key={msg.id}
                   layout
                   initial={{ opacity: 0, y: 20, scale: 0.9 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ duration: 0.3, ease: 'easeOut' }}
-                  className={`flex items-end gap-2 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex items-start gap-3 ${isBot ? 'justify-start' : 'justify-end'}`}
                 >
-                  {msg.sender === 'bot' && <div className="w-7 h-7 flex-shrink-0 mb-1 rounded-full bg-slate-800 flex items-center justify-center"><Bot className="w-4 h-4 text-cyan-400" /></div>}
-                  <div className={`max-w-xs px-4 py-3 rounded-2xl text-sm ${
-                    msg.sender === 'user' 
-                      ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-br-lg' 
-                      : 'bg-slate-800 text-slate-200 rounded-bl-lg'
-                  }`}>
-                    <p>{msg.text}</p>
-                  </div>
+                  {isBot ? (
+                    <BotMessage message={msg} />
+                  ) : (
+                    <div className="max-w-xs px-4 py-2.5 rounded-xl text-sm shadow-md bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-br-none">
+                      <p>{msg.text}</p>
+                    </div>
+                  )}
                 </motion.div>
-              ))}
+                );
+              })}
               {isLoading && (
-                <div className="flex items-end gap-2 justify-start">
-                  <div className="w-7 h-7 flex-shrink-0 mb-1 rounded-full bg-slate-800 flex items-center justify-center"><Bot className="w-4 h-4 text-cyan-400" /></div>
-                  <div className="px-4 py-3 rounded-2xl bg-slate-800 text-slate-200 rounded-bl-lg">
+                <div className="flex items-start gap-3 justify-start">
+                  <div className="w-8 h-8 flex-shrink-0 mt-1 rounded-full bg-slate-800 flex items-center justify-center"><Bot className="w-5 h-5 text-cyan-400" /></div>
+                  <div className="px-4 py-3 rounded-xl bg-slate-800 text-slate-200 rounded-bl-none">
                     <div className="flex items-center gap-1.5">
                       <span className="w-2 h-2 bg-slate-400 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></span>
                       <span className="w-2 h-2 bg-slate-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></span>
@@ -99,23 +95,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t border-slate-700/50 flex-shrink-0">
-            <form onSubmit={handleSubmit} className="flex items-center gap-2">
-              <div className="relative w-full">
-                <input
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Ask me anything..."
-                  className="w-full bg-slate-800/50 border border-slate-700 rounded-full pl-4 pr-12 py-2.5 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors"
-                  disabled={isLoading}
-                />
-                <button type="submit" className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center hover:bg-cyan-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled={isLoading || !inputValue}>
-                  <Send className="w-4 h-4 text-white -mr-0.5" />
-                </button>
-              </div>
-            </form>
-          </div>
+          <ChatInput onSendMessage={addMessage} isLoading={isLoading} />
         </motion.div>
       )}
     </AnimatePresence>

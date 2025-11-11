@@ -1,67 +1,75 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-
+import type { Content } from '@google/generative-ai';
+import { runChat } from './gemini';
 export type Message = {
   id: number;
   text: string;
   sender: 'user' | 'bot';
 };
 
-const initialMessage: Message = {
-  id: 1,
-  text: "", // Will be set by t('chatbot.initial_message')
-  sender: 'bot',
-};
-
 export const useChat = () => {
-  const { t } = useTranslation();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Set initial message after translation is loaded
+  // Set initial message
   useEffect(() => {
-    setMessages([{ ...initialMessage, text: t('chatbot.initial_message') }]);
-  }, [t]);
-
-  const getBotResponse = (userMessage: string): string => {
-    const lowerCaseMessage = userMessage.toLowerCase();
-    if (lowerCaseMessage.includes('layanan') || lowerCaseMessage.includes('service')) {
-      return t('chatbot.response_services');
-    }
-    if (lowerCaseMessage.includes('harga') || lowerCaseMessage.includes('pricing')) {
-      return t('chatbot.response_pricing');
-    }
-    if (lowerCaseMessage.includes('kontak') || lowerCaseMessage.includes('contact')) {
-      return t('chatbot.response_contact');
-    }
-    return t('chatbot.response_fallback');
-  };
-
-  const addMessage = useCallback((text: string) => {
+    setMessages([{
+      id: 1,
+      text: "Hello! I'm the AI assistant for Neverland Studio. How can I help?",
+      sender: 'bot',
+    }]);
+  }, []);
+  
+  const addMessage = useCallback(async (text: string) => {
     if (!text.trim()) return;
 
     const userMessage: Message = {
-      id: Date.now(),
+      id: Date.now(), // Using timestamp for unique ID
       text,
       sender: 'user',
     };
-    setMessages(prev => [...prev, userMessage]);
+
+    const newMessages: Message[] = [...messages, userMessage];
+
+    // Add user message and set loading state
+    setMessages(newMessages);
     setIsLoading(true);
 
-    setTimeout(() => {
-      const botResponseText = getBotResponse(text);
+    // Prepare history for Gemini API
+    const history: Content[] = newMessages
+      .filter(msg => msg.id !== 1) // Exclude initial greeting
+      .map(msg => ({
+        role: msg.sender === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.text }],
+      }));
+
+    try {
+      const botResponseText = await runChat(history, text); // The `text` is the latest user message, which is now correctly part of the history
       const botMessage: Message = {
         id: Date.now() + 1,
         text: botResponseText,
         sender: 'bot',
       };
       setMessages(prev => [...prev, botMessage]);
+    } catch (error) {
+      console.error("Gemini API error:", error);
+      const errorMessage: Message = {
+        id: Date.now() + 1,
+        text: "Sorry, it seems there was a small issue. Please try again in a moment.",
+        sender: 'bot',
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1200);
-  }, []);
+    }
+  }, [messages]);
 
   const reset = useCallback(() => {
-    setMessages([{ ...initialMessage, text: t('chatbot.initial_message') }]);
+    setMessages([{
+      id: 1,
+      text: "Hello! I'm the AI assistant for Neverland Studio. How can I help?",
+      sender: 'bot',
+    }]);
     setIsLoading(false);
   }, []);
 
