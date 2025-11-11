@@ -1,6 +1,4 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { Content } from '@google/generative-ai';
-import { runChat } from './gemini';
 export type Message = {
   id: number;
   text: string;
@@ -20,7 +18,21 @@ export const useChat = () => {
     }]);
   }, []);
   
-  const addMessage = useCallback(async (text: string) => {
+  const getBotResponse = (userMessage: string): string => {
+    const lowerCaseMessage = userMessage.toLowerCase();
+    if (lowerCaseMessage.includes('layanan') || lowerCaseMessage.includes('service')) {
+      return "Kami menawarkan layanan **Web Development**, **UI/UX Design**, dan **Digital Consultation**.";
+    }
+    if (lowerCaseMessage.includes('harga') || lowerCaseMessage.includes('pricing')) {
+      return "Untuk informasi harga, silakan kunjungi halaman Harga kami atau hubungi kami untuk penawaran khusus.";
+    }
+    if (lowerCaseMessage.includes('kontak') || lowerCaseMessage.includes('contact')) {
+      return "Anda dapat menghubungi kami melalui email di **arlianto032@gmail.com** atau mengisi formulir di halaman Kontak.";
+    }
+    return "Maaf, saya tidak mengerti pertanyaan itu. Coba tanyakan tentang layanan, harga, atau kontak.";
+  };
+
+  const addMessage = useCallback((text: string) => {
     if (!text.trim()) return;
 
     const userMessage: Message = {
@@ -29,40 +41,22 @@ export const useChat = () => {
       sender: 'user',
     };
 
-    const newMessages: Message[] = [...messages, userMessage];
-
     // Add user message and set loading state
-    setMessages(newMessages);
+    setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
 
-    // Prepare history for Gemini API
-    const history: Content[] = newMessages
-      .filter(msg => msg.id !== 1) // Exclude initial greeting
-      .map(msg => ({
-        role: msg.sender === 'user' ? 'user' : 'model',
-        parts: [{ text: msg.text }],
-      }));
-
-    try {
-      const botResponseText = await runChat(history, text); // The `text` is the latest user message, which is now correctly part of the history
+    // Simulate bot thinking and then add its response
+    setTimeout(() => {
+      const botResponseText = getBotResponse(text);
       const botMessage: Message = {
         id: Date.now() + 1,
         text: botResponseText,
         sender: 'bot',
       };
       setMessages(prev => [...prev, botMessage]);
-    } catch (error) {
-      console.error("Gemini API error:", error);
-      const errorMessage: Message = {
-        id: Date.now() + 1,
-        text: "Sorry, it seems there was a small issue. Please try again in a moment.",
-        sender: 'bot',
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
       setIsLoading(false);
-    }
-  }, [messages]);
+    }, 1200);
+  }, []);
 
   const reset = useCallback(() => {
     setMessages([{
