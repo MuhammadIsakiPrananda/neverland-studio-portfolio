@@ -8,12 +8,13 @@ import { stats } from '../../data/stats';
 
 interface HeroSectionProps {
   isLoading: boolean;
+  isMenuOpen: boolean;
   setSectionRef: (section: string) => (el: HTMLElement | null) => void;
   setShowVideo: (show: boolean) => void;
   onGetStartedClick: () => void;
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, setSectionRef, setShowVideo, onGetStartedClick }) => {
+const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, isMenuOpen, setSectionRef, setShowVideo, onGetStartedClick }) => {
   const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
@@ -46,10 +47,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, setSectionRef, set
   };
 
   return (
-    <motion.section ref={setSectionRef('Home')} id="Home" className="min-h-screen flex flex-col justify-center px-4 sm:px-6 lg:px-8 relative overflow-hidden pt-24 pb-12" initial="hidden" animate={!isLoading ? "visible" : "hidden"} variants={sectionVariants} >
+    <motion.section 
+      ref={setSectionRef('Home')} 
+      id="Home" 
+      className={`min-h-screen flex flex-col justify-center px-4 sm:px-6 lg:px-8 relative overflow-hidden pt-24 pb-12 transition-all duration-300 ${isMenuOpen ? 'z-0' : 'z-10'}`} 
+      initial="hidden" 
+      animate={!isLoading ? "visible" : "hidden"} 
+      variants={sectionVariants} 
+    >
       <StardustBackground />
 
-      <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center relative z-10">
+      <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center relative z-1">
         <motion.div className="text-center lg:text-left z-10" variants={containerVariants} initial="hidden" animate={!isLoading ? "visible" : "hidden"} >
           <motion.div variants={itemVariants} className="inline-block bg-teal-500/10 border border-teal-500/30 text-teal-300 text-sm font-semibold tracking-wider px-4 py-1.5 rounded-full mb-6 hover:bg-teal-500/20 hover:border-teal-400 hover:shadow-lg hover:shadow-teal-500/20 transition-all duration-500 transform hover:scale-105 cursor-default">
             Welcome to Neverland: Where Ideas Take Flight
@@ -75,15 +83,15 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, setSectionRef, set
             Neverland Studio is your partner in digital innovation. We blend creative artistry with technical excellence to build solutions that are not only visually stunning but also deliver measurable results.
           </motion.p>
 
-          <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-10 mb-10 text-center sm:text-left">
+          <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-12">
             {stats.map((stat, idx) => (
-              <div key={idx} className="flex items-center gap-3 group">
-                <div className="w-10 h-10 bg-slate-800/50 border border-slate-700 rounded-full flex items-center justify-center text-teal-400 group-hover:border-teal-400/50 group-hover:bg-teal-500/10 transition-all duration-300">
+              <div key={idx} className="text-center">
+                <div className="w-12 h-12 bg-slate-800/50 border border-slate-700 rounded-full flex items-center justify-center text-teal-400 mx-auto mb-3">
                   {stat.icon}
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-white">{stat.number}</div>
-                  <div className="text-sm text-slate-400">{stat.label}</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-white">{stat.number}</div>
+                  <div className="text-xs sm:text-sm text-slate-400">{stat.label}</div>
                 </div>
               </div>
             ))}
@@ -108,7 +116,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, setSectionRef, set
         </motion.div>
       </div>
 
-      <div className="w-full max-w-7xl mx-auto mt-20 lg:mt-24 z-10">
+      <div className="w-full max-w-7xl mx-auto mt-20 lg:mt-24 z-1">
         <motion.div 
           variants={itemVariants} 
           initial="hidden" 

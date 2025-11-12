@@ -179,7 +179,7 @@ const NeverlandStudio = () => {
           />
           
           <main>
-            <HeroSection isLoading={isLoading} setSectionRef={setSectionRef} setShowVideo={setShowVideo} onGetStartedClick={() => handleNavClick('Contact')} />
+            <HeroSection isLoading={isLoading} isMenuOpen={isMenuOpen} setSectionRef={setSectionRef} setShowVideo={setShowVideo} onGetStartedClick={() => handleNavClick('Contact')} />
             <BenefitsSection isLoading={isLoading} />
             <ServicesSection isLoading={isLoading} setSectionRef={setSectionRef} />
             <ProcessSection isLoading={isLoading} setSectionRef={setSectionRef} />

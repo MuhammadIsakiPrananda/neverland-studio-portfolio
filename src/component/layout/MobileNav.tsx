@@ -18,14 +18,19 @@ interface MobileNavProps {
 }
 
 const MobileNav: React.FC<MobileNavProps> = ({ isMenuOpen, setIsMenuOpen, activeSection, handleNavClick, isLoggedIn, userProfile, onLoginClick, onLogout, onDashboardClick }) => {
-  const menuVariants: Variants = {
-    hidden: { x: '100%', transition: { type: 'tween', duration: 0.3, ease: 'easeIn' } },
-    visible: { x: '0%', transition: { type: 'tween', duration: 0.3, ease: 'easeOut' } },
+  const menuContainerVariants: Variants = {
+    hidden: { opacity: 0, transition: { when: "afterChildren" } },
+    visible: { opacity: 1, transition: { when: "beforeChildren", staggerChildren: 0.08 } },
+  };
+
+  const menuItemVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
   };
 
   return (
     <>
-      <header className="md:hidden fixed top-0 left-0 w-full z-50 p-4 flex justify-between items-center bg-gray-900/50 backdrop-blur-sm">
+      <header className="md:hidden fixed top-0 left-0 w-full z-30 p-4 flex justify-between items-center bg-gray-900/50 backdrop-blur-sm">
         <a href="#Home" onClick={(e) => { e.preventDefault(); handleNavClick('Home'); }} className="z-50 group">
           <Logo />
         </a>
@@ -39,38 +44,35 @@ const MobileNav: React.FC<MobileNavProps> = ({ isMenuOpen, setIsMenuOpen, active
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-gradient-to-br from-slate-950 to-black z-50 flex flex-col items-center justify-center"
+            variants={menuContainerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
             onClick={() => setIsMenuOpen(false)}
           >
-            <motion.div
-              className="fixed top-0 right-0 h-full w-80 bg-slate-900/90 border-l border-slate-800/50 p-8 flex flex-col"
-              variants={menuVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <ul className="flex flex-col gap-2">
-                {navItems.map((item) => (
-                  <li key={item.name}>
-                    <button onClick={() => { handleNavClick(item.name); setIsMenuOpen(false); }} className={`w-full text-left px-4 py-3 rounded-lg text-lg font-medium transition-colors ${activeSection === item.name ? 'bg-teal-500/10 text-teal-300' : 'text-slate-300 hover:bg-slate-800/50'}`}>
-                      {item.name}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-auto pt-6 border-t border-slate-700/50">
-                {isLoggedIn ? (
-                  <ProfileDropdown userProfile={userProfile} onLogout={onLogout} onDashboardClick={onDashboardClick} />
-                ) : (
-                  <button onClick={onLoginClick} className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-6 py-3 rounded-full text-base font-semibold hover:shadow-lg hover:shadow-cyan-500/30 transition-all transform hover:scale-105">
-                    Login
+            <ul className="flex flex-col items-center gap-4 text-center">
+              {navItems.map((item) => (
+                <motion.li key={item.name} variants={menuItemVariants}>
+                  <button 
+                    onClick={() => { handleNavClick(item.name); setIsMenuOpen(false); }} 
+                    className={`text-3xl font-bold tracking-wide transition-colors duration-300 px-4 py-2 rounded-lg ${
+                      activeSection === item.name ? 'text-teal-300' : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    {item.name}
                   </button>
-                )}
-              </div>
+                </motion.li>
+              ))}
+            </ul>
+            <motion.div variants={menuItemVariants} className="absolute bottom-12 px-8 w-full">
+              {isLoggedIn ? (
+                <p className="text-center text-slate-400">Signed in as <span className="font-bold text-white">{userProfile.name}</span></p>
+              ) : (
+                <button onClick={onLoginClick} className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-6 py-4 rounded-full text-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/30 transition-all transform hover:scale-105">
+                  Login / Sign Up
+                </button>
+              )}
             </motion.div>
           </motion.div>
         )}
