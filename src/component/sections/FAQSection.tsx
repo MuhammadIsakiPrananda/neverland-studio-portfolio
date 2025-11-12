@@ -1,11 +1,16 @@
-import { useState } from 'react';
-import { motion, AnimatePresence, type Variants } from "framer-motion";
+import { useState, useRef } from 'react';
+import { motion, AnimatePresence, useInView, type Variants } from "framer-motion";
 import { MessageSquare, ChevronDown } from 'lucide-react';
 import { faq } from '../../data/faq';
 
-const FAQSection = () => {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+interface FAQSectionProps {
+  isLoading: boolean;
+}
 
+const FAQSection: React.FC<FAQSectionProps> = ({ isLoading }) => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
   const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
@@ -35,7 +40,12 @@ const FAQSection = () => {
   };
 
   return (
-    <motion.section className="py-20 px-4 sm:px-6 lg:px-8" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariants}> 
+    <motion.section
+      ref={sectionRef}
+      className="py-20 px-4 sm:px-6 lg:px-8"
+      initial="hidden"
+      animate={!isLoading && isInView ? "visible" : "hidden"}
+      variants={sectionVariants}> 
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
           <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">FAQ</span>

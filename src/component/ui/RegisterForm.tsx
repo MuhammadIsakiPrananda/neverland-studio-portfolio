@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { User, Mail, Lock, UserPlus, Eye, EyeOff, Loader, AlertCircle } from 'lucide-react';
+import { User, Mail, Lock, UserPlus, Eye, EyeOff, Loader, AlertCircle, AtSign } from 'lucide-react';
 import { useNotification } from './useNotification';
 import ReCAPTCHA from "react-google-recaptcha";
 
@@ -10,6 +10,7 @@ interface RegisterFormProps {
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
   const [fullName, setFullName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -54,6 +55,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
   const validate = () => {
     const newErrors: Record<string, string> = {};
     if (!fullName) newErrors.fullName = 'Full name is required.';
+    if (!username) newErrors.username = 'Username is required.';
+    else if (!/^[a-zA-Z0-9_]{3,15}$/.test(username)) newErrors.username = '3-15 characters. Letters, numbers, and underscores only.';
     if (!email) newErrors.email = 'Email is required.';
     else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Email is invalid.';
     if (!password) newErrors.password = 'Password is required.';
@@ -97,7 +100,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
     visible: { y: 0, opacity: 1 },
   };
 
-  const isFormValid = !Object.values(errors).some(Boolean) && fullName && email && password && confirmPassword && password === confirmPassword && !!captchaToken;
+  const isFormValid = !Object.values(errors).some(Boolean) && fullName && username && email && password && confirmPassword && password === confirmPassword && !!captchaToken;
 
   return (
     <motion.div
@@ -126,6 +129,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
             disabled={isLoading} required />
         </motion.div>
         {errors.fullName && <p className="text-xs text-red-400 -mt-2 ml-2">{errors.fullName}</p>}
+
+        <motion.div variants={itemVariants} className="relative">
+          <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <input type="text" placeholder="Username" value={username} onChange={(e) => {
+            setUsername(e.target.value);
+            if (errors.username) { 
+              setErrors(prev => { const { username, ...rest } = prev; return rest; });
+            }
+          }} onBlur={validate}
+            className={`w-full bg-slate-800/50 border rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors disabled:opacity-50 ${errors.username ? 'border-red-500/50' : 'border-slate-700'}`}
+            disabled={isLoading} required />
+        </motion.div>
+        {errors.username && <p className="text-xs text-red-400 -mt-2 ml-2">{errors.username}</p>}
 
         <motion.div variants={itemVariants} className="relative">
           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />

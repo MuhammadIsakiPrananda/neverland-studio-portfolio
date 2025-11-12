@@ -26,7 +26,7 @@ import ReviewModal from './component/ui/ReviewModal';
 import AuroraBackground from './component/ui/AuroraBackground';
 import JoinTeamModal from './component/ui/JoinTeamModal';
 
-type UserProfile = { name: string; email: string; avatar: string | null };
+type UserProfile = { name: string; username: string; email: string; avatar: string | null };
 
 const NeverlandStudio = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -42,6 +42,7 @@ const NeverlandStudio = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile>({
     name: 'Guest User',
+    username: 'guest',
     email: 'guest@example.com',
     avatar: null,
   });
@@ -70,15 +71,15 @@ const NeverlandStudio = () => {
     };
   }, [isAuthModalOpen, isMenuOpen, isLoading, isReviewModalOpen, isJoinTeamModalOpen, isDashboardModalOpen]);
 
-  const handleLoginSuccess = (email: string) => {
+  const handleLoginSuccess = (user: UserProfile) => {
     setIsLoggedIn(true);
-    setUserProfile({ name: 'New User', email: email, avatar: null });
+    setUserProfile(user);
     setIsAuthModalOpen(false);
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    setUserProfile({ name: 'Guest User', email: 'guest@example.com', avatar: null });
+    setUserProfile({ name: 'Guest User', username: 'guest', email: 'guest@example.com', avatar: null });
   };
 
   const handleProfileUpdate = (newProfile: UserProfile) => {
@@ -179,22 +180,22 @@ const NeverlandStudio = () => {
           
           <main>
             <HeroSection isLoading={isLoading} setSectionRef={setSectionRef} setShowVideo={setShowVideo} onGetStartedClick={() => handleNavClick('Contact')} />
-            <BenefitsSection />
-            <ServicesSection setSectionRef={setSectionRef} />
-            <ProcessSection setSectionRef={setSectionRef} />
-            <PortfolioSection setSectionRef={setSectionRef} activeFilter={activeFilter} setActiveFilter={setActiveFilter} setShowVideo={setShowVideo} />
-            <TeamSection setSectionRef={setSectionRef} onJoinTeamClick={() => setIsJoinTeamModalOpen(true)} />
-            <TestimonialsSection onAddReviewClick={() => setIsReviewModalOpen(true)} />
-            <PricingSection setSectionRef={setSectionRef} onGetStartedClick={() => handleNavClick('Contact')} />
-            <FAQSection />
-            <CTASection />
-            <ContactSection setSectionRef={setSectionRef} />
+            <BenefitsSection isLoading={isLoading} />
+            <ServicesSection isLoading={isLoading} setSectionRef={setSectionRef} />
+            <ProcessSection isLoading={isLoading} setSectionRef={setSectionRef} />
+            <PortfolioSection isLoading={isLoading} setSectionRef={setSectionRef} activeFilter={activeFilter} setActiveFilter={setActiveFilter} setShowVideo={setShowVideo} />
+            <TeamSection isLoading={isLoading} setSectionRef={setSectionRef} onJoinTeamClick={() => setIsJoinTeamModalOpen(true)} />
+            <TestimonialsSection isLoading={isLoading} onAddReviewClick={() => setIsReviewModalOpen(true)} />
+            <PricingSection isLoading={isLoading} setSectionRef={setSectionRef} onGetStartedClick={() => handleNavClick('Contact')} />
+            <FAQSection isLoading={isLoading} />
+            <CTASection isLoading={isLoading} />
+            <ContactSection isLoading={isLoading} setSectionRef={setSectionRef} />
           </main>
 
           <Footer />
           <FloatingButtons />
           <VideoModal showVideo={showVideo} setShowVideo={setShowVideo} />
-          <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} onLoginSuccess={handleLoginSuccess} />
+          <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} onLoginSuccess={handleLoginSuccess as (user: any) => void} />
           <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
           <JoinTeamModal isOpen={isJoinTeamModalOpen} onClose={() => setIsJoinTeamModalOpen(false)} />
           <DashboardModal isOpen={isDashboardModalOpen} onClose={() => setIsDashboardModalOpen(false)} userProfile={userProfile} onProfileUpdate={handleProfileUpdate} />

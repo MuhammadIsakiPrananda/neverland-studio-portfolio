@@ -5,11 +5,12 @@ import { pricing } from '../../data/pricing';
 import SpotlightCard from '../ui/SpotlightCard';
 
 interface PricingSectionProps {
+  isLoading: boolean;
   setSectionRef: (section: string) => (el: HTMLElement | null) => void;
   onGetStartedClick: () => void;
 }
 
-const PricingSection: React.FC<PricingSectionProps> = ({ setSectionRef, onGetStartedClick }) => {
+const PricingSection: React.FC<PricingSectionProps> = ({ isLoading, setSectionRef, onGetStartedClick }) => {
   const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
@@ -25,7 +26,18 @@ const PricingSection: React.FC<PricingSectionProps> = ({ setSectionRef, onGetSta
   };
 
   return (
-    <motion.section ref={setSectionRef('Pricing')} id="Pricing" className="py-20 px-4 sm:px-6 lg:px-8" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariants}>
+    <motion.section
+      ref={(el) => {
+        // This ref is managed by App.tsx for scroll navigation
+        setSectionRef('Pricing')(el);
+        // We don't need a separate ref for useInView here because the whole section animates at once.
+      }}
+      id="Pricing"
+      className="py-20 px-4 sm:px-6 lg:px-8"
+      initial="hidden"
+      whileInView={!isLoading ? "visible" : "hidden"}
+      viewport={{ once: true, amount: 0.2 }}
+      variants={sectionVariants}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">Pricing</span>

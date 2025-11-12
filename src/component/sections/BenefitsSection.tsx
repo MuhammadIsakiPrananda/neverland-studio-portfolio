@@ -1,10 +1,16 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence, type Variants } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useInView, type Variants } from 'framer-motion';
 import { benefits } from '../../data/benefits';
 
-const BenefitsSection = () => {
+interface BenefitsSectionProps {
+  isLoading: boolean;
+}
+
+const BenefitsSection: React.FC<BenefitsSectionProps> = ({ isLoading }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(0);
   const [isInteracting, setIsInteracting] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
 
   useEffect(() => {
     if (isInteracting) return;
@@ -31,10 +37,10 @@ const BenefitsSection = () => {
 
   return (
     <motion.section 
+      ref={sectionRef}
       className="py-20 px-4 sm:px-6 lg:px-8" 
       initial="hidden" 
-      whileInView="visible" 
-      viewport={{ once: true, amount: 0.2 }} 
+      animate={!isLoading && isInView ? "visible" : "hidden"}
       variants={sectionVariants}
     >
       <div className="max-w-7xl mx-auto">

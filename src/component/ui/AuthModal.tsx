@@ -5,10 +5,12 @@ import LoginForm from '../ui/LoginForm';
 import RegisterForm from '../ui/RegisterForm';
 import ForgotPasswordForm from '../ui/ForgotPasswordForm';
 
+type UserProfile = { name: string; username: string; email: string; avatar: string | null };
+
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLoginSuccess: (email: string) => void;
+  onLoginSuccess: (user: UserProfile) => void;
 }
 
 type AuthMode = 'login' | 'register' | 'forgotPassword';

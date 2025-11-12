@@ -1,14 +1,16 @@
 
-import { motion, type Variants } from "framer-motion";
+import { useRef } from 'react';
+import { motion, useInView, type Variants } from "framer-motion";
 import { Linkedin, Twitter, Mail } from 'lucide-react';
 import { team } from '../../data/team';
 
 interface TeamSectionProps {
+  isLoading: boolean;
   setSectionRef: (section: string) => (el: HTMLElement | null) => void;
   onJoinTeamClick: () => void;
 }
 
-const TeamSection: React.FC<TeamSectionProps> = ({ setSectionRef, onJoinTeamClick }) => {
+const TeamSection: React.FC<TeamSectionProps> = ({ isLoading, setSectionRef, onJoinTeamClick }) => {
   const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
@@ -28,8 +30,20 @@ const TeamSection: React.FC<TeamSectionProps> = ({ setSectionRef, onJoinTeamClic
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+
   return (
-    <motion.section ref={setSectionRef('Team')} id="Team" className="py-20 px-4 sm:px-6 lg:px-8" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariants}>
+    <motion.section
+      ref={(el) => {
+        setSectionRef('Team')(el);
+        if (el) sectionRef.current = el;
+      }}
+      id="Team"
+      className="py-20 px-4 sm:px-6 lg:px-8"
+      initial="hidden"
+      animate={!isLoading && isInView ? "visible" : "hidden"}
+      variants={sectionVariants}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">Our Team</span>

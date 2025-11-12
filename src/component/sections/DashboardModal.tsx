@@ -3,11 +3,13 @@ import { X, User, Mail, Save, Loader, Shield, KeyRound, Smartphone, QrCode } fro
 import { useState, useRef, useEffect, type ReactNode, type FormEvent } from 'react';
 import { useNotification } from '../ui/useNotification';
 
+type UserProfile = { name: string; username: string; email: string; avatar: string | null };
+
 interface DashboardModalProps {
   isOpen: boolean;
   onClose: () => void;
-  userProfile: { name: string; email: string; avatar: string | null };
-  onProfileUpdate: (profile: { name: string; email: string; avatar: string | null }) => void;
+  userProfile: UserProfile;
+  onProfileUpdate: (profile: UserProfile) => void;
 }
 
 type Tab = 'profile' | 'security';
@@ -15,6 +17,7 @@ type Tab = 'profile' | 'security';
 const DashboardModal: React.FC<DashboardModalProps> = ({ isOpen, onClose, userProfile, onProfileUpdate }) => {
   const [name, setName] = useState(userProfile.name);
   const [email, setEmail] = useState(userProfile.email);
+  const [username, setUsername] = useState(userProfile.username);
   const [avatar, setAvatar] = useState<string | null>(userProfile.avatar);
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -28,6 +31,7 @@ const DashboardModal: React.FC<DashboardModalProps> = ({ isOpen, onClose, userPr
   useEffect(() => {
     setName(userProfile.name);
     setEmail(userProfile.email);
+    setUsername(userProfile.username);
     setAvatar(userProfile.avatar);
   }, [userProfile, isOpen]);
 
@@ -46,7 +50,7 @@ const DashboardModal: React.FC<DashboardModalProps> = ({ isOpen, onClose, userPr
     e.preventDefault();
     setIsLoading(true);
     setTimeout(() => {
-      onProfileUpdate({ name, email, avatar });
+      onProfileUpdate({ name, email, username, avatar });
       setIsLoading(false);
       addNotification('Profile Updated', 'Your profile has been successfully updated.', 'success');
       onClose();
@@ -100,12 +104,12 @@ const DashboardModal: React.FC<DashboardModalProps> = ({ isOpen, onClose, userPr
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex justify-center items-center z-50 p-4"
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           variants={backdropVariants}
           initial="hidden"
           animate="visible"
           exit="hidden"
-          onClick={onClose}
+          onClick={onClose} // This should close the modal
         >
           <motion.div 
             className="bg-slate-900/80 border border-slate-700/50 rounded-2xl shadow-2xl shadow-cyan-900/20 w-full max-w-4xl h-[70vh] flex relative overflow-hidden"
@@ -113,7 +117,7 @@ const DashboardModal: React.FC<DashboardModalProps> = ({ isOpen, onClose, userPr
             onClick={(e) => e.stopPropagation()}
           >
             <button type="button" onClick={onClose} aria-label="Close modal" className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors z-20"><X className="w-6 h-6" /></button>
-            
+
             {/* Sidebar */}
             <div className="w-1/4 bg-slate-900/50 border-r border-slate-800 p-6 flex flex-col">
               <h2 className="text-xl font-bold text-white mb-8">Settings</h2>

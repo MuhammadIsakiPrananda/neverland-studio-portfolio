@@ -1,10 +1,17 @@
 
-import { motion, type Variants } from "framer-motion";
+import { useRef } from 'react';
+import { motion, useInView, type Variants } from "framer-motion";
 import { Rocket, Phone, MessageSquare, Mail, ArrowRight } from 'lucide-react';
 import { useChatbot } from "./ChatbotContext";
 
-const CTASection = () => {
+interface CTASectionProps {
+  isLoading: boolean;
+}
+
+const CTASection: React.FC<CTASectionProps> = ({ isLoading }) => {
   const { setIsChatOpen } = useChatbot();
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
 
   const handleChatClick = () => {
     setIsChatOpen(true);
@@ -16,7 +23,7 @@ const CTASection = () => {
   };
 
   return (
-    <motion.section className="py-20 px-4 sm:px-6 lg:px-8" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={sectionVariants}>
+    <motion.section ref={sectionRef} className="py-20 px-4 sm:px-6 lg:px-8" initial="hidden" animate={!isLoading && isInView ? "visible" : "hidden"} variants={sectionVariants}>
       <div className="max-w-7xl mx-auto bg-gradient-to-br from-slate-900/80 to-black/80 backdrop-blur-lg border border-slate-800/50 rounded-3xl p-8 sm:p-12 lg:p-16">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Column: Text Content */}

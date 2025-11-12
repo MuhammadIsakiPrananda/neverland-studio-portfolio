@@ -1,11 +1,13 @@
-import { motion, type Variants } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, useInView, type Variants, AnimatePresence } from 'framer-motion';
 import { Mail, Phone, MapPin, Twitter, Instagram, Linkedin, Github } from 'lucide-react';
 
 interface ContactSectionProps {
+  isLoading: boolean;
   setSectionRef: (section: string) => (el: HTMLElement | null) => void;
 }
 
-const ContactSection: React.FC<ContactSectionProps> = ({ setSectionRef, }) => {
+const ContactSection: React.FC<ContactSectionProps> = ({ isLoading, setSectionRef }) => {
   const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
@@ -25,8 +27,23 @@ const ContactSection: React.FC<ContactSectionProps> = ({ setSectionRef, }) => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+
+  const [selectedService, setSelectedService] = useState('');
+  const [otherService, setOtherService] = useState('');
+
   return (
-    <motion.section ref={setSectionRef('Contact')} id="Contact" className="py-20 px-4 sm:px-6 lg:px-8" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariants}>
+    <motion.section
+      ref={(el) => {
+        setSectionRef('Contact')(el);
+        sectionRef.current = el;
+      }}
+      id="Contact"
+      className="py-20 px-4 sm:px-6 lg:px-8"
+      initial="hidden"
+      animate={!isLoading && isInView ? "visible" : "hidden"}
+      variants={sectionVariants}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16"> 
           <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">Contact Us</span>
@@ -35,7 +52,8 @@ const ContactSection: React.FC<ContactSectionProps> = ({ setSectionRef, }) => {
             We're here to help. Reach out to us with any questions or to start your next project.
           </p>
         </div>
-        <motion.div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 md:gap-12 mb-16" variants={containerVariants}>
+        <div className="bg-slate-900/60 backdrop-blur-lg border border-slate-800/50 rounded-2xl p-8 md:p-12 mb-16">
+          <motion.div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 md:gap-12" variants={containerVariants}>
           {/* Column 1: Contact Info */}
           <motion.div className="space-y-8" variants={itemVariants}>
             {[
@@ -87,7 +105,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ setSectionRef, }) => {
           </motion.div>
 
           {/* Column 2: Contact Form */}
-          <motion.div className="bg-slate-900/60 backdrop-blur-lg border border-slate-800/50 rounded-2xl p-8" variants={itemVariants}>  
+          <motion.div variants={itemVariants}>
             <h3 className="text-2xl font-bold mb-6">Send us a Message</h3>
             <form className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
@@ -106,14 +124,32 @@ const ContactSection: React.FC<ContactSectionProps> = ({ setSectionRef, }) => {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Service</label>
-                <select className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-teal-500 focus:ring-teal-500/50 focus:outline-none transition-colors appearance-none" required>
+                <select 
+                  value={selectedService}
+                  onChange={(e) => setSelectedService(e.target.value)}
+                  className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-teal-500 focus:ring-teal-500/50 focus:outline-none transition-colors appearance-none" 
+                  required
+                >
                   <option value="">Select a service</option>
-                  <option>Web Development</option>
-                  <option>Mobile App Development</option>
-                  <option>UI/UX Design</option>
-                  <option>Other</option>
+                  <option value="Web Development">Web Development</option>
+                  <option value="Mobile App Development">Mobile App Development</option>
+                  <option value="UI/UX Design">UI/UX Design</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
+              <AnimatePresence>
+                {selectedService === 'Other' && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                    animate={{ opacity: 1, height: 'auto', marginTop: '1.5rem' }}
+                    exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  >
+                    <label className="block text-sm font-medium mb-2">Please specify the service</label>
+                    <input type="text" value={otherService} onChange={(e) => setOtherService(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-teal-500 focus:ring-teal-500/50 focus:outline-none transition-colors" placeholder="e.g., SEO Optimization" required />
+                  </motion.div>
+                )}
+              </AnimatePresence>
               <div>
                 <label className="block text-sm font-medium mb-2">Message</label>
                 <textarea rows={5} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-teal-500 focus:ring-teal-500/50 focus:outline-none transition-colors resize-none" placeholder="Your message..." required />
@@ -126,7 +162,8 @@ const ContactSection: React.FC<ContactSectionProps> = ({ setSectionRef, }) => {
               </button>
             </form>
           </motion.div>
-        </motion.div>
+          </motion.div>
+        </div>
 
         {/* Map Section */}
         <motion.div className="w-full h-[500px]" variants={itemVariants}>

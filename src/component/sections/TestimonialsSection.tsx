@@ -1,14 +1,18 @@
 
-import { motion, type Variants, AnimatePresence } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useInView, type Variants, AnimatePresence } from 'framer-motion';
 import { Star, Quote, MessageSquarePlus } from 'lucide-react';
 import { testimonials } from '../../data/testimonials';
 import SpotlightCard from '../ui/SpotlightCard';
 
 interface TestimonialsSectionProps {
+  isLoading: boolean;
   onAddReviewClick: () => void;
 }
 
-const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ onAddReviewClick }) => {
+const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ isLoading, onAddReviewClick }) => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
   const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
@@ -29,7 +33,12 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ onAddReviewCl
   }
 
   return (
-    <motion.section className="py-20 px-4 sm:px-6 lg:px-8" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariants}> 
+    <motion.section
+      ref={sectionRef}
+      className="py-20 px-4 sm:px-6 lg:px-8"
+      initial="hidden"
+      animate={!isLoading && isInView ? "visible" : "hidden"}
+      variants={sectionVariants}> 
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">Testimonials</span>

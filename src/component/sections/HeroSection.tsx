@@ -109,7 +109,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, setSectionRef, set
       </div>
 
       <div className="w-full max-w-7xl mx-auto mt-20 lg:mt-24 z-10">
-        <motion.div variants={itemVariants}>
+        <motion.div 
+          variants={itemVariants} 
+          initial="hidden" 
+          whileInView="visible" 
+          viewport={{ once: true, amount: 0.5 }}
+          className="w-full"
+        >
           <p className="text-center text-slate-500 font-semibold tracking-widest text-sm uppercase mb-8"> 
             Trusted by innovative companies worldwide
           </p>

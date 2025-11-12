@@ -1,13 +1,16 @@
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence, type Variants } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useInView, type Variants } from 'framer-motion';
 import { ArrowRight, X, ExternalLink } from 'lucide-react';
 import { portfolio } from '../../data/portfolio';
 import { categories } from '../../data/categories';
 
-type Project = typeof portfolio[0];
+type Project = typeof portfolio[0] & {
+  videoUrl?: string;
+};
 
 interface PortfolioSectionProps {
+  isLoading: boolean;
   setSectionRef: (section: string) => (el: HTMLElement | null) => void;
   activeFilter: string;
   setActiveFilter: (filter: string) => void;
@@ -15,6 +18,7 @@ interface PortfolioSectionProps {
 }
 
 const PortfolioSection: React.FC<PortfolioSectionProps> = ({ 
+  isLoading,
   setSectionRef, 
   activeFilter, 
   setActiveFilter,
@@ -22,6 +26,8 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
 }) => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [visibleCount, setVisibleCount] = useState(6);
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   useEffect(() => {
     if (selectedProject) {
@@ -59,7 +65,16 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
     : portfolio.filter(item => item.category === activeFilter);
 
   return (
-    <motion.section ref={setSectionRef('Portfolio')} id="Portfolio" className="py-20 px-4 sm:px-6 lg:px-8" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={sectionVariants}>
+    <motion.section
+      ref={(el) => {
+        setSectionRef('Portfolio')(el);
+        sectionRef.current = el;
+      }}
+      id="Portfolio"
+      className="py-20 px-4 sm:px-6 lg:px-8"
+      initial="hidden"
+      animate={!isLoading && isInView ? "visible" : "hidden"}
+      variants={sectionVariants}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16" >
           <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">Our Work</span>
@@ -94,7 +109,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
               initial="hidden"
               animate="visible"
               exit="exit"
-              onClick={() => setShowVideo(true)}
+              onClick={() => (project as Project).videoUrl && setShowVideo(true)}
               className="group relative bg-slate-900/50 rounded-2xl overflow-hidden border border-slate-800/50 hover:border-teal-500/50 transition-all cursor-pointer"
             >
               <div className="aspect-video overflow-hidden">
@@ -118,7 +133,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                 </div>
                 <button 
                   onClick={(e) => {
-                    e.stopPropagation(); // Mencegah modal video terbuka
+                    e.stopPropagation(); // Prevent video modal from opening
                     setSelectedProject(project);
                   }}
                   className="text-teal-400 font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all z-20 relative"

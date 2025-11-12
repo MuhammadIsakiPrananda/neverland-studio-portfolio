@@ -3,10 +3,11 @@ import { motion, type Variants } from "framer-motion";
 import { process } from '../../data/process';
 
 interface ProcessSectionProps {
+  isLoading: boolean;
   setSectionRef: (section: string) => (el: HTMLElement | null) => void;
 }
 
-const ProcessSection: React.FC<ProcessSectionProps> = ({ setSectionRef }) => {
+const ProcessSection: React.FC<ProcessSectionProps> = ({ isLoading, setSectionRef }) => {
   const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
@@ -27,7 +28,18 @@ const ProcessSection: React.FC<ProcessSectionProps> = ({ setSectionRef }) => {
   };
 
   return (
-    <motion.section ref={setSectionRef('Process')} id="Process" className="py-20 px-4 sm:px-6 lg:px-8" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={sectionVariants}>
+    <motion.section
+      ref={(el) => {
+        // This ref is managed by App.tsx for scroll navigation
+        setSectionRef('Process')(el);
+        // We don't need a separate ref for useInView here because the whole section animates at once.
+        // If inner elements had staggered animations, we'd use a separate ref.
+      }}
+      id="Process"
+      className="py-20 px-4 sm:px-6 lg:px-8"
+      initial="hidden"
+      whileInView={!isLoading ? "visible" : "hidden"}
+      viewport={{ once: true, amount: 0.3 }} variants={sectionVariants}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">Our Process</span>

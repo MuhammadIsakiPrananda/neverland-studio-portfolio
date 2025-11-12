@@ -68,7 +68,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSwitchMode })
           <motion.button
             variants={itemVariants}
             type="button"
-            onClick={() => onSwitchMode('login')} 
+            onClick={() => onSwitchMode('login')}
             className="font-semibold text-cyan-400 hover:underline"
           >
             Back to Sign In
@@ -93,7 +93,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSwitchMode })
             <motion.div variants={itemVariants} className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
               <input
-                type="email"
+                type="email" 
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -106,7 +106,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSwitchMode })
               variants={itemVariants}
               type="submit"
               disabled={isLoading || !email}
-              className="w-full bg-gradient-to-r from-sky-500 to-violet-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:shadow-xl hover:shadow-violet-500/30 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:transform-none"
+              className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:transform-none"
             >
               {isLoading ? (
                 <Loader className="w-5 h-5 animate-spin" />
@@ -117,7 +117,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSwitchMode })
             </motion.button>
             <motion.p variants={itemVariants} className="text-center text-sm text-slate-400">
               Remember your password?{' '}
-              <button type="button" onClick={() => onSwitchMode('login')} className="font-semibold text-sky-400 hover:underline disabled:opacity-70" disabled={isLoading}>
+              <button type="button" onClick={() => onSwitchMode('login')} className="font-semibold text-cyan-400 hover:underline disabled:opacity-70" disabled={isLoading}>
                 Sign In
               </button>
             </motion.p>

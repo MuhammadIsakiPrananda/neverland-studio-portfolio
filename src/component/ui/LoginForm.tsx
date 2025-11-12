@@ -1,29 +1,27 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Lock, LogIn, Loader, Eye, EyeOff, ShieldX } from 'lucide-react';
+import { User, Lock, LogIn, Loader, Eye, EyeOff, ShieldX } from 'lucide-react';
 import { useNotification } from './useNotification';
 
 interface LoginFormProps {
   onSwitchMode: (mode: 'register' | 'forgotPassword') => void;
-  onLoginSuccess: (email: string) => void;
+  onLoginSuccess: (user: { name: string; username: string; email: string; avatar: string | null }) => void;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) => {
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ identifier?: string; password?: string }>({});
   const { addNotification } = useNotification();
 
   const validate = () => {
-    const newErrors: { email?: string; password?: string } = {};
-    if (!email) {
-      newErrors.email = 'Email is required.';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Email is invalid.';
-    }
+    const newErrors: { identifier?: string; password?: string } = {};
+    if (!identifier) {
+      newErrors.identifier = 'Email or Username is required.';
+    } 
     if (!password) {
       newErrors.password = 'Password is required.';
     }
@@ -44,18 +42,28 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
-      const validUsers: Record<string, string> = {
-        'test@example.com': 'password',
-        'user@example.com': 'password123'
-      };
-      if (validUsers[email] === password) {
+      const validUsers = [
+        { name: 'Test User', username: 'testuser', email: 'test@example.com', password: 'password', avatar: null },
+        { name: 'Jane Doe', username: 'janedoe', email: 'user@example.com', password: 'password123', avatar: 'https://i.pravatar.cc/150?u=user@example.com' }
+      ];
+
+      const user = validUsers.find(
+        u => (u.email === identifier || u.username === identifier) && u.password === password
+      );
+
+      if (user) {
         setErrors({});
-        addNotification('Login Successful', 'Welcome back!', 'success');
-        onLoginSuccess(email);
+        addNotification('Login Successful', `Welcome back, ${user.name}!`, 'success');
+        onLoginSuccess({
+          name: user.name,
+          username: user.username,
+          email: user.email,
+          avatar: user.avatar
+        });
       } else {
-        setApiError('Invalid email or password.');
+        setApiError('Invalid credentials.');
         addNotification('Login Failed', 'Please check your credentials and try again.', 'error');
-      }
+      };
     }, 1500);
   };
 
@@ -95,24 +103,24 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
           </motion.div>
         )}
         <motion.div variants={itemVariants} className="relative">
-          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
           <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
+            type="text"
+            placeholder="Enter your email or username"
+            value={identifier}
             onChange={(e) => {
-              setEmail(e.target.value);
-              if (errors.email) {
-                setErrors(prev => ({ ...prev, email: undefined }));
+              setIdentifier(e.target.value);
+              if (errors.identifier) {
+                setErrors(prev => ({ ...prev, identifier: undefined }));
               }
             }}
             onBlur={validate}
-            className={`w-full bg-slate-800/50 border rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors disabled:opacity-50 ${errors.email ? 'border-red-500/50' : 'border-slate-700'}`}
+            className={`w-full bg-slate-800/50 border rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors disabled:opacity-50 ${errors.identifier ? 'border-red-500/50' : 'border-slate-700'}`}
             required
             disabled={isLoading}
           />
         </motion.div>
-        {errors.email && <p className="text-xs text-red-400 -mt-4 ml-2">{errors.email}</p>}
+        {errors.identifier && <p className="text-xs text-red-400 -mt-4 ml-2">{errors.identifier}</p>}
 
         <motion.div variants={itemVariants} className="relative">
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -155,7 +163,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
         <motion.button
           variants={itemVariants}
           type="submit"
-          disabled={isLoading || !email || !password || Object.keys(errors).length > 0}
+          disabled={isLoading || !identifier || !password || Object.keys(errors).length > 0}
           className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:transform-none" 
         >
           {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <LogIn className="w-5 h-5" />}
