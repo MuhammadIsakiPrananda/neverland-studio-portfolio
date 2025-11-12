@@ -44,7 +44,7 @@
 
 ## 🌟 Tentang Proyek
 
-![https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/blob/main/public/images/Screenshot%202025-11-12%20105513.png]
+![Screenshot Proyek](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/blob/main/public/images/Screenshot%202025-11-12%20105513.png?raw=true)
 
 **Neverland Studio** adalah sebuah portofolio web yang dirancang untuk menampilkan proyek, layanan, dan keahlian sebuah studio digital atau agensi kreatif. Proyek ini bukan sekadar halaman statis, melainkan sebuah aplikasi web interaktif (SPA) yang kaya fitur, dibangun dengan fokus pada estetika modern, performa, dan pengalaman pengguna yang imersif.
 
