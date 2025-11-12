@@ -78,16 +78,15 @@ Proyek ini dilengkapi dengan berbagai fitur canggih untuk menciptakan pengalaman
 
 Tumpukan teknologi yang digunakan dalam proyek ini dipilih untuk performa, skalabilitas, dan pengalaman pengembangan terbaik.
 
-<p align="center">
-  <a href="https://react.dev" target="_blank"><img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white" alt="React"></a>
-  <a href="https://www.typescriptlang.org/" target="_blank"><img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"></a>
-  <a href="https://vitejs.dev" target="_blank"><img src="https://img.shields.io/badge/Vite-5.x-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite"></a>
-  <a href="https://tailwindcss.com" target="_blank"><img src="https://img.shields.io/badge/Tailwind_CSS-3.x-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS"></a>
-  <a href="https://www.framer.com/motion/" target="_blank"><img src="https://img.shields.io/badge/Framer_Motion-11.x-0055FF?style=for-the-badge&logo=framer&logoColor=white" alt="Framer Motion"></a>
-  <a href="https://lucide.dev/" target="_blank"><img src="https://img.shields.io/badge/Lucide-Icons-14B8A6?style=for-the-badge&logo=lucide&logoColor=white" alt="Lucide React"></a>
-  <a href="https://www.docker.com/" target="_blank"><img src="https://img.shields.io/badge/Docker-24.x-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"></a>
-  <a href="https://www.nginx.com/" target="_blank"><img src="https://img.shields.io/badge/Nginx-1.x-009639?style=for-the-badge&logo=nginx&logoColor=white" alt="Nginx"></a>
-</p>
+| Kategori | Teknologi |
+| :--- | :--- |
+| **Framework Utama** | React, TypeScript |
+| **Build Tool** | Vite |
+| **Styling** | Tailwind CSS |
+| **Animasi** | Framer Motion |
+| **Ikon** | Lucide React |
+| **Formulir & Validasi** | React Hook Form (disarankan), Google reCAPTCHA |
+| **Deployment** | Docker, Nginx |
 
 ---
 
