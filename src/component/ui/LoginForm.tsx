@@ -5,10 +5,10 @@ import { useNotification } from './useNotification';
 
 interface LoginFormProps {
   onSwitchMode: (mode: 'register' | 'forgotPassword') => void;
-  onClose: () => void;
+  onLoginSuccess: (email: string) => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onClose }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -44,10 +44,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onClose }) => {
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
-      if (email === 'test@example.com' && password === 'password') {
+      const validUsers: Record<string, string> = {
+        'test@example.com': 'password',
+        'user@example.com': 'password123'
+      };
+      if (validUsers[email] === password) {
         setErrors({});
         addNotification('Login Successful', 'Welcome back!', 'success');
-        onClose();
+        onLoginSuccess(email);
       } else {
         setApiError('Invalid email or password.');
         addNotification('Login Failed', 'Please check your credentials and try again.', 'error');
@@ -96,7 +100,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onClose }) => {
             type="email"
             placeholder="Enter your email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (errors.email) {
+                setErrors(prev => ({ ...prev, email: undefined }));
+              }
+            }}
             onBlur={validate}
             className={`w-full bg-slate-800/50 border rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors disabled:opacity-50 ${errors.email ? 'border-red-500/50' : 'border-slate-700'}`}
             required
@@ -111,7 +120,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onClose }) => {
             type={showPassword ? 'text' : 'password'}
             placeholder="Enter your password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              if (errors.password) {
+                setErrors(prev => ({ ...prev, password: undefined }));
+              }
+            }}
             onBlur={validate}
             className={`w-full bg-slate-800/50 border rounded-lg pl-10 pr-12 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors disabled:opacity-50 ${errors.password ? 'border-red-500/50' : 'border-slate-700'}`}
             required

@@ -116,7 +116,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
 
         <motion.div variants={itemVariants} className="relative">
           <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <input type="text" placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} onBlur={validate}
+          <input type="text" placeholder="Full Name" value={fullName} onChange={(e) => {
+            setFullName(e.target.value);
+            if (errors.fullName) { 
+              setErrors(prev => { const { fullName, ...rest } = prev; return rest; });
+            }
+          }} onBlur={validate}
             className={`w-full bg-slate-800/50 border rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors disabled:opacity-50 ${errors.fullName ? 'border-red-500/50' : 'border-slate-700'}`}
             disabled={isLoading} required />
         </motion.div>
@@ -124,7 +129,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
 
         <motion.div variants={itemVariants} className="relative">
           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <input type="email" placeholder="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} onBlur={validate}
+          <input type="email" placeholder="Email Address" value={email} onChange={(e) => {
+            setEmail(e.target.value);
+            if (errors.email) { 
+              setErrors(prev => { const { email, ...rest } = prev; return rest; });
+            }
+          }} onBlur={validate}
             className={`w-full bg-slate-800/50 border rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors disabled:opacity-50 ${errors.email ? 'border-red-500/50' : 'border-slate-700'}`}
             disabled={isLoading} required />
         </motion.div>
@@ -132,7 +142,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
 
         <motion.div variants={itemVariants} className="relative">
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <input type={showPassword ? 'text' : 'password'} placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} onBlur={validate}
+          <input type={showPassword ? 'text' : 'password'} placeholder="Password" value={password} onChange={(e) => {
+            setPassword(e.target.value);
+            if (errors.password) { 
+              setErrors(prev => { const { password, ...rest } = prev; return rest; });
+            }
+          }} onBlur={validate}
             className={`w-full bg-slate-800/50 border rounded-lg pl-10 pr-12 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors disabled:opacity-50 ${errors.password ? 'border-red-500/50' : 'border-slate-700'}`}
             disabled={isLoading} required />
           <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors" aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}>
@@ -161,7 +176,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
 
         <motion.div variants={itemVariants} className="relative">
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <input type={showConfirmPassword ? 'text' : 'password'} placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} onBlur={validate}
+          <input type={showConfirmPassword ? 'text' : 'password'} placeholder="Confirm Password" value={confirmPassword} onChange={(e) => {
+            setConfirmPassword(e.target.value);
+            if (errors.confirmPassword) { 
+              setErrors(prev => { const { confirmPassword, ...rest } = prev; return rest; });
+            }
+          }} onBlur={validate}
             className={`w-full bg-slate-800/50 border rounded-lg pl-10 pr-12 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors disabled:opacity-50 ${errors.confirmPassword ? 'border-red-500/50' : 'border-slate-700'}`}
             disabled={isLoading} required />
           <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors" aria-label={showConfirmPassword ? 'Sembunyikan password' : 'Tampilkan password'}>

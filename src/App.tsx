@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import DesktopNav from './component/layout/DesktopNav';
+import DesktopNav from './DesktopNav';
 import MobileNav from './component/layout/MobileNav';
 import HeroSection from './component/sections/HeroSection';
 import BenefitsSection from './component/sections/BenefitsSection';
@@ -18,12 +18,15 @@ import Footer from './component/common/Footer';
 import FloatingButtons from './component/common/FloatingButtons';
 import VideoModal from './component/common/VideoModal';
 import AuthModal from './component/ui/AuthModal';
-import NotificationProvider from './component/ui/NotificationProvider';
+import NotificationProvider from './component/ui/NotificationProvider'; 
+import DashboardModal from './component/sections/DashboardModal';
 import LoadingScreen from './component/ui/LoadingScreen';
 import { ChatbotProvider } from './component/sections/ChatbotContext'; 
 import ReviewModal from './component/ui/ReviewModal';
 import AuroraBackground from './component/ui/AuroraBackground';
 import JoinTeamModal from './component/ui/JoinTeamModal';
+
+type UserProfile = { name: string; email: string; avatar: string | null };
 
 const NeverlandStudio = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -34,7 +37,14 @@ const NeverlandStudio = () => {
   const [showVideo, setShowVideo] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
   const [isJoinTeamModalOpen, setIsJoinTeamModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile>({
+    name: 'Guest User',
+    email: 'guest@example.com',
+    avatar: null,
+  });
 
   useEffect(() => {
     // Simulasi waktu loading
@@ -49,7 +59,7 @@ const NeverlandStudio = () => {
   }, []);
 
   useEffect(() => {
-    if (isAuthModalOpen || isMenuOpen || isLoading || isReviewModalOpen || isJoinTeamModalOpen) {
+    if (isAuthModalOpen || isMenuOpen || isLoading || isReviewModalOpen || isJoinTeamModalOpen || isDashboardModalOpen) {
       document.body.classList.add('overflow-hidden');
     } else {
       document.body.classList.remove('overflow-hidden');
@@ -58,7 +68,22 @@ const NeverlandStudio = () => {
     return () => {
       document.body.classList.remove('overflow-hidden');
     };
-  }, [isAuthModalOpen, isMenuOpen, isLoading, isReviewModalOpen, isJoinTeamModalOpen]);
+  }, [isAuthModalOpen, isMenuOpen, isLoading, isReviewModalOpen, isJoinTeamModalOpen, isDashboardModalOpen]);
+
+  const handleLoginSuccess = (email: string) => {
+    setIsLoggedIn(true);
+    setUserProfile({ name: 'New User', email: email, avatar: null });
+    setIsAuthModalOpen(false);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUserProfile({ name: 'Guest User', email: 'guest@example.com', avatar: null });
+  };
+
+  const handleProfileUpdate = (newProfile: UserProfile) => {
+    setUserProfile(newProfile);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -133,15 +158,24 @@ const NeverlandStudio = () => {
           <DesktopNav 
             isScrolled={isScrolled} 
             activeSection={activeSection} 
-            handleNavClick={handleNavClick} 
-            onLoginClick={() => setIsAuthModalOpen(true)} 
+            handleNavClick={handleNavClick}
+            isLoggedIn={isLoggedIn}
+            userProfile={userProfile}
+            onLoginClick={() => setIsAuthModalOpen(true)}
+            onLogout={handleLogout}
+            onDashboardClick={() => setIsDashboardModalOpen(true)}
           />
           <MobileNav 
             isMenuOpen={isMenuOpen} 
             setIsMenuOpen={setIsMenuOpen} 
             activeSection={activeSection} 
-            handleNavClick={handleNavClick} 
-            onLoginClick={() => setIsAuthModalOpen(true)} />
+            handleNavClick={handleNavClick}
+            isLoggedIn={isLoggedIn}
+            onLoginClick={() => setIsAuthModalOpen(true)}
+            onLogout={handleLogout} 
+            userProfile={userProfile}
+            onDashboardClick={() => setIsDashboardModalOpen(true)}
+          />
           
           <main>
             <HeroSection isLoading={isLoading} setSectionRef={setSectionRef} setShowVideo={setShowVideo} onGetStartedClick={() => handleNavClick('Contact')} />
@@ -160,9 +194,10 @@ const NeverlandStudio = () => {
           <Footer />
           <FloatingButtons />
           <VideoModal showVideo={showVideo} setShowVideo={setShowVideo} />
-          <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+          <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} onLoginSuccess={handleLoginSuccess} />
           <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
           <JoinTeamModal isOpen={isJoinTeamModalOpen} onClose={() => setIsJoinTeamModalOpen(false)} />
+          <DashboardModal isOpen={isDashboardModalOpen} onClose={() => setIsDashboardModalOpen(false)} userProfile={userProfile} onProfileUpdate={handleProfileUpdate} />
 
           {/* Custom Animations */}
           <style>{`

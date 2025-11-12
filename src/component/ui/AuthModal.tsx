@@ -8,11 +8,12 @@ import ForgotPasswordForm from '../ui/ForgotPasswordForm';
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onLoginSuccess: (email: string) => void;
 }
 
 type AuthMode = 'login' | 'register' | 'forgotPassword';
 
-const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
+const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }) => {
   const [mode, setMode] = useState<AuthMode>('login');
 
   const handleClose = () => {
@@ -72,7 +73,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               <X className="w-6 h-6" />
             </button>
             <AnimatePresence mode="wait">
-              {mode === 'login' && <LoginForm key="login" onSwitchMode={setMode} onClose={handleClose} />}
+              {mode === 'login' && <LoginForm key="login" onSwitchMode={setMode} onLoginSuccess={onLoginSuccess} />}
               {mode === 'register' && <RegisterForm key="register" onSwitchMode={setMode} />}
               {mode === 'forgotPassword' && <ForgotPasswordForm key="forgot" onSwitchMode={setMode} />}
             </AnimatePresence>
