@@ -1,18 +1,16 @@
 <div align="center">
-  <h1 align="center">✨ Neverland Studio Portfolio ✨</h1>
+  <img src="https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/blob/main/public/images/Neverland%20Studio.webp?raw=true" alt="Logo" width="120" height="120">
+  <h1 align="center">Neverland Studio</h1>
   <p align="center">
-    Showcase interaktif dan modern dari karya-karya kreatif dan proyek-proyek inovatif.
-  </p>
-
-  <!-- Badges -->
-  <p align="center">
-    <!-- Ganti 'MuhammadIsakiPrananda' dengan nama pengguna GitHub Anda jika berbeda -->
-    <a href="https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/actions"><img src="https://img.shields.io/github/actions/workflow/status/MuhammadIsakiPrananda/neverland-studio-portfolio/main.yml?branch=main&style=for-the-badge" alt="Build Status"></a>
-    <a href="LICENSE"><img src="https://img.shields.io/github/license/MuhammadIsakiPrananda/neverland-studio-portfolio?style=for-the-badge" alt="License"></a>
-    <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react" alt="React">
-    <img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript" alt="TypeScript">
-    <img src="https://img.shields.io/badge/Vite-blue?style=for-the-badge&logo=vite" alt="Vite">
-    <img src="https://img.shields.io/badge/Docker-blue?style=for-the-badge&logo=docker" alt="Docker">
+    Sebuah showcase portofolio interaktif dan modern yang dibangun dengan teknologi web terkini. <br />
+    Menampilkan desain yang elegan, animasi yang halus, dan pengalaman pengguna yang dinamis.
+    <br />
+    <a href="https://neverlandstudio.my.id"><strong>Lihat Demo Langsung »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/issues">Laporkan Bug</a>
+    ·
+    <a href="https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/issues">Minta Fitur</a>
   </p>
 </div>
 
@@ -20,94 +18,118 @@
 
 ## 📜 Daftar Isi
 
-- 🌐 Demo Langsung
-- 🚀 Fitur Utama
-- 🛠️ Tumpukan Teknologi
-- ⚙️ Memulai Proyek
-  - Prasyarat
-  - Instalasi
-  - Menjalankan di Mode Development
-  - Membuat Build Produksi
-- 🐳 Deployment dengan Docker
-- 📂 Struktur Proyek
-- 🤝 Berkontribusi
-- 📄 Lisensi
-- ✉️ Kontak
+<details>
+  <summary>Klik untuk membuka</summary>
+  <ol>
+    <li><a href="#-tentang-proyek">Tentang Proyek</a></li>
+    <li><a href="#-fitur-utama">Fitur Utama</a></li>
+    <li><a href="#-dibangun-dengan">Dibangun Dengan</a></li>
+    <li><a href="#-memulai-proyek">Memulai Proyek</a>
+      <ul>
+        <li><a href="#prasyarat">Prasyarat</a></li>
+        <li><a href="#instalasi">Instalasi</a></li>
+        <li><a href="#menjalankan-di-mode-development">Menjalankan di Mode Development</a></li>
+        <li><a href="#membuat-build-produksi">Membuat Build Produksi</a></li>
+      </ul>
+    </li>
+    <li><a href="#-deployment-dengan-docker">Deployment dengan Docker</a></li>
+    <li><a href="#-struktur-proyek">Struktur Proyek</a></li>
+    <li><a href="#-berkontribusi">Berkontribusi</a></li>
+    <li><a href="#-lisensi">Lisensi</a></li>
+    <li><a href="#-kontak">Kontak</a></li>
+  </ol>
+</details>
 
 ---
 
-## 🌐 Demo Langsung
+## 🌟 Tentang Proyek
 
-Anda dapat melihat versi live dari portofolio ini di sini:
+![https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/blob/main/public/images/Screenshot%202025-11-12%20105513.png]
 
-**➡️ neverlandstudio.my.id**
+**Neverland Studio** adalah sebuah portofolio web yang dirancang untuk menampilkan proyek, layanan, dan keahlian sebuah studio digital atau agensi kreatif. Proyek ini bukan sekadar halaman statis, melainkan sebuah aplikasi web interaktif (SPA) yang kaya fitur, dibangun dengan fokus pada estetika modern, performa, dan pengalaman pengguna yang imersif.
 
-<!-- Ganti URL di bawah dengan screenshot aplikasi Anda -->
-!Screenshot Aplikasi
+Tujuan utama proyek ini adalah:
+*   **Menarik Klien Potensial**: Dengan showcase visual yang kuat dan informasi yang jelas.
+*   **Mendemonstrasikan Keahlian Teknis**: Menggunakan tumpukan teknologi modern seperti React, TypeScript, dan Framer Motion.
+*   **Memberikan Pengalaman Pengguna yang Luar Biasa**: Melalui desain responsif, animasi yang halus, dan interaksi yang intuitif.
 
 ---
 
 ## 🚀 Fitur Utama
 
--   🎨 **Desain Modern & Responsif**: Dibangun dengan Tailwind CSS, memastikan tampilan yang sempurna di semua ukuran layar, dari ponsel hingga desktop 4K.
--   ✨ **Animasi Halus**: Pengalaman pengguna yang dinamis dan menarik dengan `framer-motion` untuk transisi halaman dan interaksi komponen.
--   🛡️ **Formulir Aman & Interaktif**: Contoh implementasi formulir Login dan Lupa Password dengan validasi sisi klien dan animasi yang informatif.
--   🌍 **Internasionalisasi (i18n)**: Dukungan multi-bahasa yang mudah diperluas menggunakan `react-i18next`.
--   ⚡ **Performa Cepat**: Dibangun dengan Vite untuk *hot module replacement* (HMR) yang super cepat di development dan bundle yang teroptimasi untuk produksi.
--   🐳 **Siap Docker**: Dilengkapi dengan `Dockerfile` multi-stage untuk build yang efisien dan deployment yang konsisten menggunakan Nginx.
+Proyek ini dilengkapi dengan berbagai fitur canggih untuk menciptakan pengalaman portofolio yang lengkap.
+
+| Fitur | Deskripsi |
+| :--- | :--- |
+| 🎨 **Desain Modern & Responsif** | Dibangun dengan **Tailwind CSS**, memastikan tampilan sempurna di semua perangkat, dari ponsel hingga desktop 4K. |
+| ✨ **Animasi Halus & Interaktif** | Pengalaman pengguna yang dinamis dengan **Framer Motion** untuk transisi halaman dan interaksi komponen yang memukau. |
+| 🔐 **Sistem Autentikasi** | Alur lengkap untuk **Login**, **Registrasi**, dan **Lupa Password** dengan validasi sisi klien dan keamanan reCAPTCHA. |
+| 👤 **Dashboard Pengguna** | Modal dashboard pribadi tempat pengguna dapat memperbarui profil mereka, termasuk nama, email, dan avatar. |
+| 🤖 **AI Chatbot Assistant** | Asisten AI interaktif untuk menjawab pertanyaan pengunjung secara real-time, meningkatkan engagement. |
+| 🔔 **Sistem Notifikasi** | Notifikasi toast yang elegan untuk memberikan umpan balik kepada pengguna setelah melakukan aksi (misalnya, login berhasil). |
+| 🎬 **Modal Interaktif** | Berbagai modal (Auth, Video, Dashboard, Review) dengan animasi `AnimatePresence` untuk pengalaman yang mulus. |
+| 🏗️ **Arsitektur Berbasis Komponen** | Kode yang terorganisir dengan baik, memisahkan antara UI, layout, section, dan data untuk kemudahan pemeliharaan. |
+| ⚡ **Performa Cepat** | Dibangun dengan **Vite** untuk *Hot Module Replacement* (HMR) super cepat dan *build* produksi yang teroptimasi. |
+| 🐳 **Siap Docker** | Dilengkapi dengan `Dockerfile` *multi-stage* untuk *build* yang efisien dan *deployment* yang konsisten menggunakan Nginx. |
 
 ---
 
-## 🛠️ Tumpukan Teknologi
+## 🛠️ Dibangun Dengan
 
-| Kategori      | Teknologi                                                                                                                                                                                          |
-| :------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Frontend**  | React 19, TypeScript, Vite, Tailwind CSS                                                  |
-| **Animasi**   | Framer Motion                                                                                                                                                    |
-| **Ikon**      | Lucide React                                                                                                                                                                |
-| **i18n**      | react-i18next                                                                                                                                                        |
-| **Deployment**| Docker, Nginx                                                                                                                                  |
+Tumpukan teknologi yang digunakan dalam proyek ini dipilih untuk performa, skalabilitas, dan pengalaman pengembangan terbaik.
+
+| Kategori | Teknologi |
+| :--- | :--- |
+| **Framework Utama** | !React !TypeScript |
+| **Build Tool** | !Vite |
+| **Styling** | !Tailwind CSS |
+| **Animasi** | !Framer Motion |
+| **Ikon** | !Lucide React |
+| **Formulir & Validasi** | React Hook Form (disarankan), Google reCAPTCHA |
+| **Deployment** | !Docker !Nginx |
 
 ---
 
 ## ⚙️ Memulai Proyek
 
-Ikuti langkah-langkah ini untuk menjalankan salinan proyek di mesin lokal Anda untuk tujuan pengembangan dan pengujian.
+Ikuti langkah-langkah ini untuk menjalankan salinan proyek di mesin lokal Anda.
 
 ### Prasyarat
 
-Pastikan perangkat Anda telah terinstal perangkat lunak berikut:
--   Node.js (v20.x atau lebih baru)
--   npm (v10.x atau lebih baru) atau Yarn
--   Docker (Wajib untuk deployment Docker)
+Pastikan perangkat Anda telah terinstal:
+*   Node.js (v20.x atau lebih baru)
+*   npm (v10.x atau lebih baru) atau Yarn
+*   Docker (Opsional, untuk deployment)
 
 ### Instalasi
 
-1.  **Clone repositori ini:**
+1.  **Clone repositori:**
     ```bash
     git clone https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio.git
     cd neverland-studio-portfolio
     ```
 
-2.  **Instal dependensi proyek:**
-    Proyek ini menggunakan `npm` secara default (berdasarkan adanya `package-lock.json`).
+2.  **Instal dependensi:**
     ```bash
     npm install
     ```
-    *Atau jika Anda lebih suka menggunakan Yarn:*
-    ```bash
-    # yarn install
+
+3.  **Konfigurasi Environment Variables:**
+    Buat file `.env` di root proyek dan tambahkan kunci API yang diperlukan. Anda bisa menyalin dari `.env.example` jika ada.
+    ```env
+    VITE_RECAPTCHA_SITE_KEY="6Lc5EAgsAAAAAMBLswyP5OAl7Tzo8BYXLHWGKLZt"
     ```
+    > **Catatan**: Kunci di atas adalah contoh. Sebaiknya gunakan kunci Anda sendiri dari Google reCAPTCHA Admin Console.
 
 ### Menjalankan di Mode Development
 
-Untuk memulai server development dengan Hot-Module-Replacement (HMR):
+Untuk memulai server development dengan HMR:
 
 ```bash
 npm run dev
 ```
 
-Buka browser Anda dan kunjungi **http://localhost:5173**.
+Buka browser dan kunjungi `http://localhost:5173`.
 
 ### Membuat Build Produksi
 
@@ -117,7 +139,7 @@ Untuk membuat bundle aplikasi yang siap untuk produksi:
 npm run build
 ```
 
-File yang dioptimalkan akan dibuat di dalam direktori `dist/`.
+File yang teroptimasi akan dibuat di dalam direktori `dist/`.
 
 ---
 
@@ -125,8 +147,8 @@ File yang dioptimalkan akan dibuat di dalam direktori `dist/`.
 
 Proyek ini dikonfigurasi untuk deployment yang mudah menggunakan Docker. `Dockerfile` kami menggunakan *multi-stage build* untuk menciptakan image yang ringan dan aman.
 
-1.  **Stage 1 (Builder)**: Menginstal dependensi Node.js dan membangun aset statis React.
-2.  **Stage 2 (Production)**: Menggunakan image Nginx yang ringan untuk menyajikan aset yang telah dibangun dari stage sebelumnya.
+1.  **Stage 1 (Builder)**: Menggunakan image Node.js untuk menginstal dependensi dan membangun aset statis React.
+2.  **Stage 2 (Production)**: Menggunakan image Nginx yang ringan untuk menyajikan aset yang telah dibangun dari stage sebelumnya, dengan konfigurasi yang optimal.
 
 ### Langkah-langkah Deployment
 
@@ -139,37 +161,37 @@ Proyek ini dikonfigurasi untuk deployment yang mudah menggunakan Docker. `Docker
 2.  **Jalankan Docker Container:**
     Setelah image berhasil dibuat, jalankan sebagai container:
     ```bash
-    docker run --rm -d -p 80:80 neverland-studio
+    docker run --rm -d -p 8080:80 neverland-studio
     ```
-    -   `--rm`: Hapus container secara otomatis saat dihentikan.
-    -   `-d`: Jalankan dalam mode *detached* (di latar belakang).
-    -   `-p 80:80`: Petakan port 80 dari host ke port 80 di container.
+    *   `--rm`: Hapus container secara otomatis saat dihentikan.
+    *   `-d`: Jalankan dalam mode *detached* (di latar belakang).
+    *   `-p 8080:80`: Petakan port `8080` dari host ke port `80` di container.
 
-Aplikasi Anda sekarang dapat diakses di **http://localhost**.
+Aplikasi Anda sekarang dapat diakses di `http://localhost:8080`.
 
 ---
 
 ## 📂 Struktur Proyek
 
-Struktur file utama dalam proyek ini adalah sebagai berikut:
+Struktur file yang terorganisir dengan baik untuk skalabilitas dan kemudahan pemeliharaan.
 
 ```
 neverlandstudio/
-├── .github/                # Konfigurasi GitHub Actions (CI/CD)
-├── public/                 # Aset statis (favicon, dll.)
+├── public/                 # Aset statis (favicon, gambar, dll.)
 ├── src/
-│   ├── assets/             # Gambar, font, dan aset lainnya
-│   ├── components/         # Komponen React yang dapat digunakan kembali
-│   │   └── ui/             # Contoh: Komponen UI dasar (Button, Input, dll.)
-│   ├── pages/              # Contoh: Komponen yang mewakili halaman (Home, About, Contact)
-│   ├── lib/                # Contoh: Logika utilitas, hooks kustom, dll.
-│   ├── styles/             # Contoh: File CSS global atau konfigurasi Tailwind
-│   ├── App.tsx             # Komponen root aplikasi
-│   └── main.tsx            # Titik masuk aplikasi
+│   ├── component/
+│   │   ├── common/         # Komponen umum (Footer, FloatingButtons)
+│   │   ├── layout/         # Komponen tata letak (DesktopNav, MobileNav)
+│   │   ├── sections/       # Komponen per bagian halaman (Hero, Services, etc.)
+│   │   └── ui/             # Komponen UI atomik (Button, Modal, Form)
+│   ├── data/               # Data statis aplikasi (navItems, services, team)
+│   ├── App.tsx             # Komponen root aplikasi & state management utama
+│   └── main.tsx            # Titik masuk aplikasi React
+├── .gitignore              # File yang diabaikan oleh Git
 ├── Dockerfile              # Instruksi untuk membangun image Docker
-├── nginx.conf              # Konfigurasi Nginx untuk menyajikan aplikasi
+├── index.html              # Template HTML utama
+├── nginx.conf              # Konfigurasi Nginx untuk production
 ├── package.json            # Daftar dependensi dan skrip
-├── yarn.lock               # Lock file untuk Yarn (jika digunakan)
 ├── README.md               # Anda sedang membacanya
 └── tsconfig.json           # Konfigurasi TypeScript
 ```
@@ -180,11 +202,11 @@ neverlandstudio/
 
 Kontribusi membuat komunitas open source menjadi tempat yang luar biasa untuk belajar, menginspirasi, dan berkreasi. Setiap kontribusi yang Anda buat sangat **dihargai**.
 
-Jika Anda memiliki saran untuk perbaikan, silakan fork repositori ini dan buat *pull request*. Anda juga dapat membuka *issue* dengan tag "enhancement".
+Jika Anda memiliki saran untuk perbaikan, silakan fork repositori ini dan buat *pull request*. Anda juga dapat membuka *issue* dengan tag "enhancement". Jangan lupa untuk memberikan bintang pada proyek ini! Terima kasih lagi!
 
 1.  Fork Proyek ini
 2.  Buat Branch Fitur Anda (`git checkout -b feature/AmazingFeature`)
-3.  Commit Perubahan Anda (`git commit -m 'Add some AmazingFeature'`)
+3.  Commit Perubahan Anda (`git commit -m 'feat: Add some AmazingFeature'`)
 4.  Push ke Branch (`git push origin feature/AmazingFeature`)
 5.  Buka sebuah Pull Request
 
@@ -192,17 +214,12 @@ Jika Anda memiliki saran untuk perbaikan, silakan fork repositori ini dan buat *
 
 ## 📄 Lisensi
 
-Proyek ini dilisensikan di bawah Lisensi MIT. Lihat file `LICENSE` untuk detail lebih lanjut.
+Didistribusikan di bawah Lisensi MIT. Lihat `LICENSE` untuk informasi lebih lanjut.
 
 ---
 
 ## ✉️ Kontak
 
-Jika Anda memiliki pertanyaan atau ingin berdiskusi lebih lanjut, jangan ragu untuk menghubungi:
-
--   **Nama Anda / Neverland Studio**
--   **Email**: arlianto032@gmail.com
--   **LinkedIn**: *(Ganti dengan URL profil LinkedIn Anda)*
--   **Website**: neverlandstudio.my.id
+Muhammad Isaki Prananda - arlianto032@gmail.com
 
 Link Proyek: https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio
