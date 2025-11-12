@@ -76,7 +76,12 @@ const MobileNav: React.FC<MobileNavProps> = ({ isMenuOpen, setIsMenuOpen, active
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>      
+      {isLoggedIn && (
+        <div className="md:hidden fixed top-4 right-20 z-40">
+          <ProfileDropdown userProfile={userProfile} onLogout={onLogout} onDashboardClick={onDashboardClick} />
+        </div>
+      )}
     </>
   );
 };
