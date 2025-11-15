@@ -2,7 +2,6 @@
 import { motion, type Variants } from 'framer-motion';
 import { ChevronRight, Play } from 'lucide-react';
 import StardustBackground from '../ui/StardustBackground';
-import HeroImage from '../ui/HeroImage';
 import Partners from '../ui/Partners';
 import { stats } from '../../data/stats';
 
@@ -112,7 +111,22 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, isMenuOpen, setSec
           </motion.div>
         </motion.div>
         <motion.div className="hidden lg:flex items-center justify-center" variants={itemVariants}>
-          <HeroImage />
+          <motion.div
+            animate={{
+              y: ["-10px", "10px", "-10px"],
+            }}
+            transition={{
+              duration: 5,
+              ease: "easeInOut",
+              repeat: Infinity,
+            }}
+          >
+            <img 
+              src="/images/Neverland Studio.webp" 
+              alt="Neverland Studio Showcase" 
+              className="w-full h-auto max-w-lg rounded-lg shadow-2xl shadow-teal-900/50 object-contain"
+            />
+          </motion.div>
         </motion.div>
       </div>
 
@@ -124,9 +138,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, isMenuOpen, setSec
           viewport={{ once: true, amount: 0.5 }}
           className="w-full"
         >
-          <p className="text-center text-slate-500 font-semibold tracking-widest text-sm uppercase mb-8"> 
-            Trusted by innovative companies worldwide
-          </p>
+          <p className="text-center text-slate-500 font-semibold tracking-widest text-sm uppercase mb-8">Dipercaya oleh Brand Terkemuka</p>
           <Partners />
         </motion.div>
       </div>
