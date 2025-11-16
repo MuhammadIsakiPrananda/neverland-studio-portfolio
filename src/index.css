@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .shimmer-text {
+    background-size: 200% auto;
+    background-position: 0% center;
+    transition: background-position 0.5s ease-in-out;
+  }
+
+  .group:hover .shimmer-text {
+    animation: shimmer 2s linear infinite;
+  }
+
+  .btn-shine {
+    @apply relative overflow-hidden;
+  }
+
+  .btn-shine::before {
+    content: '';
+    @apply absolute top-0 w-full h-full;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    left: -100%;
+    transition: left 0.6s ease-in-out;
+  }
+
+  .btn-shine:hover::before {
+    left: 100%;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% center;
+  }
+}
