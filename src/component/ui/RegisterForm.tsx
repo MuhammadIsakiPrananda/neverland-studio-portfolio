@@ -4,6 +4,7 @@ import { User, Mail, Lock, UserPlus, Eye, EyeOff, Loader, AlertCircle, AtSign } 
 import { useNotification } from './useNotification';
 import ReCAPTCHA from "react-google-recaptcha";
 
+import SocialLoginButtons from './SocialLoginButtons';
 interface RegisterFormProps {
   onSwitchMode: (mode: 'login') => void;
 }
@@ -220,6 +221,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
           {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <UserPlus className="w-5 h-5" />}
           {isLoading ? 'Registering...' : 'Register'}
         </motion.button>
+
+        <motion.div variants={itemVariants}>
+          <SocialLoginButtons />
+        </motion.div>
 
         <motion.p variants={itemVariants} className="text-center text-sm text-slate-400 pt-2">
           Already have an account?{' '}

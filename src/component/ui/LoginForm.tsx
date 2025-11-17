@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, Lock, LogIn, Loader, Eye, EyeOff, ShieldX } from 'lucide-react';
 import { useNotification } from './useNotification';
+import SocialLoginButtons from './SocialLoginButtons';
 
 interface LoginFormProps {
   onSwitchMode: (mode: 'register' | 'forgotPassword') => void;
@@ -169,6 +170,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
           {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <LogIn className="w-5 h-5" />}
           {isLoading ? 'Signing In...' : 'Sign In'}
         </motion.button>
+        <motion.p variants={itemVariants} className="text-center text-sm text-slate-400">
+          <SocialLoginButtons />
+        </motion.p>
         <motion.p variants={itemVariants} className="text-center text-sm text-slate-400">
           Don't have an account?{' '}
           <button type="button" onClick={() => onSwitchMode('register')} className="font-semibold text-cyan-400 hover:underline disabled:opacity-50" disabled={isLoading}> 
