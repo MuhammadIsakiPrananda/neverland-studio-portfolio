@@ -1,5 +1,5 @@
 import { Github, Linkedin } from 'lucide-react';
-import { useSocialAuth, type AuthProvider } from './useSocialAuth';
+import { useSocialAuth } from './useSocialAuth';
 import { Loader } from 'lucide-react';
 
 // Ikon Google tidak ada di lucide-react, jadi kita gunakan SVG.
