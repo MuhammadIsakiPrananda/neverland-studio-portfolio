@@ -1,5 +1,5 @@
 import { Github, Linkedin } from 'lucide-react';
-import { useSocialAuth } from './useSocialAuth';
+import { useSocialAuth, AuthProvider } from './useSocialAuth';
 import { Loader } from 'lucide-react';
 
 // Ikon Google tidak ada di lucide-react, jadi kita gunakan SVG.
@@ -12,6 +12,21 @@ const GoogleIcon = () => (
     <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C39.901,36.61,44,30.817,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
   </svg>
 );
+
+const socialProviders: { name: AuthProvider; icon: JSX.Element }[] = [
+  {
+    name: 'google',
+    icon: <GoogleIcon />,
+  },
+  {
+    name: 'github',
+    icon: <Github className="h-6 w-6" />,
+  },
+  {
+    name: 'linkedin',
+    icon: <Linkedin className="h-6 w-6" />,
+  },
+];
 
 const SocialLoginButtons = () => {
   const { initiateLogin, isLoading } = useSocialAuth();
@@ -27,30 +42,18 @@ const SocialLoginButtons = () => {
         </div>
       </div>
       <div className="grid grid-cols-3 gap-4">
-        <button
-          type="button"
-          onClick={() => initiateLogin('google')}
-          disabled={!!isLoading}
-          className="inline-flex w-full justify-center items-center rounded-lg border border-slate-700 bg-slate-800/50 py-2.5 px-4 text-sm font-medium text-slate-300 shadow-sm hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isLoading === 'google' ? <Loader className="animate-spin" size={24} /> : <GoogleIcon />}
-        </button>
-        <button
-          type="button"
-          onClick={() => initiateLogin('github')}
-          disabled={!!isLoading}
-          className="inline-flex w-full justify-center items-center rounded-lg border border-slate-700 bg-slate-800/50 py-2.5 px-4 text-sm font-medium text-slate-300 shadow-sm hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isLoading === 'github' ? <Loader className="animate-spin" size={24} /> : <Github className="h-6 w-6" />}
-        </button>
-        <button
-          type="button"
-          onClick={() => initiateLogin('linkedin')}
-          disabled={!!isLoading}
-          className="inline-flex w-full justify-center items-center rounded-lg border border-slate-700 bg-slate-800/50 py-2.5 px-4 text-sm font-medium text-slate-300 shadow-sm hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isLoading === 'linkedin' ? <Loader className="animate-spin" size={24} /> : <Linkedin className="h-6 w-6" />}
-        </button>
+        {socialProviders.map((provider) => (
+          <button
+            key={provider.name}
+            type="button"
+            onClick={() => initiateLogin(provider.name)}
+            disabled={!!isLoading}
+            className="inline-flex w-full justify-center items-center rounded-lg border border-slate-700 bg-slate-800/50 py-2.5 px-4 text-sm font-medium text-slate-300 shadow-sm hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label={`Login with ${provider.name}`}
+          >
+            {isLoading === provider.name ? <Loader className="animate-spin" size={24} /> : provider.icon}
+          </button>
+        ))}
       </div>
     </div>
   );
