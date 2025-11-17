@@ -1,5 +1,6 @@
+import type { JSX } from 'react';
 import { Github, Linkedin } from 'lucide-react';
-import { useSocialAuth, AuthProvider } from './useSocialAuth';
+import { useSocialAuth, type AuthProvider } from './useSocialAuth';
 import { Loader } from 'lucide-react';
 
 // Ikon Google tidak ada di lucide-react, jadi kita gunakan SVG.
@@ -13,7 +14,12 @@ const GoogleIcon = () => (
   </svg>
 );
 
-const socialProviders: { name: AuthProvider; icon: JSX.Element }[] = [
+type SocialProviderConfig = {
+  name: AuthProvider;
+  icon: JSX.Element;
+};
+
+const socialProviders: SocialProviderConfig[] = [
   {
     name: 'google',
     icon: <GoogleIcon />,
