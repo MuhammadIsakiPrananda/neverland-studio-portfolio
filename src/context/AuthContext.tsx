@@ -52,6 +52,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = useCallback(() => {
     setUserProfile(null);
     localStorage.removeItem('userProfile');
+    // Redirect to the main page after logout
+    window.location.href = '/';
   }, []);
 
   const updateProfile = useCallback((newProfileData: Partial<UserProfile>) => {
