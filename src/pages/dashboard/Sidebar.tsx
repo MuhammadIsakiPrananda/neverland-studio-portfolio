@@ -1,23 +1,17 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { FiHome, FiSettings, FiGrid, FiLogOut, FiChevronsLeft, FiChevronsRight, FiChevronDown, FiUser, FiSearch, FiBarChart2, FiInbox, FiMessageSquare, FiUsers, FiBriefcase } from 'react-icons/fi';
 import { useAuth } from '../../context/AuthContext';
-import { useSettings } from '../../SettingsContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Define strong types for navigation links
-type SubLink = {
-  name: string;
-  path: string;
-  icon: React.ElementType;
-  notification?: number | boolean;
-  subLinks?: SubLink[]; // For multi-level submenus
-};
-
 type NavLinkType = {
   name: string;
   icon: React.ElementType;
-} & ({ path: string; subLinks?: never; notification?: number | boolean } | { path?: never; subLinks: SubLink[]; notification?: number | boolean });
+  path?: string;
+  notification?: number | boolean;
+  subLinks?: NavLinkType[];
+};
 
 // Custom hook to check screen width
 const useMediaQuery = (query: string) => {
@@ -55,6 +49,7 @@ const navLinks: NavLinkType[] = [
     subLinks: [
       { name: 'Profile', path: '/dashboard/settings', icon: FiUser },
       {
+        path: '#', // Add a placeholder path
         name: 'Website',
         icon: FiSettings,
         subLinks: [
@@ -81,7 +76,6 @@ const Sidebar = ({ isMobileOpen, setMobileOpen }: { isMobileOpen: boolean, setMo
     closed: { x: '-100%' }
   };
 
- const { settings, toggleTheme, setLanguage, setNotificationsEnabled } = useSettings();
   // Collapse sidebar automatically on tablet, but allow manual override
   useEffect(() => {
     setIsCollapsed(isTablet);
@@ -92,19 +86,20 @@ const Sidebar = ({ isMobileOpen, setMobileOpen }: { isMobileOpen: boolean, setMo
   const filteredNavLinks = useMemo(() => {
     if (!searchTerm) return navLinks;
 
-    return navLinks.map(link => {
-      // If the parent link matches, include it and all its sublinks
-      if (link.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-        return link;
-      }
-      // If sublinks exist, filter them
-      if (link.subLinks) {
-        const filteredSubLinks = link.subLinks.filter(sub => sub.name.toLowerCase().includes(searchTerm.toLowerCase()));
-        if (filteredSubLinks.length > 0) return { ...link, subLinks: filteredSubLinks };
-      }
-      return null; // Using filter(Boolean) will remove null entries
-    }).filter(Boolean);
-  }, [searchTerm, navLinks]);
+    const filterLinks = (links: NavLinkType[]): NavLinkType[] => {
+      return links.map(link => {
+        if (link.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+          return link; // Keep parent if it matches
+        }
+        if (link.subLinks) {
+          const filteredSubs = filterLinks(link.subLinks);
+          if (filteredSubs.length > 0) return { ...link, subLinks: filteredSubs };
+        }
+        return null;
+      }).filter((link): link is NavLinkType => link !== null);
+    };
+    return filterLinks(navLinks);
+  }, [searchTerm]);
 
   return (
     <motion.aside
@@ -184,7 +179,7 @@ const NavItem = ({ link, isCollapsed, setMobileOpen, isTablet }: { link: NavLink
   const { pathname } = useLocation();
   // For parent links, check if the current path starts with the parent's logical group.
   // For sublinks, check if any sublink path is active.
-  const isParentActive = link.subLinks ? link.subLinks.some(sub => pathname.startsWith(sub.path)) : false;
+  const isParentActive = link.subLinks ? link.subLinks.some(sub => sub.path && pathname.startsWith(sub.path)) : false;
   const [isOpen, setIsOpen] = useState(isParentActive);
 
   const handleItemClick = () => {

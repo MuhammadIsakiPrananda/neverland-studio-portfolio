@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion';
-import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { AnalyticsData } from '../../utils/api';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 interface AnalyticsChartProps {
-  data: AnalyticsData[];
+  data: any[];
 }
 
 const AnalyticsChart = ({ data }: AnalyticsChartProps) => {

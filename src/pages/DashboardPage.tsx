@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import Sidebar from './dashboard/Sidebar';
 import DashboardHeader from './dashboard/DashboardHeader';
 import StatsCard from './dashboard/StatsCard';
 import AnalyticsChart from './dashboard/AnalyticsChart';
@@ -9,85 +8,95 @@ import RecentActivity from './dashboard/RecentActivity';
 import ProjectsTable from './dashboard/ProjectsTable';
 import QuickActions from './dashboard/QuickActions';
 import { FolderKanban, TrendingUp, Users, DollarSign } from 'lucide-react';
-import { api, DashboardStats, AnalyticsData, Activity, Project } from '../utils/api';
-import { motion } from 'framer-motion';
 import { useNotification } from '../component/ui/useNotification';
 import NotificationProvider from '../component/ui/NotificationProvider';
 
+// --- Mock Data ---
+const mockStats = {
+  total_projects: 124,
+  active_projects: 8,
+  total_clients: 42,
+  revenue: 125430.50,
+  growth_rate: 15.2,
+};
+
+const mockAnalytics = [
+  { month: 'Jan', revenue: 12000, projects: 5 },
+  { month: 'Feb', revenue: 18000, projects: 7 },
+  { month: 'Mar', revenue: 15000, projects: 6 },
+  { month: 'Apr', revenue: 22000, projects: 9 },
+  { month: 'May', revenue: 25000, projects: 8 },
+  { month: 'Jun', revenue: 30000, projects: 10 },
+];
+
+const mockActivities = [
+  { id: '1', type: 'project', title: 'New Project: "QuantumLeap"', description: 'Initiated by Alex Johnson.', user: 'Alex J.', timestamp: new Date().toISOString() },
+  { id: '2', type: 'milestone', title: 'Milestone Reached: "Phoenix" Beta', description: 'UI/UX design phase completed.', user: 'Sarah M.', timestamp: new Date(Date.now() - 3600000).toISOString() },
+  { id: '3', type: 'client', title: 'New Client: "Innovate Inc."', description: 'Onboarded for a 6-month retainer.', user: 'Mike W.', timestamp: new Date(Date.now() - 86400000).toISOString() },
+];
+
+const mockProjects = [
+  { id: 'p1', title: 'Project Phoenix', client: 'Innovate Inc.', status: 'in_progress', progress: 75, budget: 50000, deadline: '2024-12-31' },
+  { id: 'p2', title: 'Website Redesign', client: 'Creative Solutions', status: 'completed', progress: 100, budget: 25000, deadline: '2024-10-01' },
+  { id: 'p3', title: 'Mobile App "ConnectU"', client: 'Startup Hub', status: 'pending', progress: 10, budget: 75000, deadline: '2025-03-15' },
+];
+// --- End Mock Data ---
+
 const DashboardPage = () => {
-  const { user, logout, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { userProfile, isLoggedIn, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { addNotification } = useNotification();
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [analytics, setAnalytics] = useState<AnalyticsData[]>([]);
-  const [activities, setActivities] = useState<Activity[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [stats, setStats] = useState<any | null>(null);
+  const [analytics, setAnalytics] = useState<any[]>([]);
+  const [activities, setActivities] = useState<any[]>([]);
+  const [projects, setProjects] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
+    if (!authLoading && !isLoggedIn) {
       navigate('/');
     }
-  }, [isAuthenticated, authLoading, navigate]);
+  }, [isLoggedIn, authLoading, navigate]);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
-      try {
-        setIsLoading(true);
-        const [statsData, analyticsData, activitiesData, projectsData] = await Promise.all([
-          api.getDashboardStats(),
-          api.getAnalytics(),
-          api.getActivities(),
-          api.getProjects(),
-        ]);
-
-        setStats(statsData);
-        setAnalytics(analyticsData);
-        setActivities(activitiesData);
-        setProjects(projectsData);
-      } catch (error) {
-        console.error('Failed to fetch dashboard data:', error);
-        addNotification('Error', 'Failed to load dashboard data', 'error');
-      } finally {
+      setIsLoading(true);
+      // Simulate API call delay
+      setTimeout(() => {
+        setStats(mockStats);
+        setAnalytics(mockAnalytics);
+        setActivities(mockActivities);
+        setProjects(mockProjects);
         setIsLoading(false);
-      }
+        addNotification('Info', 'Mock data loaded successfully', 'info');
+      }, 1000);
     };
 
-    if (isAuthenticated) {
+    if (isLoggedIn) {
       fetchDashboardData();
     }
-  }, [isAuthenticated, refreshKey, addNotification]);
+  }, [isLoggedIn, refreshKey, addNotification]);
 
   // Auto-refresh every 30 seconds
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isLoggedIn) return;
 
     const interval = setInterval(() => {
       setRefreshKey((prev) => prev + 1);
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [isAuthenticated]);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
+  }, [isLoggedIn]);
 
   const handleDeleteProject = async (projectId: string) => {
-    try {
-      await api.deleteProject(projectId);
-      setProjects((prev) => prev.filter((p) => p.id !== projectId));
-      addNotification('Success', 'Project deleted successfully', 'success');
-      setRefreshKey((prev) => prev + 1);
-    } catch (error) {
-      console.error('Failed to delete project:', error);
-      addNotification('Error', 'Failed to delete project', 'error');
-    }
+    // Simulate deleting a project
+    setProjects((prev) => prev.filter((p) => p.id !== projectId));
+    addNotification('Success', 'Project deleted successfully (mock)', 'success');
+    // No need to refresh key with mock data
   };
 
-  if (authLoading || !isAuthenticated) {
+  if (authLoading || !isLoggedIn) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-white text-xl">Loading...</div>
@@ -97,11 +106,9 @@ const DashboardPage = () => {
 
   return (
     <NotificationProvider>
-      <div className="min-h-screen bg-gray-900 flex" data-testid="dashboard-page">
-        <Sidebar onLogout={handleLogout} />
-
-        <div className="flex-1 overflow-auto">
-          <DashboardHeader user={user} title="Dashboard Overview" />
+      <div className="min-h-screen bg-gray-900" data-testid="dashboard-page">
+        <div className="flex-1">
+          <DashboardHeader user={userProfile} title="Dashboard Overview" />
 
           <main className="p-8 space-y-8">
             {isLoading ? (

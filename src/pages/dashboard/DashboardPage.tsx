@@ -1,12 +1,11 @@
 import { ArrowUpRight, DollarSign, Users, ShoppingBag } from 'lucide-react';
 import { useMemo } from 'react';
-import { User } from '../../utils/api';
 import DashboardHeader from './DashboardHeader';
 import KpiCard from './KpiCard';
 import RecentActivityTable from './RecentActivityTable';
 
 // Mock user data, in a real app this would come from an API/auth context
-const mockUser: User = {
+const mockUser = {
   id: '1',
   name: 'Rizky',
   email: 'rizky@example.com',
@@ -22,6 +21,7 @@ const DashboardPage = () => {
       icon: <DollarSign className="w-5 h-5" />,
       trend: '+20.1% from last month',
       isPositive: true,
+      color: 'text-emerald-400',
     },
     {
       title: 'Subscriptions',
@@ -29,6 +29,7 @@ const DashboardPage = () => {
       icon: <Users className="w-5 h-5" />,
       trend: '+180.1% from last month',
       isPositive: true,
+      color: 'text-sky-400',
     },
     {
       title: 'Sales',
@@ -36,6 +37,7 @@ const DashboardPage = () => {
       icon: <ShoppingBag className="w-5 h-5" />,
       trend: '+19% from last month',
       isPositive: true,
+      color: 'text-violet-400',
     },
     {
       title: 'Active Now',
@@ -43,6 +45,7 @@ const DashboardPage = () => {
       icon: <ArrowUpRight className="w-5 h-5" />,
       trend: '+201 since last hour',
       isPositive: false, // Just for visual variety
+      color: 'text-amber-400',
     },
   ], []);
 

@@ -1,11 +1,10 @@
 import { motion } from 'framer-motion';
-import { Project } from '../../utils/api';
 import { MoreVertical, Edit2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 interface ProjectsTableProps {
-  projects: Project[];
-  onEdit?: (project: Project) => void;
+  projects: any[];
+  onEdit?: (project: any) => void;
   onDelete?: (projectId: string) => void;
 }
 

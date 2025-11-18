@@ -74,10 +74,6 @@ const LandingPage = () => {
     setIsAuthModalOpen(false);
   };
 
-  const handleLogout = () => {
-    logout();
-  };
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -153,7 +149,7 @@ const LandingPage = () => {
             activeSection={activeSection} 
             handleNavClick={handleNavClick}
             isLoggedIn={isLoggedIn}
-            userProfile={userProfile}
+            userProfile={userProfile!}
             onLoginClick={() => setIsAuthModalOpen(true)}
             onLogout={logout}
             onDashboardClick={() => navigate('/dashboard')}
@@ -166,8 +162,8 @@ const LandingPage = () => {
             handleNavClick={handleNavClick}
             isLoggedIn={isLoggedIn}
             onLoginClick={() => setIsAuthModalOpen(true)}
-            onLogout={logout} 
-            userProfile={userProfile}
+            onLogout={logout}
+            userProfile={userProfile!}
             onDashboardClick={() => navigate('/dashboard')}
           />
           

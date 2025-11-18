@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext, ReactNode, useEffect, useMemo, useCallback } from 'react';
+import { createContext, useState, useContext, useEffect, useMemo, useCallback } from 'react';
+import type { ReactNode } from 'react';
 
 // Tipe data untuk profil pengguna
 export type UserProfile = {

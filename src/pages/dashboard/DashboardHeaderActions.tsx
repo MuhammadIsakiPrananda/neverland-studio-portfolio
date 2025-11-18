@@ -1,8 +1,7 @@
 import { Bell, Search, User } from 'lucide-react';
-import { User as UserType } from '../../utils/api';
 
 interface DashboardHeaderActionsProps {
-  user: UserType | null;
+  user: any | null;
   hasNotifications: boolean;
   searchValue: string;
   onSearchChange: (value: string) => void;

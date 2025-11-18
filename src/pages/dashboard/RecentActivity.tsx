@@ -1,10 +1,9 @@
 import { motion } from 'framer-motion';
-import { Activity as ActivityType } from '../../utils/api';
 import { FolderKanban, TrendingUp, Users, CheckCircle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 interface RecentActivityProps {
-  activities: ActivityType[];
+  activities: any[];
 }
 
 const getActivityIcon = (type: string) => {

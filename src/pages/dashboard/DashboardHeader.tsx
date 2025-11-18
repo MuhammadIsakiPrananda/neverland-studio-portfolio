@@ -1,10 +1,9 @@
 import { motion } from 'framer-motion';
-import { User as UserType } from '../../utils/api';
 import { useState } from 'react';
 import DashboardHeaderActions from './DashboardHeaderActions';
 
 interface DashboardHeaderProps {
-  user: UserType | null;
+  user: any | null;
   title: string;
 }
 
