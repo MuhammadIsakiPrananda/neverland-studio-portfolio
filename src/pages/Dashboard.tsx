@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import Sidebar from '../component/layout/Sidebar';
+import Sidebar from './dashboard/Sidebar';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const pageVariants = {
