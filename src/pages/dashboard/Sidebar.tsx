@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { FiHome, FiSettings, FiGrid, FiLogOut, FiChevronsLeft, FiChevronsRight, FiChevronDown, FiUser, FiSearch, FiBarChart2, FiInbox, FiMessageSquare, FiUsers, FiBriefcase, FiCreditCard, FiLayout, FiPlusCircle, FiCalendar, FiCheckSquare, FiImage, FiBell, FiHelpCircle, FiExternalLink } from 'react-icons/fi';
+import { FiHome, FiSettings, FiGrid, FiChevronsLeft, FiChevronsRight, FiChevronDown, FiUser, FiSearch, FiBarChart2, FiInbox, FiMessageSquare, FiUsers, FiBriefcase, FiCreditCard, FiLayout, FiPlusCircle, FiCalendar, FiCheckSquare, FiImage, FiHelpCircle, FiExternalLink } from 'react-icons/fi';
 import { useAuth } from '../../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -266,7 +266,6 @@ const NavItem = ({ link, isCollapsed, setMobileOpen, isTablet }: { link: NavLink
     );
   }
 
-  const isExternal = link.path && (link.path.startsWith('http') || link.path.startsWith('/'));
   const commonProps = {
     onClick: handleItemClick,
     title: isCollapsed ? link.name : '',
