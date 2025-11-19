@@ -1,5 +1,6 @@
-import { motion, type Variants } from "framer-motion";
-import { benefits } from "../../data/benefits.tsx";
+import { useState, useRef } from "react";
+import { motion, type Variants, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { benefits, type Benefit } from "../../data/benefits.tsx";
 
 interface BenefitsSectionProps {
   isLoading: boolean;
@@ -36,29 +37,111 @@ const BenefitsSection: React.FC<BenefitsSectionProps> = ({ isLoading }) => {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">Our Advantage</span>
-          <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6 text-white">Why Partner With Neverland</h2>
-          <p className="text-slate-400 text-lg max-w-3xl mx-auto balance-text">We combine creativity, technology, and strategy to deliver exceptional results that drive growth for your business.</p>
+          <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">Core Strengths</span>
+          <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6 text-white">Your Vision, Amplified by Technology</h2>
+          <p className="text-slate-400 text-lg max-w-3xl mx-auto balance-text">We fuse cutting-edge technology with strategic design to build digital experiences that don't just look good—they perform, engage, and drive business growth.</p>
         </motion.div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
           {benefits.map((benefit, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              className="bg-slate-800/30 p-6 rounded-xl border border-slate-800/50 text-center transition-all duration-300 hover:bg-slate-800/60 hover:border-teal-500/50 hover:-translate-y-2"
-            >
-              <div className="flex justify-center mb-4">
-                <div className="w-16 h-16 rounded-full bg-slate-900/70 flex items-center justify-center border border-slate-700">
-                  {benefit.icon}
-                </div>
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">{benefit.title}</h3>
-              <p className="text-sm text-slate-400 leading-relaxed">{benefit.description}</p>
-            </motion.div>
+            <BenefitCard key={index} benefit={benefit} variants={itemVariants} />
           ))}
         </div>
       </div>
     </motion.section>
+  );
+};
+
+interface BenefitCardProps {
+  benefit: Benefit;
+  variants: Variants;
+}
+
+const BenefitCard: React.FC<BenefitCardProps> = ({ benefit, variants }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // 3D Tilt Effect Logic
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { stiffness: 150, damping: 20, mass: 0.5 };
+  const rotateX = useSpring(useTransform(mouseY, [-1, 1], [-10, 10]), springConfig);
+  const rotateY = useSpring(useTransform(mouseX, [-1, 1], [10, -10]), springConfig);
+
+  // Spotlight Effect Logic
+  const [spotlightPosition, setSpotlightPosition] = useState({ x: -100, y: -100 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      const { width, height, left, top } = rect;
+      
+      // For 3D Tilt
+      const mouseX_val = (e.clientX - left) / width - 0.5;
+      const mouseY_val = (e.clientY - top) / height - 0.5;
+      mouseX.set(mouseX_val);
+      mouseY.set(mouseY_val);
+
+      // For Spotlight
+      setSpotlightPosition({ x: e.clientX - left, y: e.clientY - top });
+    }
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+    setSpotlightPosition({ x: -100, y: -100 });
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      variants={variants}
+      className="relative p-[1px] bg-slate-800/50 rounded-xl overflow-hidden group transition-all duration-300 hover:bg-slate-800/80 hover:-translate-y-1"
+      style={{
+        perspective: "1000px",
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
+    >
+      {/* Glowing Outline Effect */}
+      <div
+        className="absolute -inset-px rounded-xl opacity-0 group-hover:opacity-70 transition-opacity duration-500"
+        style={{
+          background: `radial-gradient(600px circle at ${spotlightPosition.x}px ${spotlightPosition.y}px, ${benefit.spotlightColor}, transparent 40%)`,
+          filter: "blur(20px)",
+        }}
+      />
+
+      {/* Spotlight Effect */}
+      <div
+        className="absolute inset-0 transition-all duration-300 opacity-0 group-hover:opacity-100"
+        style={{
+          background: `radial-gradient(300px at ${spotlightPosition.x}px ${spotlightPosition.y}px, ${benefit.spotlightColor}, transparent 80%)`,
+          transform: "translateZ(20px)", // Push spotlight slightly forward
+        }}
+      />
+      <div className="relative h-full bg-slate-900/70 p-6 rounded-[11px] text-center flex flex-col" style={{ transform: "translateZ(40px)" }}>
+        <div className="flex justify-center mb-4">
+          <div className={`w-16 h-16 rounded-full bg-slate-800/70 flex items-center justify-center border border-slate-700 group-hover:${benefit.borderColor} transition-colors duration-300`}>
+            {benefit.icon}
+          </div>
+        </div>
+        <div className="flex-grow flex flex-col" style={{ transform: "translateZ(20px)" }}>
+          <h3 className="text-lg font-bold text-white mb-2">{benefit.title}</h3>
+          <p className="text-sm text-slate-400 leading-relaxed flex-grow">{benefit.description}</p>
+          {benefit.details && (
+            <ul className="mt-4 text-left text-sm text-slate-400 space-y-2 pl-4 list-disc list-inside">
+              {benefit.details.map((detail, i) => (
+                <li key={i}>{detail}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </motion.div>
   );
 };
 
