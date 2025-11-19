@@ -1,9 +1,8 @@
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type ReactNode, type MouseEvent } from 'react';
 import { motion, useInView, type Variants } from 'framer-motion';
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from 'lucide-react';
 import { services } from '../../data/services';
-import SpotlightCard from '../ui/SpotlightCard';
 import ServiceDetailModal from '../ui/ServiceDetailModal';
 
 type Service = typeof services[0] & {
@@ -16,6 +15,42 @@ interface ServicesSectionProps {
   setSectionRef: (section: string) => (el: HTMLElement | null) => void;
 }
 
+interface SpotlightCardProps {
+  children: ReactNode;
+  onClick: () => void;
+  className?: string;
+}
+
+const SpotlightCard: React.FC<SpotlightCardProps> = ({ children, className, ...props }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const { left, top } = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - left;
+    const y = e.clientY - top;
+    cardRef.current.style.setProperty('--spotlight-x', `${x}px`);
+    cardRef.current.style.setProperty('--spotlight-y', `${y}px`);
+  };
+
+  const cardVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: 'easeOut' } },
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      variants={cardVariants}
+      className={`group relative rounded-2xl border border-slate-800 bg-slate-900 p-8 transition-colors duration-300 before:absolute before:-inset-px before:rounded-2xl before:border before:border-transparent before:bg-[radial-gradient(400px_at_var(--spotlight-x)_var(--spotlight-y),rgba(0,255,255,0.1),transparent_40%)] before:opacity-0 before:transition-opacity before:duration-300 hover:border-teal-500/40 hover:before:opacity-100 ${className || ''}`}
+      {...props}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 const ServicesSection: React.FC<ServicesSectionProps> = ({ isLoading, setSectionRef }) => {
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
@@ -23,16 +58,16 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ isLoading, setSection
 
   const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
   };
 
   const containerVariants: Variants = {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.1
-      }
-    }
+        staggerChildren: 0.1,
+      },
+    },
   };
 
   useEffect(() => {
@@ -55,7 +90,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ isLoading, setSection
       id="Services"
       className="py-20 px-4 sm:px-6 lg:px-8"
       initial="hidden"
-      animate={!isLoading && isInView ? "visible" : "hidden"}
+      animate={!isLoading && isInView ? 'visible' : 'hidden'}
       variants={sectionVariants}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
@@ -69,10 +104,9 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ isLoading, setSection
             <SpotlightCard
               key={idx}
               onClick={() => setSelectedService(service as Service)}
-              className="group relative bg-gradient-to-br from-slate-900/80 to-black/80 backdrop-blur-lg border border-slate-800/50 rounded-2xl p-8 transition-all duration-300 hover:border-teal-500/50 hover:shadow-2xl hover:shadow-teal-500/10"
             >
-              <div className="absolute -top-2 -right-2 w-24 h-24 bg-gradient-to-bl from-teal-500/20 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="relative z-10 flex flex-col h-full">
+              {/* The content is now inside a z-10 container to appear above the spotlight effect */}
+              <div className="relative z-10 flex h-full flex-col">
                 <div className="w-16 h-16 mb-6 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform duration-300">
                   {/* Render the icon directly as a component */}
                   <service.icon.type className="w-8 h-8" />
@@ -82,9 +116,9 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ isLoading, setSection
                   <p className="text-slate-400 leading-relaxed">{service.desc}</p>
                 </div>
                 <div className="mt-8">
-                  <button className="inline-flex items-center gap-2 font-semibold text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 focus:outline-none">
+                  <div className="inline-flex cursor-pointer items-center gap-2 font-semibold text-teal-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     Learn More <ArrowRight className="w-4 h-4" />
-                  </button>
+                  </div>
                 </div>
               </div>
             </SpotlightCard>

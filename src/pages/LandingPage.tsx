@@ -17,8 +17,8 @@ import Footer from '../component/common/Footer';
 import FloatingButtons from '../component/common/FloatingButtons';
 import VideoModal from '../component/common/VideoModal';
 import AuthModal from '../component/ui/AuthModal';
-import NotificationProvider from '../component/ui/NotificationProvider'; 
-import DashboardModal from '../component/sections/DashboardModal';
+import NotificationProvider from '../component/ui/NotificationProvider';
+import UserDashboard from '../component/ui/UserDashboard'; // Import UserDashboard
 import LoadingScreen from '../component/ui/LoadingScreen';
 import { ChatbotProvider } from '../component/sections/ChatbotContext'; 
 import ReviewModal from '../component/ui/ReviewModal';
@@ -26,7 +26,6 @@ import AuroraBackground from '../component/ui/AuroraBackground';
 import JoinTeamModal from '../component/ui/JoinTeamModal';
 import QuoteRequestModal from '../component/ui/QuoteRequestModal';
 import ModalPortal from '../component/ui/ModalPortal';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import type { UserProfile } from '../context/AuthContext';
 
@@ -42,8 +41,7 @@ const LandingPage = () => {
   const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
   const [isJoinTeamModalOpen, setIsJoinTeamModalOpen] = useState(false);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
-  const { isLoggedIn, userProfile, login, logout } = useAuth();
-  const navigate = useNavigate();
+  const { isLoggedIn, userProfile, login, logout, updateProfile } = useAuth();
 
   useEffect(() => {
     // Simulasi waktu loading
@@ -72,6 +70,18 @@ const LandingPage = () => {
   const handleLoginSuccess = (user: UserProfile) => {
     login(user);
     setIsAuthModalOpen(false);
+  };
+
+  const handleProfileUpdate = (updatedUser: UserProfile) => {
+    // Panggil fungsi dari AuthContext untuk memperbarui profil
+    updateProfile(updatedUser);
+  };
+
+  const handleAccountDelete = () => {
+    // Panggil fungsi logout dari AuthContext dan tutup modal
+    logout();
+    setIsDashboardModalOpen(false);
+    // Anda bisa menambahkan navigasi ke halaman utama jika perlu
   };
 
   useEffect(() => {
@@ -152,8 +162,8 @@ const LandingPage = () => {
             userProfile={userProfile!}
             onLoginClick={() => setIsAuthModalOpen(true)}
             onLogout={logout}
-            onDashboardClick={() => navigate('/dashboard')}
-            onQuoteClick={() => setIsQuoteModalOpen(true)}
+            onDashboardClick={() => setIsDashboardModalOpen(true)}
+            onQuoteClick={() => handleNavClick('Contact')}
           />
           <MobileNav 
             isMenuOpen={isMenuOpen} 
@@ -164,7 +174,7 @@ const LandingPage = () => {
             onLoginClick={() => setIsAuthModalOpen(true)}
             onLogout={logout}
             userProfile={userProfile!}
-            onDashboardClick={() => navigate('/dashboard')}
+            onDashboardClick={() => setIsDashboardModalOpen(true)}
           />
           
           <main>
@@ -187,9 +197,17 @@ const LandingPage = () => {
             <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} onLoginSuccess={handleLoginSuccess} />
             <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
             <JoinTeamModal isOpen={isJoinTeamModalOpen} onClose={() => setIsJoinTeamModalOpen(false)} />
-            {isDashboardModalOpen && userProfile && (
-              <DashboardModal isOpen={isDashboardModalOpen} onClose={() => setIsDashboardModalOpen(false)} userProfile={userProfile} onProfileUpdate={() => {}} />
-            )}
+            <AnimatePresence>
+              {isDashboardModalOpen && userProfile && (
+                <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+                  <UserDashboard 
+                    user={userProfile} 
+                    onClose={() => setIsDashboardModalOpen(false)} 
+                    onUpdateProfile={handleProfileUpdate}
+                    onDeleteAccount={handleAccountDelete} />
+                </div>
+              )}
+            </AnimatePresence>
             <QuoteRequestModal isOpen={isQuoteModalOpen} onClose={() => setIsQuoteModalOpen(false)} />
           </ModalPortal>
 
@@ -237,6 +255,27 @@ const LandingPage = () => {
             }
             .animate-infinite-scroll {
               animation: infinite-scroll linear infinite;
+            }
+
+            /* Modern Scrollbar Styling */
+            .custom-scrollbar {
+              scrollbar-width: thin;
+              scrollbar-color: rgba(100, 116, 139, 0.7) transparent;
+            }
+            .custom-scrollbar::-webkit-scrollbar {
+              width: 8px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-track {
+              background: transparent;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+              background-color: rgba(100, 116, 139, 0.5); /* slate-500 with 50% opacity */
+              border-radius: 10px;
+              border: 2px solid transparent;
+              background-clip: content-box;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+              background-color: rgba(100, 116, 139, 0.8);
             }
           `}</style>
         </NotificationProvider>

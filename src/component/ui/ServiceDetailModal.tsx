@@ -40,53 +40,56 @@ const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({ service, onClos
           <motion.div
             variants={modalVariants}
             onClick={(e) => e.stopPropagation()}
-            className="relative bg-gradient-to-br from-slate-900 to-black border border-slate-800 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto"
+            className="relative flex flex-col bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden"
           >
             {/* Sticky Header with Close Button */}
-            <div className="sticky top-0 p-4 flex justify-end bg-slate-900/50 backdrop-blur-sm z-10">
-              <button onClick={onClose} className="w-10 h-10 bg-slate-800/50 rounded-full flex items-center justify-center hover:bg-slate-700 transition-colors">
+            <div className="sticky top-0 p-4 sm:p-6 flex justify-between items-center bg-slate-900/70 backdrop-blur-lg border-b border-slate-800 z-10 flex-shrink-0">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-lg flex items-center justify-center text-white flex-shrink-0">
+                  <service.icon.type className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-sm text-teal-400 font-semibold">Service Spotlight</p>
+                  <h2 className="text-xl font-bold text-white">{service.title}</h2>
+                </div>
+              </div>
+              <button onClick={onClose} className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500">
                 <X className="w-6 h-6 text-slate-300" />
               </button>
             </div>
 
-            <div className="p-6 sm:p-8 lg:p-10 pt-0">
-              {/* Modal Header */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-8">
-                <div className="w-20 h-20 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-cyan-500/20 flex-shrink-0">
-                  <service.icon.type className="w-10 h-10" />
-                </div>
-                <div>
-                  <p className="text-teal-400 font-semibold">Layanan Unggulan Kami</p>
-                  <h2 className="text-3xl sm:text-4xl font-bold text-white mt-1">{service.title}</h2>
-                </div>
-              </div>
-
+            <div className="overflow-y-auto">
               {/* Modal Content */}
-              <div className="grid lg:grid-cols-3 gap-8">
+              <div className="p-6 sm:p-8 lg:p-10 grid md:grid-cols-5 gap-8">
                 {/* Main Content */}
-                <div className="lg:col-span-2 space-y-4 text-slate-300 leading-relaxed">
-                  <p className="text-lg text-slate-200">{service.desc}</p>
+                <div className="md:col-span-3 space-y-6 text-slate-300">
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-4">Project Overview</h3>
+                    <p className="text-lg text-slate-200 leading-relaxed">{service.desc}</p>
+                  </div>
+                  <div className="w-full h-px bg-gradient-to-r from-teal-500/30 via-slate-700 to-transparent"></div>
                   {/* Render detailed description paragraphs */}
-                  {(service.detailedDesc || []).map((paragraph, index) => (
-                    <p key={index}>{paragraph}</p>
-                  ))}
+                  <div className="space-y-4 leading-relaxed">
+                    {(service.detailedDesc || []).map((paragraph, index) => (
+                      <p key={index}>{paragraph}</p>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Sidebar with Features */}
-                <div className="lg:col-span-1">
-                  <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-6">
-                    <h4 className="text-lg font-bold text-white mb-4">Apa yang Anda Dapatkan?</h4>
+                <div className="md:col-span-2">
+                  <div className="sticky top-0 bg-slate-800/50 border border-slate-700/80 rounded-xl p-6">
+                    <h4 className="text-xl font-bold text-white mb-5">Key Features</h4>
                     <ul className="space-y-3">
                       {(service.features || []).map((feature, index) => (
                         <motion.li 
                           key={index} 
                           className="flex items-start gap-3"
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.1 }}
+                          initial={{ opacity: 0, x: -15 }}
+                          animate={{ opacity: 1, x: 0, transition: { delay: 0.2 + index * 0.1, ease: 'easeOut' } }}
                         >
                           <CheckCircle className="w-5 h-5 text-teal-400 flex-shrink-0 mt-0.5" />
-                          <span>{feature}</span>
+                          <span className="text-slate-300">{feature}</span>
                         </motion.li>
                       ))}
                     </ul>

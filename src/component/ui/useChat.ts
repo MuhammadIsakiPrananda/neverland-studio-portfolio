@@ -12,24 +12,25 @@ export const useChat = () => {
   // Set initial message
   useEffect(() => {
     setMessages([{
-      id: 1,
-      text: "Hello! I'm the AI assistant for Neverland Studio. How can I help?",
+      id: Date.now(),
       sender: 'bot',
+      text: "Hello! I'm the AI assistant for Neverland Studio. I'm here to help you with your questions.\n\n" +
+            "You can ask me about:\n- Our **Services** (e.g., 'What services do you offer?')\n- **Pricing** information\n- How to **Contact** us"
     }]);
   }, []);
   
   const getBotResponse = (userMessage: string): string => {
     const lowerCaseMessage = userMessage.toLowerCase();
     if (lowerCaseMessage.includes('layanan') || lowerCaseMessage.includes('service')) {
-      return "Kami menawarkan layanan **Web Development**, **UI/UX Design**, dan **Digital Consultation**.";
+      return "We offer **Web Development**, **UI/UX Design**, and **Digital Consultation** services.";
     }
     if (lowerCaseMessage.includes('harga') || lowerCaseMessage.includes('pricing')) {
-      return "Untuk informasi harga, silakan kunjungi halaman Harga kami atau hubungi kami untuk penawaran khusus.";
+      return "For pricing information, please visit our Pricing page or contact us for a custom quote.";
     }
     if (lowerCaseMessage.includes('kontak') || lowerCaseMessage.includes('contact')) {
-      return "Anda dapat menghubungi kami melalui email di **arlianto032@gmail.com** atau mengisi formulir di halaman Kontak.";
+      return "You can contact us via email at **arlianto032@gmail.com** or by filling out the form on our Contact page.";
     }
-    return "Maaf, saya tidak mengerti pertanyaan itu. Coba tanyakan tentang layanan, harga, atau kontak.";
+    return "I'm sorry, I don't understand that question. Try asking about services, pricing, or contact information.";
   };
 
   const addMessage = useCallback((text: string) => {
@@ -60,9 +61,10 @@ export const useChat = () => {
 
   const reset = useCallback(() => {
     setMessages([{
-      id: 1,
-      text: "Hello! I'm the AI assistant for Neverland Studio. How can I help?",
+      id: Date.now(),
       sender: 'bot',
+      text: "Hello! I'm the AI assistant for Neverland Studio. I'm here to help you with your questions.\n\n" +
+            "You can ask me about:\n- Our **Services** (e.g., 'What services do you offer?')\n- **Pricing** information\n- How to **Contact** us"
     }]);
     setIsLoading(false);
   }, []);
