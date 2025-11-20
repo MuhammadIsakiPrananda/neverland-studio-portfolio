@@ -1,9 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
-import {
-  ShieldCheck, X, User, Palette, CreditCard, Save, Loader
-} from 'lucide-react';
+import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SettingsCard } from './SettingsCard';
 import { AccountTabContent } from './AccountTab';
 import { AppearanceTabContent } from './AppearanceTab';
 import { SecurityTabContent } from './SecurityTab';
@@ -40,7 +37,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onUpdateProfile, on
   }, [user]);
 
   const { appSettings, handleSettingsChange, handleThemeChange } = useAppearanceState();
-  const { isEditing, setIsEditing, isLoading, formData, handleInputChange, handleSaveChanges, handleCancel, avatarPreview, coverPhotoPreview, fileInputRef, coverPhotoInputRef, handleAvatarChange, handleCoverPhotoChange } = useProfileState(user, onUpdateProfile);
+  const { isLoading, formData, handleInputChange, handleSaveChanges, handleCancel, avatarPreview, coverPhotoPreview, fileInputRef, coverPhotoInputRef, handleAvatarChange, handleCoverPhotoChange } = useProfileState(user, onUpdateProfile);
   const securityState = useSecurityState();
   const { isDeleteModalOpen, setIsDeleteModalOpen, isDeleting, handleAccountDeletion } = useDeletionState(onDeleteAccount);
 
@@ -55,10 +52,9 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onUpdateProfile, on
     return (score / total) * 100;
   }, [user, avatarPreview, coverPhotoPreview]);
 
-  const profileCompletion = calculateProfileCompletion();
+  calculateProfileCompletion();
 
   const currentAvatar = avatarPreview || user.avatar || `https://ui-avatars.com/api/?name=${user.name.replace(' ', '+')}&background=0d9488&color=fff&size=128`;
-  const currentCover = coverPhotoPreview || user.coverPhoto || 'https://images.unsplash.com/photo-1504805572947-34fad45aed93?q=80&w=2070&auto=format&fit=crop'; //NOSONAR
 
   return (
     <>
@@ -77,12 +73,8 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onUpdateProfile, on
           <header className="p-6 border-b border-gray-800">
             <ProfileHeader 
               user={user}
-              isEditing={isEditing}
               currentAvatar={currentAvatar}
-              currentCover={currentCover}
-              onEdit={() => setIsEditing(true)}
               onAvatarClick={() => fileInputRef.current?.click()}
-              onCoverClick={() => coverPhotoInputRef.current?.click()}
             />
             <nav className="relative flex items-center gap-4 mt-6 border-b border-gray-800">
               {['profile', 'security', 'account', 'appearance'].map((section) => (
@@ -119,8 +111,8 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onUpdateProfile, on
                     handleInputChange={handleInputChange}
                     handleCancel={handleCancel}
                     handleSaveChanges={handleSaveChanges}
-                    fileInputRef={fileInputRef}
-                    coverPhotoInputRef={coverPhotoInputRef}
+                    fileInputRef={fileInputRef as React.RefObject<HTMLInputElement>}
+                    coverPhotoInputRef={coverPhotoInputRef as React.RefObject<HTMLInputElement>}
                     handleAvatarChange={handleAvatarChange}
                     handleCoverPhotoChange={handleCoverPhotoChange}
                   />

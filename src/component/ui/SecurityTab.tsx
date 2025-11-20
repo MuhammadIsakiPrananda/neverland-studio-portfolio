@@ -1,13 +1,11 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader, ShieldCheck, Smartphone, QrCode, LogOut, Globe, LogIn, ShieldAlert, Trash2 } from 'lucide-react';
-import { SettingsCard } from './SettingsCard';
+import { Loader, ShieldCheck, Smartphone, QrCode, LogOut, Globe, Trash2 } from 'lucide-react';
 
 export const SecurityTabContent: React.FC<any> = ({
   handlePasswordChangeSubmit, passwordData, handlePasswordInputChange, passwordErrors, isLoading, setIsSettingUp2FA,
   isSettingUp2FA, is2faEnabled, handleDisable2FA, handleEnable2FA, handleVerify2FA, twoFactorCode, setTwoFactorCode,
   sessions, handleSignOutAllOtherSessions, handleSignOutSession,
-  loginHistory,
   setIsDeleteModalOpen
 }) => {
   const getPasswordStrength = (password: string) => {

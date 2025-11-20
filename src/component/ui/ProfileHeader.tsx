@@ -1,17 +1,13 @@
 import React from 'react';
-import { Edit, Camera, Github, Linkedin, Twitter } from 'lucide-react';
+import { Camera } from 'lucide-react';
 
 interface ProfileHeaderProps {
   user: { name: string; username: string; };
-  isEditing: boolean;
-  currentCover: string;
   currentAvatar: string;
-  onEdit: () => void;
   onAvatarClick: () => void;
-  onCoverClick: () => void;
 }
 
-export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, isEditing, currentCover, currentAvatar, onEdit, onAvatarClick, onCoverClick }) => (
+export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, currentAvatar, onAvatarClick }) => (
   <div className="flex items-center gap-3 p-2">
     <div className="relative group">
       <img className="w-10 h-10 rounded-full object-cover" src={currentAvatar} alt="User avatar" />

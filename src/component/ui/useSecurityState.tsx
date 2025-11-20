@@ -12,7 +12,7 @@ const loginHistory = [
 
 export const useSecurityState = () => {
   const [passwordData, setPasswordData] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
-  const [passwordErrors, setPasswordErrors] = useState<Record<string, string>>({});
+  const [passwordErrors] = useState<Record<string, string>>({});
   const [isSettingUp2FA, setIsSettingUp2FA] = useState(false);
   const [twoFactorCode, setTwoFactorCode] = useState('');
   const [is2faEnabled, setIs2faEnabled] = useState(false);
