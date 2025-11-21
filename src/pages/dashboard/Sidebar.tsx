@@ -1,263 +1,198 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, createContext, useContext } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { FiHome, FiSettings, FiGrid, FiChevronsLeft, FiChevronsRight, FiChevronDown, FiUser, FiSearch, FiBarChart2, FiInbox, FiMessageSquare, FiUsers, FiBriefcase, FiCreditCard, FiLayout, FiPlusCircle, FiCalendar, FiCheckSquare, FiImage, FiHelpCircle, FiExternalLink } from 'react-icons/fi';
+import {
+  FiHome, FiSettings, FiChevronsLeft, FiChevronsRight, FiChevronDown,
+  FiUser, FiSearch, FiBarChart2, FiInbox, FiMessageSquare, FiUsers,
+  FiBriefcase, FiCreditCard, FiLayout, FiPlusCircle, FiCalendar,
+  FiCheckSquare, FiImage, FiHelpCircle, FiLogOut, FiX
+} from 'react-icons/fi';
 import { useAuth } from '../../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Define strong types for navigation links
-type NavLinkType = {
+// Types
+interface NavItemType {
   name: string;
   icon: React.ElementType;
   path?: string;
-  notification?: number | boolean;
-  subLinks?: NavLinkType[];
-};
+  badge?: number | boolean;
+  children?: NavItemType[];
+}
 
-// Custom hook to check screen width
+interface SidebarContextType {
+  isCollapsed: false; // Always expanded on desktop
+  isTablet: boolean;
+  closeMobile: () => void;
+}
+
+// Context
+const SidebarContext = createContext<SidebarContextType | null>(null);
+const useSidebar = () => useContext(SidebarContext)!;
+
+// Hooks
 const useMediaQuery = (query: string) => {
-  const [matches, setMatches] = useState(window.matchMedia(query).matches);
-
+  const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
   useEffect(() => {
-    const media = window.matchMedia(query);
-    const listener = () => setMatches(media.matches);
-    media.addEventListener('change', listener);
-    return () => media.removeEventListener('change', listener);
+    const mq = window.matchMedia(query);
+    const handler = (e: MediaQueryListEvent) => setMatches(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
   }, [query]);
-
   return matches;
 };
 
-// Define navLinks outside the component to prevent re-creation on re-renders
-const navLinks: NavLinkType[] = [
-  { name: 'Overview', path: '/dashboard', icon: FiHome, notification: true },
+// Navigation Data
+const navigation: NavItemType[] = [
+  { name: 'Overview', path: '/dashboard', icon: FiHome },
   { name: 'Analytics', path: '/dashboard/analytics', icon: FiBarChart2 },
   { name: 'Calendar', path: '/dashboard/calendar', icon: FiCalendar },
-  { 
-    name: 'Inbox', 
-    icon: FiInbox,
-    notification: 8,
-    subLinks: [
-      { name: 'Reviews', path: '/dashboard/inbox/reviews', icon: FiMessageSquare, notification: 3 },
-      { name: 'Applicants', path: '/dashboard/inbox/applicants', icon: FiUsers, notification: 5 },
+  {
+    name: 'Inbox', icon: FiInbox, badge: 8,
+    children: [
+      { name: 'Reviews', path: '/dashboard/inbox/reviews', icon: FiMessageSquare, badge: 3 },
+      { name: 'Applicants', path: '/dashboard/inbox/applicants', icon: FiUsers, badge: 5 },
       { name: 'Collaborations', path: '/dashboard/inbox/collaborations', icon: FiBriefcase },
     ]
   },
   {
-    name: 'Portfolios',
-    icon: FiGrid,
-    subLinks: [
+    name: 'Portfolios', icon: FiLayout,
+    children: [
       { name: 'All Portfolios', path: '/dashboard/portfolios', icon: FiLayout },
-      { name: 'Add New', path: '/dashboard/portfolios/new', icon: FiPlusCircle },
+      { name: 'Create New', path: '/dashboard/portfolios/new', icon: FiPlusCircle },
     ]
   },
-  { name: 'Tasks', path: '/dashboard/tasks', icon: FiCheckSquare, notification: 4 },
+  { name: 'Tasks', path: '/dashboard/tasks', icon: FiCheckSquare, badge: 4 },
   { name: 'Clients', path: '/dashboard/clients', icon: FiUsers },
   { name: 'Media', path: '/dashboard/media', icon: FiImage },
-  { 
-    name: 'Settings',
-    icon: FiSettings,
-    subLinks: [
+  {
+    name: 'Settings', icon: FiSettings,
+    children: [
       { name: 'Profile', path: '/dashboard/settings', icon: FiUser },
       { name: 'Billing', path: '/dashboard/settings/billing', icon: FiCreditCard },
-      {
-        path: '#', // Add a placeholder path
-        name: 'Website',
-        icon: FiSettings,
-        subLinks: [
-          { name: 'General', path: '/dashboard/settings/website/general', icon: FiSettings },
-        ]
-      }
+      { name: 'Website', path: '/dashboard/settings/website', icon: FiSettings },
     ]
   },
-  {
-    name: 'Support',
-    icon: FiHelpCircle,
-    path: '/dashboard/support'
-  },
+  { name: 'Support', path: '/dashboard/support', icon: FiHelpCircle },
 ];
 
-const Sidebar = ({ isMobileOpen, setMobileOpen }: { isMobileOpen: boolean, setMobileOpen: (isOpen: boolean) => void }) => {
-  const isTablet = useMediaQuery('(max-width: 1024px)');
-  const [isCollapsed, setIsCollapsed] = useState(isTablet);
-  const [searchTerm, setSearchTerm] = useState('');
-  const { userProfile, isLoggedIn, logout } = useAuth();
+// Animation Variants
+const sidebarVariants = {
+  // Sidebar is always expanded on desktop
+  open: { width: 280 },
+};
 
- const sidebarVariants = {
-    expanded: { width: '16rem' }, // 256px
-    collapsed: { width: '5rem' } // 80px
-  };
+const mobileVariants = {
+  open: { x: 0, opacity: 1 },
+  closed: { x: -300, opacity: 0 },
+};
 
-  const mobileSidebarVariants = {
-    open: { x: 0 },
-    closed: { x: '-100%' }
-  };
+// Components
+const Badge = ({ value }: { value: number | boolean }) => {
+  if (value === true) {
+    return <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />;
+  }
+  if (typeof value === 'number' && value > 0) {
+    return (
+      <span className="px-2 py-0.5 text-[10px] font-semibold bg-violet-500/20 text-violet-300 rounded-full">
+        {value > 99 ? '99+' : value}
+      </span>
+    );
+  }
+  return null;
+};
 
-  // Collapse sidebar automatically on tablet, but allow manual override
-  useEffect(() => {
-    setIsCollapsed(isTablet);
-  }, [isTablet]);
-
-  const finalSidebarVariants = isTablet ? mobileSidebarVariants : sidebarVariants;
-
-  const filteredNavLinks = useMemo(() => {
-    if (!searchTerm) return navLinks;
-
-    const filterLinks = (links: NavLinkType[]): NavLinkType[] => {
-      return links.map(link => {
-        if (link.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-          return link; // Keep parent if it matches
-        }
-        if (link.subLinks) {
-          const filteredSubs = filterLinks(link.subLinks);
-          if (filteredSubs.length > 0) return { ...link, subLinks: filteredSubs };
-        }
-        return null;
-      }).filter((link): link is NavLinkType => link !== null);
-    };
-    return filterLinks(navLinks);
-  }, [searchTerm]);
-
+const Tooltip = ({ children, label }: { children: React.ReactNode; label: string }) => {
+  const { isCollapsed, isTablet } = useSidebar();
+  if (isTablet) return <>{children}</>; // Tooltips are only for collapsed state, which is now disabled on desktop
+  
   return (
-    <motion.div
-      initial={false}
-      variants={finalSidebarVariants}
-      animate={isTablet ? (isMobileOpen ? 'open' : 'closed') : (isCollapsed ? 'collapsed' : 'expanded')}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
-      className={`bg-gray-900 text-white flex flex-col h-screen z-20 ${isTablet ? 'fixed' : 'sticky'} top-0`}
-    >
-      {/* Overlay for mobile view */}
-      {isTablet && isMobileOpen && <div onClick={() => setMobileOpen(false)} className="fixed inset-0 bg-black/50 z-10" />}
-      
-      {/* Header with Logo and Toggle Button */}
-      <div className={`flex items-center p-4 h-20 border-b border-gray-800 ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
-        <div className={`flex items-center gap-2 ${isCollapsed ? 'justify-center' : ''}`}>
-            <div className="bg-violet-600 p-2 rounded-lg">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c0 3.517-1.009 6.79-2.731 9.172-.64.84-1.775 1.242-2.85 1.015A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10c0 .155-.006.308-.017.46a9.964 9.964 0 01-2.91 6.56c-1.09.863-2.52 1.03-3.728.463A9.945 9.945 0 0112 11z" /></svg>
-            </div>
-            <AnimatePresence>
-            {!isCollapsed && (
-                <motion.span
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.2 }}
-                className="text-xl font-bold text-white whitespace-nowrap"
-                >
-                Neverland
-                </motion.span>
-            )}
-            </AnimatePresence>
-        </div>
-        {!isTablet && (
-          <button onClick={() => setIsCollapsed(!isCollapsed)} className="p-2 rounded-full hover:bg-gray-800 transition-colors">
-          {isCollapsed ? <FiChevronsRight className="w-6 h-6" /> : <FiChevronsLeft className="w-6 h-6" />}
-        </button>
-        )}
+    <div className="relative group">
+      {children}
+      <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-800 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-xl border border-gray-700">
+        {label}
+        <div className="absolute right-full top-1/2 -translate-y-1/2 border-8 border-transparent border-r-gray-800" />
       </div>
-
-      {/* Search Bar */}
-      <div className={`p-4 ${isCollapsed ? 'px-3' : ''}`}>
-        <div className="relative">
-          <FiSearch className={`absolute top-1/2 -translate-y-1/2 text-gray-500 ${isCollapsed ? 'left-3' : 'left-3'}`} />
-          {!isCollapsed && (
-            <input 
-              type="text" 
-              placeholder="Search..."
-              value={isCollapsed ? '' : searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-10 pr-4 py-2 text-sm outline-none focus:ring-2 focus:ring-violet-500 transition"
-            />
-          )}
-        </div>
-      </div>
-
-      {/* Main navigation area */}
-      <div className="flex-grow overflow-y-auto border-r border-gray-800">
-        <nav className="p-4 pt-0">
-          {filteredNavLinks.map(link => link && <NavItem key={link.name} link={link} isCollapsed={isCollapsed} setMobileOpen={setMobileOpen} isTablet={isTablet} />)}
-        </nav>
-      </div>
-
-      {/* User Profile Footer */}
-      {isLoggedIn && userProfile && (
-        <div className={`p-4 border-t border-gray-800 space-y-4 ${isCollapsed ? '' : 'border-r border-gray-800'}`}>
-          <div className={`flex items-center ${isCollapsed ? 'justify-center' : ''}`}>
-            <img
-              src={userProfile.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${userProfile.name}`}
-              alt="User Avatar"
-              className="w-10 h-10 rounded-full border-2 border-gray-600"
-            />
-            <AnimatePresence>
-              {!isCollapsed && (
-                <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="ml-3 overflow-hidden">
-                  <p className="font-semibold text-sm text-white truncate">{userProfile.name}</p>
-                  <p className="text-xs text-slate-400 truncate">@{userProfile.username}</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-          <button onClick={logout} className={`w-full flex items-center py-2.5 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white transition-colors duration-200 ${isCollapsed ? 'justify-center' : 'px-4'}`}>
-            <FiExternalLink className="w-5 h-5" />
-            {!isCollapsed && <span className="font-medium ml-3">Back to Main</span>}
-          </button>
-        </div>
-      )}
-    </motion.div>
+    </div>
   );
 };
 
-const NavItem = ({ link, isCollapsed, setMobileOpen, isTablet }: { link: NavLinkType, isCollapsed: boolean, setMobileOpen: (isOpen: boolean) => void, isTablet: boolean}) => {
+const NavItem = ({ item, depth = 0 }: { item: NavItemType; depth?: number }) => {
   const location = useLocation();
-  const isParentActive = link.subLinks ? link.subLinks.some(sub => sub.path && location.pathname.startsWith(sub.path)) : false;
-  const [isOpen, setIsOpen] = useState(isParentActive);
+  const { isCollapsed, closeMobile, isTablet } = useSidebar();
+  const [isOpen, setIsOpen] = useState(false);  
+  
+  const isChildActive = item.children?.some(c => c.path && location.pathname.startsWith(c.path));
+  const hasChildren = !!item.children?.length;
+  useEffect(() => {
+    if (isChildActive) setIsOpen(true);
+  }, [isChildActive]);
 
-  const handleItemClick = () => {
-    if (link.subLinks) {
+  const handleClick = (e: React.MouseEvent) => {
+    if (hasChildren) {
+      e.preventDefault();
       setIsOpen(!isOpen);
     } else {
-      if (isTablet) setMobileOpen(false);
+      closeMobile();
     }
   };
 
-  // Sync dropdown state with routing
-  useEffect(() => {
-    setIsOpen(isParentActive);
-  }, [isParentActive]);
+  const baseClasses = `
+    relative flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer
+    transition-all duration-200 group
+    ${depth > 0 ? 'ml-3' : ''}
+  `;
 
-
-  if (link.subLinks) {
-    return (
-      <div className="my-1">
-        <div
-          onClick={handleItemClick}
-          className={`flex items-center h-12 px-4 rounded-lg transition-colors duration-200 group relative cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-white ${
-            isParentActive ? 'text-white bg-gray-800' : ''
-          } ${isCollapsed ? 'justify-center' : 'pr-2'}`}
+  const content = (isActive: boolean) => (
+    <>
+      {isActive && !hasChildren && (
+        <motion.div
+          layoutId="nav-indicator"
+          className="absolute inset-0 bg-gradient-to-r from-violet-600/90 to-indigo-600/90 rounded-xl"
+          transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+        />
+      )}
+      <item.icon className={`relative w-5 h-5 flex-shrink-0 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'}`} />
+      <AnimatePresence mode="wait">
+        <motion.span
+          initial={{ opacity: 0, width: 0 }}
+          animate={{ opacity: 1, width: 'auto' }}
+          exit={{ opacity: 0, width: 0 }}
+          className={`relative flex-1 font-medium text-sm truncate ${isActive ? 'text-white' : 'text-slate-300 group-hover:text-white'}`}
         >
-          <link.icon className="w-6 h-6" />
-          {!isCollapsed && ( // Wrapper to prevent text wrapping during collapse animation
-            <span className="font-medium ml-3 whitespace-nowrap flex-1">{link.name}</span>
-          )}
-          {!isCollapsed && link.notification && (
-            <NotificationBadge notification={link.notification} />
-          )}
-          {!isCollapsed && <FiChevronDown className={`w-5 h-5 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />}
-          {isCollapsed && (
-            <div className="absolute left-full rounded-md px-2 py-1 ml-6 bg-violet-600 text-white text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 whitespace-nowrap">
-              {link.name}
-            </div>
-          )}
-        </div>
+          {item.name}
+        </motion.span>
+      </AnimatePresence>
+      {item.badge && <Badge value={item.badge} />}
+      {hasChildren && (
+        <FiChevronDown className={`relative w-4 h-4 text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+      )}
+    </>
+  );
+
+  // Parent with children
+  if (hasChildren) {
+    return (
+      <div className="relative">
+        <Tooltip label={item.name}>
+          <div
+            onClick={handleClick}
+            className={`${baseClasses} ${isChildActive ? 'bg-white/5 text-white' : 'text-slate-400 hover:bg-white/5'}`}
+          >
+            {content(isChildActive || false)}
+          </div>
+        </Tooltip>
+
+        {/* Expanded dropdown */}
         <AnimatePresence>
-          {isOpen && !isCollapsed && (
+          {isOpen && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden ml-6 pl-2 border-l-2 border-gray-700"
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden mt-1 pl-4 border-l border-gray-700/50"
             >
-              {link.subLinks.map((subLink) => (
-                <NavItem key={subLink.name} link={subLink} isCollapsed={isCollapsed} setMobileOpen={setMobileOpen} isTablet={isTablet} />
+              {item.children!.map(child => (
+                <NavItem key={child.name} item={child} depth={depth + 1} />
               ))}
             </motion.div>
           )}
@@ -266,73 +201,164 @@ const NavItem = ({ link, isCollapsed, setMobileOpen, isTablet }: { link: NavLink
     );
   }
 
-  const commonProps = {
-    onClick: handleItemClick,
-    title: isCollapsed ? link.name : '',
-  };
-
+  // Regular link
   return (
-    <NavLink
-      to={link.path || '#'}
-      // Use `end` prop for the overview link to prevent it from matching all other dashboard routes
-      end={link.path === '/dashboard'}
-      {...commonProps}
-      className={({ isActive }) =>
-        `flex items-center h-12 my-1 rounded-lg transition-colors duration-200 group relative text-gray-400 hover:bg-gray-800 hover:text-white ${
-          isActive ? 'bg-gray-800 text-white' : ''
-        } ${isCollapsed ? 'justify-center' : 'px-4' }`
-      }
-    >
-      {({ isActive }) => <Content link={link} isCollapsed={isCollapsed} isActive={isActive} />}
-    </NavLink>
+    <Tooltip label={item.name}>
+      <NavLink
+        to={item.path || '#'}
+        end={item.path === '/dashboard'}
+        onClick={handleClick}
+        className={({ isActive }) => `${baseClasses} ${isActive ? 'text-white' : 'text-slate-400 hover:bg-white/5'}`}
+      >
+        {({ isActive }) => content(isActive)}
+      </NavLink>
+    </Tooltip>
   );
 };
 
-const Content = ({ link, isCollapsed, isActive }: { link: NavLinkType, isCollapsed: boolean, isActive: boolean }) => (
-  <> 
-    {isActive && !isCollapsed && (
-      <motion.div layoutId="active-indicator" className="absolute left-0 h-6 w-1 bg-violet-500 rounded-r-full" />
-    )}
-    <link.icon className="w-6 h-6" />
-    <AnimatePresence>
-      {!isCollapsed && (
-        <motion.span
-          initial={{ opacity: 0, width: 0 }}
-          animate={{ opacity: 1, width: 'auto' }}
-          exit={{ opacity: 0, width: 0 }}
-          transition={{ duration: 0.2, delay: 0.1 }}
-          className="font-medium ml-3 whitespace-nowrap flex-1 overflow-hidden"
-        >
-          {link.name}
-        </motion.span>
-      )}
-    </AnimatePresence>
-    {!isCollapsed && link.notification && (
-      <NotificationBadge notification={link.notification} />
-    )}
-    {isCollapsed && (
-      <div className="absolute left-full rounded-md px-2 py-1 ml-6 bg-violet-600 text-white text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 whitespace-nowrap">
-        {link.name}
-      </div>
-    )}
-  </>
-);
+const SearchBar = () => {
+  const [query, setQuery] = useState('');
 
-const NotificationBadge = ({ notification }: { notification: number | boolean }) => {
-  if (typeof notification === 'number' && notification > 0) {
-    return (
-      <motion.div 
-        initial={{ scale: 0 }} animate={{ scale: 1 }}
-        className="bg-violet-500 text-white text-xs font-bold rounded-full h-5 min-w-[1.25rem] flex items-center justify-center ml-auto px-1"
+  return (
+    <div className="px-4 mb-2">
+      <div className="relative">
+        <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+        <input
+          type="text"
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          placeholder="Search..."
+          className="w-full bg-white/5 border border-gray-700/50 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 transition-all"
+        />
+      </div>
+    </div>
+  );
+};
+
+const UserProfile = () => {
+  const { userProfile, logout } = useAuth();
+  if (!userProfile) return null;
+
+  return (
+    <div className="p-4 border-t border-gray-700/50">
+      <div className="flex items-center gap-3">
+        <img
+          src={userProfile.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${userProfile.name}`}
+          alt=""
+          className="w-10 h-10 rounded-xl object-cover ring-2 ring-violet-500/30"
+        />
+        <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            className="flex-1 min-w-0"
+          >
+            <p className="font-semibold text-sm text-white truncate">{userProfile.name}</p>
+            <p className="text-xs text-slate-400 truncate">@{userProfile.username}</p>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+      <Tooltip label="Logout">
+        <button
+          onClick={logout}
+          className="mt-3 flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all"
+        >
+          <FiLogOut className="w-5 h-5" />
+          <span className="text-sm font-medium">Logout</span>
+        </button>
+      </Tooltip>
+    </div>
+  );
+};
+
+// Main Sidebar Component
+const Sidebar = ({ isMobileOpen, setMobileOpen }: { isMobileOpen: boolean; setMobileOpen: (v: boolean) => void }) => {
+  const isTablet = useMediaQuery('(max-width: 1024px)');  
+  const { isLoggedIn } = useAuth();
+
+  const contextValue = useMemo(() => ({
+    isCollapsed: false, // Always false for desktop
+    isTablet,
+    closeMobile: () => isTablet && setMobileOpen(false),
+  }), [isTablet, setMobileOpen]);
+
+  return (
+    <SidebarContext.Provider value={contextValue}>
+      {/* Mobile Overlay */}
+      <AnimatePresence>
+        {isTablet && isMobileOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setMobileOpen(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Sidebar */}
+      <motion.aside
+        variants={isTablet ? mobileVariants : sidebarVariants}
+        initial={false}
+        animate={isTablet ? (isMobileOpen ? 'open' : 'closed') : 'open'}
+        transition={{ type: 'spring', stiffness: 400, damping: 40 }}
+        className={`
+          bg-gray-900/80 backdrop-blur-2xl border-r border-gray-700/50 flex flex-col z-50
+          ${isTablet ? 'fixed inset-y-0 left-0 w-[280px] overflow-y-auto' 
+                     : 'sticky top-0 h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent'}
+        `}
       >
-        {notification}
-      </motion.div>
-    );
-  }
-  if (notification === true) {
-    return <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="bg-violet-500 rounded-full h-2 w-2 ml-auto" />;
-  }
-  return null;
+        {/* Header */}
+        <div className="flex items-center justify-between h-20 px-4">
+          <div className="flex items-center gap-3">
+            <motion.div
+              whileHover={{ scale: 1.1, rotate: -5 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+              className="w-10 h-10 flex-shrink-0 cursor-pointer"
+            >
+              <img
+                src="/images/Neverland Studio.webp"
+                alt="Neverland Studio Logo"
+                className="w-full h-full object-cover rounded-xl shadow-lg shadow-violet-500/25"
+              />
+            </motion.div>
+            <AnimatePresence>
+              <motion.span
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                className="text-xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent"
+              >
+                Neverland
+              </motion.span>
+            </AnimatePresence>
+          </div>
+          
+          {isTablet && (
+            <button onClick={() => setMobileOpen(false)} className="p-2 text-slate-400 hover:text-white transition-colors">
+              <FiX className="w-5 h-5" />
+            </button>
+          )}
+        </div>
+
+        {/* Search */}
+        <SearchBar />
+
+        {/* Navigation */}
+        <nav className="flex-grow px-2 py-4 space-y-1">
+          {navigation.map(item => (
+            <NavItem key={item.name} item={item} />
+          ))}
+        </nav>
+
+        {/* User Profile */}
+        {isLoggedIn && <UserProfile />}
+      </motion.aside>
+    </SidebarContext.Provider>
+  );
 };
 
 export default Sidebar;
