@@ -19,6 +19,14 @@ RUN npm run build
 FROM nginx:stable-alpine AS production
 
 # Copy the Nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Create a non-root user and group
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Switch to the non-root user
+USER appuser
+
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy the built React application from the builder stage
