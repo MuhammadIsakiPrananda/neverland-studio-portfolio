@@ -18,17 +18,15 @@ RUN npm run build
 # Stage 2: Serve the application with Nginx
 FROM nginx:stable-alpine AS production
 
-# Copy the Nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy the Nginx configuration (jika Anda punya file kustom, aktifkan baris ini)
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Create a non-root user and group, dan berikan izin ke direktori yang dibutuhkan Nginx
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-RUN chown -R appuser:appgroup /var/cache/nginx && \
-    chown -R appuser:appgroup /var/log/nginx && \
-    chown -R appuser:appgroup /etc/nginx/conf.d
-RUN touch /var/run/nginx.pid && \
+# Create a non-root user, group, and set permissions in a single RUN command
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup && \
+    chown -R appuser:appgroup /var/cache/nginx /var/log/nginx /etc/nginx/conf.d && \
+    touch /var/run/nginx.pid && \
     chown -R appuser:appgroup /var/run/nginx.pid
-
+ 
 # Switch to the non-root user
 USER appuser
 
