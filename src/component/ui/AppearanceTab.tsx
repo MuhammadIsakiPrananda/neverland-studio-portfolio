@@ -1,6 +1,5 @@
 import React from 'react'; // NOSONAR
 import { Moon, Sun } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { ToggleSwitch } from './ToggleSwitch'; // NOSONAR
 
 interface AppSettings {
@@ -26,11 +25,11 @@ export const AppearanceTabContent: React.FC<AppearanceTabContentProps> = ({ appS
         <div>
           <label className="text-sm font-medium text-slate-300">Theme</label>
           <div className="relative flex w-full p-1 mt-2 bg-gray-800 rounded-lg border border-gray-700">
-            <motion.div
-              className="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-gray-700 shadow-sm rounded-md"
-              animate={{ x: appSettings.theme === 'light' ? 0 : '100%' }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            {/* --- OPTIMASI: Mengganti framer-motion dengan transisi CSS --- */}
+            <div
+              className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-gray-700 shadow-sm rounded-md transition-transform duration-300 ease-in-out ${appSettings.theme === 'dark' ? 'translate-x-full' : 'translate-x-0'}`}
             />
+            {/* ----------------------------------------------------------- */}
             <button onClick={() => onThemeChange('light')} className="relative z-10 flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium transition-colors">
                 <Sun className={`w-5 h-5 transition-colors ${appSettings.theme === 'light' ? 'text-yellow-400' : 'text-slate-400'}`} />
                 <span className={appSettings.theme === 'light' ? 'text-white' : 'text-slate-400'}>Light</span>

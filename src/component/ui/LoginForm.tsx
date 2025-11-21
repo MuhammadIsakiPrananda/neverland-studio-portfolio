@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { User, Lock, LogIn, Loader, Eye, EyeOff, ShieldX } from 'lucide-react';
 import { useNotification } from './useNotification';
 import SocialLoginButtons from './SocialLoginButtons';
@@ -85,42 +84,19 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
     }, 1500);
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-    exit: { opacity: 0 }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1 },
-  };
-
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-    >
-      <motion.h2 variants={itemVariants} className="text-2xl font-bold text-white mb-6 text-center">Sign In</motion.h2>
+    <div>
+      <h2 className="text-2xl font-bold text-white mb-6 text-center">Sign In</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         {apiError && (
-          <motion.div 
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
+          <div
             className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm p-3 rounded-lg flex items-center gap-2"
           >
             <ShieldX className="w-5 h-5" />
             <span>{apiError}</span> 
-          </motion.div>
+          </div>
         )}
-        <motion.div variants={itemVariants} className="relative">
+        <div className="relative">
           <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
           <input
             type="text"
@@ -137,10 +113,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
             required
             disabled={isLoading}
           />
-        </motion.div>
+        </div>
         {errors.identifier && <p className="text-xs text-red-400 -mt-4 ml-2">{errors.identifier}</p>}
 
-        <motion.div variants={itemVariants} className="relative">
+        <div className="relative">
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
           <input
             type={showPassword ? 'text' : 'password'}
@@ -170,10 +146,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
           >
             {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
           </button>
-        </motion.div>
+        </div>
         {errors.password && <p className="text-xs text-red-400 -mt-4 ml-2">{errors.password}</p>}
 
-        <motion.div variants={itemVariants} className="flex justify-between items-center text-sm">
+        <div className="flex justify-between items-center text-sm">
           <div className="flex items-center gap-2">
             <input
               type="checkbox"
@@ -195,27 +171,26 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
             >
               Forgot Password?
             </button>
-        </motion.div>
-        <motion.button
-          variants={itemVariants}
+        </div>
+        <button
           type="submit"
           disabled={isLoading || !identifier || !password || Object.keys(errors).length > 0}
           className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-pointer disabled:hover:shadow-none disabled:transform-none" 
         >
           {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <LogIn className="w-5 h-5" />}
           {isLoading ? 'Signing In...' : 'Sign In'}
-        </motion.button>
-        <motion.div variants={itemVariants} className="text-center text-sm text-slate-400">
+        </button>
+        <div className="text-center text-sm text-slate-400">
           <SocialLoginButtons />
-        </motion.div>
-        <motion.p variants={itemVariants} className="text-center text-sm text-slate-400">
+        </div>
+        <p className="text-center text-sm text-slate-400">
           Don't have an account?{' '}
           <button type="button" onClick={() => onSwitchMode('register')} className="font-semibold text-cyan-400 hover:underline disabled:opacity-50 disabled:cursor-pointer" disabled={isLoading}> 
             Sign Up
           </button>
-        </motion.p>
+        </p>
       </form>
-    </motion.div>
+    </div>
   );
 };
 

@@ -15,7 +15,7 @@ interface AuthContextType {
   isLoggedIn: boolean;
   isLoading: boolean;
   userProfile: UserProfile | null;
-  login: (user: UserProfile) => void;
+  login: (user: UserProfile, rememberMe?: boolean) => void;
   logout: () => void;
   updateProfile: (newProfileData: Partial<UserProfile>) => void;
 }
@@ -44,16 +44,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // Bungkus fungsi dengan useCallback agar referensinya tidak berubah di setiap render
-  const login = useCallback((user: UserProfile) => {
+  const login = useCallback((user: UserProfile, rememberMe = false) => {
     setUserProfile(user);
-    localStorage.setItem('userProfile', JSON.stringify(user));
+    if (rememberMe) {
+      localStorage.setItem('userProfile', JSON.stringify(user));
+    }
   }, []);
 
   const logout = useCallback(() => {
     setUserProfile(null);
     localStorage.removeItem('userProfile');
-    // Redirect to the main page after logout
-    window.location.href = '/';
   }, []);
 
   const updateProfile = useCallback((newProfileData: Partial<UserProfile>) => {

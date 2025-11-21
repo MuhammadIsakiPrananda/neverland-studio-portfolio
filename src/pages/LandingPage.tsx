@@ -16,7 +16,6 @@ import ContactSection from '../component/sections/ContactSection';
 import Footer from '../component/common/Footer';
 import FloatingButtons from '../component/common/FloatingButtons';
 import VideoModal from '../component/common/VideoModal';
-import AuthModal from '../component/ui/AuthModal';
 import NotificationProvider from '../component/ui/NotificationProvider';
 import UserDashboard from '../component/ui/UserDashboard'; // Import UserDashboard
 import LoadingScreen from '../component/ui/LoadingScreen';
@@ -29,19 +28,23 @@ import ModalPortal from '../component/ui/ModalPortal';
 import { useAuth } from '../context/AuthContext';
 import type { UserProfile } from '../context/AuthContext';
 
-const LandingPage = () => {
+// 1. Definisikan tipe untuk props yang akan diterima
+interface LandingPageProps {
+  onLoginClick: () => void;
+}
+
+const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('Home');
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeFilter, setActiveFilter] = useState('All');
   const [showVideo, setShowVideo] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
   const [isJoinTeamModalOpen, setIsJoinTeamModalOpen] = useState(false);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
-  const { isLoggedIn, userProfile, login, logout, updateProfile } = useAuth();
+  const { isLoggedIn, userProfile, logout, updateProfile } = useAuth();
 
   useEffect(() => {
     // Simulasi waktu loading
@@ -56,7 +59,7 @@ const LandingPage = () => {
   }, []);
 
   useEffect(() => {
-    if (isAuthModalOpen || isMenuOpen || isLoading || isReviewModalOpen || isJoinTeamModalOpen || isDashboardModalOpen || isQuoteModalOpen) {
+    if (isMenuOpen || isLoading || isReviewModalOpen || isJoinTeamModalOpen || isDashboardModalOpen || isQuoteModalOpen) {
       document.body.classList.add('overflow-hidden');
     } else {
       document.body.classList.remove('overflow-hidden');
@@ -65,12 +68,7 @@ const LandingPage = () => {
     return () => {
       document.body.classList.remove('overflow-hidden');
     };
-  }, [isAuthModalOpen, isMenuOpen, isLoading, isReviewModalOpen, isJoinTeamModalOpen, isDashboardModalOpen, isQuoteModalOpen]);
-
-  const handleLoginSuccess = (user: UserProfile) => {
-    login(user);
-    setIsAuthModalOpen(false);
-  };
+  }, [isMenuOpen, isLoading, isReviewModalOpen, isJoinTeamModalOpen, isDashboardModalOpen, isQuoteModalOpen]);
 
   const handleProfileUpdate = (updatedUser: UserProfile) => {
     // Panggil fungsi dari AuthContext untuk memperbarui profil
@@ -160,7 +158,7 @@ const LandingPage = () => {
             handleNavClick={handleNavClick}
             isLoggedIn={isLoggedIn}
             userProfile={userProfile!}
-            onLoginClick={() => setIsAuthModalOpen(true)}
+            onLoginClick={onLoginClick} // 2. Gunakan prop onLoginClick
             onLogout={logout}
             onDashboardClick={() => setIsDashboardModalOpen(true)}
             onQuoteClick={() => handleNavClick('Contact')}
@@ -171,7 +169,7 @@ const LandingPage = () => {
             activeSection={activeSection} 
             handleNavClick={handleNavClick}
             isLoggedIn={isLoggedIn}
-            onLoginClick={() => setIsAuthModalOpen(true)}
+            onLoginClick={onLoginClick} // 3. Gunakan prop onLoginClick
             onLogout={logout}
             userProfile={userProfile!}
             onDashboardClick={() => setIsDashboardModalOpen(true)}
@@ -194,7 +192,6 @@ const LandingPage = () => {
           <ModalPortal>
             <FloatingButtons />
             <VideoModal showVideo={showVideo} setShowVideo={setShowVideo} />
-            <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} onLoginSuccess={handleLoginSuccess} />
             <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
             <JoinTeamModal isOpen={isJoinTeamModalOpen} onClose={() => setIsJoinTeamModalOpen(false)} />
             <AnimatePresence>
