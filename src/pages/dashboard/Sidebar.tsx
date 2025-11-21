@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, createContext, useContext } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
-  FiHome, FiSettings, FiChevronsLeft, FiChevronsRight, FiChevronDown,
+  FiHome, FiSettings, FiChevronDown,
   FiUser, FiSearch, FiBarChart2, FiInbox, FiMessageSquare, FiUsers,
   FiBriefcase, FiCreditCard, FiLayout, FiPlusCircle, FiCalendar,
   FiCheckSquare, FiImage, FiHelpCircle, FiLogOut, FiX
@@ -19,7 +19,7 @@ interface NavItemType {
 }
 
 interface SidebarContextType {
-  isCollapsed: false; // Always expanded on desktop
+  isCollapsed: boolean; // Always expanded on desktop
   isTablet: boolean;
   closeMobile: () => void;
 }
@@ -63,6 +63,7 @@ const navigation: NavItemType[] = [
   { name: 'Tasks', path: '/dashboard/tasks', icon: FiCheckSquare, badge: 4 },
   { name: 'Clients', path: '/dashboard/clients', icon: FiUsers },
   { name: 'Media', path: '/dashboard/media', icon: FiImage },
+  { name: 'divider', icon: () => null }, // Divider
   {
     name: 'Settings', icon: FiSettings,
     children: [
@@ -72,6 +73,7 @@ const navigation: NavItemType[] = [
     ]
   },
   { name: 'Support', path: '/dashboard/support', icon: FiHelpCircle },
+  { name: 'divider', icon: () => null }, // Divider
 ];
 
 // Animation Variants
@@ -101,7 +103,7 @@ const Badge = ({ value }: { value: number | boolean }) => {
 };
 
 const Tooltip = ({ children, label }: { children: React.ReactNode; label: string }) => {
-  const { isCollapsed, isTablet } = useSidebar();
+  const { isTablet } = useSidebar();
   if (isTablet) return <>{children}</>; // Tooltips are only for collapsed state, which is now disabled on desktop
   
   return (
@@ -116,8 +118,13 @@ const Tooltip = ({ children, label }: { children: React.ReactNode; label: string
 };
 
 const NavItem = ({ item, depth = 0 }: { item: NavItemType; depth?: number }) => {
+  // Handle divider
+  if (item.name === 'divider') {
+    return <hr className="my-2 border-gray-700/50" />;
+  }
+
   const location = useLocation();
-  const { isCollapsed, closeMobile, isTablet } = useSidebar();
+  const { closeMobile } = useSidebar();
   const [isOpen, setIsOpen] = useState(false);  
   
   const isChildActive = item.children?.some(c => c.path && location.pathname.startsWith(c.path));
@@ -306,12 +313,12 @@ const Sidebar = ({ isMobileOpen, setMobileOpen }: { isMobileOpen: boolean; setMo
         transition={{ type: 'spring', stiffness: 400, damping: 40 }}
         className={`
           bg-gray-900/80 backdrop-blur-2xl border-r border-gray-700/50 flex flex-col z-50
-          ${isTablet ? 'fixed inset-y-0 left-0 w-[280px] overflow-y-auto' 
-                     : 'sticky top-0 h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent'}
+          ${isTablet ? 'fixed inset-y-0 left-0 w-[280px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden' 
+                     : 'sticky top-0 h-screen overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'}
         `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between h-20 px-4">
+        <div className="flex items-center justify-between h-20 px-4 border-b border-gray-700/50">
           <div className="flex items-center gap-3">
             <motion.div
               whileHover={{ scale: 1.1, rotate: -5 }}
@@ -345,7 +352,7 @@ const Sidebar = ({ isMobileOpen, setMobileOpen }: { isMobileOpen: boolean; setMo
         </div>
 
         {/* Search */}
-        <SearchBar />
+        <div className="py-4 border-b border-gray-700/50"><SearchBar /></div>
 
         {/* Navigation */}
         <nav className="flex-grow px-2 py-4 space-y-1">
