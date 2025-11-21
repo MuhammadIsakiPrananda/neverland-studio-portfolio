@@ -30,58 +30,44 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setApiError(null);
 
-    if (!validate()) {
-      return;
-    }
+    if (!validate()) return;
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const response = await fetch('http://localhost:3001/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ identifier, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Jika response dari server adalah error (4xx atau 5xx)
+        throw new Error(data.message || 'An error occurred.');
+      }
+
+      // Jika login berhasil
+      setErrors({});
+      addNotification('Login Successful', `Welcome back, ${data.user.name}!`, 'success');
+      
+      // Panggil onLoginSuccess dengan data dari API
+      onLoginSuccess(data.user, rememberMe);
+
+    } catch (error: any) {
+      const errorMessage = error.message || 'Please check your credentials and try again.';
+      setApiError(errorMessage);
+      addNotification('Login Failed', errorMessage, 'error');
+    } finally {
       setIsLoading(false);
-      const validUsers = [
-        { name: 'Admin', username: 'admin', email: 'admin@example.com', password: 'admin', avatar: null },
-        { name: 'Test User', username: 'testuser', email: 'test@example.com', password: 'password', avatar: null },
-        { name: 'Jane Doe', username: 'janedoe', email: 'user@example.com', password: 'password123', avatar: 'https://i.pravatar.cc/150?u=user@example.com' },
-      ];
-
-      const user = validUsers.find(
-        u => (u.email === identifier || u.username === identifier) && u.password === password
-      );
-
-      if (user) {
-        setErrors({});
-        addNotification('Login Successful', `Welcome back, ${user.name}!`, 'success');
-        
-        // Simulasi deteksi perangkat baru dan pengiriman notifikasi
-        const isNewDevice = Math.random() > 0.7; // 30% kemungkinan terdeteksi sebagai perangkat baru
-        if (isNewDevice) {
-          setTimeout(() => {
-            addNotification('Security Alert: New Device Login', 
-            'We detected a login from a new device. If this wasn\'t you, please check your active sessions and change your password immediately.', 
-            'warning');
-          }, 1000); // Tampilkan notifikasi setelah 1 detik agar tidak tumpang tindih
-        }
-
-        const userData = {
-          name: user.name,
-          username: user.username,
-          email: user.email,
-          avatar: user.avatar
-        };
-        if (rememberMe) {
-          localStorage.setItem('user', JSON.stringify(userData));
-        }
-        onLoginSuccess(userData, rememberMe);
-      } else {
-        setApiError('Invalid credentials.');
-        addNotification('Login Failed', 'Please check your credentials and try again.', 'error');
-      };
-    }, 1500);
+    }
   };
 
   return (
