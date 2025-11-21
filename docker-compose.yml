@@ -1,35 +1,9 @@
 version: '3.8'
 
 services:
-  # Service ini hanya untuk membangun aset statis React
-  # dan akan berhenti setelah selesai.
-  builder:
-    image: node:20-alpine
-    container_name: neverlandstudio_builder
-    working_dir: /app
-    volumes:
-      # Mount kode sumber ke dalam container
-      - .:/app
-      # Volume untuk menyimpan hasil build (folder 'dist')
-      - react-build:/app/dist
-    # Perintah untuk install dependensi dan build
-    command: sh -c "npm ci && npm run build"
-
-  # Service ini menggunakan Nginx untuk menyajikan file statis
-  # yang dihasilkan oleh service 'builder'.
-  web:
-    image: nginx:stable-alpine
-    container_name: neverlandstudio_web
-    depends_on:
-      - builder # Pastikan 'web' berjalan setelah 'builder' selesai
+  app:
+    build: . # Memberitahu Docker Compose untuk build dari Dockerfile di direktori ini
+    container_name: neverlandstudio_app
     ports:
       - "80:80"
     restart: unless-stopped
-    volumes:
-      # Mount hasil build dari volume bersama ke direktori root Nginx
-      - react-build:/usr/share/nginx/html
-      # Mount konfigurasi Nginx
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro # 'ro' = read-only
-
-volumes:
-  react-build: # Volume untuk berbagi data antara 'builder' dan 'web'
