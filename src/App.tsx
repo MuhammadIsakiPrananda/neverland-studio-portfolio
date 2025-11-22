@@ -1,6 +1,6 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, Outlet, useNavigate, Navigate } from 'react-router-dom';
-import { useAuth, type UserProfile } from './context/AuthContext';
+import { useAuth } from './context/AuthContext';
 import NotificationContainer from './component/ui/NotificationContainer';
 import LandingPage from './pages/LandingPage';
 import DashboardLayout from './pages/Dashboard';
@@ -22,7 +22,7 @@ const Placeholder = ({ title }: { title: string }) => (
 
 // Komponen untuk melindungi rute yang memerlukan autentikasi
 const ProtectedRoute = () => {
-  const { isLoggedIn, isLoading, userProfile } = useAuth();
+  const { isLoggedIn, isLoading } = useAuth();
 
   if (isLoading) {
     return <div className="flex h-screen items-center justify-center bg-gray-900 text-white">Loading...</div>;

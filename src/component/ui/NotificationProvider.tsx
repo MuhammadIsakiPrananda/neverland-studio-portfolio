@@ -1,4 +1,4 @@
-import React, { createContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useState, useCallback, type ReactNode } from 'react';
 
 export type NotificationType = 'success' | 'error' | 'info' | 'warning';
 
@@ -33,3 +33,5 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
 
   return <NotificationContext.Provider value={value}>{children}</NotificationContext.Provider>;
 };
+
+export default NotificationProvider;

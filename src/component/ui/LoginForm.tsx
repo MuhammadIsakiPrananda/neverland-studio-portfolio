@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User as UserIcon, Lock, LogIn, Loader, Eye, EyeOff, ShieldX, X } from 'lucide-react';
+import { User as UserIcon, Lock, LogIn, Loader, Eye, EyeOff, ShieldX } from 'lucide-react';
 import { useNotification } from './useNotification';
 import SocialLoginButtons from './SocialLoginButtons';
 
