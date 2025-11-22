@@ -1,10 +1,8 @@
-import React, { useState, createContext, useCallback } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import Notification from './Notification';
+import React, { createContext, useState, useCallback, ReactNode } from 'react';
 
 export type NotificationType = 'success' | 'error' | 'info' | 'warning';
 
-export interface NotificationItem {
+export interface Notification {
   id: number;
   title: string;
   message: string;
@@ -12,40 +10,26 @@ export interface NotificationItem {
 }
 
 interface NotificationContextType {
+  notifications: Notification[];
   addNotification: (title: string, message: string, type: NotificationType) => void;
+  removeNotification: (id: number) => void;
 }
 
-export const NotificationContext = createContext<NotificationContextType | null>(null);
+export const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
-const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const addNotification = useCallback((title: string, message: string, type: NotificationType) => {
-    const id = Date.now();
-    setNotifications((prev) => [...prev, { id, title, message, type }]);
+    const id = new Date().getTime();
+    setNotifications(prev => [{ id, title, message, type }, ...prev]);
   }, []);
 
   const removeNotification = useCallback((id: number) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
+    setNotifications(prev => prev.filter(notification => notification.id !== id));
   }, []);
 
-  return (
-    <NotificationContext.Provider value={{ addNotification }}>
-      {children}
-      <div className="fixed top-5 right-5 z-[100] w-full max-w-sm">
-        <AnimatePresence>
-          {notifications.map((notification, index) => (
-            <Notification
-              key={notification.id}
-              notification={notification}
-              onRemove={removeNotification}
-              index={index}
-            />
-          ))}
-        </AnimatePresence>
-      </div>
-    </NotificationContext.Provider>
-  );
-};
+  const value = { notifications, addNotification, removeNotification };
 
-export default NotificationProvider;
+  return <NotificationContext.Provider value={value}>{children}</NotificationContext.Provider>;
+};

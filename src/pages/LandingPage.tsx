@@ -16,7 +16,6 @@ import ContactSection from '../component/sections/ContactSection';
 import Footer from '../component/common/Footer';
 import FloatingButtons from '../component/common/FloatingButtons';
 import VideoModal from '../component/common/VideoModal';
-import NotificationProvider from '../component/ui/NotificationProvider';
 import UserDashboard from '../component/ui/UserDashboard'; // Import UserDashboard
 import LoadingScreen from '../component/ui/LoadingScreen';
 import { ChatbotProvider } from '../component/sections/ChatbotContext'; 
@@ -31,9 +30,10 @@ import type { UserProfile } from '../context/AuthContext';
 // 1. Definisikan tipe untuk props yang akan diterima
 interface LandingPageProps {
   onLoginClick: () => void;
+  isAuthModalOpen: boolean;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, isAuthModalOpen }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('Home');
@@ -59,7 +59,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
   }, []);
 
   useEffect(() => {
-    if (isMenuOpen || isLoading || isReviewModalOpen || isJoinTeamModalOpen || isDashboardModalOpen || isQuoteModalOpen) {
+    if (isMenuOpen || isLoading || isReviewModalOpen || isJoinTeamModalOpen || isDashboardModalOpen || isQuoteModalOpen || isAuthModalOpen) {
       document.body.classList.add('overflow-hidden');
     } else {
       document.body.classList.remove('overflow-hidden');
@@ -68,7 +68,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
     return () => {
       document.body.classList.remove('overflow-hidden');
     };
-  }, [isMenuOpen, isLoading, isReviewModalOpen, isJoinTeamModalOpen, isDashboardModalOpen, isQuoteModalOpen]);
+  }, [isMenuOpen, isLoading, isReviewModalOpen, isJoinTeamModalOpen, isDashboardModalOpen, isQuoteModalOpen, isAuthModalOpen]);
 
   const handleProfileUpdate = (updatedUser: UserProfile) => {
     // Panggil fungsi dari AuthContext untuk memperbarui profil
@@ -146,136 +146,134 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick }) => {
     <ChatbotProvider>
       <div 
         className="bg-gray-900 text-slate-300 min-h-screen relative">
-        <NotificationProvider>
-          <AuroraBackground />
-          <AnimatePresence mode="wait">
-            {isLoading && <LoadingScreen />}
+        <AuroraBackground />
+        <AnimatePresence mode="wait">
+          {isLoading && <LoadingScreen />}
+        </AnimatePresence>
+
+        <DesktopNav 
+          isScrolled={isScrolled} 
+          activeSection={activeSection} 
+          handleNavClick={handleNavClick}
+          isLoggedIn={isLoggedIn}
+          userProfile={userProfile!}
+          onLoginClick={onLoginClick} // 2. Gunakan prop onLoginClick
+          onLogout={logout}
+          onDashboardClick={() => setIsDashboardModalOpen(true)}
+          onQuoteClick={() => handleNavClick('Contact')}
+        />
+        <MobileNav 
+          isMenuOpen={isMenuOpen} 
+          setIsMenuOpen={setIsMenuOpen} 
+          activeSection={activeSection} 
+          handleNavClick={handleNavClick}
+          isLoggedIn={isLoggedIn}
+          onLoginClick={onLoginClick} // 3. Gunakan prop onLoginClick
+          onLogout={logout}
+          userProfile={userProfile!}
+          onDashboardClick={() => setIsDashboardModalOpen(true)}
+        />
+        
+        <main>
+          <HeroSection isLoading={isLoading} isMenuOpen={isMenuOpen} setSectionRef={setSectionRef} setShowVideo={setShowVideo} onGetStartedClick={() => handleNavClick('Contact')} />
+          <BenefitsSection isLoading={isLoading} />
+          <ServicesSection isLoading={isLoading} setSectionRef={setSectionRef} />
+          <ProcessSection isLoading={isLoading} setSectionRef={setSectionRef} />
+          <PortfolioSection isLoading={isLoading} setSectionRef={setSectionRef} activeFilter={activeFilter} setActiveFilter={setActiveFilter} setShowVideo={setShowVideo} />
+          <TeamSection isLoading={isLoading} setSectionRef={setSectionRef} onJoinTeamClick={() => setIsJoinTeamModalOpen(true)} />
+          <PricingSection isLoading={isLoading} setSectionRef={setSectionRef} onGetStartedClick={() => setIsQuoteModalOpen(true)} />
+          <FAQSection isLoading={isLoading} />
+          <CTASection isLoading={isLoading} />
+          <ContactSection isLoading={isLoading} setSectionRef={setSectionRef} />
+        </main>
+
+        <Footer />          
+        <ModalPortal>
+          <FloatingButtons />
+          <VideoModal showVideo={showVideo} setShowVideo={setShowVideo} />
+          <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
+          <JoinTeamModal isOpen={isJoinTeamModalOpen} onClose={() => setIsJoinTeamModalOpen(false)} />
+          <AnimatePresence>
+            {isDashboardModalOpen && userProfile && (
+              <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+                <UserDashboard 
+                  user={userProfile} 
+                  onClose={() => setIsDashboardModalOpen(false)} 
+                  onUpdateProfile={handleProfileUpdate}
+                  onDeleteAccount={handleAccountDelete} />
+              </div>
+            )}
           </AnimatePresence>
+          <QuoteRequestModal isOpen={isQuoteModalOpen} onClose={() => setIsQuoteModalOpen(false)} />
+        </ModalPortal>
 
-          <DesktopNav 
-            isScrolled={isScrolled} 
-            activeSection={activeSection} 
-            handleNavClick={handleNavClick}
-            isLoggedIn={isLoggedIn}
-            userProfile={userProfile!}
-            onLoginClick={onLoginClick} // 2. Gunakan prop onLoginClick
-            onLogout={logout}
-            onDashboardClick={() => setIsDashboardModalOpen(true)}
-            onQuoteClick={() => handleNavClick('Contact')}
-          />
-          <MobileNav 
-            isMenuOpen={isMenuOpen} 
-            setIsMenuOpen={setIsMenuOpen} 
-            activeSection={activeSection} 
-            handleNavClick={handleNavClick}
-            isLoggedIn={isLoggedIn}
-            onLoginClick={onLoginClick} // 3. Gunakan prop onLoginClick
-            onLogout={logout}
-            userProfile={userProfile!}
-            onDashboardClick={() => setIsDashboardModalOpen(true)}
-          />
+        {/* Custom Animations */}
+        <style>{`
+          @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; } 
+            100% { background-position: 0% 50%; } 
+          }
           
-          <main>
-            <HeroSection isLoading={isLoading} isMenuOpen={isMenuOpen} setSectionRef={setSectionRef} setShowVideo={setShowVideo} onGetStartedClick={() => handleNavClick('Contact')} />
-            <BenefitsSection isLoading={isLoading} />
-            <ServicesSection isLoading={isLoading} setSectionRef={setSectionRef} />
-            <ProcessSection isLoading={isLoading} setSectionRef={setSectionRef} />
-            <PortfolioSection isLoading={isLoading} setSectionRef={setSectionRef} activeFilter={activeFilter} setActiveFilter={setActiveFilter} setShowVideo={setShowVideo} />
-            <TeamSection isLoading={isLoading} setSectionRef={setSectionRef} onJoinTeamClick={() => setIsJoinTeamModalOpen(true)} />
-            <PricingSection isLoading={isLoading} setSectionRef={setSectionRef} onGetStartedClick={() => setIsQuoteModalOpen(true)} />
-            <FAQSection isLoading={isLoading} />
-            <CTASection isLoading={isLoading} />
-            <ContactSection isLoading={isLoading} setSectionRef={setSectionRef} />
-          </main>
+          .animate-gradient {
+            background-size: 200% 200%;
+            animation: gradient 3s ease infinite;
+          }
+          
+          @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+          }
+          
+          .animate-float {
+            animation: float 3s ease-in-out infinite;
+          }
 
-          <Footer />          
-          <ModalPortal>
-            <FloatingButtons />
-            <VideoModal showVideo={showVideo} setShowVideo={setShowVideo} />
-            <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
-            <JoinTeamModal isOpen={isJoinTeamModalOpen} onClose={() => setIsJoinTeamModalOpen(false)} />
-            <AnimatePresence>
-              {isDashboardModalOpen && userProfile && (
-                <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-                  <UserDashboard 
-                    user={userProfile} 
-                    onClose={() => setIsDashboardModalOpen(false)} 
-                    onUpdateProfile={handleProfileUpdate}
-                    onDeleteAccount={handleAccountDelete} />
-                </div>
-              )}
-            </AnimatePresence>
-            <QuoteRequestModal isOpen={isQuoteModalOpen} onClose={() => setIsQuoteModalOpen(false)} />
-          </ModalPortal>
+          .balance-text {
+            text-wrap: balance;
+          }
 
-          {/* Custom Animations */}
-          <style>{`
-            @keyframes gradient {
-              0% { background-position: 0% 50%; }
-              50% { background-position: 100% 50%; } 
-              100% { background-position: 0% 50%; } 
-            }
-            
-            .animate-gradient {
-              background-size: 200% 200%;
-              animation: gradient 3s ease infinite;
-            }
-            
-            @keyframes float {
-              0%, 100% { transform: translateY(0px); }
-              50% { transform: translateY(-20px); }
-            }
-            
-            .animate-float {
-              animation: float 3s ease-in-out infinite;
-            }
+          @keyframes pulse-slow {
+            50% { opacity: 0.6; }
+          }
+          .animate-pulse-slow { animation: pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
 
-            .balance-text {
-              text-wrap: balance;
-            }
+          @keyframes pulse-slow-reverse { 50% { opacity: 0.6; } }
+          .animate-pulse-slow-reverse { animation: pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) 2s infinite; }
 
-            @keyframes pulse-slow {
-              50% { opacity: 0.6; }
-            }
-            .animate-pulse-slow { animation: pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+          .bg-radial-gradient-hero {
+            background-image: radial-gradient(circle, rgba(10, 10, 10, 0) 50%, rgba(10, 10, 10, 1) 85%);
+          }
 
-            @keyframes pulse-slow-reverse { 50% { opacity: 0.6; } }
-            .animate-pulse-slow-reverse { animation: pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) 2s infinite; }
+          @keyframes infinite-scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+          }
+          .animate-infinite-scroll {
+            animation: infinite-scroll linear infinite;
+          }
 
-            .bg-radial-gradient-hero {
-              background-image: radial-gradient(circle, rgba(10, 10, 10, 0) 50%, rgba(10, 10, 10, 1) 85%);
-            }
-
-            @keyframes infinite-scroll {
-              from { transform: translateX(0); }
-              to { transform: translateX(-50%); }
-            }
-            .animate-infinite-scroll {
-              animation: infinite-scroll linear infinite;
-            }
-
-            /* Modern Scrollbar Styling */
-            .custom-scrollbar {
-              scrollbar-width: thin;
-              scrollbar-color: rgba(100, 116, 139, 0.7) transparent;
-            }
-            .custom-scrollbar::-webkit-scrollbar {
-              width: 8px;
-            }
-            .custom-scrollbar::-webkit-scrollbar-track {
-              background: transparent;
-            }
-            .custom-scrollbar::-webkit-scrollbar-thumb {
-              background-color: rgba(100, 116, 139, 0.5); /* slate-500 with 50% opacity */
-              border-radius: 10px;
-              border: 2px solid transparent;
-              background-clip: content-box;
-            }
-            .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-              background-color: rgba(100, 116, 139, 0.8);
-            }
-          `}</style>
-        </NotificationProvider>
+          /* Modern Scrollbar Styling */
+          .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(100, 116, 139, 0.7) transparent;
+          }
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: rgba(100, 116, 139, 0.5); /* slate-500 with 50% opacity */
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: content-box;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(100, 116, 139, 0.8);
+          }
+        `}</style>
       </div>
     </ChatbotProvider>
   );

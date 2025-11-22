@@ -1,91 +1,81 @@
-import { useState } from 'react';
-import { motion, AnimatePresence, type Variants } from 'framer-motion';
+import { useState, Fragment } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
 import { X } from 'lucide-react';
-import LoginForm from '../ui/LoginForm';
-import RegisterForm from '../ui/RegisterForm';
-import ForgotPasswordForm from '../ui/ForgotPasswordForm';
-import { useAuth } from '../../context/AuthContext'; // PERBAIKAN: Mengarah ke file yang benar
-
-type UserProfile = { name: string; username: string; email: string; avatar: string | null };
+import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
+import ForgotPasswordForm from './ForgotPasswordForm';
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLoginSuccess: (user: UserProfile, rememberMe?: boolean) => void;
+  onLoginSuccess: (user: any, rememberMe: boolean) => void;
 }
 
 type AuthMode = 'login' | 'register' | 'forgotPassword';
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }) => {
   const [mode, setMode] = useState<AuthMode>('login');
-  const { login } = useAuth(); // Panggil useAuth di sini
 
-  const handleClose = () => {
-    onClose();
-    // Reset to login mode after a short delay to allow for exit animation
-    setTimeout(() => setMode('login'), 300);
+  const handleSwitchMode = (newMode: AuthMode) => {
+    setMode(newMode);
   };
 
-  const handleLoginSuccess = (user: UserProfile, rememberMe?: boolean) => {
-    login(user, rememberMe); // Panggil fungsi login dari context
-    onLoginSuccess(user, rememberMe); // Panggil prop untuk menutup modal
-  };
-
-  const backdropVariants = {
-    visible: { opacity: 1 },
-    hidden: { opacity: 0 },
-  };
-
-  const modalVariants: Variants = {
-    hidden: {
-      opacity: 0,
-      scale: 0.95,
-    },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.2, // Durasi lebih singkat untuk feel yang responsif
-        ease: "easeOut", // Menggunakan easing standar yang sangat efisien
-      },
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.95,
-      transition: {
-        duration: 0.15,
-        ease: "easeIn",
-      }
-    },
+  const renderContent = () => {
+    switch (mode) {
+      case 'register':
+        return <RegisterForm onSwitchMode={handleSwitchMode} />;
+      case 'forgotPassword':
+        return <ForgotPasswordForm onSwitchMode={handleSwitchMode} />;
+      case 'login':
+      default:
+        return <LoginForm onSwitchMode={handleSwitchMode} onLoginSuccess={onLoginSuccess} />;
+    }
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex justify-center items-center z-50 p-4"
-          variants={backdropVariants}
-          initial="hidden"
-          animate="visible"
-          exit="hidden" // We keep exit for the animation, but remove onClick
+    <Transition appear show={isOpen} as={Fragment}>
+      <Dialog as="div" className="relative z-50" onClose={onClose}>
+        {/* Backdrop (overlay) dengan transisi fade dan efek blur */}
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
         >
-          <motion.div
-            className="bg-slate-900/80 border border-slate-700/50 rounded-2xl shadow-2xl shadow-cyan-900/20 p-8 w-full max-w-md relative"
-            variants={modalVariants}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button onClick={handleClose} className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
-              <X className="w-6 h-6" />
-            </button>
-            <AnimatePresence mode="wait">
-              {mode === 'login' && <LoginForm key="login" onSwitchMode={setMode} onLoginSuccess={handleLoginSuccess} />}
-              {mode === 'register' && <RegisterForm key="register" onSwitchMode={setMode} />}
-              {mode === 'forgotPassword' && <ForgotPasswordForm key="forgot" onSwitchMode={setMode} />}
-            </AnimatePresence>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
+        </Transition.Child>
+
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4 text-center">
+            {/* Panel Modal dengan transisi fade dan scale */}
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <Dialog.Panel static className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-slate-900/80 backdrop-blur-lg border border-slate-700/50 p-8 text-left align-middle shadow-2xl shadow-cyan-500/10 transition-all">
+                {/* Tombol Close (X) */}
+                <button
+                  onClick={onClose}
+                  className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors z-10"
+                  aria-label="Close"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+                {renderContent()}
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </div>
+      </Dialog>
+    </Transition>
   );
 };
 

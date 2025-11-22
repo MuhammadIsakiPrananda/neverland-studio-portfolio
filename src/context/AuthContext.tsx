@@ -7,6 +7,7 @@ export type UserProfile = {
   username: string;
   email: string;
   avatar: string | null;
+  role?: 'admin' | 'user'; // Menambahkan peran pengguna
   bio?: string;
 };
 

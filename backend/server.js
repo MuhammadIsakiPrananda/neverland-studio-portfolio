@@ -1,7 +1,8 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
-const db = require('./db');
+import express from 'express';
+import cors from 'cors';
+import sqlite3 from 'sqlite3';
+import bcrypt from 'bcrypt';
+import 'dotenv/config';
 
 const app = express();
 const PORT = process.env.API_PORT || 3001;
@@ -10,34 +11,77 @@ const PORT = process.env.API_PORT || 3001;
 app.use(cors()); // Mengizinkan request dari domain lain (frontend Anda)
 app.use(express.json()); // Mem-parsing body request sebagai JSON
 
-// Contoh Route untuk Login
+// Inisialisasi database SQLite
+const sqlite3Verbose = sqlite3.verbose();
+const db = new sqlite3Verbose.Database('./database.db', (err) => {
+  if (err) {
+    console.error('Error opening database', err.message);
+  } else {
+    console.log('Connected to the SQLite database.');
+    // Buat tabel 'users' jika belum ada
+    db.run(`CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE,
+      password TEXT NOT NULL
+    )`);
+  }
+});
+
+// Endpoint untuk Registrasi Pengguna
+app.post('/api/register', async (req, res) => {
+  const { name, email, password } = req.body;
+
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: 'Name, email, and password are required.' });
+  }
+
+  try {
+    // Enkripsi (Hash) kata sandi sebelum disimpan
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const sql = `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`;
+    db.run(sql, [name, email, hashedPassword], function (err) {
+      if (err) {
+        if (err.message.includes('UNIQUE constraint failed: users.email')) {
+          return res.status(409).json({ message: 'Email address is already registered.' });
+        }
+        return res.status(500).json({ message: 'An error occurred during registration.' });
+      }
+      res.status(201).json({ message: 'User registered successfully!', user: { id: this.lastID, name, email } });
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'An internal server error occurred.' });
+  }
+});
+
+// Endpoint untuk Login
 app.post('/api/login', async (req, res) => {
   const { identifier, password } = req.body;
 
   if (!identifier || !password) {
-    return res.status(400).json({ message: 'Identifier and password are required.' });
+    return res.status(400).json({ message: 'Email/Username and password are required.' });
   }
 
-  try {
-    // Query ke database untuk mencari user
-    // Gunakan '?' untuk mencegah SQL Injection
-    const [rows] = await db.execute(
-      'SELECT * FROM users WHERE (email = ? OR username = ?) AND password = ?',
-      [identifier, identifier, password] // Asumsi password belum di-hash, ini tidak aman untuk produksi!
-    );
-
-    if (rows.length > 0) {
-      const user = rows[0];
-      // Jangan kirim password ke frontend
-      delete user.password;
-      res.json({ message: 'Login successful', user });
-    } else {
-      res.status(401).json({ message: 'Invalid credentials.' });
+  const sql = `SELECT * FROM users WHERE email = ?`;
+  db.get(sql, [identifier], async (err, user) => {
+    if (err) {
+      return res.status(500).json({ message: 'An internal server error occurred.' });
     }
-  } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ message: 'An error occurred on the server.' });
-  }
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials. Please check your email and password.' });
+    }
+    
+    // Bandingkan password yang diberikan dengan hash di database
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid credentials. Please check your email and password.' });
+    }
+    
+    // Jika login berhasil, kirim data user tanpa password
+    const { password: _, ...userWithoutPassword } = user;
+    res.status(200).json({ message: 'Login successful!', user: userWithoutPassword });
+  });
 });
 
 // Jalankan server
