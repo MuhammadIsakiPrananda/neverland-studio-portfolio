@@ -6,6 +6,10 @@ import path from 'path'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    port: 5701,
+    strictPort: false, // Akan mencoba port lain jika 3000 digunakan
+  },
   test: {
     globals: true,
     environment: 'jsdom',

@@ -9,7 +9,7 @@ interface DesktopNavProps {
   activeSection: string;
   handleNavClick: (section: string) => void;
   isLoggedIn: boolean;
-  userProfile: { name: string; email: string; avatar: string | null; };
+  userProfile: { name: string; email: string; avatar: string | null; } | null;
   onLoginClick: () => void;
   onLogout: () => void;
   onDashboardClick: () => void;
@@ -40,7 +40,7 @@ const DesktopNav: React.FC<DesktopNavProps> = ({ isScrolled, activeSection, hand
             <Globe className="w-5 h-5" />
           </button>
           {isLoggedIn ? (
-            <div className="pr-1"><ProfileDropdown userProfile={userProfile} onLogout={onLogout} onDashboardClick={onDashboardClick} /></div>
+            <div className="pr-1">{userProfile && <ProfileDropdown userProfile={userProfile} onLogout={onLogout} onDashboardClick={onDashboardClick} />}</div>
           ) : (
             <button 
               onClick={onLoginClick}

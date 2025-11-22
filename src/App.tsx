@@ -1,14 +1,17 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, Outlet, useNavigate, Navigate } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
+import LandingPageLayout from './pages/LandingPageLayout'; // Path diperbaiki
 import { useAuth } from './context/AuthContext';
 import DashboardLayout from './pages/Dashboard';
 import DashboardOverview from './pages/dashboard/DashboardOverview';
 import Projects from './pages/dashboard/Projects';
 import Team from './pages/dashboard/Team';
 import Settings from './pages/dashboard/Settings';
+import CalendarPage from './pages/dashboard/CalendarPage';
 import Analytics from './pages/dashboard/Analytics';
 import NotificationContainer from './component/ui/NotificationContainer';
+import ReviewsPage from './context/ReviewsPage';
 import AccessDenied from './context/AccessDenied';
 
 
@@ -86,23 +89,25 @@ function App() {
   return (
     <>
       <Routes>
-        {/* Berikan fungsi untuk membuka modal ke LandingPage */}
-        <Route path="/" element={<LandingPage 
-          onLoginClick={() => setModalOpen(true)} 
-          onScheduleConsultationClick={() => setConsultationModalOpen(true)}
-          isAuthModalOpen={isModalOpen} />} />
+        {/* Rute Halaman Utama dibungkus oleh LandingPageLayout, teruskan onLoginClick */}
+        <Route element={<LandingPageLayout onLoginClick={() => setModalOpen(true)} />}>
+          <Route path="/" element={<LandingPage
+            onScheduleConsultationClick={() => setConsultationModalOpen(true)}
+            isAuthModalOpen={isModalOpen} />} />
+        </Route>
         
         {/* Rute yang dilindungi */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<DashboardOverview />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="calendar" element={<CalendarPage />} />
             
             {/* Rute khusus Admin di dalam dasbor */}
             <Route element={<AdminRoute />}>
               <Route path="analytics" element={<Analytics />} />
-              <Route path="inbox">
-                <Route path="reviews" element={<Placeholder title="Inbox: Reviews" />} />
+              <Route path="inbox" >
+                <Route path="reviews" element={<ReviewsPage />} />
                 <Route path="applicants" element={<Placeholder title="Inbox: Applicants" />} />
                 <Route path="collaborations" element={<Placeholder title="Inbox: Collaborations" />} />
               </Route>

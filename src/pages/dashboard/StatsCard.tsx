@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
+import clsx from 'clsx';
 
 interface StatsCardProps {
   title: string;
@@ -18,6 +19,9 @@ const StatsCard = ({ title, value, icon: Icon, trend, color, delay = 0 }: StatsC
     orange: 'from-orange-500 to-red-500',
   };
 
+  const trendIsPositive = trend !== undefined && trend >= 0;
+  const trendIcon = trend !== undefined ? (trendIsPositive ? '↑' : '↓') : '';
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -30,13 +34,16 @@ const StatsCard = ({ title, value, icon: Icon, trend, color, delay = 0 }: StatsC
         <div className="flex-1">
           <p className="text-slate-400 text-sm font-medium mb-2">{title}</p>
           <h3 className="text-3xl font-bold text-white mb-1" data-testid={`stats-value-${title.toLowerCase().replace(/\s+/g, '-')}`}>{value}</h3>
-          {trend !== undefined && (
-            <p className={`text-sm font-medium ${trend >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-              {trend >= 0 ? '↑' : '↓'} {Math.abs(trend)}% from last month
+          {trend !== undefined &&
+            <p className={clsx('text-sm font-medium', {
+              'text-green-400': trendIsPositive,
+              'text-red-400': !trendIsPositive,
+            })}>
+              {trendIcon} {Math.abs(trend)}% from last month
             </p>
-          )}
+          }
         </div>
-        <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${colorClasses[color]} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+        <div className={clsx('w-12 h-12 rounded-lg bg-gradient-to-br flex items-center justify-center group-hover:scale-110 transition-transform', colorClasses[color])}>
           <Icon className="w-6 h-6 text-white" />
         </div>
       </div>

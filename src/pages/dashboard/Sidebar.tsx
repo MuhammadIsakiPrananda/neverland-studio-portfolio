@@ -19,7 +19,6 @@ interface NavItemType {
 }
 
 interface SidebarContextType {
-  isCollapsed: boolean; // Always expanded on desktop
   isTablet: boolean;
   closeMobile: () => void;
 }
@@ -104,7 +103,7 @@ const Badge = ({ value }: { value: number | boolean }) => {
 
 const Tooltip = ({ children, label }: { children: React.ReactNode; label: string }) => {
   const { isTablet } = useSidebar();
-  if (isTablet) return <>{children}</>; // Tooltips are only for collapsed state, which is now disabled on desktop
+  if (isTablet) return <>{children}</>; // Disable tooltips on touch devices
   
   return (
     <div className="relative group">
@@ -285,7 +284,6 @@ const Sidebar = ({ isMobileOpen, setMobileOpen }: { isMobileOpen: boolean; setMo
   const { isLoggedIn } = useAuth();
 
   const contextValue = useMemo(() => ({
-    isCollapsed: false, // Always false for desktop
     isTablet,
     closeMobile: () => isTablet && setMobileOpen(false),
   }), [isTablet, setMobileOpen]);
@@ -312,9 +310,9 @@ const Sidebar = ({ isMobileOpen, setMobileOpen }: { isMobileOpen: boolean; setMo
         animate={isTablet ? (isMobileOpen ? 'open' : 'closed') : 'open'}
         transition={{ type: 'spring', stiffness: 400, damping: 40 }}
         className={`
-          bg-gray-900/80 backdrop-blur-2xl border-r border-gray-700/50 flex flex-col z-50
-          ${isTablet ? 'fixed inset-y-0 left-0 w-[280px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden' 
-                     : 'sticky top-0 h-screen overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'}
+          bg-gray-900/80 backdrop-blur-2xl border-r border-gray-700/50 flex flex-col z-50 custom-scrollbar
+          ${isTablet ? 'fixed inset-y-0 left-0 w-[280px]' 
+                     : 'sticky top-0 h-screen'}
         `}
       >
         {/* Header */}

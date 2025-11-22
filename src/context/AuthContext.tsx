@@ -32,13 +32,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Efek untuk rehidrasi state dari localStorage saat komponen pertama kali dimuat
   useEffect(() => {
     try {
-      const storedUser = localStorage.getItem('userProfile');
+      // Prioritaskan localStorage (untuk "Remember Me")
+      let storedUser = localStorage.getItem('userProfile');
+      // Jika tidak ada, cek sessionStorage (untuk sesi sementara)
+      if (!storedUser) {
+        storedUser = sessionStorage.getItem('userProfile');
+      }
+
       if (storedUser) {
         setUserProfile(JSON.parse(storedUser));
       }
     } catch (error) {
-      console.error("Failed to parse user profile from localStorage", error);
+      console.error("Failed to parse user profile from storage", error);
       localStorage.removeItem('userProfile');
+      sessionStorage.removeItem('userProfile');
     } finally {
       setIsLoading(false);
     }
@@ -49,12 +56,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUserProfile(user);
     if (rememberMe) {
       localStorage.setItem('userProfile', JSON.stringify(user));
+    } else {
+      sessionStorage.setItem('userProfile', JSON.stringify(user));
     }
   }, []);
 
   const logout = useCallback(() => {
     setUserProfile(null);
+    // Hapus dari kedua storage untuk memastikan logout bersih
     localStorage.removeItem('userProfile');
+    sessionStorage.removeItem('userProfile');
   }, []);
 
   const updateProfile = useCallback((newProfileData: Partial<UserProfile>) => {
@@ -62,6 +73,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!prevProfile) return null;
       const updatedProfile = { ...prevProfile, ...newProfileData };
       localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
+      // Perbarui juga sessionStorage jika ada
+      if (sessionStorage.getItem('userProfile')) {
+        sessionStorage.setItem('userProfile', JSON.stringify(updatedProfile));
+      }
       return updatedProfile;
     });
   }, []);

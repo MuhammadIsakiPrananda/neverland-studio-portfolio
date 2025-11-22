@@ -11,7 +11,7 @@ interface MobileNavProps {
   activeSection: string;
   handleNavClick: (section: string) => void;
   isLoggedIn: boolean;
-  userProfile: { name: string; email: string; avatar: string | null; };
+  userProfile: { name: string; email: string; avatar: string | null; } | null;
   onLoginClick: () => void;
   onLogout: () => void;
   onDashboardClick: () => void;
@@ -67,7 +67,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ isMenuOpen, setIsMenuOpen, active
             </ul>
             <motion.div variants={menuItemVariants} className="absolute bottom-12 px-8 w-full">
               {isLoggedIn ? (
-                <p className="text-center text-slate-400">Signed in as <span className="font-bold text-white">{userProfile.name}</span></p>
+                <p className="text-center text-slate-400">Signed in as <span className="font-bold text-white">{userProfile?.name}</span></p>
               ) : (
                 <button onClick={onLoginClick} className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-6 py-4 rounded-full text-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/30 transition-all transform hover:scale-105">
                   Login / Sign Up
@@ -79,7 +79,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ isMenuOpen, setIsMenuOpen, active
       </AnimatePresence>      
       {isLoggedIn && (
         <div className="md:hidden fixed top-4 right-20 z-40">
-          <ProfileDropdown userProfile={userProfile} onLogout={onLogout} onDashboardClick={onDashboardClick} />
+          {userProfile && <ProfileDropdown userProfile={userProfile} onLogout={onLogout} onDashboardClick={onDashboardClick} />}
         </div>
       )}
     </>

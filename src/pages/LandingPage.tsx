@@ -1,14 +1,14 @@
 "use client";
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import DesktopNav from '../component/layout/DesktopNav';
-import MobileNav from '../component/layout/MobileNav';
+import { useOutletContext } from 'react-router-dom';
 import HeroSection from '../component/sections/HeroSection';
 import BenefitsSection from '../component/sections/BenefitsSection';
 import ServicesSection from '../component/sections/ServicesSection';
 import ProcessSection from '../component/sections/ProcessSection';
 import PortfolioSection from '../component/sections/PortfolioSection';
 import TeamSection from '../component/sections/TeamSection';
+import ReviewSection from '../component/sections/ReviewSection'; // Impor seksi baru
 import PricingSection from '../component/sections/PricingSection';
 import FAQSection from '../component/sections/FAQSection';
 import CTASection from '../component/sections/CTASection';
@@ -29,24 +29,28 @@ import type { UserProfile } from '../context/AuthContext';
 
 // 1. Definisikan tipe untuk props yang akan diterima
 interface LandingPageProps {
-  onLoginClick: () => void;
   onScheduleConsultationClick: () => void;
   isAuthModalOpen: boolean;
 }
+interface OutletContextType {
+  sectionRefs: React.MutableRefObject<Record<string, HTMLElement | null>>;
+  setActiveSection: React.Dispatch<React.SetStateAction<string>>;
+  isProgrammaticScroll: React.MutableRefObject<boolean>;
+}
 
-const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onScheduleConsultationClick, isAuthModalOpen }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('Home');
-  const [isScrolled, setIsScrolled] = useState(false);
+const LandingPage: React.FC<LandingPageProps> = ({ onScheduleConsultationClick, isAuthModalOpen }) => {
+  const { sectionRefs, setActiveSection, isProgrammaticScroll } = useOutletContext<OutletContextType>();
+
+  const [isLoading, setIsLoading] = useState(true);  
   const [activeFilter, setActiveFilter] = useState('All');
   const [showVideo, setShowVideo] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
   const [isJoinTeamModalOpen, setIsJoinTeamModalOpen] = useState(false);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
-  const [initialDashboardSection, setInitialDashboardSection] = useState('profile');
-  const { isLoggedIn, userProfile, logout, updateProfile } = useAuth();
+  const [initialDashboardSection] = useState('profile');
+  const { userProfile, logout, updateProfile } = useAuth();
+
 
   useEffect(() => {
     // Simulasi waktu loading
@@ -61,7 +65,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onScheduleConsu
   }, []);
 
   useEffect(() => {
-    if (isMenuOpen || isLoading || isReviewModalOpen || isJoinTeamModalOpen || isDashboardModalOpen || isQuoteModalOpen || isAuthModalOpen) {
+    if (isLoading || isReviewModalOpen || isJoinTeamModalOpen || isDashboardModalOpen || isQuoteModalOpen || isAuthModalOpen) {
       document.body.classList.add('overflow-hidden');
     } else {
       document.body.classList.remove('overflow-hidden');
@@ -70,16 +74,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onScheduleConsu
     return () => {
       document.body.classList.remove('overflow-hidden');
     };
-  }, [isMenuOpen, isLoading, isReviewModalOpen, isJoinTeamModalOpen, isDashboardModalOpen, isQuoteModalOpen, isAuthModalOpen]);
+  }, [isLoading, isReviewModalOpen, isJoinTeamModalOpen, isDashboardModalOpen, isQuoteModalOpen, isAuthModalOpen]);
 
   const handleProfileUpdate = (updatedUser: UserProfile) => {
     // Panggil fungsi dari AuthContext untuk memperbarui profil
     updateProfile(updatedUser);
-  };
-
-  const handleDashboardOpen = (section: string) => {
-    setInitialDashboardSection(section);
-    setIsDashboardModalOpen(true);
   };
 
   const handleAccountDelete = () => {
@@ -89,42 +88,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onScheduleConsu
     // Anda bisa menambahkan navigasi ke halaman utama jika perlu
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
-
   const setSectionRef = (section: string) => (el: HTMLElement | null) => {
     sectionRefs.current[section] = el;
-  };
-
-  const scrollTimeoutRef = useRef<number | null>(null);
-  const isProgrammaticScroll = useRef(false);
-
-  const handleNavClick = (section: string) => {
-    isProgrammaticScroll.current = true;
-    setActiveSection(section);
-
-    sectionRefs.current[section]?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    });
-
-    if (scrollTimeoutRef.current) {
-      clearTimeout(scrollTimeoutRef.current);
-    }
-
-    scrollTimeoutRef.current = window.setTimeout(() => {
-      isProgrammaticScroll.current = false;
-    }, 1000); // Duration should be enough for smooth scroll to finish
   };
 
   useEffect(() => {
@@ -147,7 +112,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onScheduleConsu
     return () => Object.values(currentRefs).forEach((el) => {
       if (el) observer.unobserve(el);
     });
-  }, []);
+  }, [isProgrammaticScroll, setActiveSection]);
 
   return (
     <ChatbotProvider>
@@ -158,36 +123,15 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onScheduleConsu
           {isLoading && <LoadingScreen />}
         </AnimatePresence>
 
-        <DesktopNav 
-          isScrolled={isScrolled} 
-          activeSection={activeSection} 
-          handleNavClick={handleNavClick}
-          isLoggedIn={isLoggedIn}
-          userProfile={userProfile!}
-          onLoginClick={onLoginClick} // 2. Gunakan prop onLoginClick
-          onLogout={logout}
-          onDashboardClick={() => handleDashboardOpen('profile')}
-          onQuoteClick={() => handleNavClick('Contact')}
-        />
-        <MobileNav 
-          isMenuOpen={isMenuOpen} 
-          setIsMenuOpen={setIsMenuOpen} 
-          activeSection={activeSection} 
-          handleNavClick={handleNavClick}
-          isLoggedIn={isLoggedIn}
-          onLoginClick={onLoginClick} // 3. Gunakan prop onLoginClick
-          onLogout={logout}
-          userProfile={userProfile!}
-          onDashboardClick={() => handleDashboardOpen('profile')}
-        />
-        
         <main>
-          <HeroSection isLoading={isLoading} isMenuOpen={isMenuOpen} setSectionRef={setSectionRef} setShowVideo={setShowVideo} onGetStartedClick={() => handleNavClick('Contact')} />
+          <HeroSection isLoading={isLoading} isMenuOpen={false} setSectionRef={setSectionRef} setShowVideo={setShowVideo} onGetStartedClick={() => { /* Logika klik dipindahkan ke layout */ }} />
           <BenefitsSection isLoading={isLoading} />
           <ServicesSection isLoading={isLoading} setSectionRef={setSectionRef} />
           <ProcessSection isLoading={isLoading} setSectionRef={setSectionRef} />
           <PortfolioSection isLoading={isLoading} setSectionRef={setSectionRef} activeFilter={activeFilter} setActiveFilter={setActiveFilter} setShowVideo={setShowVideo} />
-          <TeamSection isLoading={isLoading} setSectionRef={setSectionRef} onJoinTeamClick={() => setIsJoinTeamModalOpen(true)} />          <PricingSection isLoading={isLoading} setSectionRef={setSectionRef} onGetStartedClick={() => setIsQuoteModalOpen(true)} onScheduleConsultationClick={onScheduleConsultationClick} />
+          <TeamSection isLoading={isLoading} setSectionRef={setSectionRef} onJoinTeamClick={() => setIsJoinTeamModalOpen(true)} />
+          <PricingSection isLoading={isLoading} setSectionRef={setSectionRef} onGetStartedClick={() => setIsQuoteModalOpen(true)} onScheduleConsultationClick={onScheduleConsultationClick} />
+          <ReviewSection setSectionRef={setSectionRef} onWriteReviewClick={() => setIsReviewModalOpen(true)} />
           <FAQSection isLoading={isLoading} />
           <CTASection isLoading={isLoading} />
           <ContactSection isLoading={isLoading} setSectionRef={setSectionRef} />
@@ -197,7 +141,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onScheduleConsu
         <ModalPortal>
           <FloatingButtons />
           <VideoModal showVideo={showVideo} setShowVideo={setShowVideo} />
-          <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
+          <ReviewModal 
+            isOpen={isReviewModalOpen} 
+            onClose={() => setIsReviewModalOpen(false)} 
+            // onSubmit={handleReviewSubmit} // onSubmit tidak ada di ReviewModal, data dikirim via context/API internal
+          />
           <JoinTeamModal isOpen={isJoinTeamModalOpen} onClose={() => setIsJoinTeamModalOpen(false)} />
           <AnimatePresence>
             {isDashboardModalOpen && userProfile && (

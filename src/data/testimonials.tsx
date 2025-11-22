@@ -12,7 +12,7 @@ export const testimonials: Testimonial[] = [
     name: "Michael Chen",
     role: "Marketing Director, Quantum Corp.",
     text: "Working with this team was a breeze. They are professional, responsive, and incredibly talented. Our new website has already boosted our engagement rates significantly.",
-    rating: 5,
+    rating: 4,
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&fm=webp"
   },
   {
@@ -33,7 +33,7 @@ export const testimonials: Testimonial[] = [
     name: "Lisa Anderson",
     role: "CTO, Nexus Ltd.",
     text: "From start to finish, the project was handled with utmost professionalism. The code quality is excellent, and they delivered on time and within budget.",
-    rating: 5,
+    rating: 4,
     image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=100&h=100&fit=crop&fm=webp"
   },
   {
