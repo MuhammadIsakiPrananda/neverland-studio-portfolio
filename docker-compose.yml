@@ -1,52 +1,46 @@
+# Gunakan versi 3.8 atau yang lebih baru untuk kompatibilitas fitur
 version: '3.8'
 
 services:
-  # Layanan Web Aplikasi React + Nginx
-  web:
-    build:
-      context: .
-      dockerfile: dockerfile
-    container_name: neverlandstudio
-    ports:
-      - "80:80"
-    restart: unless-stopped
-    networks:
-      - app-network
-
-  # Layanan Database MariaDB
+  # Layanan untuk Database MariaDB
   db:
-    image: mariadb:10.6
+    image: mariadb:latest
     container_name: mariadb_neverland
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      # Password untuk user 'root'. Ganti dengan password yang kuat untuk lingkungan produksi.
+      MYSQL_ROOT_PASSWORD: root
+      # Nama database yang akan dibuat saat pertama kali dijalankan
+      MYSQL_DATABASE: neverlandstudio
     volumes:
-      - db_data:/var/lib/mysql
-    restart: unless-stopped
+      # Menyimpan data MariaDB secara persisten di folder lokal
+      - mariadb_data:/var/lib/mysql
     networks:
       - app-network
 
-  # Layanan phpMyAdmin
+  # Layanan untuk phpMyAdmin
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin:latest
     container_name: phpmyadmin_neverland
-    ports:
-      - "8080:80"
-    environment:
-      PMA_HOST: db
-      PMA_PORT: 3306
-    depends_on:
-      - db
     restart: unless-stopped
+    ports:
+      # Memetakan port 8080 di mesin Anda ke port 80 di dalam kontainer
+      - '8080:80'
+    environment:
+      # Menghubungkan phpMyAdmin ke host 'db' (nama layanan MariaDB)
+      PMA_HOST: db
+    depends_on:
+      # Memastikan layanan 'db' berjalan sebelum phpMyAdmin dimulai
+      - db
     networks:
       - app-network
 
+# Mendefinisikan jaringan kustom untuk komunikasi antar kontainer
 networks:
   app-network:
     driver: bridge
 
+# Mendefinisikan volume untuk persistensi data database
 volumes:
-  db_data:
+  mariadb_data:
     driver: local
