@@ -1,158 +1,173 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader, ShieldCheck, Smartphone, QrCode, LogOut, Globe, Trash2 } from 'lucide-react';
+import { Loader, Save, Smartphone, Trash2, Monitor, Globe, LogOut } from 'lucide-react';
+import { SettingsCard } from './SettingsCard';
 
 export const SecurityTabContent: React.FC<any> = ({
-  handlePasswordChangeSubmit, passwordData, handlePasswordInputChange, passwordErrors, isLoading, setIsSettingUp2FA,
-  isSettingUp2FA, is2faEnabled, handleDisable2FA, handleEnable2FA, handleVerify2FA, twoFactorCode, setTwoFactorCode,
-  sessions, handleSignOutAllOtherSessions, handleSignOutSession,
-  setIsDeleteModalOpen
+  handlePasswordChangeSubmit,
+  passwordData,
+  handlePasswordInputChange,
+  passwordErrors,
+  isLoading,
+  is2faEnabled,
+  handleEnable2FA,
+  // Props baru untuk sesi
+  sessions,
+  handleSignOutSession,
+  handleSignOutAllOtherSessions,
+  // Prop untuk modal
+  setIsDeleteModalOpen,
 }) => {
   const getPasswordStrength = (password: string) => {
     let score = 0;
     if (!password) return 0;
     if (password.length >= 8) score++;
     if (password.length >= 12) score++;
-    if (/[A-Z]/.test(password)) score++;
-    if (/[0-9]/.test(password)) score++;
-    if (/[^A-Za-z0-9]/.test(password)) score++;
+    if (/[A-Z]/.test(password)) score++; // Uppercase
+    if (/[0-9]/.test(password)) score++; // Number
+    if (/[^A-Za-z0-9]/.test(password)) score++; // Special character
     return score;
   };
 
   const strength = getPasswordStrength(passwordData.newPassword);
   const strengthText = ['Very Weak', 'Weak', 'Medium', 'Strong', 'Very Strong', 'Excellent'][strength];
-  const strengthColor = ['bg-red-500', 'bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500', 'bg-green-500'][strength];
+  const strengthColor = ['bg-red-500', 'bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-emerald-500', 'bg-emerald-500'][strength];
 
   return (
-    <div className="divide-y divide-gray-800">
-      {/* Change Password Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-8">
-        <div className="md:col-span-1">
-          <h3 className="text-lg font-semibold text-white">Change Password</h3>
-          <p className="mt-1 text-sm text-slate-400">Update your password for enhanced security. Use a strong, unique password.</p>
-        </div>
-        <div className="md:col-span-2">
-          <form id="password-change-form" onSubmit={handlePasswordChangeSubmit} className="space-y-4 bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <div>
-              <label className="text-sm font-medium text-slate-400">Current Password</label>
-              <input type="password" name="currentPassword" value={passwordData.currentPassword} onChange={handlePasswordInputChange} className={`w-full bg-gray-800 border rounded-lg px-3 py-2 mt-1 focus:border-blue-500 focus:ring-blue-500/50 outline-none ${passwordErrors.currentPassword ? 'border-red-500/50' : 'border-gray-700'}`} />
-              {passwordErrors.currentPassword && <p className="text-xs text-red-400 mt-1">{passwordErrors.currentPassword}</p>}
-            </div>
-            <div>
-              <label className="text-sm font-medium text-slate-400">New Password</label>
-              <input type="password" name="newPassword" value={passwordData.newPassword} onChange={handlePasswordInputChange} className={`w-full bg-gray-800 border rounded-lg px-3 py-2 mt-1 focus:border-blue-500 focus:ring-blue-500/50 outline-none ${passwordErrors.newPassword ? 'border-red-500/50' : 'border-gray-700'}`} />
-              {passwordErrors.newPassword && <p className="text-xs text-red-400 mt-1">{passwordErrors.newPassword}</p>}
-            </div>
-            <div>
-              <label className="text-sm font-medium text-slate-400">Confirm New Password</label>
-              <input type="password" name="confirmPassword" value={passwordData.confirmPassword} onChange={handlePasswordInputChange} className={`w-full bg-gray-800 border rounded-lg px-3 py-2 mt-1 focus:border-blue-500 focus:ring-blue-500/50 outline-none ${passwordErrors.confirmPassword ? 'border-red-500/50' : 'border-gray-700'}`} />
-              {passwordErrors.confirmPassword && <p className="text-xs text-red-400 mt-1">{passwordErrors.confirmPassword}</p>}
-            </div>
-            {passwordData.newPassword && (
-              <div className="flex items-center gap-2 pt-1">
-                <div className="w-full bg-gray-700 rounded-full h-1.5"><div className={`h-1.5 rounded-full ${strengthColor}`} style={{ width: `${(strength / 5) * 100}%` }}></div></div>
-                <span className="text-xs text-slate-400 w-24 text-right">{strengthText}</span>
+    <form onSubmit={handlePasswordChangeSubmit} className="space-y-8">
+      <SettingsCard
+        title="Change Password"
+        description="Update your password for enhanced security. Use a strong, unique password."
+        footer={
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+              <span className="font-semibold">{isLoading ? 'Saving...' : 'Update Password'}</span>
+            </button>
+          </div>
+        }
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="text-sm font-medium text-slate-400">Current Password</label>
+            <input type="password" name="currentPassword" value={passwordData.currentPassword} onChange={handlePasswordInputChange} className={`w-full bg-slate-800/60 border rounded-lg px-3 py-2 mt-1 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors ${passwordErrors.currentPassword ? 'border-red-500/50' : 'border-slate-700'}`} />
+            {passwordErrors.currentPassword && <p className="text-xs text-red-400 mt-1.5">{passwordErrors.currentPassword}</p>}
+          </div>
+          <div>
+            <label className="text-sm font-medium text-slate-400">New Password</label>
+            <input type="password" name="newPassword" value={passwordData.newPassword} onChange={handlePasswordInputChange} className={`w-full bg-slate-800/60 border rounded-lg px-3 py-2 mt-1 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors ${passwordErrors.newPassword ? 'border-red-500/50' : 'border-slate-700'}`} />
+            {passwordErrors.newPassword && <p className="text-xs text-red-400 mt-1.5">{passwordErrors.newPassword}</p>}
+          </div>
+          <div>
+            <label className="text-sm font-medium text-slate-400">Confirm New Password</label>
+            <input type="password" name="confirmPassword" value={passwordData.confirmPassword} onChange={handlePasswordInputChange} className={`w-full bg-slate-800/60 border rounded-lg px-3 py-2 mt-1 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors ${passwordErrors.confirmPassword ? 'border-red-500/50' : 'border-slate-700'}`} />
+            {passwordErrors.confirmPassword && <p className="text-xs text-red-400 mt-1.5">{passwordErrors.confirmPassword}</p>}
+          </div>
+          {passwordData.newPassword && (
+            <div className="flex items-center gap-3 pt-1">
+              <div className="w-full bg-slate-700/50 rounded-full h-1.5">
+                <motion.div
+                  className={`h-1.5 rounded-full ${strengthColor}`}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(strength / 5) * 100}%` }}
+                  transition={{ duration: 0.3 }}
+                />
               </div>
-            )}
-            <div className="flex justify-end pt-2">
-              <button type="submit" form="password-change-form" disabled={isLoading} className="flex items-center justify-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-violet-600 to-blue-600 text-white hover:shadow-lg hover:shadow-blue-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <ShieldCheck className="w-5 h-5" />}
-                <span className="font-semibold">{isLoading ? 'Updating...' : 'Update Password'}</span>
-              </button>
+              <span className="text-xs text-slate-400 w-24 text-right font-medium">{strengthText}</span>
             </div>
-          </form>
-        </div>
-      </div>
-
-      {/* 2FA Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-8">
-        <div className="md:col-span-1">
-          <h3 className="text-lg font-semibold text-white">Two-Factor Authentication</h3>
-          <p className="mt-1 text-sm text-slate-400">Add an extra layer of security to your account during login.</p>
-        </div>
-        <div className="md:col-span-2 bg-gray-900 border border-gray-800 rounded-xl p-6">
-          {!isSettingUp2FA ? (
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium text-white">Status: <span className={is2faEnabled ? 'text-green-400' : 'text-slate-400'}>{is2faEnabled ? 'Enabled' : 'Disabled'}</span></p>
-              </div>
-              {is2faEnabled ? (
-                <button onClick={handleDisable2FA} className="bg-red-500/20 text-red-300 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-500/30 transition-colors">Disable</button>
-              ) : (
-                <button onClick={handleEnable2FA} className="bg-blue-500/20 text-blue-300 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-500/30 transition-colors">Enable</button>
-              )}
-            </div>
-          ) : (
-            <AnimatePresence>
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <div className="flex flex-col sm:flex-row items-center gap-6">
-                  <div className="p-3 bg-white rounded-lg"><QrCode className="w-32 h-32 text-black" /></div>
-                  <form onSubmit={handleVerify2FA} className="space-y-4 w-full">
-                    <p className="text-sm text-slate-300">Scan the QR code, then enter the 6-digit code from your authenticator app.</p>
-                    <div className="relative"><Smartphone className="absolute left-3 bottom-3.5 w-5 h-5 text-slate-400" /><input type="text" placeholder="6-digit code" value={twoFactorCode} onChange={(e) => setTwoFactorCode(e.target.value)} maxLength={6} className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-10 pr-4 py-3 text-white tracking-[0.5em] text-center focus:border-blue-500 focus:ring-blue-500/50 focus:outline-none transition-colors" /></div>
-                    <div className="flex gap-2">
-                      <button type="submit" className="w-full bg-gradient-to-r from-violet-600 to-blue-600 text-white py-2 rounded-lg font-semibold">Verify</button>
-                      <button type="button" onClick={() => setIsSettingUp2FA(false)} className="w-full bg-gray-700 text-slate-300 py-2 rounded-lg font-semibold hover:bg-gray-600">Cancel</button>
-                    </div>
-                  </form>
-                </div>
-              </motion.div>
-            </AnimatePresence>
           )}
         </div>
-      </div>
+      </SettingsCard>
 
-      {/* Active Sessions Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-8">
-        <div className="md:col-span-1">
-          <h3 className="text-lg font-semibold text-white">Active Sessions</h3>
-          <p className="mt-1 text-sm text-slate-400">This is a list of devices that have logged into your account. Revoke any sessions you do not recognize.</p>
+      <SettingsCard
+        title="Two-Factor Authentication"
+        description="Add an extra layer of security to your account during login."
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className={`p-2 rounded-full ${is2faEnabled ? 'bg-emerald-500/20' : 'bg-slate-700'}`}>
+              <Smartphone className={`w-5 h-5 ${is2faEnabled ? 'text-emerald-400' : 'text-slate-400'}`} />
+            </div>
+            <div>
+              <p className="font-medium text-white">Authenticator App</p>
+              <p className={`text-sm ${is2faEnabled ? 'text-emerald-400' : 'text-slate-400'}`}>
+                {is2faEnabled ? 'Enabled' : 'Not configured'}
+              </p>
+            </div>
+          </div>
+          <button onClick={handleEnable2FA} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${is2faEnabled ? 'bg-red-600/20 text-red-400 border border-red-500/50 hover:bg-red-600/30' : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 hover:bg-cyan-500/30'}`}>
+            {is2faEnabled ? 'Disable' : 'Configure'}
+          </button>
         </div>
-        <div className="md:col-span-2 bg-gray-900 border border-gray-800 rounded-xl">
-          {sessions.length > 1 && (
-            <div className="p-4 flex justify-end border-b border-gray-800">
+      </SettingsCard>
+
+      <SettingsCard
+        title="Active Sessions"
+        description="This is a list of devices that have logged into your account. Revoke any sessions you do not recognize."
+        footer={
+          sessions.length > 1 && (
+            <div className="flex justify-end">
               <button onClick={handleSignOutAllOtherSessions} className="flex items-center gap-2 text-sm font-semibold text-red-400 hover:text-red-300 transition-colors">
                 <LogOut className="w-4 h-4" />
                 <span>Sign out all other sessions</span>
               </button>
             </div>
-          )}
-          <ul className="divide-y divide-gray-800">
-            <AnimatePresence>
-              {sessions.map((session: any) => (
-                <motion.li key={session.id} layout initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 50, transition: { duration: 0.3 } }} className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-4">
-                    {session.icon}
-                    <div>
-                      <p className="font-semibold text-white">{session.device} &middot; <span className="font-normal">{session.browser}</span></p>
-                      <p className="text-sm text-slate-400 flex items-center gap-1.5"><Globe className="w-3 h-3" /> {session.location} &middot; {session.isCurrent ? <span className="text-green-400 font-semibold">{session.lastActive}</span> : session.lastActive}</p>
-                    </div>
+          )
+        }
+      >
+        <ul className="divide-y divide-slate-800 -mx-6">
+          <AnimatePresence initial={false}>
+            {sessions.map((session: any) => (
+              <motion.li 
+                key={session.id} 
+                layout
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, x: -300, transition: { duration: 0.3 } }}
+                className="flex items-center justify-between px-6 py-4"
+              >
+                <div className="flex items-center gap-4">
+                  {session.device.includes('Windows') ? <Monitor className="w-6 h-6 text-slate-400" /> : <Smartphone className="w-6 h-6 text-slate-400" />}
+                  <div>
+                    <p className="font-semibold text-white">{session.device} &middot; <span className="font-normal text-slate-300">{session.browser}</span></p>
+                    <p className="text-sm text-slate-400 flex items-center gap-1.5">
+                      <Globe className="w-3 h-3" /> {session.location} &middot; {session.isCurrent ? <span className="text-emerald-400 font-semibold">{session.lastActive}</span> : session.lastActive}
+                    </p>
                   </div>
-                  {!session.isCurrent && <button onClick={() => handleSignOutSession(session.id)} className="text-sm text-red-400 hover:text-red-300 hover:underline">Sign out</button>}
-                </motion.li>
-              ))}
-            </AnimatePresence>
-          </ul>
-        </div>
-      </div>
+                </div>
+                {!session.isCurrent && (
+                  <button onClick={() => handleSignOutSession(session.id)} className="text-sm text-red-400 hover:text-red-300 hover:underline">Sign out</button>
+                )}
+              </motion.li>
+            ))}
+          </AnimatePresence>
+        </ul>
+      </SettingsCard>
 
-      {/* Danger Zone Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-8">
-        <div className="md:col-span-1">
-          <h3 className="text-lg font-semibold text-red-400">Danger Zone</h3>
-          <p className="mt-1 text-sm text-slate-400">Irreversible and destructive actions.</p>
-        </div>
-        <div className="md:col-span-2 bg-gray-900 border border-red-500/30 rounded-xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <SettingsCard
+        title="Danger Zone"
+        description="Permanently delete your account and all of its content. This action is irreversible."
+        border="border-red-500/30"
+      >
+        <div className="flex justify-between items-center">
           <div>
             <p className="font-medium text-white">Delete Account</p>
-            <p className="text-sm text-slate-400 mt-1 max-w-lg">Once you delete your account, all of your data will be permanently lost. This action is irreversible.</p>
+            <p className="text-sm text-slate-400 mt-1">Once you delete your account, there is no going back.</p>
           </div>
-          <button onClick={() => setIsDeleteModalOpen(true)} className="flex-shrink-0 flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-500 transition-colors">
+          <button
+            type="button"
+            onClick={() => setIsDeleteModalOpen(true)}
+            className="flex-shrink-0 flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition-colors shadow-lg shadow-red-500/20"
+          >
             <Trash2 className="w-4 h-4" />
             Delete my account
           </button>
         </div>
-      </div>
-    </div>
+      </SettingsCard>
+    </form>
   );
 };

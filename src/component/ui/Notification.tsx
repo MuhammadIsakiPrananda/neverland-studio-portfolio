@@ -10,20 +10,20 @@ interface NotificationProps {
 }
 
 const icons = {
-  success: <CheckCircle className="w-6 h-6 text-green-400" />,
+  success: <CheckCircle className="w-6 h-6 text-emerald-400" />,
   error: <XCircle className="w-6 h-6 text-red-400" />,
-  info: <Info className="w-6 h-6 text-blue-400" />,
-  warning: <AlertTriangle className="w-6 h-6 text-yellow-400" />,
+  info: <Info className="w-6 h-6 text-sky-400" />,
+  warning: <AlertTriangle className="w-6 h-6 text-amber-400" />,
 };
 
 const borderColors = {
-  success: 'border-green-500',
+  success: 'border-emerald-500',
   error: 'border-red-500',
-  info: 'border-blue-500',
-  warning: 'border-yellow-500',
+  info: 'border-sky-500',
+  warning: 'border-amber-500',
 };
 
-const Notification: React.FC<NotificationProps> = ({ notification, onRemove, index }) => {
+const NotificationComponent: React.FC<NotificationProps> = ({ notification, onRemove, index }) => {
   const { id, message, type, title } = notification;
 
   useEffect(() => {
@@ -46,13 +46,13 @@ const Notification: React.FC<NotificationProps> = ({ notification, onRemove, ind
       <div className="flex items-start p-5 gap-4">
         <div className="flex-shrink-0 mt-0.5">{icons[type]}</div>
         <div className="w-0 flex-1">
-          <p className="text-base font-bold text-white">{title}</p>
+          <p className="text-base font-bold text-slate-100">{title}</p>
           <p className="mt-1 text-sm text-slate-300">{message}</p>
         </div>
         <div className="ml-4 flex-shrink-0 flex">
           <button
             onClick={() => onRemove(id)}
-            className="inline-flex text-slate-400 hover:text-white transition-colors p-1 rounded-full hover:bg-slate-700/50"
+            className="inline-flex text-slate-400 hover:text-white transition-colors p-1 rounded-full hover:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-slate-600"
           >
             <X className="h-5 w-5" />
           </button>
@@ -68,4 +68,4 @@ const Notification: React.FC<NotificationProps> = ({ notification, onRemove, ind
   );
 };
 
-export default Notification;
+export default NotificationComponent;

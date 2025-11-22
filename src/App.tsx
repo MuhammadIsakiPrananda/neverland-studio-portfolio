@@ -1,14 +1,14 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, Outlet, useNavigate, Navigate } from 'react-router-dom';
-import { useAuth } from './context/AuthContext';
-import NotificationContainer from './component/ui/NotificationContainer';
 import LandingPage from './pages/LandingPage';
+import { useAuth } from './context/AuthContext';
 import DashboardLayout from './pages/Dashboard';
 import DashboardOverview from './pages/dashboard/DashboardOverview';
 import Projects from './pages/dashboard/Projects';
 import Team from './pages/dashboard/Team';
 import Settings from './pages/dashboard/Settings';
 import Analytics from './pages/dashboard/Analytics';
+import NotificationContainer from './component/ui/NotificationContainer';
 import AccessDenied from './context/AccessDenied';
 
 
@@ -43,23 +43,37 @@ const AdminRoute = () => {
 
 // --- OPTIMASI: Gunakan React.lazy untuk memuat AuthModal hanya saat dibutuhkan ---
 const AuthModal = lazy(() => import('./component/ui/AuthModal'));
+const ConsultationModal = lazy(() => import('./component/ui/ConsultationModal'));
 
 function App() {
+  const [isConsultationModalOpen, setConsultationModalOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const auth = useAuth();
   const navigate = useNavigate();
   
   // Fungsi ini akan menangani data dari LoginForm
   const handleLoginSuccess = (user: any, rememberMe: boolean) => {
-    auth.login(user, rememberMe);
-    // Arahkan SEMUA pengguna yang berhasil login ke dasbor.
-    navigate('/dashboard');
+    // Buat salinan data pengguna untuk dimodifikasi
+    const userProfile = { ...user };
+
+    // Jika pengguna tidak memiliki avatar, tambahkan avatar default
+    if (!userProfile.avatar) {
+      userProfile.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(userProfile.name)}&background=0d9488&color=fff&size=128`;
+    }
+
+    auth.login(userProfile, rememberMe);
+
+    // Periksa peran pengguna. Hanya admin yang diarahkan ke dasbor.
+    if (userProfile.role === 'admin') {
+      navigate('/dashboard');
+    }
+    
     setModalOpen(false); // Tutup modal
   };
 
   // Efek untuk mengontrol scroll pada body saat modal terbuka/tertutup
   useEffect(() => {
-    if (isModalOpen) {
+    if (isModalOpen || isConsultationModalOpen) {
       document.body.classList.add('overflow-hidden');
     } else {
       // Hanya hapus kelas jika tidak ada modal lain yang aktif di LandingPage
@@ -67,13 +81,16 @@ function App() {
       // Untuk kesederhanaan, kita asumsikan hanya satu modal utama yang aktif.
       document.body.classList.remove('overflow-hidden');
     }
-  }, [isModalOpen]);
+  }, [isModalOpen, isConsultationModalOpen]);
 
   return (
     <>
       <Routes>
         {/* Berikan fungsi untuk membuka modal ke LandingPage */}
-        <Route path="/" element={<LandingPage onLoginClick={() => setModalOpen(true)} isAuthModalOpen={isModalOpen} />} />
+        <Route path="/" element={<LandingPage 
+          onLoginClick={() => setModalOpen(true)} 
+          onScheduleConsultationClick={() => setConsultationModalOpen(true)}
+          isAuthModalOpen={isModalOpen} />} />
         
         {/* Rute yang dilindungi */}
         <Route element={<ProtectedRoute />}>
@@ -102,6 +119,10 @@ function App() {
           isOpen={isModalOpen}
           onClose={() => setModalOpen(false)}
           onLoginSuccess={handleLoginSuccess}
+        />
+        <ConsultationModal
+          isOpen={isConsultationModalOpen}
+          onClose={() => setConsultationModalOpen(false)}
         />
       </Suspense>
       <NotificationContainer />

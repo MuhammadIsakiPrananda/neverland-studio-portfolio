@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User as UserIcon, Lock, Mail, LogIn, Loader, Eye, EyeOff, ShieldX } from 'lucide-react';
+import { User as UserIcon, Lock, Mail, LogIn, Loader, Eye, EyeOff, ShieldX, AtSign } from 'lucide-react';
 import { useNotification } from './useNotification';
 import PasswordStrengthMeter from './PasswordStrengthMeter';
 import ReCAPTCHA from 'react-google-recaptcha';
@@ -10,6 +10,7 @@ interface RegisterFormProps {
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
   const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -17,12 +18,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-  const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string; confirmPassword?: string; recaptcha?: string; }>({});
+  const [errors, setErrors] = useState<{ name?: string; username?: string; email?: string; password?: string; confirmPassword?: string; recaptcha?: string; }>({});
   const { addNotification } = useNotification();
 
   const validate = () => {
     const newErrors: typeof errors = {};
     if (!name) newErrors.name = 'Name is required.';
+    if (!username) newErrors.username = 'Username is required.';
     if (!email) newErrors.email = 'Email is required.';
     else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Email address is invalid.';
     
@@ -79,7 +81,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, email, password, recaptchaToken }),
+        body: JSON.stringify({ name, username, email, password, recaptchaToken }),
       });
 
       const data = await response.json();
@@ -91,12 +93,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
 
       // Jika registrasi berhasil
       setErrors({});
-      addNotification('Registration Successful', `Welcome, ${data.user.name}! Please sign in.`, 'success');
+      
+      addNotification('Registration Successful', `Welcome, ${data.user.name}! Your profile is ready. Please sign in.`, 'success');
       // Setelah registrasi berhasil, alihkan ke mode login
       onSwitchMode('login');
 
     } catch (error: any) {
-      const errorMessage = error.message || 'An error occurred during registration.';
+      const errorMessage = error.message || 'An unknown error occurred during registration.';
       setApiError(errorMessage);
       addNotification('Registration Failed', errorMessage, 'error');
     } finally {
@@ -132,6 +135,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode }) => {
             }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.name ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
           </div>
           {errors.name && <p className="text-xs text-red-400 mt-1.5 ml-1 animate-fade-in">{errors.name}</p>}
+        </div>
+
+        {/* Username Input */}
+        <div>
+          <label htmlFor="username" className="text-sm font-medium text-slate-400 mb-2 block">Username</label>
+          <div className="relative">
+            <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+            <input id="username" type="text" placeholder="e.g. alexj" value={username} onChange={(e) => {
+              setUsername(e.target.value);
+              setErrors(prev => ({ ...prev, username: undefined }));
+            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.username ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
+          </div>
+          {errors.username && <p className="text-xs text-red-400 mt-1.5 ml-1 animate-fade-in">{errors.username}</p>}
         </div>
 
         {/* Email Input */}

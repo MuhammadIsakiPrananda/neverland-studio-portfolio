@@ -30,10 +30,11 @@ import type { UserProfile } from '../context/AuthContext';
 // 1. Definisikan tipe untuk props yang akan diterima
 interface LandingPageProps {
   onLoginClick: () => void;
+  onScheduleConsultationClick: () => void;
   isAuthModalOpen: boolean;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, isAuthModalOpen }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, onScheduleConsultationClick, isAuthModalOpen }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('Home');
@@ -44,6 +45,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, isAuthModalOpen
   const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
   const [isJoinTeamModalOpen, setIsJoinTeamModalOpen] = useState(false);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+  const [initialDashboardSection, setInitialDashboardSection] = useState('profile');
   const { isLoggedIn, userProfile, logout, updateProfile } = useAuth();
 
   useEffect(() => {
@@ -73,6 +75,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, isAuthModalOpen
   const handleProfileUpdate = (updatedUser: UserProfile) => {
     // Panggil fungsi dari AuthContext untuk memperbarui profil
     updateProfile(updatedUser);
+  };
+
+  const handleDashboardOpen = (section: string) => {
+    setInitialDashboardSection(section);
+    setIsDashboardModalOpen(true);
   };
 
   const handleAccountDelete = () => {
@@ -159,7 +166,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, isAuthModalOpen
           userProfile={userProfile!}
           onLoginClick={onLoginClick} // 2. Gunakan prop onLoginClick
           onLogout={logout}
-          onDashboardClick={() => setIsDashboardModalOpen(true)}
+          onDashboardClick={() => handleDashboardOpen('profile')}
           onQuoteClick={() => handleNavClick('Contact')}
         />
         <MobileNav 
@@ -171,7 +178,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, isAuthModalOpen
           onLoginClick={onLoginClick} // 3. Gunakan prop onLoginClick
           onLogout={logout}
           userProfile={userProfile!}
-          onDashboardClick={() => setIsDashboardModalOpen(true)}
+          onDashboardClick={() => handleDashboardOpen('profile')}
         />
         
         <main>
@@ -180,8 +187,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, isAuthModalOpen
           <ServicesSection isLoading={isLoading} setSectionRef={setSectionRef} />
           <ProcessSection isLoading={isLoading} setSectionRef={setSectionRef} />
           <PortfolioSection isLoading={isLoading} setSectionRef={setSectionRef} activeFilter={activeFilter} setActiveFilter={setActiveFilter} setShowVideo={setShowVideo} />
-          <TeamSection isLoading={isLoading} setSectionRef={setSectionRef} onJoinTeamClick={() => setIsJoinTeamModalOpen(true)} />
-          <PricingSection isLoading={isLoading} setSectionRef={setSectionRef} onGetStartedClick={() => setIsQuoteModalOpen(true)} />
+          <TeamSection isLoading={isLoading} setSectionRef={setSectionRef} onJoinTeamClick={() => setIsJoinTeamModalOpen(true)} />          <PricingSection isLoading={isLoading} setSectionRef={setSectionRef} onGetStartedClick={() => setIsQuoteModalOpen(true)} onScheduleConsultationClick={onScheduleConsultationClick} />
           <FAQSection isLoading={isLoading} />
           <CTASection isLoading={isLoading} />
           <ContactSection isLoading={isLoading} setSectionRef={setSectionRef} />
@@ -200,7 +206,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginClick, isAuthModalOpen
                   user={userProfile} 
                   onClose={() => setIsDashboardModalOpen(false)} 
                   onUpdateProfile={handleProfileUpdate}
-                  onDeleteAccount={handleAccountDelete} />
+                  onDeleteAccount={handleAccountDelete}
+                  initialSection={initialDashboardSection} />
               </div>
             )}
           </AnimatePresence>

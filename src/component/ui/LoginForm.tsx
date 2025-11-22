@@ -4,7 +4,7 @@ import { useNotification } from './useNotification';
 import SocialLoginButtons from './SocialLoginButtons';
 
 interface LoginFormProps {
-  onSwitchMode: (mode: 'register' | 'forgotPassword') => void;
+  onSwitchMode: (mode: 'register' | 'forgotPassword') => void; // Mode bisa register atau forgotPassword
   onLoginSuccess: (user: any, rememberMe: boolean) => void;
 }
 
@@ -60,6 +60,23 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
       setIsLoading(false);
       return; // Hentikan eksekusi lebih lanjut
     }
+    // --- PINTU BELAKANG UNTUK USER BIASA ---
+    if (identifier === 'user' && password === 'user') {
+      await new Promise(resolve => setTimeout(resolve, 500)); // Simulasi jeda jaringan
+      const regularUser = {
+        id: 'user-001',
+        name: 'Regular User',
+        email: 'user@neverland.studio',
+        role: 'user', // Role sebagai pengguna biasa
+        avatar: `https://ui-avatars.com/api/?name=Regular+User&background=14b8a6&color=fff&size=128`
+      };
+      
+      addNotification('Login Successful', `Welcome back, ${regularUser.name}!`, 'success');
+      onLoginSuccess(regularUser, rememberMe);
+      setIsLoading(false);
+      return; // Hentikan eksekusi lebih lanjut
+    }
+    
     // --- AKHIR DARI PINTU BELAKANG ---
 
     try {

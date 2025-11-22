@@ -8,9 +8,10 @@ interface PricingSectionProps {
   isLoading: boolean;
   setSectionRef: (section: string) => (el: HTMLElement | null) => void;
   onGetStartedClick: () => void;
+  onScheduleConsultationClick: () => void;
 }
 
-const PricingSection: React.FC<PricingSectionProps> = ({ isLoading, setSectionRef, onGetStartedClick }) => {
+const PricingSection: React.FC<PricingSectionProps> = ({ isLoading, setSectionRef, onGetStartedClick, onScheduleConsultationClick }) => {
   const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
@@ -93,7 +94,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ isLoading, setSectionRe
           <p className="text-slate-400 mb-6 max-w-2xl mx-auto">We offer tailored enterprise solutions. Contact us for a personalized quote and strategy session.</p>
           <div className="flex flex-wrap gap-4 justify-center">
             <button 
-              onClick={onGetStartedClick}
+              onClick={onScheduleConsultationClick}
               className="bg-gradient-to-r from-teal-500 to-emerald-600 text-white px-8 py-4 rounded-full font-semibold hover:shadow-xl hover:shadow-emerald-500/30 transition-all transform hover:scale-105 flex items-center gap-3 group"
             >
               <Phone className="w-5 h-5" />

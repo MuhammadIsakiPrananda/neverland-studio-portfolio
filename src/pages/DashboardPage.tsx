@@ -9,7 +9,7 @@ import ProjectsTable from './dashboard/ProjectsTable';
 import QuickActions from './dashboard/QuickActions';
 import { FolderKanban, TrendingUp, Users, DollarSign } from 'lucide-react';
 import { useNotification } from '../component/ui/useNotification';
-import NotificationProvider from '../component/ui/NotificationProvider';
+import { NotificationProvider } from '../component/ui/NotificationProvider';
 
 // --- Mock Data ---
 const mockStats = {
@@ -110,13 +110,13 @@ const DashboardPage = () => {
         <div className="flex-1">
           <DashboardHeader user={userProfile} title="Dashboard Overview" />
 
-          <main className="p-8 space-y-8">
+          <main className="p-4 md:p-8 space-y-8">
             {isLoading ? (
               <div className="text-center text-slate-400 py-20">Loading dashboard data...</div>
             ) : (
               <>
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                   <StatsCard
                     title="Total Projects"
                     value={stats?.total_projects || 0}
@@ -150,10 +150,14 @@ const DashboardPage = () => {
                 </div>
 
                 {/* Analytics Chart */}
-                <AnalyticsChart data={analytics} />
+                <div className="overflow-x-auto"><AnalyticsChart data={analytics} /></div>
 
                 {/* Projects Table */}
-                <ProjectsTable projects={projects} onDelete={handleDeleteProject} />
+                {/* Menambahkan shadow-inner-right untuk indikator scroll di mobile */}
+                <div className="overflow-x-auto custom-scrollbar relative md:shadow-none 
+                  before:absolute before:top-0 before:right-0 before:h-full before:w-8 before:bg-gradient-to-l before:from-gray-900 before:to-transparent before:pointer-events-none before:opacity-100 md:before:hidden">
+                  <ProjectsTable projects={projects} onDelete={handleDeleteProject} />
+                </div>
 
                 {/* Bottom Row */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

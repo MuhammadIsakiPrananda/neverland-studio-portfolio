@@ -34,7 +34,7 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ isOpen, 
             </div>
           </div>
           <p className="text-slate-300 my-4">To confirm, please type your username <strong className="text-blue-400">{username}</strong> in the box below.</p>
-          <input type="text" value={confirmationInput} onChange={(e) => setConfirmationInput(e.target.value)} className="w-full bg-gray-800/70 border border-gray-700 rounded-lg px-3 py-2 text-center focus:border-red-500 focus:ring-red-500/50 outline-none" />
+          <input type="text" value={confirmationInput} onChange={(e) => setConfirmationInput(e.target.value)} className="w-full bg-gray-800/70 border border-gray-700 rounded-lg px-3 py-2 text-center text-white focus:border-red-500 focus:ring-red-500/50 outline-none" />
           <div className="flex justify-end gap-3 mt-6">
             <button onClick={onClose} disabled={isLoading} className="py-2 px-4 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors text-sm font-semibold disabled:opacity-50">Cancel</button>
             <button onClick={() => onConfirm(confirmationInput)} disabled={confirmationInput !== username || isLoading} className="flex items-center gap-2 py-2 px-4 rounded-lg bg-red-600 hover:bg-red-500 transition-colors text-sm font-semibold text-white disabled:opacity-50 disabled:bg-red-600/50">

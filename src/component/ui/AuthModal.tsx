@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react';
+import { useState, Fragment, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { X } from 'lucide-react';
 import LoginForm from './LoginForm';
@@ -15,6 +15,18 @@ type AuthMode = 'login' | 'register' | 'forgotPassword';
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }) => {
   const [mode, setMode] = useState<AuthMode>('login');
+
+  // Efek untuk me-reset mode ke 'login' saat modal ditutup.
+  // Ini memastikan pengguna selalu disambut dengan form login.
+  useEffect(() => {
+    if (!isOpen) {
+      // Tambahkan sedikit jeda agar reset terjadi setelah animasi penutupan selesai.
+      const timer = setTimeout(() => {
+        setMode('login');
+      }, 200); // Durasi 200ms cocok dengan animasi 'leave'
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   const handleSwitchMode = (newMode: AuthMode) => {
     setMode(newMode);

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import { User, LogOut, Settings, LifeBuoy } from 'lucide-react';
+import { User, LogOut, Settings, LifeBuoy, FileText } from 'lucide-react';
 
 interface ProfileDropdownProps {
   userProfile: {
@@ -9,7 +9,7 @@ interface ProfileDropdownProps {
     avatar: string | null;
   };
   onLogout: () => void;
-  onDashboardClick: () => void;
+  onDashboardClick: (section: string) => void;
 }
 
 const menuContainerVariants: Variants = {
@@ -68,13 +68,19 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ userProfile, onLogout
               </div>
               <motion.button 
                 variants={menuItemVariants} 
-                onClick={() => { 
-                  onDashboardClick(); 
-                  setIsOpen(false); 
-                }} 
+                onClick={() => { onDashboardClick('profile'); setIsOpen(false); }} 
                 className="w-full text-left px-4 py-2.5 text-sm text-slate-200 hover:bg-slate-700/60 flex items-center gap-3.5 rounded-lg transition-colors"
-              ><Settings className="w-5 h-5 text-slate-400" /> Settings & Profile</motion.button>              
-              <motion.button variants={menuItemVariants} className="w-full text-left px-4 py-2.5 text-sm text-slate-200 hover:bg-slate-700/60 flex items-center gap-3.5 rounded-lg transition-colors"><LifeBuoy className="w-5 h-5 text-slate-400" /> Support</motion.button>              
+              ><Settings className="w-5 h-5 text-slate-400" /> Profile Settings</motion.button>
+              <motion.button 
+                variants={menuItemVariants} 
+                onClick={() => { onDashboardClick('support'); setIsOpen(false); }} 
+                className="w-full text-left px-4 py-2.5 text-sm text-slate-200 hover:bg-slate-700/60 flex items-center gap-3.5 rounded-lg transition-colors"
+              ><LifeBuoy className="w-5 h-5 text-slate-400" /> Help Center</motion.button>
+              <motion.button 
+                variants={menuItemVariants} 
+                onClick={() => { onDashboardClick('terms'); setIsOpen(false); }} 
+                className="w-full text-left px-4 py-2.5 text-sm text-slate-200 hover:bg-slate-700/60 flex items-center gap-3.5 rounded-lg transition-colors"
+              ><FileText className="w-5 h-5 text-slate-400" /> Terms & Conditions</motion.button>
               
               <div className="border-t border-slate-700/50 my-1.5"></div>
 
