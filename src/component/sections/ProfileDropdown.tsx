@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import { User, LogOut, Settings, LifeBuoy, FileText } from 'lucide-react';
+import { User, LogOut, Settings, LifeBuoy, FileText, LayoutDashboard } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface ProfileDropdownProps {
   userProfile: {
@@ -9,8 +10,11 @@ interface ProfileDropdownProps {
     avatar: string | null;
   };
   onLogout: () => void;
-  onDashboardClick: (section: string) => void;
+  onDashboardClick: (section?: string) => void;
 }
+
+// Tipe untuk memastikan hanya section yang valid yang bisa dikirim
+type DashboardSection = 'profile' | 'support' | 'terms';
 
 const menuContainerVariants: Variants = {
   open: {
@@ -29,6 +33,8 @@ const menuItemVariants: Variants = {
 const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ userProfile, onLogout, onDashboardClick }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -39,6 +45,11 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ userProfile, onLogout
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const handleItemClick = (section: DashboardSection) => {
+    setIsOpen(false); // Tutup dropdown terlebih dahulu
+    onDashboardClick(section);
+  };
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -68,17 +79,17 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ userProfile, onLogout
               </div>
               <motion.button 
                 variants={menuItemVariants} 
-                onClick={() => { onDashboardClick('profile'); setIsOpen(false); }} 
+                onClick={() => handleItemClick('profile')}
                 className="w-full text-left px-4 py-2.5 text-sm text-slate-200 hover:bg-slate-700/60 flex items-center gap-3.5 rounded-lg transition-colors"
               ><Settings className="w-5 h-5 text-slate-400" /> Profile Settings</motion.button>
               <motion.button 
                 variants={menuItemVariants} 
-                onClick={() => { onDashboardClick('support'); setIsOpen(false); }} 
+                onClick={() => handleItemClick('support')}
                 className="w-full text-left px-4 py-2.5 text-sm text-slate-200 hover:bg-slate-700/60 flex items-center gap-3.5 rounded-lg transition-colors"
               ><LifeBuoy className="w-5 h-5 text-slate-400" /> Help Center</motion.button>
               <motion.button 
                 variants={menuItemVariants} 
-                onClick={() => { onDashboardClick('terms'); setIsOpen(false); }} 
+                onClick={() => handleItemClick('terms')}
                 className="w-full text-left px-4 py-2.5 text-sm text-slate-200 hover:bg-slate-700/60 flex items-center gap-3.5 rounded-lg transition-colors"
               ><FileText className="w-5 h-5 text-slate-400" /> Terms & Conditions</motion.button>
               

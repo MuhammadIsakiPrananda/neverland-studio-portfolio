@@ -1,6 +1,6 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, Outlet, useNavigate, Navigate } from 'react-router-dom';
-import LandingPage from './pages/LandingPage';
+import LandingPage from './pages/LandingPage'; // NOSONAR
 import LandingPageLayout from './pages/LandingPageLayout'; // Path diperbaiki
 import { useAuth } from './context/AuthContext';
 import DashboardLayout from './pages/Dashboard';
@@ -47,9 +47,12 @@ const AdminRoute = () => {
 // --- OPTIMASI: Gunakan React.lazy untuk memuat AuthModal hanya saat dibutuhkan ---
 const AuthModal = lazy(() => import('./component/ui/AuthModal'));
 const ConsultationModal = lazy(() => import('./component/ui/ConsultationModal'));
+const UserDashboard = lazy(() => import('./component/ui/UserDashboard'));
 
 function App() {
   const [isConsultationModalOpen, setConsultationModalOpen] = useState(false);
+  const [isUserDashboardOpen, setUserDashboardOpen] = useState(false);
+  const [dashboardInitialSection, setDashboardInitialSection] = useState('profile');
   const [isModalOpen, setModalOpen] = useState(false);
   const auth = useAuth();
   const navigate = useNavigate();
@@ -74,9 +77,15 @@ function App() {
     setModalOpen(false); // Tutup modal
   };
 
+  // Pastikan fungsi ini menerima string dan memiliki tipe yang benar
+  const handleDashboardClick = (section: string = 'profile') => {
+    setDashboardInitialSection(section);
+    setUserDashboardOpen(true);
+  };
+
   // Efek untuk mengontrol scroll pada body saat modal terbuka/tertutup
   useEffect(() => {
-    if (isModalOpen || isConsultationModalOpen) {
+    if (isModalOpen || isConsultationModalOpen || isUserDashboardOpen) {
       document.body.classList.add('overflow-hidden');
     } else {
       // Hanya hapus kelas jika tidak ada modal lain yang aktif di LandingPage
@@ -84,13 +93,13 @@ function App() {
       // Untuk kesederhanaan, kita asumsikan hanya satu modal utama yang aktif.
       document.body.classList.remove('overflow-hidden');
     }
-  }, [isModalOpen, isConsultationModalOpen]);
+  }, [isModalOpen, isConsultationModalOpen, isUserDashboardOpen]);
 
   return (
     <>
       <Routes>
         {/* Rute Halaman Utama dibungkus oleh LandingPageLayout, teruskan onLoginClick */}
-        <Route element={<LandingPageLayout onLoginClick={() => setModalOpen(true)} />}>
+        <Route element={<LandingPageLayout onLoginClick={() => setModalOpen(true)} onDashboardClick={handleDashboardClick} />}>
           <Route path="/" element={<LandingPage
             onScheduleConsultationClick={() => setConsultationModalOpen(true)}
             isAuthModalOpen={isModalOpen} />} />
@@ -129,6 +138,18 @@ function App() {
           isOpen={isConsultationModalOpen}
           onClose={() => setConsultationModalOpen(false)}
         />
+        {/* Hanya render UserDashboard jika user login DAN modal diminta untuk terbuka */}
+        {isUserDashboardOpen && auth.userProfile && (
+            <UserDashboard
+              user={auth.userProfile}
+              onUpdateProfile={auth.updateProfile}
+              onClose={() => setUserDashboardOpen(false)}
+              onDeleteAccount={auth.logout}
+              initialSection={dashboardInitialSection}
+              // Key memastikan komponen di-remount saat dibuka, menerapkan initialSection dengan benar
+              key={isUserDashboardOpen ? 'dashboard-open' : 'dashboard-closed'} 
+            />
+          )}
       </Suspense>
       <NotificationContainer />
     </>

@@ -6,9 +6,10 @@ import { useAuth } from '../context/AuthContext';
 
 interface LandingPageLayoutProps {
   onLoginClick: () => void;
+  onDashboardClick: (section?: string) => void; // 1. Tambahkan prop ini
 }
 
-const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ onLoginClick }) => {
+const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ onLoginClick, onDashboardClick }) => { // 2. Terima prop ini
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('Home');
   const [isScrolled, setIsScrolled] = useState(false);
@@ -63,7 +64,7 @@ const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ onLoginClick }) =
         userProfile={isLoggedIn ? userProfile : null}
         onLoginClick={onLoginClick}
         onLogout={logout}
-        onDashboardClick={() => { /* akan ditangani oleh App.tsx */ }}
+        onDashboardClick={onDashboardClick} // 3. Teruskan prop ke DesktopNav
         onQuoteClick={() => handleNavClick('Contact')}
       />
       <MobileNav
@@ -75,7 +76,7 @@ const LandingPageLayout: React.FC<LandingPageLayoutProps> = ({ onLoginClick }) =
         onLoginClick={onLoginClick}
         onLogout={logout}
         userProfile={isLoggedIn ? userProfile : null}
-        onDashboardClick={() => { /* akan ditangani oleh App.tsx */ }}
+        onDashboardClick={onDashboardClick} // 4. Teruskan prop ke MobileNav
       />
       <Outlet context={{ sectionRefs, setActiveSection, isProgrammaticScroll }} />
     </>

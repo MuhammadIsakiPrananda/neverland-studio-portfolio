@@ -35,7 +35,8 @@ interface UserDashboardProps {
 }
 
 const UserDashboard: React.FC<UserDashboardProps> = ({ user, onUpdateProfile, onClose, onDeleteAccount, initialSection = 'profile' }) => {
-  const [activeSection, setActiveSection] = useState('profile');
+  // Inisialisasi state langsung dari prop untuk memastikan tab yang benar aktif saat dibuka.
+  const [activeSection, setActiveSection] = useState(initialSection);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const navItems = [
@@ -48,10 +49,6 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onUpdateProfile, on
     { id: 'apiKeys', label: 'API Keys', icon: KeyRound },
     { id: 'terms', label: 'Terms & Conditions', icon: FileText },
   ];
-
-  useEffect(() => {
-    setActiveSection(initialSection);
-  }, [user, initialSection]);
 
   const { appSettings, handleSettingsChange, handleThemeChange } = useAppearanceState();
   const { isLoading, formData, handleInputChange, handleSaveChanges, handleCancel, avatarPreview, coverPhotoPreview, fileInputRef, coverPhotoInputRef, handleAvatarChange, handleCoverPhotoChange } = useProfileState(user, onUpdateProfile);

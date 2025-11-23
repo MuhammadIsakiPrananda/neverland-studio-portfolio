@@ -12,7 +12,7 @@ interface DesktopNavProps {
   userProfile: { name: string; email: string; avatar: string | null; } | null;
   onLoginClick: () => void;
   onLogout: () => void;
-  onDashboardClick: () => void;
+  onDashboardClick: (section?: string) => void;
   onQuoteClick: () => void;
 }
 
