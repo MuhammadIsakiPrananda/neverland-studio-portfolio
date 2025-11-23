@@ -127,7 +127,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onScheduleConsultationClick, 
           <HeroSection isLoading={isLoading} isMenuOpen={false} setSectionRef={setSectionRef} setShowVideo={setShowVideo} onGetStartedClick={() => { /* Logika klik dipindahkan ke layout */ }} />
           <BenefitsSection isLoading={isLoading} />
           <ServicesSection isLoading={isLoading} setSectionRef={setSectionRef} />
-          <ProcessSection isLoading={isLoading} setSectionRef={setSectionRef} />
+          <ProcessSection 
+            isLoading={isLoading} 
+            setSectionRef={setSectionRef} 
+            // Pastikan Anda meneruskan prop yang diperlukan jika ada, contoh:
+            // onStepClick={() => {}} 
+          />
           <PortfolioSection isLoading={isLoading} setSectionRef={setSectionRef} activeFilter={activeFilter} setActiveFilter={setActiveFilter} setShowVideo={setShowVideo} />
           <TeamSection isLoading={isLoading} setSectionRef={setSectionRef} onJoinTeamClick={() => setIsJoinTeamModalOpen(true)} />
           <PricingSection isLoading={isLoading} setSectionRef={setSectionRef} onGetStartedClick={() => setIsQuoteModalOpen(true)} onScheduleConsultationClick={onScheduleConsultationClick} />

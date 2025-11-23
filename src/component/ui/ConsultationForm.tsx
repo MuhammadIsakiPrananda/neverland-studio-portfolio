@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { User, Mail, Building, MessageSquare, Send, Loader, AlertCircle, Calendar, Clock, BookCopy } from 'lucide-react';
 import { useNotification } from './useNotification';
 
@@ -22,6 +22,7 @@ const ConsultationForm: React.FC<ConsultationFormProps> = ({ onClose }) => {
     email: '',
     company: '',
     topic: '',
+    otherTopic: '', // State untuk topik kustom
     date: '',
     time: '',
     details: ''
@@ -37,7 +38,10 @@ const ConsultationForm: React.FC<ConsultationFormProps> = ({ onClose }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.topic || !formData.date || !formData.time) {
+    // Validasi baru: jika topik adalah 'Other', pastikan otherTopic tidak kosong
+    const isOtherTopicInvalid = formData.topic === 'Other' && !formData.otherTopic.trim();
+
+    if (!formData.name || !formData.email || !formData.topic || !formData.date || !formData.time || isOtherTopicInvalid) {
       setError('Please fill all required fields.');
       return;
     }
@@ -80,6 +84,25 @@ const ConsultationForm: React.FC<ConsultationFormProps> = ({ onClose }) => {
         <motion.div variants={itemVariants} className="relative"><Building className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" /><input type="text" name="company" placeholder="Company Name (Optional)" value={formData.company} onChange={handleChange} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors" /></motion.div>
 
         <motion.div variants={itemVariants} className="relative"><BookCopy className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 z-10" /><select name="topic" value={formData.topic} onChange={handleChange} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors appearance-none" required><option value="" disabled>Select Consultation Topic</option>{consultationTopics.map(s => <option key={s} value={s} className="bg-slate-900">{s}</option>)}</select></motion.div>
+
+        {/* Kolom input baru yang muncul saat "Other" dipilih */}
+        <AnimatePresence>
+          {formData.topic === 'Other' && (
+            <motion.div
+              key="other-topic-input"
+              initial={{ opacity: 0, height: 0, marginTop: 0 }}
+              animate={{ opacity: 1, height: 'auto', marginTop: '1rem' }}
+              exit={{ opacity: 0, height: 0, marginTop: 0 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="relative overflow-hidden"
+            >
+              <div className="relative">
+                <MessageSquare className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <input type="text" name="otherTopic" placeholder="Please specify your topic" value={formData.otherTopic} onChange={handleChange} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors" required />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="relative"><Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" /><input type="date" name="date" value={formData.date} onChange={handleChange} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors" required /></div>

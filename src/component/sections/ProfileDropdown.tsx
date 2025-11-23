@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import { User, LogOut, Settings, LifeBuoy, FileText, LayoutDashboard } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { User, LogOut, Settings, LifeBuoy, FileText } from 'lucide-react';
 
 interface ProfileDropdownProps {
   userProfile: {
@@ -33,8 +32,6 @@ const menuItemVariants: Variants = {
 const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ userProfile, onLogout, onDashboardClick }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

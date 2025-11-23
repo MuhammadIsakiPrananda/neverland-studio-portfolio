@@ -13,9 +13,11 @@ import OverviewPage from './dashboard/DashboardOverview'; // Nama file yang bena
 // Components
 import AuthModal from '../component/ui/AuthModal'; // Path yang benar adalah di dalam /ui/
 import { useAuth } from '../context/AuthContext';
+import ConsultationModal from '../component/ui/ConsultationModal'; // 1. Impor modal konsultasi
 
 function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false); // 2. Tambahkan state untuk modal konsultasi
   const auth = useAuth();
   const navigate = useNavigate();
 
@@ -31,22 +33,31 @@ function App() {
     auth.login(userProfile, rememberMe);
 
     if (userProfile.role === 'admin') {
+      // Langsung navigasi ke dasbor utama setelah login berhasil
       navigate('/dashboard');
     }
     
     setIsAuthModalOpen(false); // Tutup modal
   };
 
+  const handleDashboardClick = (section?: string) => {
+    // Fungsi ini akan menangani klik dari ProfileDropdown
+    // dan menavigasi ke bagian dasbor yang sesuai.
+    navigate(section ? `/dashboard/${section}` : '/dashboard');
+  };
+
   return (
     <>
       <Routes>
         {/* Rute untuk Halaman Utama (Landing Page) */}
-        <Route element={<LandingPageLayout onLoginClick={() => setIsAuthModalOpen(true)} />}>
+        <Route
+          element={<LandingPageLayout onLoginClick={() => setIsAuthModalOpen(true)} onDashboardClick={handleDashboardClick} />}
+        >
           <Route
             path="/"
             element={
               <LandingPage
-                onScheduleConsultationClick={() => {}}
+                onScheduleConsultationClick={() => setIsConsultationModalOpen(true)} // 3. Panggil fungsi untuk membuka modal
                 isAuthModalOpen={isAuthModalOpen}
               />
             }
@@ -68,6 +79,12 @@ function App() {
         onClose={() => setIsAuthModalOpen(false)} 
         onLoginSuccess={handleLoginSuccess}
       />}
+
+      {/* 4. Render modal konsultasi secara kondisional */}
+      <ConsultationModal
+        isOpen={isConsultationModalOpen}
+        onClose={() => setIsConsultationModalOpen(false)}
+      />
     </>
   );
 }

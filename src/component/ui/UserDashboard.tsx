@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { X, UserCircle, Shield, CreditCard, Palette, Bell, LifeBuoy, KeyRound, FileText, Menu } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AccountTabContent } from './AccountTab';
@@ -72,7 +72,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onUpdateProfile, on
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4" onClick={onClose}>
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -206,7 +206,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onUpdateProfile, on
         </motion.div>
       </div>
       {/* Tombol Close dipindahkan ke luar panel utama untuk posisi yang lebih baik */}
-      <button onClick={onClose} className="fixed top-6 right-6 bg-slate-800/50 p-2 rounded-full text-slate-400 hover:text-white hover:bg-slate-700/50 transition-all z-50">
+      <button onClick={onClose} className="fixed top-6 right-6 bg-slate-800/50 p-2 rounded-full text-slate-400 hover:text-white hover:bg-slate-700/50 transition-all z-[70]">
         <X className="w-6 h-6" />
       </button>
       

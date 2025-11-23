@@ -1,21 +1,15 @@
 
 import { useRef } from 'react';
 import { motion, useInView, type Variants } from "framer-motion";
-import { Rocket, Phone, MessageSquare, Mail, ArrowRight } from 'lucide-react';
-import { useChatbot } from "./ChatbotContext";
+import { Rocket, Phone, Youtube, Mail, ArrowRight } from 'lucide-react';
 
 interface CTASectionProps {
   isLoading: boolean;
 }
 
 const CTASection: React.FC<CTASectionProps> = ({ isLoading }) => {
-  const { setIsChatOpen } = useChatbot();
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
-
-  const handleChatClick = () => {
-    setIsChatOpen(true);
-  };
 
   const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
@@ -50,13 +44,14 @@ const CTASection: React.FC<CTASectionProps> = ({ isLoading }) => {
           <div className="space-y-6">
             {[
               { icon: <Mail className="w-6 h-6 text-teal-400" />, title: "Send us an Email", detail: "arlianto032@gmail.com", action: "Send Now", href: "mailto:arlianto032@gmail.com" },
-              { icon: <Phone className="w-6 h-6 text-teal-400" />, title: "Schedule a Call", detail: "Book a 15-min intro call", action: "Schedule", href: "#" }, // Ganti '#' dengan link penjadwalan
-              { icon: <MessageSquare className="w-6 h-6 text-teal-400" />, title: "Live Chat", detail: "Chat with our AI assistant", action: "Start Chat", onClick: handleChatClick },
+              { icon: <Phone className="w-6 h-6 text-teal-400" />, title: "Schedule a Call", detail: "Book a 15-min intro call", action: "Schedule", href: "https://calendly.com/your-link" }, // Ganti dengan link Calendly Anda
+              { icon: <Youtube className="w-6 h-6 text-red-500" />, title: "Watch Our Demo", detail: "See our work in action.", action: "Watch Now", href: "https://www.youtube.com/watch?v=YOUR_VIDEO_ID" },
             ].map((item, idx) => (
               <motion.a
                 key={idx}
                 href={item.href}
-                onClick={item.onClick}
+                target={item.href?.startsWith('http') ? '_blank' : '_self'}
+                rel="noopener noreferrer"
                 className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-6 flex items-center justify-between hover:bg-slate-800/80 hover:border-teal-500/50 transition-all cursor-pointer group" 
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
