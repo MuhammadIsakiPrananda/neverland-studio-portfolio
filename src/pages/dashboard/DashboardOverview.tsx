@@ -38,64 +38,83 @@ interface ServerMetrics {
 }
 
 // --- PENTING ---
-// Ini adalah fungsi simulasi. Ganti bagian ini dengan logika pengambilan data
-// dari API monitoring Anda yang sebenarnya (misalnya: UptimeRobot, Netdata, atau API custom Anda).
-// Gunakan API Key Anda di sini untuk otentikasi jika diperlukan.
+// Fungsi ini mengambil data dari API Netdata.
+// Pastikan server Netdata dapat diakses dari alamat http://10.0.0.4:19999.
 const fetchServerMetrics = async (): Promise<ServerMetrics> => {
-  // Simulasi data real-time
-  const randomCpu = (Math.random() * (75 - 5) + 5).toFixed(2);
-  const randomRam = (Math.random() * (80 - 20) + 20).toFixed(2);
-  const randomDisk = (Math.random() * (90 - 40) + 40).toFixed(2);
-  const randomNetIn = (Math.random() * (500 - 50) + 50).toFixed(2); // KB/s
-  const randomNetOut = (Math.random() * (200 - 20) + 20).toFixed(2); // KB/s
+  const NETDATA_URL = 'http://10.0.0.4:19999/api/v1';
 
-  // Untuk pengambilan data awal, kita buat riwayat kosong
-  // Logika real-time akan mengisi ini di useEffect
-  const cpuHistory: CpuHistoryPoint[] = [];
-  
-  // Simulasi riwayat Jaringan untuk 10 titik data terakhir (mode simulasi sederhana)
-  const networkHistory = Array.from({ length: 10 }).map((_, i) => {
-    const now = new Date();
-    now.setSeconds(now.getSeconds() - (10 - i) * 5);
-    return {
-      time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-      in: parseFloat((Math.random() * (500 - 50) + 50).toFixed(2)),
-      out: parseFloat((Math.random() * (200 - 20) + 20).toFixed(2)),
+  try {
+    // Helper untuk fetch data dari chart tertentu
+    const fetchData = async (chart: string, after: number = -1) => {
+      const response = await fetch(`${NETDATA_URL}/data?chart=${chart}&after=${after}&points=1&format=json`);
+      if (!response.ok) throw new Error(`Failed to fetch ${chart}`);
+      const data = await response.json();
+      // Mengembalikan nilai terakhir dari data
+      return data.data[0] || Array(data.labels.length).fill(0);
     };
-  });
 
+    // 1. Ambil Info Sistem
+    const infoResponse = await fetch(`${NETDATA_URL}/info`);
+    if (!infoResponse.ok) throw new Error('Failed to fetch system info');
+    const systemInfoData = await infoResponse.json();
 
-  // Simulasi status layanan (90% kemungkinan 'Active')
-  const getServiceStatus = (): ServiceStatus => {
-    const rand = Math.random();
-    if (rand < 0.9) return 'Active';
-    if (rand < 0.95) return 'Inactive';
-    return 'Error';
-  };
+    // 2. Ambil metrik CPU, RAM, Disk, Network
+    const cpuData = await fetchData('system.cpu');
+    const ramData = await fetchData('system.ram');
+    const diskData = await fetchData('disk_space._'); // Ganti '_' dengan mount point yang benar jika perlu, misal 'disk_space._var'
+    const netData = await fetchData('system.net');
+    const uptimeData = await fetchData('system.uptime');
 
-  // Simulasi delay jaringan
-  await new Promise(resolve => setTimeout(resolve, 750));
+    // 3. Ambil riwayat network untuk grafik
+    const netHistoryResponse = await fetch(`${NETDATA_URL}/data?chart=system.net&after=-60&points=15&group=average&format=json`);
+    const netHistoryData = await netHistoryResponse.json();
+    const networkHistory: NetworkHistoryPoint[] = netHistoryData.data.map((point: number[]) => ({
+      time: new Date(point[0] * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      in: parseFloat((point[1] / 8).toFixed(2)), // convert kbps to KB/s
+      out: parseFloat((Math.abs(point[2]) / 8).toFixed(2)), // convert kbps to KB/s
+    }));
 
-  return {
-    websiteUptime: "99.98%",
-    cpuUsage: parseFloat(randomCpu),
-    ramUsage: parseFloat(randomRam),
-    diskUsage: parseFloat(randomDisk),
-    networkIn: parseFloat(randomNetIn),
-    networkOut: parseFloat(randomNetOut),
-    cpuHistory,
-    systemInfo: {
-      os: "Debian GNU/Linux 12 (bookworm)",
-      ip: "192.168.1.101",
-      uptime: "28 days, 4 hours",
-    },
-    services: {
-      'Web Server (Nginx)': getServiceStatus(),
-      'Database (PostgreSQL)': getServiceStatus(),
-      'Firewall (UFW)': 'Active',
-    },
-    networkHistory,
-  };
+    // 4. Kalkulasi Metrik
+    const cpuUsage = parseFloat(cpuData[7].toFixed(2)); // 'usage' dimension
+    const ramUsed = ramData[1];
+    const ramTotal = ramData[1] + ramData[2] + ramData[3] + ramData[4];
+    const ramUsage = parseFloat(((ramUsed / ramTotal) * 100).toFixed(2));
+    const diskUsed = diskData[2];
+    const diskAvail = diskData[1];
+    const diskUsage = parseFloat(((diskUsed / (diskUsed + diskAvail)) * 100).toFixed(2));
+    const networkIn = parseFloat((netData[1] / 8).toFixed(2)); // received kbps to KB/s
+    const networkOut = parseFloat((Math.abs(netData[2]) / 8).toFixed(2)); // sent kbps to KB/s
+
+    const uptimeSeconds = uptimeData[1];
+    const days = Math.floor(uptimeSeconds / (3600 * 24));
+    const hours = Math.floor((uptimeSeconds % (3600 * 24)) / 3600);
+    const uptimeString = `${days} days, ${hours} hours`;
+
+    return {
+      websiteUptime: "99.98%", // Ini tetap statis karena Netdata tidak memonitor uptime website secara default
+      cpuUsage,
+      ramUsage,
+      diskUsage,
+      networkIn,
+      networkOut,
+      cpuHistory: [], // Akan diisi oleh useEffect
+      systemInfo: {
+        os: systemInfoData.os_name + " " + systemInfoData.os_version,
+        ip: "10.0.0.4", // IP statis karena API info tidak selalu memberikan IP yang relevan
+        uptime: uptimeString,
+      },
+      services: { // Status layanan disimulasikan karena deteksi otomatisnya kompleks
+        'Web Server (Nginx)': 'Active',
+        'Database (PostgreSQL)': 'Active',
+        'Firewall (UFW)': 'Active',
+      },
+      networkHistory,
+    };
+  } catch (error) {
+    console.error("Error fetching Netdata metrics:", error);
+    // Mengembalikan null atau state error agar UI bisa menampilkannya
+    throw error;
+  }
 };
 
 const DashboardOverview = () => {
@@ -104,7 +123,8 @@ const DashboardOverview = () => {
   useEffect(() => {
     // Fungsi untuk mengambil data dan menjadwalkan pengambilan berikutnya
     const updateMetrics = async () => {
-      const newMetrics = await fetchServerMetrics();
+      try {
+        const newMetrics = await fetchServerMetrics();
       
       setMetrics(prevMetrics => {
         // Titik data waktu saat ini
@@ -128,6 +148,10 @@ const DashboardOverview = () => {
           // networkHistory sekarang datang langsung dari newMetrics
         };
       });
+      } catch (error) {
+        console.error("Failed to update metrics, will retry...", error);
+        // Opsional: set state error untuk ditampilkan di UI
+      }
     };
 
     // Panggil pertama kali saat komponen dimuat

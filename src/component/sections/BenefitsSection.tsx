@@ -98,7 +98,7 @@ const BenefitCard: React.FC<BenefitCardProps> = ({ benefit, variants }) => {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       variants={variants}
-      className="relative p-[1px] bg-slate-800/50 rounded-xl overflow-hidden group transition-all duration-300 hover:bg-slate-800/80 hover:-translate-y-1"
+      className="relative border border-slate-800 rounded-xl overflow-hidden group transition-all duration-300 hover:border-slate-700/80 hover:bg-slate-800/30 hover:-translate-y-1"
       style={{
         perspective: "1000px",
         rotateX,
@@ -123,7 +123,7 @@ const BenefitCard: React.FC<BenefitCardProps> = ({ benefit, variants }) => {
           transform: "translateZ(20px)", // Push spotlight slightly forward
         }}
       />
-      <div className="relative h-full bg-slate-900/70 p-6 rounded-[11px] text-center flex flex-col" style={{ transform: "translateZ(40px)" }}>
+      <div className="relative h-full bg-slate-900/70 p-6 rounded-lg text-center flex flex-col" style={{ transform: "translateZ(40px)" }}>
         <div className="flex justify-center mb-4">
           <div className={`w-16 h-16 rounded-full bg-slate-800/70 flex items-center justify-center border border-slate-700 group-hover:${benefit.borderColor} transition-colors duration-300`}>
             {benefit.icon}

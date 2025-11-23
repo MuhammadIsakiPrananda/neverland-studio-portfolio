@@ -1,7 +1,7 @@
 
 import { useRef } from 'react';
 import { motion, useInView, type Variants } from "framer-motion";
-import { Rocket, Phone, Youtube, Mail, ArrowRight } from 'lucide-react';
+import { Rocket, Phone, Linkedin, Mail, ArrowRight } from 'lucide-react';
 
 interface CTASectionProps {
   isLoading: boolean;
@@ -45,7 +45,7 @@ const CTASection: React.FC<CTASectionProps> = ({ isLoading }) => {
             {[
               { icon: <Mail className="w-6 h-6 text-teal-400" />, title: "Send us an Email", detail: "arlianto032@gmail.com", action: "Send Now", href: "mailto:arlianto032@gmail.com" },
               { icon: <Phone className="w-6 h-6 text-teal-400" />, title: "Schedule a Call", detail: "Book a 15-min intro call", action: "Schedule", href: "https://calendly.com/your-link" }, // Ganti dengan link Calendly Anda
-              { icon: <Youtube className="w-6 h-6 text-red-500" />, title: "Watch Our Demo", detail: "See our work in action.", action: "Watch Now", href: "https://www.youtube.com/watch?v=YOUR_VIDEO_ID" },
+              { icon: <Linkedin className="w-6 h-6 text-sky-400" />, title: "Connect on LinkedIn", detail: "Let's build a professional network.", action: "Connect", href: "https://www.linkedin.com/in/your-profile" }, // Ganti dengan link LinkedIn Anda
             ].map((item, idx) => (
               <motion.a
                 key={idx}

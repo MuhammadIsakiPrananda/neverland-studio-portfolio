@@ -1,5 +1,5 @@
 
-import { motion, type Variants, useMotionValue, useTransform } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { ChevronRight, Play } from 'lucide-react'; 
 import StardustBackground from '../ui/StardustBackground';
 import Partners from '../ui/Partners';
@@ -47,25 +47,12 @@ const wordVariant: Variants = {
 };
 
 const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, isMenuOpen, setSectionRef, setShowVideo, onGetStartedClick }) => {
-  // Hooks for interactive mouse effects
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  // Transform for interactive glow (moves with the mouse)
-  const glowParallaxX = useTransform(x, [-100, 100], [-30, 30]);
-  const glowParallaxY = useTransform(y, [-100, 100], [-30, 30]);
-
-  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    x.set(event.clientX - rect.left - rect.width / 2);
-    y.set(event.clientY - rect.top - rect.height / 2);
+  const handleGetStartedClick = () => {
+    // Panggil fungsi asli jika ada logika lain (misal: menutup menu)
+    onGetStartedClick();
+    // Lakukan scroll ke bagian Contact
+    document.getElementById('Contact')?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-  
   return (
     <motion.section 
       ref={setSectionRef('Home')} 
@@ -126,49 +113,39 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, isMenuOpen, setSec
 
           <motion.div variants={itemVariants} className="flex flex-row gap-4 justify-center lg:justify-start">
             <button 
-              onClick={onGetStartedClick} 
-              className="btn-cartoon flex items-center justify-center gap-2 group flex-1 sm:flex-none text-base"
+              onClick={handleGetStartedClick} 
+              className="group inline-flex items-center justify-center px-7 py-3 text-base font-bold text-white transition-all duration-300 bg-gradient-to-r from-teal-500 to-emerald-600 rounded-full shadow-lg hover:shadow-xl hover:shadow-teal-500/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-teal-500 transform hover:scale-105 flex-1 sm:flex-none"
             >
               Get Started
-              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <ChevronRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
             </button> 
             <button 
               onClick={() => setShowVideo(true)}
-              className="btn-cartoon-secondary flex items-center justify-center gap-2 group flex-1 sm:flex-none text-base"
+              className="group inline-flex items-center justify-center px-7 py-3 text-base font-medium text-slate-200 bg-transparent border-2 border-slate-700 rounded-full transition-all duration-300 hover:border-teal-500 hover:bg-teal-500/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-slate-600 transform hover:scale-105 flex-1 sm:flex-none"
             >
-              <Play className="w-4 h-4" />
+              <Play className="w-4 h-4 mr-2 fill-current" />
               Watch Demo
             </button>
           </motion.div>
         </motion.div>
         <motion.div 
-          className="hidden lg:flex items-center justify-center relative" 
+          className="hidden lg:flex items-center justify-center relative"
           variants={itemVariants}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
         >
-          <motion.div 
-            className="relative p-2 bg-white/5 border border-white/10 rounded-2xl shadow-2xl shadow-black/30 backdrop-blur-sm"
-          >
-            <motion.div
-              className="absolute inset-0 bg-teal-500/20 rounded-full blur-3xl animate-pulse-slow -z-10"
-              style={{ x: glowParallaxX, y: glowParallaxY }}
-            ></motion.div>
-            <motion.div
-              animate={{ y: ["-10px", "10px", "-10px"] }}
-              transition={{
-                duration: 5,
-                ease: "easeInOut",
-                repeat: Infinity,
-              }}
-            >
-              <img 
-                src="/images/Neverland Studio.webp" 
-                alt="Neverland Studio Showcase" 
-                className="w-full h-auto max-w-md rounded-lg shadow-2xl shadow-teal-900/50 object-contain relative z-10"
-              />
-            </motion.div>
-          </motion.div>
+          <motion.img 
+            src="/images/Neverland Studio.webp" 
+            alt="Neverland Studio Showcase" 
+            className="w-full h-auto max-w-md rounded-2xl object-contain shadow-2xl shadow-teal-500/10"
+            animate={{
+              y: [0, -10, 0], // Efek melayang naik-turun
+              boxShadow: [ // Efek cahaya berdenyut
+                "0 25px 50px -12px rgba(13, 148, 136, 0.1)",
+                "0 25px 50px -12px rgba(13, 148, 136, 0.2)",
+                "0 25px 50px -12px rgba(13, 148, 136, 0.1)",
+              ]
+            }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          />
         </motion.div>
       </div>
 
