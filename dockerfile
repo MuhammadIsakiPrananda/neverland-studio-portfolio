@@ -1,45 +1,33 @@
-# STAGE 1: Build Frontend (React)
-# Menggunakan base image Node.js untuk proses build. 'as frontend-builder' menamai stage ini.
-FROM node:18-alpine AS frontend-builder
+# --- Tahap 1: Build ---
+# Menggunakan base image Node.js yang ringan untuk proses build.
+FROM node:18-alpine AS builder
 
-# Set working directory di dalam container
+# Menentukan working directory di dalam container
 WORKDIR /app
 
-# Copy package.json dan package-lock.json (atau yarn.lock) terlebih dahulu
+# Menyalin package.json dan package-lock.json terlebih dahulu.
 # Ini memanfaatkan caching Docker, sehingga 'npm install' hanya berjalan jika file-file ini berubah.
 COPY package*.json ./
 
-# Install dependencies frontend
+# Menginstall semua dependencies yang dibutuhkan untuk proses build (termasuk devDependencies).
 RUN npm install
 
-# Copy sisa source code frontend
+# Menyalin sisa source code aplikasi (frontend dan backend).
+# Karena ini monorepo, kita salin semuanya.
 COPY . .
 
-# Build aplikasi React untuk production
-# Folder hasil build default dari Vite adalah 'dist'
+# Menjalankan script build dari package.json untuk membuat aset frontend.
+# Vite akan menghasilkan folder 'dist' yang berisi file statis.
 RUN npm run build
 
-# STAGE 2: Final Image
-# Ini adalah image akhir yang akan dijalankan. Menggunakan base image yang ringan.
-FROM node:18-alpine
+# --- Tahap 2: Serve ---
+# Menggunakan base image Nginx yang ringan untuk menyajikan file statis.
+FROM nginx:alpine
 
-WORKDIR /app
+# Menyalin hasil build dari tahap 'builder' ke direktori default Nginx.
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy package.json untuk menginstall production dependencies
-COPY package*.json ./
+# Memberi tahu Docker bahwa container akan mendengarkan di port 80.
+EXPOSE 80
 
-# Install HANYA production dependencies untuk image akhir yang lebih kecil
-RUN npm install --production
-
-# Copy source code backend (misal: server.js) dan file-file lain yang relevan
-COPY . .
-
-# Copy hasil build frontend dari stage 'frontend-builder' ke folder 'public'
-# Vite secara default membuat folder 'dist', bukan 'build'
-COPY --from=frontend-builder /app/dist ./public
-
-# Expose port yang digunakan oleh server backend
-EXPOSE 8080
-
-# Perintah untuk menjalankan aplikasi saat container dimulai
-CMD ["node", "server.js"]
+# Perintah default untuk Nginx akan dijalankan secara otomatis untuk memulai server.

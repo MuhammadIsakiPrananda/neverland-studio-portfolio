@@ -36,19 +36,31 @@ services:
       - app-network
 
   # Layanan untuk Aplikasi (Frontend + Backend)
-  app:
+  # Layanan untuk Backend API (Node.js/Express)
+  backend:
     build:
-      context: . # Konteks build adalah folder saat ini
-      dockerfile: Dockerfile # Menggunakan Dockerfile di root
-    container_name: neverland_app
+      context: . # Konteks build adalah folder root proyek
+      dockerfile: ./neverland-backend/Dockerfile # Menunjuk ke Dockerfile backend
+    container_name: neverland_backend
     restart: unless-stopped
     ports:
-      # Map port 80 (frontend) di mesin Anda ke port 8080 di dalam kontainer
-      - "80:8080"
-      # Map port 5000 (backend API) di mesin Anda ke port 8080 di dalam kontainer
-      - "5000:8080"
+      # Memetakan port 5000 di mesin Anda ke port 5000 di dalam kontainer
+      - "5000:5000"
     depends_on:
       - db # Pastikan backend dimulai setelah database siap
+    networks:
+      - app-network
+
+  # Layanan untuk Frontend (React/Vite + Nginx)
+  frontend:
+    build:
+      context: . # Konteks build adalah folder root proyek
+      dockerfile: Dockerfile # Menggunakan Dockerfile di root
+    container_name: neverland_frontend
+    restart: unless-stopped
+    ports:
+      # Memetakan port 80 di mesin Anda ke port 80 di dalam kontainer (Nginx)
+      - "80:80"
     networks:
       - app-network
 
