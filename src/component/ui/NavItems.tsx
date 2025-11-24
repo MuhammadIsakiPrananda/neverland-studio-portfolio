@@ -1,0 +1,53 @@
+
+import { motion } from 'framer-motion';
+import { navItems as originalNavItems } from '../../data/navItems';
+import { MessageSquare } from 'lucide-react';
+
+interface NavItemsProps {
+  activeSection: string;
+  handleNavClick: (section: string) => void;
+}
+
+const NavItems: React.FC<NavItemsProps> = ({ activeSection, handleNavClick }) => {
+  // Menambahkan "Reviews" ke dalam daftar navigasi secara dinamis
+  const pricingIndex = originalNavItems.findIndex(item => item.name === 'Pricing');
+  const navItems = [...originalNavItems];
+  
+  // Jika "Pricing" ditemukan, sisipkan "Reviews" setelahnya.
+  if (pricingIndex !== -1) {
+    navItems.splice(pricingIndex + 1, 0, { name: 'Reviews', href: '/reviews', icon: <MessageSquare className="w-4 h-4" /> });
+  }
+
+  return (
+    <div className="hidden lg:flex items-center gap-1 transition-all duration-300">
+      {navItems.map((item) => (
+        <div
+          key={item.name}
+          className="relative group"
+        >
+          <button
+            onClick={() => handleNavClick(item.name)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium tracking-wide transition-colors duration-300 relative z-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50 ${ 
+              activeSection === item.name ? 'text-white' : 'text-slate-300'
+            }`}
+          >
+            {item.icon} {item.name}
+          </button>
+          {activeSection === item.name && (
+            <motion.div 
+              layoutId="active-pill" 
+              className="absolute inset-0 bg-gradient-to-r from-teal-500/30 to-cyan-500/30 rounded-full shadow-lg shadow-cyan-500/20 ring-2 ring-cyan-500/50 ring-offset-2 ring-offset-slate-900" 
+              style={{ borderRadius: 9999 }} 
+              transition={{ type: "spring", stiffness: 300, damping: 30 }} />
+          )}
+          {/* Efek Hover Pill untuk item yang tidak aktif. Hanya muncul jika item tidak aktif. */}
+          {activeSection !== item.name && (
+            <div className="absolute inset-0 bg-slate-800/80 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default NavItems;

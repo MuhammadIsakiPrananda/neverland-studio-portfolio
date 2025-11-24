@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .shimmer-text {
+    background-size: 200% auto;
+    background-position: 0% center;
+    transition: background-position 0.5s ease-in-out;
+  }
+
+  .group:hover .shimmer-text {
+    animation: shimmer 2s linear infinite;
+  }
+
+  .btn-shine {
+    @apply relative overflow-hidden;
+  }
+
+  .btn-shine::before {
+    content: '';
+    @apply absolute top-0 w-full h-full;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    left: -100%;
+    transition: left 0.6s ease-in-out;
+  }
+
+  .btn-shine:hover::before {
+    left: 100%;
+  }
+
+  /* Efek kilau DI DALAM teks saat hover */
+  .text-shine-effect {
+    /* Membuat teks menjadi "topeng" untuk background */
+    @apply bg-clip-text text-transparent;
+
+    /* Definisikan DUA lapis background: kilau putih di atas, gradasi teal di bawah */
+    background-image: 
+      linear-gradient(90deg, transparent, theme('colors.white'), transparent),
+      linear-gradient(to right, theme('colors.teal.400'), theme('colors.emerald.400'));
+
+    /* Atur ukuran masing-masing background */
+    background-size: 40% 100%, 100% 100%;
+    background-position: -150% 0, 0 0; /* Posisi awal: kilau di luar, gradasi teal di dalam */
+    background-repeat: no-repeat;
+
+    /* Transisi untuk pergerakan kilau */
+    transition: background-position 0.8s ease-in-out;
+  }
+
+  .text-shine-effect:hover {
+    /* Saat hover, pindahkan posisi background kilau melintasi teks */
+    background-position: 150% 0, 0 0;
+  }
+
+  /* Gaya Tombol Kartun */
+  .btn-cartoon {
+    @apply relative inline-block px-6 sm:px-8 py-3 rounded-full font-semibold text-white border-2 border-black transition-all duration-150;
+    background-color: theme('colors.teal.500');
+    box-shadow: 4px 4px 0px theme('colors.black');
+  }
+  .btn-cartoon:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px theme('colors.black');
+  }
+  .btn-cartoon:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px theme('colors.black');
+  }
+
+  .btn-cartoon-secondary {
+    @apply relative inline-block px-6 sm:px-8 py-3 rounded-full font-semibold text-white border-2 border-black transition-all duration-150;
+    background-color: theme('colors.slate.700');
+    box-shadow: 4px 4px 0px theme('colors.black');
+  }
+  .btn-cartoon-secondary:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px theme('colors.black');
+  }
+  .btn-cartoon-secondary:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px theme('colors.black');
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% center;
+  }
+}

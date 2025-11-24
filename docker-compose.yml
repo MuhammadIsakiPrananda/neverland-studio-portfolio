@@ -1,0 +1,80 @@
+# Gunakan versi 3.8 atau yang lebih baru untuk kompatibilitas fitur
+version: '3.8'
+
+services:
+  # Layanan untuk Database MariaDB
+  db:
+    image: mariadb:latest
+    container_name: mariadb_neverland
+    restart: unless-stopped
+    environment:
+      # Password untuk user 'root'. Ganti dengan password yang kuat untuk lingkungan produksi.
+      MYSQL_ROOT_PASSWORD: root
+      # Nama database yang akan dibuat saat pertama kali dijalankan
+      MYSQL_DATABASE: neverlandstudio
+    volumes:
+      # Menyimpan data MariaDB secara persisten di folder lokal
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  # Layanan untuk phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin_neverland
+    restart: unless-stopped
+    ports:
+      # Memetakan port 8080 di mesin Anda ke port 80 di dalam kontainer
+      - '8080:80'
+    environment:
+      # Menghubungkan phpMyAdmin ke host 'db' (nama layanan MariaDB)
+      PMA_HOST: db
+    depends_on:
+      # Memastikan layanan 'db' berjalan sebelum phpMyAdmin dimulai
+      - db
+    networks:
+      - app-network
+
+  # Layanan untuk Backend API (Node.js)
+  backend:
+    build:
+      context: ./neverland-backend # Path ke folder backend
+      dockerfile: Dockerfile # Nama Dockerfile di dalam folder tersebut
+    container_name: backend_neverland
+    restart: unless-stopped
+    ports:
+      - "5000:5000" # Map port 5000 di mesin Anda ke port 5000 di kontainer
+    volumes:
+      - ./neverland-backend:/usr/src/app # Sinkronisasi kode agar perubahan langsung terlihat
+      - /usr/src/app/node_modules # Mencegah folder node_modules lokal menimpa yang di kontainer
+    depends_on:
+      - db # Pastikan backend dimulai setelah database siap
+    networks:
+      - app-network
+
+  # Layanan untuk Frontend (React/Vite)
+  frontend:
+    build:
+      context: . # Path ke folder root frontend
+      dockerfile: Dockerfile # Nama Dockerfile di dalam folder tersebut
+    container_name: frontend_neverland
+    restart: unless-stopped
+    ports:
+      - "80:5173" # Map port 80 di mesin Anda ke port 5173 (Vite) di kontainer
+    volumes:
+      - .:/usr/src/app # Sinkronisasi kode
+      - /usr/src/app/node_modules
+    depends_on:
+      - backend # Pastikan frontend dimulai setelah backend siap
+    networks:
+      - app-network
+
+# Mendefinisikan jaringan kustom untuk komunikasi antar kontainer
+networks:
+  app-network:
+    driver: bridge
+
+# Mendefinisikan volume untuk persistensi data database
+volumes:
+  mariadb_data:
+    driver: local
