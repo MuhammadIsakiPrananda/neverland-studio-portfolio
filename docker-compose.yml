@@ -35,37 +35,20 @@ services:
     networks:
       - app-network
 
-  # Layanan untuk Backend API (Node.js)
-  backend:
+  # Layanan untuk Aplikasi (Frontend + Backend)
+  app:
     build:
-      context: ./neverland-backend # Path ke folder backend
-      dockerfile: Dockerfile # Nama Dockerfile di dalam folder tersebut
-    container_name: backend_neverland
+      context: . # Konteks build adalah folder saat ini
+      dockerfile: Dockerfile # Menggunakan Dockerfile di root
+    container_name: neverland_app
     restart: unless-stopped
     ports:
-      - "5000:5000" # Map port 5000 di mesin Anda ke port 5000 di kontainer
-    volumes:
-      - ./neverland-backend:/usr/src/app # Sinkronisasi kode agar perubahan langsung terlihat
-      - /usr/src/app/node_modules # Mencegah folder node_modules lokal menimpa yang di kontainer
+      # Map port 80 (frontend) di mesin Anda ke port 8080 di dalam kontainer
+      - "80:8080"
+      # Map port 5000 (backend API) di mesin Anda ke port 8080 di dalam kontainer
+      - "5000:8080"
     depends_on:
       - db # Pastikan backend dimulai setelah database siap
-    networks:
-      - app-network
-
-  # Layanan untuk Frontend (React/Vite)
-  frontend:
-    build:
-      context: . # Path ke folder root frontend
-      dockerfile: Dockerfile # Nama Dockerfile di dalam folder tersebut
-    container_name: frontend_neverland
-    restart: unless-stopped
-    ports:
-      - "80:5173" # Map port 80 di mesin Anda ke port 5173 (Vite) di kontainer
-    volumes:
-      - .:/usr/src/app # Sinkronisasi kode
-      - /usr/src/app/node_modules
-    depends_on:
-      - backend # Pastikan frontend dimulai setelah backend siap
     networks:
       - app-network
 
