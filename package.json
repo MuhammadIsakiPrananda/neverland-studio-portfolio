@@ -12,8 +12,6 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
-    "@stripe/react-stripe-js": "^2.8.0",
-    "@stripe/stripe-js": "^4.1.0",
     "clsx": "^2.1.1",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
