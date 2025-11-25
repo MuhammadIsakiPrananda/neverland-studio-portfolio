@@ -1,14 +1,16 @@
 # Stage 1: Build aplikasi frontend (React/Vite)
-FROM node:18-alpine as builder
+FROM node:20-alpine as builder
 
 # Set working directory
 WORKDIR /app
 
-# Salin file package.json dan install dependencies
+# Salin file-file manifest dan lock untuk caching dependensi
 COPY package*.json ./
-RUN npm install
 
-# Salin sisa source code frontend
+# Install hanya dependensi yang diperlukan untuk build frontend
+RUN npm install --omit=optional
+
+# Salin sisa source code
 COPY . .
 
 # Build aplikasi untuk production

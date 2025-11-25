@@ -1,93 +1,35 @@
-# Gunakan versi 3.8 atau yang lebih baru untuk kompatibilitas fitur
 version: '3.8'
 
 services:
-  # Layanan untuk Database MariaDB
-  db:
-    image: mariadb:latest
-    container_name: mariadb_neverland
-    restart: unless-stopped
-    environment:
-      # Password untuk user 'root'. Ganti dengan password yang kuat untuk lingkungan produksi.
-      MYSQL_ROOT_PASSWORD: root
-      # Nama database yang akan dibuat saat pertama kali dijalankan
-      MYSQL_DATABASE: neverlandstudio
-    volumes:
-      # Menyimpan data MariaDB secara persisten di folder lokal
-      - mariadb_data:/var/lib/mysql
-    networks:
-      - app-network
-    healthcheck:
-      # Perintah untuk memeriksa apakah database siap
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
-      interval: 10s # Cek setiap 10 detik
-      timeout: 5s   # Tunggu 5 detik untuk respons
-      retries: 5    # Coba 5 kali sebelum menandai sebagai tidak sehat
-
-  # Layanan untuk phpMyAdmin
-  phpmyadmin:
-    image: phpmyadmin:latest
-    container_name: phpmyadmin_neverland
-    restart: unless-stopped
-    ports:
-      # Memetakan port 8080 di mesin Anda ke port 80 di dalam kontainer
-      - '8080:80'
-    environment:
-      # Menghubungkan phpMyAdmin ke host 'db' (nama layanan MariaDB)
-      PMA_HOST: db
-    depends_on:
-      # Memastikan layanan 'db' berjalan sebelum phpMyAdmin dimulai
-      - db
-    networks:
-      - app-network
-
-  # Layanan untuk Aplikasi (Frontend + Backend)
-  # Layanan untuk Backend API (Node.js/Express)
   backend:
     build:
-      context: ./neverland-backend # Mengubah konteks build ke folder backend
-      dockerfile: Dockerfile # Dockerfile sekarang dicari di dalam konteks (./neverland-backend/Dockerfile)
+      context: ./neverland-backend
+      dockerfile: Dockerfile
     container_name: neverland_backend
-    restart: unless-stopped
     ports:
-      # Memetakan port 5000 di mesin Anda ke port 5000 di dalam kontainer
       - "5000:5000"
     environment:
-      # Teruskan variabel koneksi database ke kontainer backend
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASSWORD=root
-      - DB_NAME=neverlandstudio
-      - DB_PORT=3306
-      - DB_DIALECT=mariadb # <-- Tambahkan baris ini
-    depends_on:
-      db:
-        # Tunggu sampai healthcheck 'db' berhasil
-        condition: service_healthy
+      # Tambahkan variabel lingkungan yang dibutuhkan backend di sini
+      # Contoh:
+      # DB_HOST: db
+      # DB_USER: user
+      # DB_PASSWORD: password
+      # DB_NAME: neverland_db
     networks:
       - app-network
 
-  # Layanan untuk Frontend (React/Vite + Nginx)
   frontend:
     build:
-      context: . # Konteks build adalah folder root proyek
-      dockerfile: Dockerfile # Menggunakan Dockerfile di root yang baru kita buat
+      context: .
+      dockerfile: Dockerfile
     container_name: neverland_frontend
-    restart: unless-stopped
-    depends_on:
-      - backend # Pastikan frontend dimulai setelah backend
     ports:
-      # Memetakan port 80 di mesin Anda ke port 80 di dalam kontainer (Nginx)
       - "80:80"
+    depends_on:
+      - backend
     networks:
       - app-network
 
-# Mendefinisikan jaringan kustom untuk komunikasi antar kontainer
 networks:
   app-network:
     driver: bridge
-
-# Mendefinisikan volume untuk persistensi data database
-volumes:
-  mariadb_data:
-    driver: local
