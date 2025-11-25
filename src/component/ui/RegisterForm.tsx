@@ -204,16 +204,22 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
         </div>
 
         <div className="pt-2">
-          <ReCAPTCHA
-            // PERBAIKAN: Mengambil sitekey dari environment variable Vite
-            sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-            onChange={handleRecaptchaChange}
-            theme="dark"
-          />
+          {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
+            <ReCAPTCHA
+              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+              onChange={handleRecaptchaChange}
+              theme="dark"
+            />
+          ) : (
+            <div className="bg-yellow-900/40 border border-yellow-500/30 text-yellow-300 text-sm p-3 rounded-lg">
+              reCAPTCHA is not configured. Please set{" "}
+              <code className="bg-slate-700 px-1 py-0.5 rounded">VITE_RECAPTCHA_SITE_KEY</code> in your .env file and restart the server.
+            </div>
+          )}
           {errors.recaptcha && <p className="text-xs text-red-400 mt-1.5 ml-1 animate-fade-in">{errors.recaptcha}</p>}
         </div>
 
-        <button type="submit" disabled={isLoading || !recaptchaToken} className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-[1.02] mt-4 cursor-pointer">
+        <button type="submit" disabled={isLoading || !recaptchaToken} className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-[1.02] mt-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none">
           {isLoading ? <><Loader className="w-5 h-5 animate-spin" /> Creating Account...</> : <><LogIn className="w-5 h-5" /> Sign Up</>}
         </button>
 

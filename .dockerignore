@@ -2,7 +2,7 @@
 node_modules
 
 # Abaikan folder backend
-neverland-backend
+neverland-backend/
 
 # Abaikan file-file lain yang tidak perlu
 .git
