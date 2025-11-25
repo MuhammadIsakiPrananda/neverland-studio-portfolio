@@ -45,8 +45,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
     setIsLoading(true);
 
     try {
-      // Menggunakan URL lengkap dari environment variable
-      const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/api/auth/login`;
+      // Menggunakan URL relatif agar fleksibel, sama seperti RegisterForm.
+      // Permintaan akan dikirim ke domain yang sama dengan frontend.
+      // Di development, ini akan ditangani oleh proxy Vite.
+      // Di produksi, ini akan langsung mengarah ke backend di domain yang sama.
+      const apiUrl = '/api/auth/login';
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {

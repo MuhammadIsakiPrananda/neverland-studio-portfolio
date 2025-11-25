@@ -77,8 +77,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
 
     setIsLoading(true);
     try {
-      // PERBAIKAN FINAL: Gunakan URL lengkap dari environment variable, sama seperti LoginForm.
-      const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/api/auth/register`;
+      // Menggunakan URL relatif agar fleksibel antara localhost dan domain produksi.
+      // Permintaan akan dikirim ke domain yang sama dengan frontend.
+      // Contoh: http://localhost:5173/api/auth/register atau https://neverlandstudio.my.id/api/auth/register
+      // Pastikan server backend Anda (baik lokal maupun produksi) dapat menangani permintaan dari path ini.
+      const apiUrl = '/api/auth/register';
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
