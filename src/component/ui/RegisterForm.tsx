@@ -78,7 +78,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
     setIsLoading(true);
     try {
       // PERBAIKI URL: Gunakan port 5000 dan path /api/auth/register
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch('http://10.0.0.2:5000/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
