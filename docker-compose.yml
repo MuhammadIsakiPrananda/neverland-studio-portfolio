@@ -17,6 +17,12 @@ services:
       - mariadb_data:/var/lib/mysql
     networks:
       - app-network
+    healthcheck:
+      # Perintah untuk memeriksa apakah database siap
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s # Cek setiap 10 detik
+      timeout: 5s   # Tunggu 5 detik untuk respons
+      retries: 5    # Coba 5 kali sebelum menandai sebagai tidak sehat
 
   # Layanan untuk phpMyAdmin
   phpmyadmin:
@@ -55,15 +61,17 @@ services:
       - DB_PORT=3306
       - DB_DIALECT=mariadb # <-- Tambahkan baris ini
     depends_on:
-      - db # Pastikan backend dimulai setelah database siap
+      db:
+        # Tunggu sampai healthcheck 'db' berhasil
+        condition: service_healthy
     networks:
       - app-network
 
   # Layanan untuk Frontend (React/Vite + Nginx)
   frontend:
     build:
-      context: .
-      dockerfile: Dockerfile # Pastikan Dockerfile ini menggunakan nginx.conf
+      context: . # Konteks build adalah folder root proyek
+      dockerfile: Dockerfile # Menggunakan Dockerfile di root yang baru kita buat
     container_name: neverland_frontend
     restart: unless-stopped
     depends_on:

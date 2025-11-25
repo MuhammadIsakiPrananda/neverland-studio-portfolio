@@ -1,32 +1,22 @@
-# --- Tahap 1: Build ---
-# Menggunakan base image Node.js versi 20 yang sesuai dengan kebutuhan Vite.
-FROM node:20-alpine AS builder
+# Stage 1: Build aplikasi frontend (React/Vite)
+FROM node:18-alpine as builder
 
-# Menentukan working directory di dalam container
+# Set working directory
 WORKDIR /app
 
-# Menyalin package.json dan package-lock.json terlebih dahulu.
-# Ini memanfaatkan caching Docker, sehingga 'npm install' hanya berjalan jika file-file ini berubah.
+# Salin file package.json dan install dependencies
 COPY package*.json ./
-
-# Menginstall semua dependencies yang dibutuhkan untuk proses build (termasuk devDependencies).
 RUN npm install
 
-# Menyalin sisa source code aplikasi.
+# Salin sisa source code frontend
 COPY . .
 
-# Menjalankan script build dari package.json untuk membuat aset frontend.
-# Vite akan menghasilkan folder 'dist' yang berisi file statis.
+# Build aplikasi untuk production
 RUN npm run build
 
-# --- Tahap 2: Serve ---
-# Menggunakan base image Nginx yang ringan untuk menyajikan file statis.
-FROM nginx:alpine
-
-# Menyalin hasil build dari tahap 'builder' ke direktori default Nginx.
+# Stage 2: Sajikan aplikasi menggunakan Nginx
+FROM nginx:stable-alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Memberi tahu Docker bahwa container akan mendengarkan di port 80.
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
-
-# Perintah default untuk Nginx akan dijalankan secara otomatis untuk memulai server.
+CMD ["nginx", "-g", "daemon off;"]
