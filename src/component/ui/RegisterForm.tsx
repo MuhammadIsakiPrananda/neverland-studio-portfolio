@@ -77,8 +77,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
 
     setIsLoading(true);
     try {
-      // PERBAIKI URL: Gunakan port 5000 dan path /api/auth/register
-      const response = await fetch('http://10.0.0.2:5000/api/auth/register', {
+      // PERBAIKAN: Gunakan path relatif. 
+      // Ini akan otomatis menjadi 'http://localhost:5701/api/auth/register' di development (via proxy Vite)
+      // dan 'https://neverlandstudio.my.id/api/auth/register' di produksi (via proxy Nginx).
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -203,7 +205,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
 
         <div className="pt-2">
           <ReCAPTCHA
-            sitekey="6LctOhQsAAAAABekEQMZ1hW1PnP7Q-P-hp9r119H"
+            // PERBAIKAN: Mengambil sitekey dari environment variable Vite
+            sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
             onChange={handleRecaptchaChange}
             theme="dark"
           />

@@ -8,7 +8,14 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5701,
-    strictPort: false, // Akan mencoba port lain jika 5701 digunakan
+    strictPort: true,
+    proxy: {
+      // Teruskan semua permintaan yang dimulai dengan /api ke server backend
+      '/api': {
+        target: 'http://localhost:5000', // Alamat backend Anda
+        changeOrigin: true, // Diperlukan untuk virtual host
+      }
+    }
   },
   test: {
     globals: true,

@@ -1,7 +1,9 @@
+# Abaikan dependensi dari host
 node_modules
-npm-debug.log
-dist
-.env
+
+# Abaikan folder backend
+neverland-backend
+
+# Abaikan file-file lain yang tidak perlu
 .git
-.gitignore
-docker-compose.yml
+.vscode

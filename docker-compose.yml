@@ -7,11 +7,13 @@ services:
       dockerfile: Dockerfile
     container_name: neverland_backend
     ports:
-      - "5000:5000" # Port backend
+      # Hanya ekspos port ke localhost server untuk keamanan
+      - "127.0.0.1:5000:5000"
     env_file:
       - ./neverland-backend/.env # Memuat variabel dari file .env
     depends_on:
-      - mariadb_neverland # Backend akan menunggu database siap
+      mariadb_neverland:
+        condition: service_healthy # Menunggu sampai database benar-benar siap
     networks:
       - app-network
 
@@ -21,7 +23,8 @@ services:
       dockerfile: Dockerfile
     container_name: neverland_frontend
     ports:
-      - "80:80"
+      # Hanya ekspos port ke localhost server, Argo Tunnel akan mengakses ini
+      - "127.0.0.1:80:80"
     depends_on:
       - backend
     networks:
@@ -32,9 +35,17 @@ services:
     container_name: mariadb_neverland
     restart: always
     env_file:
-      - ./neverland-backend/.env # Menggunakan .env yang sama dengan backend untuk konsistensi
+      - ./neverland-backend/.env
     volumes:
       - mariadb-data:/var/lib/mysql
+    # Healthcheck memastikan layanan lain hanya akan start jika database benar-benar siap
+    healthcheck:
+      # Gunakan variabel dari .env untuk memeriksa status
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u${DB_USER}", "-p${DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       - app-network
 
@@ -43,18 +54,19 @@ services:
     container_name: neverland_phpmyadmin
     restart: always
     ports:
-      - "8080:80" # Akses dari http://localhost:8080
+      # Ganti port agar tidak konflik dan hanya ekspos ke localhost
+      - "127.0.0.1:8081:80"
     environment:
       PMA_HOST: mariadb_neverland # Menunjuk ke service database
       PMA_PORT: 3306
     depends_on:
-      - mariadb_neverland # Harus menunggu database siap
+      mariadb_neverland:
+        condition: service_healthy # Menunggu sampai phpmyadmin juga siap
     networks:
       - app-network
 
 networks:
   app-network:
     driver: bridge
-
 volumes:
-  mariadb-data:
+  mariadb-data: {} # Definisi volume eksplisit
