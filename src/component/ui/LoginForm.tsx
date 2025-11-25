@@ -45,8 +45,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
     setIsLoading(true);
 
     try {
-      // Ganti URL dan endpoint ke backend yang benar
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      // Menggunakan path relatif agar proxy Vite dapat menanganinya
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

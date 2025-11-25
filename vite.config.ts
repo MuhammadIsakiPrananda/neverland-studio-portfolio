@@ -10,7 +10,9 @@ export default defineConfig({
     port: 5701,
     strictPort: true,
     proxy: {
-      // Teruskan semua permintaan yang dimulai dengan /api ke server backend
+      // Aturan ini meneruskan semua permintaan dari frontend yang dimulai dengan '/api'
+      // ke server backend Anda di http://localhost:5000.
+      // Contoh: request ke '/api/auth/register' akan diteruskan ke 'http://localhost:5000/api/auth/register'
       '/api': {
         target: 'http://localhost:5000', // Alamat backend Anda
         changeOrigin: true, // Diperlukan untuk virtual host
