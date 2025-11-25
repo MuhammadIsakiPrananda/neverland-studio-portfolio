@@ -7,14 +7,11 @@ services:
       dockerfile: Dockerfile
     container_name: neverland_backend
     ports:
-      - "5000:5000"
-    environment:
-      # Tambahkan variabel lingkungan yang dibutuhkan backend di sini
-      # Contoh:
-      # DB_HOST: db
-      # DB_USER: user
-      # DB_PASSWORD: password
-      # DB_NAME: neverland_db
+      - "5000:5000" # Port backend
+    env_file:
+      - ./neverland-backend/.env # Memuat variabel dari file .env
+    depends_on:
+      - mariadb_neverland # Backend akan menunggu database siap
     networks:
       - app-network
 
@@ -30,6 +27,21 @@ services:
     networks:
       - app-network
 
+  mariadb_neverland:
+    image: mariadb:10.6 # Menggunakan image MariaDB
+    container_name: mariadb_neverland
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD} # Mengambil dari .env
+      MYSQL_DATABASE: ${DB_NAME} # Mengambil dari .env
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  mariadb-data:
