@@ -4,6 +4,9 @@ const express = require('express');
 const cors = require('cors');
 const sequelize = require('./config/database'); // Import koneksi sequelize
 
+// Import model agar Sequelize tahu tabel apa yang harus dibuat
+require('./models/User');
+
 const app = express();
 
 // Middleware

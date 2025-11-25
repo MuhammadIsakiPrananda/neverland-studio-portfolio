@@ -1,27 +1,16 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const axios = require('axios');
 const { Op } = require('sequelize');
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
 exports.register = async (req, res) => {
   // Terima `recaptchaToken` bersama data lainnya
-  const { name, username, email, password, recaptchaToken } = req.body;
+  const { name, username, email, password } = req.body;
 
   try {
-    // 1. KEAMANAN EXTRA: Verifikasi reCAPTCHA
-    if (!recaptchaToken) {
-      return res.status(400).json({ msg: 'Please verify you are not a robot.' });
-    }
-    const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`;
-    const recaptchaResponse = await axios.post(verifyUrl);
-    if (!recaptchaResponse.data.success) {
-      return res.status(400).json({ msg: 'Failed reCAPTCHA verification.' });
-    }
-
-    // 2. Pengecekan Email dan Username yang Sudah Ada (dibuat lebih efisien)
+    // Pengecekan Email dan Username yang Sudah Ada (dibuat lebih efisien)
     const existingUser = await User.findOne({ where: { [Op.or]: [{ email }, { username }] } });
     if (existingUser) {
       if (existingUser.email === email) {

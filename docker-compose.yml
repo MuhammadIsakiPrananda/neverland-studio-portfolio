@@ -39,13 +39,21 @@ services:
   # Layanan untuk Backend API (Node.js/Express)
   backend:
     build:
-      context: . # Konteks build adalah folder root proyek
-      dockerfile: ./neverland-backend/Dockerfile # Menunjuk ke Dockerfile backend
+      context: ./neverland-backend # Mengubah konteks build ke folder backend
+      dockerfile: Dockerfile # Dockerfile sekarang dicari di dalam konteks (./neverland-backend/Dockerfile)
     container_name: neverland_backend
     restart: unless-stopped
     ports:
       # Memetakan port 5000 di mesin Anda ke port 5000 di dalam kontainer
       - "5000:5000"
+    environment:
+      # Teruskan variabel koneksi database ke kontainer backend
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=neverlandstudio
+      - DB_PORT=3306
+      - DB_DIALECT=mariadb # <-- Tambahkan baris ini
     depends_on:
       - db # Pastikan backend dimulai setelah database siap
     networks:
@@ -54,10 +62,12 @@ services:
   # Layanan untuk Frontend (React/Vite + Nginx)
   frontend:
     build:
-      context: . # Konteks build adalah folder root proyek
-      dockerfile: Dockerfile # Menggunakan Dockerfile di root
+      context: .
+      dockerfile: Dockerfile # Pastikan Dockerfile ini menggunakan nginx.conf
     container_name: neverland_frontend
     restart: unless-stopped
+    depends_on:
+      - backend # Pastikan frontend dimulai setelah backend
     ports:
       # Memetakan port 80 di mesin Anda ke port 80 di dalam kontainer (Nginx)
       - "80:80"

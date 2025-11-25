@@ -14,7 +14,7 @@ RUN npm install --production
 
 # Menyalin source code backend ke working directory di dalam container.
 # Perhatikan kita menyalin dari subfolder 'neverland-backend' dari konteks build.
-COPY ./neverland-backend/ .
+COPY . .
 
 # Membuat user dan grup aplikasi
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup

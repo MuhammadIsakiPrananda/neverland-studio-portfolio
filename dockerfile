@@ -1,6 +1,6 @@
 # --- Tahap 1: Build ---
-# Menggunakan base image Node.js yang ringan untuk proses build.
-FROM node:18-alpine AS builder
+# Menggunakan base image Node.js versi 20 yang sesuai dengan kebutuhan Vite.
+FROM node:20-alpine AS builder
 
 # Menentukan working directory di dalam container
 WORKDIR /app
@@ -12,8 +12,7 @@ COPY package*.json ./
 # Menginstall semua dependencies yang dibutuhkan untuk proses build (termasuk devDependencies).
 RUN npm install
 
-# Menyalin sisa source code aplikasi (frontend dan backend).
-# Karena ini monorepo, kita salin semuanya.
+# Menyalin sisa source code aplikasi.
 COPY . .
 
 # Menjalankan script build dari package.json untuk membuat aset frontend.
