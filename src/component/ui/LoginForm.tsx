@@ -45,8 +45,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
     setIsLoading(true);
 
     try {
-      // Menggunakan path relatif agar proxy Vite dapat menanganinya
-      const response = await fetch('/api/auth/login', {
+      // Menggunakan URL lengkap dari environment variable
+      const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/api/auth/login`;
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +133,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
                 setPassword(e.target.value);
                 setErrors(prev => ({ ...prev, password: undefined }));
               }}
-              onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(e); }}
               className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.password ? 'border-red-500/50' : 'border-slate-700'}`}
               required
               disabled={isLoading}

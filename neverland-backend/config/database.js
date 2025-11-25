@@ -11,8 +11,8 @@ const sequelize = new Sequelize(
   process.env.DB_PASSWORD,
   {
     host: process.env.DB_HOST,
-    // Pastikan Anda telah menginstal driver database yang sesuai: `npm install mysql2`
-    dialect: 'mysql', // atau 'mariadb' sesuai dengan database Anda
+    // Menggunakan dialek 'mariadb' karena driver mariadb yang diinstal
+    dialect: 'mariadb',
     logging: false, // Set ke `console.log` untuk melihat query SQL
   }
 );
