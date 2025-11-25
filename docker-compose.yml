@@ -31,9 +31,8 @@ services:
     image: mariadb:10.6 # Menggunakan image MariaDB
     container_name: mariadb_neverland
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD} # Mengambil dari .env
-      MYSQL_DATABASE: ${DB_NAME} # Mengambil dari .env
+    env_file:
+      - ./neverland-backend/.env # Menggunakan .env yang sama dengan backend untuk konsistensi
     volumes:
       - mariadb-data:/var/lib/mysql
     networks:
