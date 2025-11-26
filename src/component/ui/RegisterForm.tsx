@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { User as UserIcon, Lock, Mail, LogIn, Loader, Eye, EyeOff, ShieldX, AtSign } from 'lucide-react';
 import { useNotification } from './useNotification';
 import PasswordStrengthMeter from './PasswordStrengthMeter';
-// import ReCAPTCHA from 'react-google-recaptcha'; // Dinonaktifkan sementara
+import ReCAPTCHA from 'react-google-recaptcha';
 
 interface RegisterFormProps {
   onSwitchMode: (mode: 'login') => void;
@@ -18,7 +18,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  // const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null); // Dinonaktifkan sementara
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const [errors, setErrors] = useState<{ name?: string; username?: string; email?: string; password?: string; confirmPassword?: string; recaptcha?: string; }>({});
   const { addNotification } = useNotification();
 
@@ -54,19 +54,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
     }
 
     if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match.';
-    // if (!recaptchaToken) newErrors.recaptcha = 'Please verify you are not a robot.'; // Dinonaktifkan sementara
+    if (!recaptchaToken) newErrors.recaptcha = 'Please verify you are not a robot.';
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // const handleRecaptchaChange = (token: string | null) => {
-  //   setRecaptchaToken(token);
-  //   // Hapus error recaptcha jika token sudah ada
-  //   if (token) {
-  //     setErrors(prev => ({ ...prev, recaptcha: undefined }));
-  //   }
-  // }
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
+    // Hapus error recaptcha jika token sudah ada
+    if (token) {
+      setErrors(prev => ({ ...prev, recaptcha: undefined }));
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -205,7 +205,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
           {errors.confirmPassword && <p className="text-xs text-red-400 mt-1.5 ml-1 animate-fade-in">{errors.confirmPassword}</p>}
         </div>
 
-        {/* <div className="pt-2">
+        <div className="pt-2">
           {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
             <ReCAPTCHA
               sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
@@ -219,7 +219,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
             </div>
           )}
           {errors.recaptcha && <p className="text-xs text-red-400 mt-1.5 ml-1 animate-fade-in">{errors.recaptcha}</p>}
-        </div> */}
+        </div>
 
         <button type="submit" disabled={isLoading} className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-[1.02] mt-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none">
           {isLoading ? <><Loader className="w-5 h-5 animate-spin" /> Creating Account...</> : <><LogIn className="w-5 h-5" /> Sign Up</>}

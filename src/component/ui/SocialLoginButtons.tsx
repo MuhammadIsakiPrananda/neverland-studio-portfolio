@@ -2,6 +2,7 @@ import type { JSX } from 'react';
 import { Github, Linkedin } from 'lucide-react';
 import { useSocialAuth, type AuthProvider } from './useSocialAuth';
 import { Loader } from 'lucide-react';
+import { User } from '@/types/user';
 
 // Ikon Google tidak ada di lucide-react, jadi kita gunakan SVG.
 // Ini adalah SVG Google yang umum digunakan.
@@ -34,8 +35,12 @@ const socialProviders: SocialProviderConfig[] = [
   },
 ];
 
-const SocialLoginButtons = () => {
-  const { initiateLogin, isLoading } = useSocialAuth();
+interface SocialLoginButtonsProps {
+  onLoginSuccess: (user: User, provider: AuthProvider) => void;
+}
+
+const SocialLoginButtons = ({ onLoginSuccess }: SocialLoginButtonsProps) => {
+  const { initiateLogin, isLoading } = useSocialAuth(onLoginSuccess);
 
   return (
     <div className="w-full">

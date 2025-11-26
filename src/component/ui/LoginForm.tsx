@@ -188,7 +188,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
           )}
         </button>
 
-        <SocialLoginButtons />
+        <SocialLoginButtons onLoginSuccess={(user) => onLoginSuccess(user, rememberMe)} />
 
         <p className="text-center text-sm text-slate-400 pt-4 border-t border-slate-700/50">
           Don't have an account?{' '}
