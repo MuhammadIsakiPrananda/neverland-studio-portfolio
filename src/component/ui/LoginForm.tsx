@@ -188,7 +188,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
           )}
         </button>
 
-        <SocialLoginButtons onLoginSuccess={(user) => onLoginSuccess(user, rememberMe)} />
+        <div className="relative flex py-3 items-center">
+            <div className="flex-grow border-t border-slate-700/50"></div>
+            <span className="flex-shrink mx-4 text-slate-400 text-sm">OR</span>
+            <div className="flex-grow border-t border-slate-700/50"></div>
+        </div>
+
+        <SocialLoginButtons />
 
         <p className="text-center text-sm text-slate-400 pt-4 border-t border-slate-700/50">
           Don't have an account?{' '}
