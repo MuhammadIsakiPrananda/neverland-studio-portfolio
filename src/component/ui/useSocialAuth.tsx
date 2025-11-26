@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNotification } from '@/component/ui/useNotification';
-import { User } from '@/types/user'; // Asumsi Anda memiliki tipe User
+import type { User } from '@/types/user'; // Asumsi Anda memiliki tipe User
 
 export type AuthProvider = 'google' | 'github' | 'linkedin';
 
