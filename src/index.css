@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-background: #F8F9FA; /* Abu-abu sangat terang */
+  --color-text-base: #212529;    /* Arang / Hitam lembut */
+  --color-accent-primary: #4DB6AC; /* Teal / Hijau Laut */
+  --color-accent-secondary: #5D9CEC; /* Biru Tenang */
+  --color-text-secondary: #6c757d; /* Abu-abu untuk teks sekunder */
+  --color-border-shadow: #212529; /* Arang untuk border & shadow */
+  --color-text-on-accent: #FFFFFF; /* Putih untuk teks di atas warna aksen */
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-base);
+}
+
 @layer components {
   .shimmer-text {
     background-size: 200% auto;
@@ -37,7 +52,7 @@
     /* Definisikan DUA lapis background: kilau putih di atas, gradasi teal di bawah */
     background-image: 
       linear-gradient(90deg, transparent, theme('colors.white'), transparent),
-      linear-gradient(to right, theme('colors.teal.400'), theme('colors.emerald.400'));
+      linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary));
 
     /* Atur ukuran masing-masing background */
     background-size: 40% 100%, 100% 100%;
@@ -55,31 +70,35 @@
 
   /* Gaya Tombol Kartun */
   .btn-cartoon {
-    @apply relative inline-block px-6 sm:px-8 py-3 rounded-full font-semibold text-white border-2 border-black transition-all duration-150;
-    background-color: theme('colors.teal.500');
-    box-shadow: 4px 4px 0px theme('colors.black');
+    @apply relative inline-block px-6 sm:px-8 py-3 rounded-full font-semibold transition-all duration-150;
+    background-color: var(--color-accent-primary);
+    color: var(--color-text-on-accent);
+    border: 2px solid var(--color-border-shadow);
+    box-shadow: 4px 4px 0px var(--color-border-shadow);
   }
   .btn-cartoon:hover {
     transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0px theme('colors.black');
+    box-shadow: 6px 6px 0px var(--color-border-shadow);
   }
   .btn-cartoon:active {
     transform: translate(2px, 2px);
-    box-shadow: 0px 0px 0px theme('colors.black');
+    box-shadow: 0px 0px 0px var(--color-border-shadow);
   }
 
   .btn-cartoon-secondary {
-    @apply relative inline-block px-6 sm:px-8 py-3 rounded-full font-semibold text-white border-2 border-black transition-all duration-150;
-    background-color: theme('colors.slate.700');
-    box-shadow: 4px 4px 0px theme('colors.black');
+    @apply relative inline-block px-6 sm:px-8 py-3 rounded-full font-semibold transition-all duration-150;
+    background-color: var(--color-accent-secondary);
+    color: var(--color-text-on-accent);
+    border: 2px solid var(--color-border-shadow);
+    box-shadow: 4px 4px 0px var(--color-border-shadow);
   }
   .btn-cartoon-secondary:hover {
     transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0px theme('colors.black');
+    box-shadow: 6px 6px 0px var(--color-border-shadow);
   }
   .btn-cartoon-secondary:active {
     transform: translate(2px, 2px);
-    box-shadow: 0px 0px 0px theme('colors.black');
+    box-shadow: 0px 0px 0px var(--color-border-shadow);
   }
 
   .profile-image {
