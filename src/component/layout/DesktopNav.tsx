@@ -41,7 +41,7 @@ const DesktopNav: React.FC<DesktopNavProps> = ({ isScrolled, activeSection, hand
           ) : (
             <button 
               onClick={onLoginClick}
-              className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-teal-500/80 to-cyan-500/80 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-cyan-900/30 tracking-wide transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-cyan-500/20"
+              className="flex items-center gap-1.5 rounded-full bg-slate-800/50 border border-slate-700 px-4 py-2 text-sm font-medium text-slate-300 tracking-wide transition-all hover:-translate-y-0.5 hover:bg-slate-700/50 hover:border-amber-500/50 hover:text-white"
             >
               <LogIn className="w-4 h-4" />
               Login
@@ -49,7 +49,7 @@ const DesktopNav: React.FC<DesktopNavProps> = ({ isScrolled, activeSection, hand
           )}
           <button 
             onClick={onQuoteClick} 
-            className="whitespace-nowrap rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-cyan-900/50 tracking-wide transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-cyan-500/30"
+            className="whitespace-nowrap rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 tracking-wide transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-amber-500/40"
           >
               Get Started
           </button>

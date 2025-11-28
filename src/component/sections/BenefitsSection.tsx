@@ -37,7 +37,7 @@ const BenefitsSection: React.FC<BenefitsSectionProps> = ({ isLoading }) => {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">Core Strengths</span>
+          <span className="text-amber-400 font-semibold text-sm uppercase tracking-wider">Core Strengths</span>
           <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6 text-white">Your Vision, Amplified by Technology</h2>
           <p className="text-slate-400 text-lg max-w-3xl mx-auto balance-text">We fuse cutting-edge technology with strategic design to build digital experiences that don't just look good—they perform, engage, and drive business growth.</p>
         </motion.div>
@@ -110,7 +110,7 @@ const BenefitCard: React.FC<BenefitCardProps> = ({ benefit, variants }) => {
       <div
         className="absolute -inset-px rounded-xl opacity-0 group-hover:opacity-70 transition-opacity duration-500"
         style={{
-          background: `radial-gradient(600px circle at ${spotlightPosition.x}px ${spotlightPosition.y}px, ${benefit.spotlightColor}, transparent 40%)`,
+          background: `radial-gradient(600px circle at ${spotlightPosition.x}px ${spotlightPosition.y}px, rgba(251, 191, 36, 0.1), transparent 40%)`,
           filter: "blur(20px)",
         }}
       />
@@ -119,13 +119,13 @@ const BenefitCard: React.FC<BenefitCardProps> = ({ benefit, variants }) => {
       <div
         className="absolute inset-0 transition-all duration-300 opacity-0 group-hover:opacity-100"
         style={{
-          background: `radial-gradient(300px at ${spotlightPosition.x}px ${spotlightPosition.y}px, ${benefit.spotlightColor}, transparent 80%)`,
+          background: `radial-gradient(300px at ${spotlightPosition.x}px ${spotlightPosition.y}px, rgba(251, 191, 36, 0.1), transparent 80%)`,
           transform: "translateZ(20px)", // Push spotlight slightly forward
         }}
       />
       <div className="relative h-full bg-slate-900/70 p-6 rounded-lg text-center flex flex-col" style={{ transform: "translateZ(40px)" }}>
         <div className="flex justify-center mb-4">
-          <div className={`w-16 h-16 rounded-full bg-slate-800/70 flex items-center justify-center border border-slate-700 group-hover:${benefit.borderColor} transition-colors duration-300`}>
+          <div className={`w-16 h-16 rounded-full bg-slate-800/70 flex items-center justify-center border border-slate-700 group-hover:border-amber-500/50 transition-colors duration-300`}>
             {benefit.icon}
           </div>
         </div>

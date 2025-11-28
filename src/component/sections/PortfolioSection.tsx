@@ -77,7 +77,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
       variants={sectionVariants}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16" >
-          <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">Our Work</span>
+          <span className="text-amber-400 font-semibold text-sm uppercase tracking-wider">Our Work</span>
           <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6">Featured Projects</h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">
             Explore a selection of our finest work, showcasing our expertise across various industries.
@@ -91,7 +91,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
               onClick={() => setActiveFilter(category)}
               className={`px-6 py-2 rounded-full font-medium transition-all ${
                 activeFilter === category
-                  ? 'bg-gradient-to-r from-teal-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/30'
+                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20'
                   : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
               }`}
             > 
@@ -109,8 +109,8 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
               initial="hidden"
               animate="visible"
               exit="exit"
-              onClick={() => (project as Project).videoUrl && setShowVideo(true)}
-              className="group relative bg-slate-900/50 rounded-2xl overflow-hidden border border-slate-800/50 hover:border-teal-500/50 transition-all cursor-pointer"
+              onClick={() => (project as Project).videoUrl ? setShowVideo(true) : setSelectedProject(project)}
+              className="group relative bg-slate-900/50 rounded-2xl overflow-hidden border border-slate-800/50 hover:border-amber-500/50 transition-all cursor-pointer"
             >
               <div className="aspect-video overflow-hidden">
                 <img
@@ -121,7 +121,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               </div>
               <div className="p-6">
-                <span className="text-teal-400 text-sm font-semibold">{project.category}</span>
+                <span className="text-amber-400 text-sm font-semibold">{project.category}</span>
                 <h3 className="text-xl font-bold mt-2 mb-3">{project.title}</h3>
                 <p className="text-slate-400 text-sm mb-4">{project.desc}</p>
                 <div className="flex flex-wrap gap-2 mb-4">
@@ -136,7 +136,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                     e.stopPropagation(); // Prevent video modal from opening
                     setSelectedProject(project);
                   }}
-                  className="text-teal-400 font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all z-20 relative"
+                  className="text-amber-400 font-semibold flex items-center justify-center gap-2 group-hover:gap-3 transition-all z-20 relative"
                 >
                   View Case Study
                   <ArrowRight className="w-4 h-4" />
@@ -164,7 +164,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
               Show Less
             </button>
           )}
-          <button onClick={() => document.getElementById('Contact')?.scrollIntoView({ behavior: 'smooth' })} className="bg-gradient-to-r from-teal-500 to-emerald-600 text-white px-8 py-4 rounded-full font-semibold hover:shadow-xl hover:shadow-emerald-500/30 transition-all transform hover:scale-105">
+          <button onClick={() => document.getElementById('Contact')?.scrollIntoView({ behavior: 'smooth' })} className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-8 py-4 rounded-full font-semibold shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-105">
             Start Your Project
           </button>
         </div>
@@ -191,10 +191,10 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
               {/* Header Modal */}
               <div className="flex-shrink-0 p-4 sm:p-6 flex justify-between items-center border-b border-slate-800">
                 <div>
-                  <span className="text-teal-400 font-semibold text-sm">{selectedProject.category}</span>
+                  <span className="text-amber-400 font-semibold text-sm">{selectedProject.category}</span>
                   <h2 className="text-xl sm:text-2xl font-bold text-white">{selectedProject.title}</h2>
                 </div>
-                <button onClick={() => setSelectedProject(null)} className="w-10 h-10 bg-slate-800/80 rounded-full flex items-center justify-center hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                <button onClick={() => setSelectedProject(null)} className="w-10 h-10 bg-slate-800/80 rounded-full flex items-center justify-center hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500">
                   <X className="w-5 h-5 text-slate-300" />
                 </button>
               </div>
@@ -235,7 +235,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({
                       ))}
                     </div>
 
-                    <button className="w-full bg-gradient-to-r from-teal-500 to-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-xl hover:shadow-emerald-500/30 transition-all flex items-center justify-center gap-2.5 group transform hover:scale-105">
+                    <button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-3 rounded-lg font-semibold shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all flex items-center justify-center gap-2.5 group transform hover:scale-105">
                       Visit Live Site
                       <ExternalLink className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                     </button>

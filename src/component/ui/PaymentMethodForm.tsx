@@ -20,7 +20,7 @@ export const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({ onCancel }
       </div>
       <div className="flex justify-end gap-3">
         <button type="button" onClick={onCancel} className="px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 bg-slate-700 hover:bg-slate-600 transition-colors">Cancel</button>
-        <button type="submit" disabled={true} className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-cyan-600 hover:bg-cyan-500 transition-colors disabled:opacity-50">
+        <button type="submit" disabled={true} className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-amber-600 hover:bg-amber-500 transition-colors disabled:opacity-50">
           <CreditCard className="w-4 h-4" />
           Save Card
         </button>

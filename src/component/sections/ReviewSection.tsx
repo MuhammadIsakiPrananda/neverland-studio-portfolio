@@ -46,7 +46,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ setSectionRef, onWriteRev
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">Testimonials</span>
+          <span className="text-amber-400 font-semibold text-sm uppercase tracking-wider">Testimonials</span>
           <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6 text-white balance-text">
             Loved by Teams Worldwide
           </h2>
@@ -70,12 +70,12 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ setSectionRef, onWriteRev
               variants={itemVariants}
             >
               {/* Kontainer utama kartu dengan transisi */}
-              <div className="relative h-full rounded-lg overflow-hidden bg-gradient-to-r from-teal-400/80 to-cyan-400/80 p-px transition-all duration-300 group-hover:scale-[1.02] group-hover:-translate-y-1 shadow-lg shadow-slate-950/20">
+              <div className="relative h-full rounded-lg overflow-hidden bg-gradient-to-r from-amber-500/20 to-orange-500/20 p-px transition-all duration-300 group-hover:scale-[1.02] group-hover:-translate-y-1 shadow-lg shadow-slate-950/20">
                 {/* Konten kartu dengan latar belakang solid */}
                 <figure className="relative h-full flex flex-col bg-slate-900 rounded-[7px] transition-colors duration-300 group-hover:bg-slate-900/80">
                   {/* Aksen garis animasi di atas */}
-                  <div className="absolute top-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent">
-                    <div className="absolute top-0 left-0 h-px w-0 bg-gradient-to-r from-teal-400 to-cyan-400 transition-all duration-500 ease-out group-hover:w-full"></div>
+                  <div className="absolute top-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-amber-500/30 to-transparent">
+                    <div className="absolute top-0 left-0 h-px w-0 bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-500 ease-out group-hover:w-full"></div>
                   </div>
 
                 {/* Isi Ulasan */}
@@ -99,7 +99,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ setSectionRef, onWriteRev
         </motion.div>
 
         <div className="mt-16 flex justify-center">
-          <button onClick={onWriteReviewClick} className="group relative inline-flex items-center justify-center gap-2.5 overflow-hidden rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 px-7 py-3 text-base font-semibold text-white shadow-lg shadow-cyan-500/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-cyan-500/40">
+          <button onClick={onWriteReviewClick} className="group relative inline-flex items-center justify-center gap-2.5 overflow-hidden rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 px-7 py-3 text-base font-semibold text-white shadow-lg shadow-amber-500/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-amber-500/30">
             {/* Efek Kilatan (Shine Effect) */}
             <span className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-white/0 via-white/40 to-white/0 transition-transform duration-1000 group-hover:translate-x-full"></span>
             

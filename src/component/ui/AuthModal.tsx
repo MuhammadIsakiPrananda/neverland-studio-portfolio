@@ -72,7 +72,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-slate-900/80 backdrop-blur-lg border border-slate-700/50 p-8 text-left align-middle shadow-2xl shadow-cyan-500/10 transition-all">
+              <Dialog.Panel className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-slate-900/80 backdrop-blur-lg border border-slate-700/50 p-8 text-left align-middle shadow-2xl shadow-amber-500/10 transition-all">
                 {/* Tombol Close (X) */}
                 <button
                   onClick={onClose}

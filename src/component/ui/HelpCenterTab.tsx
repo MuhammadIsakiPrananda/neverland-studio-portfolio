@@ -44,14 +44,14 @@ export const HelpCenterTabContent: React.FC = () => {
         <form className="space-y-4">
           <div>
             <label className="text-sm font-medium text-slate-400">Subject</label>
-            <input type="text" placeholder="e.g., Issue with billing" className="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 mt-1 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors" />
+            <input type="text" placeholder="e.g., Issue with billing" className="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 mt-1 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors" />
           </div>
           <div>
             <label className="text-sm font-medium text-slate-400">How can we help?</label>
-            <textarea rows={5} placeholder="Describe your issue in detail..." className="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 mt-1 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors resize-none" />
+            <textarea rows={5} placeholder="Describe your issue in detail..." className="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 mt-1 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors resize-none" />
           </div>
           <div className="flex justify-end">
-            <button type="submit" className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-[1.02]">
+            <button type="submit" className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02]">
               <Send className="w-5 h-5" />
               <span className="font-semibold">Send Message</span>
             </button>

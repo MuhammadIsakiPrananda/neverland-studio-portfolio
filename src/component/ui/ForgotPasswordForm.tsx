@@ -47,10 +47,10 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSwitchMode })
           <h2 className="text-2xl font-bold text-white">Check Your Inbox</h2>
           <p className="text-slate-400 mt-2 max-w-sm mx-auto">
             A password reset link has been sent to <br />
-            <span className="font-semibold text-cyan-400">{email}</span>
+            <span className="font-semibold text-amber-400">{email}</span>
             <br /> if it's associated with an account.
           </p>
-          <button onClick={() => onSwitchMode('login')} className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-cyan-400 hover:underline">
+          <button onClick={() => onSwitchMode('login')} className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-amber-400 hover:underline">
             <ArrowLeft className="w-4 h-4" />
             Back to Sign In
           </button>
@@ -58,7 +58,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSwitchMode })
       ) : (
         <div key="form">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-cyan-400">Forgot Password?</h2>
+            <h2 className="text-3xl font-bold text-amber-400">Forgot Password?</h2>
             <p className="text-slate-400 mt-2">No worries, we'll send you reset instructions.</p>
           </div>
 
@@ -68,14 +68,14 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSwitchMode })
               <label htmlFor="email-forgot" className="text-sm font-medium text-slate-400 mb-2 block">Email Address</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                <input id="email-forgot" type="email" placeholder="Enter your account email" value={email} onChange={(e) => setEmail(e.target.value)} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition-all disabled:opacity-50 ${error ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
+                <input id="email-forgot" type="email" placeholder="Enter your account email" value={email} onChange={(e) => setEmail(e.target.value)} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none transition-all disabled:opacity-50 ${error ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
               </div>
             </div>
-            <button type="submit" disabled={isLoading} className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed">
+            <button type="submit" disabled={isLoading} className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed">
               {isLoading ? <><Loader className="w-5 h-5 animate-spin" /> Sending...</> : <><Send className="w-5 h-5" /> Send Reset Link</>}
             </button>
             <p className="text-center text-sm text-slate-400 pt-4">
-              <button type="button" onClick={() => onSwitchMode('login')} className="font-semibold text-cyan-400 hover:underline disabled:opacity-50 inline-flex items-center gap-2" disabled={isLoading}><ArrowLeft className="w-4 h-4" /> Back to Sign In</button>
+              <button type="button" onClick={() => onSwitchMode('login')} className="font-semibold text-amber-400 hover:underline disabled:opacity-50 inline-flex items-center gap-2" disabled={isLoading}><ArrowLeft className="w-4 h-4" /> Back to Sign In</button>
             </p>
           </form>
         </div>

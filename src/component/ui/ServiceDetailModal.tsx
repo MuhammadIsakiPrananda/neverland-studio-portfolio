@@ -45,15 +45,15 @@ const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({ service, onClos
             {/* Sticky Header with Close Button */}
             <div className="sticky top-0 p-4 sm:p-6 flex justify-between items-center bg-slate-900/70 backdrop-blur-lg border-b border-slate-800 z-10 flex-shrink-0">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-lg flex items-center justify-center text-white flex-shrink-0">
+                <div className="w-12 h-12 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-white flex-shrink-0">
                   <service.icon.type className="w-6 h-6" />
                 </div>
                 <div>
-                  <p className="text-sm text-teal-400 font-semibold">Service Spotlight</p>
+                  <p className="text-sm text-amber-400 font-semibold">Service Spotlight</p>
                   <h2 className="text-xl font-bold text-white">{service.title}</h2>
                 </div>
               </div>
-              <button onClick={onClose} className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500">
+              <button onClick={onClose} className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500">
                 <X className="w-6 h-6 text-slate-300" />
               </button>
             </div>
@@ -67,7 +67,7 @@ const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({ service, onClos
                     <h3 className="text-2xl font-bold text-white mb-4">Project Overview</h3>
                     <p className="text-lg text-slate-200 leading-relaxed">{service.desc}</p>
                   </div>
-                  <div className="w-full h-px bg-gradient-to-r from-teal-500/30 via-slate-700 to-transparent"></div>
+                  <div className="w-full h-px bg-gradient-to-r from-amber-500/30 via-slate-700 to-transparent"></div>
                   {/* Render detailed description paragraphs */}
                   <div className="space-y-4 leading-relaxed">
                     {(service.detailedDesc || []).map((paragraph, index) => (
@@ -88,7 +88,7 @@ const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({ service, onClos
                           initial={{ opacity: 0, x: -15 }}
                           animate={{ opacity: 1, x: 0, transition: { delay: 0.2 + index * 0.1, ease: 'easeOut' } }}
                         >
-                          <CheckCircle className="w-5 h-5 text-teal-400 flex-shrink-0 mt-0.5" />
+                          <CheckCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
                           <span className="text-slate-300">{feature}</span>
                         </motion.li>
                       ))}

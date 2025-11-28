@@ -80,31 +80,31 @@ const JoinTeamForm: React.FC<JoinTeamFormProps> = ({ onClose }) => {
         )}
 
         <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="relative"><User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" /><input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors" required /></div>
-          <div className="relative"><Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" /><input type="email" placeholder="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors" required /></div>
+          <div className="relative"><User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" /><input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors" required /></div>
+          <div className="relative"><Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" /><input type="email" placeholder="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors" required /></div>
         </motion.div>
 
         <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="relative"><LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" /><input type="url" placeholder="Portfolio/LinkedIn URL" value={portfolio} onChange={(e) => setPortfolio(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors" required /></div>
-          <div className="relative"><Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" /><select value={position} onChange={(e) => setPosition(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors appearance-none" required><option value="" disabled>Position Applying For</option>{positions.map(p => <option key={p} value={p} className="bg-slate-900">{p}</option>)}</select></div>
+          <div className="relative"><LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" /><input type="url" placeholder="Portfolio/LinkedIn URL" value={portfolio} onChange={(e) => setPortfolio(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors" required /></div>
+          <div className="relative"><Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" /><select value={position} onChange={(e) => setPosition(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors appearance-none" required><option value="" disabled>Position Applying For</option>{positions.map(p => <option key={p} value={p} className="bg-slate-900">{p}</option>)}</select></div>
         </motion.div>
 
         <AnimatePresence>
           {position === 'Other' && (
             <motion.div variants={itemVariants} initial="hidden" animate="visible" exit="hidden" className="relative">
-              <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" /><input type="text" placeholder="Please specify position" value={otherPosition} onChange={(e) => setOtherPosition(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors" required />
+              <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" /><input type="text" placeholder="Please specify position" value={otherPosition} onChange={(e) => setOtherPosition(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors" required />
             </motion.div>
           )}
         </AnimatePresence>
 
         <motion.div variants={itemVariants} className="relative">
           <MessageSquare className="absolute left-3 top-4 w-5 h-5 text-slate-400" />
-          <textarea placeholder="Why do you want to join us?" value={message} onChange={(e) => setMessage(e.target.value)} rows={4} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors resize-none" required />
+          <textarea placeholder="Why do you want to join us?" value={message} onChange={(e) => setMessage(e.target.value)} rows={4} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors resize-none" required />
         </motion.div>
 
         <motion.div variants={itemVariants}>
           <label className="block text-sm font-medium mb-2 text-slate-300">Upload Resume/CV (PDF, max 5MB)</label>
-          <div className="relative border-2 border-dashed border-slate-700 rounded-lg p-6 text-center hover:border-cyan-500 transition-colors">
+          <div className="relative border-2 border-dashed border-slate-700 rounded-lg p-6 text-center hover:border-amber-500 transition-colors">
             <Paperclip className="mx-auto h-8 w-8 text-slate-500" />
             <p className="mt-2 text-sm text-slate-400">{resume ? resume.name : 'Drag and drop or click to upload'}</p>
             <input type="file" onChange={handleFileChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept=".pdf" />
@@ -115,7 +115,7 @@ const JoinTeamForm: React.FC<JoinTeamFormProps> = ({ onClose }) => {
           variants={itemVariants}
           type="submit"
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
           {isLoading ? 'Submitting...' : 'Submit Application'}

@@ -66,7 +66,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, isMenuOpen, setSec
 
       <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center relative z-1">
         <motion.div className="text-center lg:text-left z-10" variants={containerVariants} initial="hidden" animate={!isLoading ? "visible" : "hidden"} >
-          <motion.div variants={itemVariants} className="inline-block bg-teal-500/10 border border-teal-500/30 text-teal-300 text-sm font-semibold tracking-wider px-4 py-1.5 rounded-full mb-4 hover:bg-teal-500/20 hover:border-teal-400/60 transition-all duration-300 cursor-default">
+          <motion.div variants={itemVariants} className="inline-block bg-amber-500/10 border border-amber-500/30 text-amber-300 text-sm font-semibold tracking-wider px-4 py-1.5 rounded-full mb-4 hover:bg-amber-500/20 hover:border-amber-400/60 transition-all duration-300 cursor-default">
             Where Ideas Take Flight
           </motion.div>
 
@@ -86,7 +86,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, isMenuOpen, setSec
               </motion.span>
 
               <motion.div
-                className="absolute -bottom-3 left-0 h-[3px] bg-gradient-to-r from-teal-500 to-emerald-600 rounded-full"
+                className="absolute -bottom-3 left-0 h-[3px] bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"
                 initial={{ width: 0 }}
                 animate={!isLoading ? { width: "100%" } : { width: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut", delay: 0.8 }}
@@ -99,8 +99,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, isMenuOpen, setSec
 
           <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
             {stats.map((stat, idx) => (
-              <div key={idx} className="text-center p-4 rounded-xl bg-slate-800/30 border border-slate-700/50 hover:border-teal-500/50 hover:bg-slate-800/50 transition-all duration-300 group transform hover:-translate-y-1.5">
-                <div className="w-12 h-12 bg-slate-900/50 border border-slate-700 rounded-full flex items-center justify-center text-teal-400 mx-auto mb-3 group-hover:bg-teal-500/10 group-hover:text-teal-300 transition-all duration-300">
+              <div key={idx} className="text-center p-4 rounded-xl bg-slate-800/30 border border-slate-700/50 hover:border-amber-500/50 hover:bg-slate-800/50 transition-all duration-300 group transform hover:-translate-y-1.5">
+                <div className="w-12 h-12 bg-slate-900/50 border border-slate-700 rounded-full flex items-center justify-center text-amber-400 mx-auto mb-3 group-hover:bg-amber-500/10 group-hover:text-amber-300 transition-all duration-300">
                   {stat.icon}
                 </div>
                 <div>
@@ -114,14 +114,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, isMenuOpen, setSec
           <motion.div variants={itemVariants} className="flex flex-row gap-4 justify-center lg:justify-start">
             <button 
               onClick={handleGetStartedClick} 
-              className="group inline-flex items-center justify-center px-7 py-3 text-base font-bold text-white transition-all duration-300 bg-gradient-to-r from-teal-500 to-emerald-600 rounded-full shadow-lg hover:shadow-xl hover:shadow-teal-500/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-teal-500 transform hover:scale-105 flex-1 sm:flex-none"
+              className="group inline-flex items-center justify-center px-7 py-3 text-base font-bold text-white transition-all duration-300 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-amber-500 transform hover:scale-105 flex-1 sm:flex-none"
             >
               Get Started
               <ChevronRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
             </button> 
             <button 
               onClick={() => setShowVideo(true)}
-              className="group inline-flex items-center justify-center px-7 py-3 text-base font-medium text-slate-200 bg-transparent border-2 border-slate-700 rounded-full transition-all duration-300 hover:border-teal-500 hover:bg-teal-500/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-slate-600 transform hover:scale-105 flex-1 sm:flex-none"
+              className="group inline-flex items-center justify-center px-7 py-3 text-base font-medium text-slate-200 bg-transparent border-2 border-slate-700 rounded-full transition-all duration-300 hover:border-amber-500 hover:bg-amber-500/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-amber-600 transform hover:scale-105 flex-1 sm:flex-none"
             >
               <Play className="w-4 h-4 mr-2 fill-current" />
               Watch Demo
@@ -135,13 +135,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, isMenuOpen, setSec
           <motion.img 
             src="/images/Neverland Studio.webp" 
             alt="Neverland Studio Showcase" 
-            className="w-full h-auto max-w-md rounded-2xl object-contain shadow-2xl shadow-teal-500/10"
+            className="w-full h-auto max-w-md rounded-2xl object-contain shadow-2xl shadow-amber-500/10"
             animate={{
               y: [0, -10, 0], // Efek melayang naik-turun
               boxShadow: [ // Efek cahaya berdenyut
-                "0 25px 50px -12px rgba(13, 148, 136, 0.1)",
-                "0 25px 50px -12px rgba(13, 148, 136, 0.2)",
-                "0 25px 50px -12px rgba(13, 148, 136, 0.1)",
+                "0 25px 50px -12px rgba(251, 191, 36, 0.1)",
+                "0 25px 50px -12px rgba(251, 191, 36, 0.2)",
+                "0 25px 50px -12px rgba(251, 191, 36, 0.1)",
               ]
             }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -159,7 +159,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, isMenuOpen, setSec
       >
         {/* Animated Separator Outline */}
         <motion.div variants={itemVariants} className="w-full max-w-3xl mx-auto">
-          <div className="h-px w-full bg-gradient-to-r from-transparent via-teal-500/30 to-transparent"></div>
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"></div>
         </motion.div>
         <motion.div variants={itemVariants} className="w-full pt-12 lg:pt-16">
           <p className="text-center text-slate-400 font-medium tracking-widest text-sm uppercase mb-8">Trusted by Industry Leaders</p>

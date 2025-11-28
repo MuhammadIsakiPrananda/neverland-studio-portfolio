@@ -123,7 +123,11 @@ const fetchAnalyticsData = async (): Promise<RealtimeAnalytics> => {
   };
 };
 
-const DEVICE_COLORS = { Desktop: '#8884d8', Mobile: '#82ca9d', Tablet: '#ffc658' };
+const DEVICE_COLORS = { 
+  Desktop: '#f59e0b', // amber-500
+  Mobile: '#fb923c', // orange-400
+  Tablet: '#facc15'  // yellow-400
+};
 
 const Analytics = () => {
   const [analytics, setAnalytics] = useState<RealtimeAnalytics | null>(null);
@@ -143,10 +147,10 @@ const Analytics = () => {
     const sessionSeconds = analytics.avgSessionDuration % 60;
 
     return [
-      { title: 'Users Online', value: analytics.liveUsers.toString(), icon: <Users className="w-6 h-6" />, trend: 'Right now', isPositive: true, color: 'text-emerald-400' },
-      { title: 'Avg. Session', value: `${sessionMinutes}m ${sessionSeconds}s`, icon: <Clock className="w-6 h-6" />, trend: 'Last 30 mins', isPositive: true, color: 'text-sky-400' },
+      { title: 'Users Online', value: analytics.liveUsers.toString(), icon: <Users className="w-6 h-6" />, trend: 'Right now', isPositive: true, color: 'text-amber-400' },
+      { title: 'Avg. Session', value: `${sessionMinutes}m ${sessionSeconds}s`, icon: <Clock className="w-6 h-6" />, trend: 'Last 30 mins', isPositive: true, color: 'text-amber-400' },
       { title: 'Bounce Rate', value: `${analytics.bounceRate}%`, icon: <TrendingDown className="w-6 h-6" />, trend: 'Lower is better', isPositive: analytics.bounceRate < 50, color: 'text-amber-400' },
-      { title: 'New / Returning', value: `${analytics.userSegments.new} / ${analytics.userSegments.returning}`, icon: <UserPlus className="w-6 h-6" />, trend: 'Live users', isPositive: true, color: 'text-fuchsia-400' },
+      { title: 'New / Returning', value: `${analytics.userSegments.new} / ${analytics.userSegments.returning}`, icon: <UserPlus className="w-6 h-6" />, trend: 'Live users', isPositive: true, color: 'text-amber-400' },
     ];
   }, [analytics]);
 
@@ -176,8 +180,8 @@ const Analytics = () => {
               <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
               <XAxis dataKey="time" stroke="#94a3b8" fontSize={12} />
               <YAxis stroke="#94a3b8" />
-              <Tooltip contentStyle={{ backgroundColor: 'rgba(30, 41, 59, 0.9)', borderColor: '#475569' }} cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }} />
-              <Line type="monotone" dataKey="views" name="Page Views" stroke="#8884d8" strokeWidth={2} dot={false} activeDot={{ r: 6 }} />
+              <Tooltip contentStyle={{ backgroundColor: 'rgba(30, 41, 59, 0.9)', borderColor: '#475569' }} cursor={{ fill: 'rgba(251, 191, 36, 0.1)' }} />
+              <Line type="monotone" dataKey="views" name="Page Views" stroke="#f59e0b" strokeWidth={2} dot={false} activeDot={{ r: 6 }} />
             </LineChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -237,9 +241,9 @@ const Analytics = () => {
             <BarChart data={analytics?.referrers} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
               <XAxis type="number" stroke="#94a3b8" />
-              <YAxis type="category" dataKey="name" stroke="#94a3b8" width={80} tick={{ fill: '#cbd5e1' }} />
-              <Tooltip contentStyle={{ backgroundColor: 'rgba(30, 41, 59, 0.9)', borderColor: '#475569' }} cursor={{ fill: 'rgba(130, 202, 157, 0.1)' }} />
-              <Bar dataKey="users" fill="#82ca9d" />
+              <YAxis type="category" dataKey="name" stroke="#94a3b8" width={80} tick={{ fill: '#cbd5e1' }} tickLine={false} axisLine={false} />
+              <Tooltip contentStyle={{ backgroundColor: 'rgba(30, 41, 59, 0.9)', borderColor: '#475569' }} cursor={{ fill: 'rgba(251, 191, 36, 0.1)' }} />
+              <Bar dataKey="users" fill="#f59e0b" />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -269,7 +273,7 @@ const Analytics = () => {
                   <li key={event.id} className="flex items-start gap-3">
                     <img src={`https://flagcdn.com/w20/${event.countryCode}.png`} alt={event.city} className="w-5 h-auto mt-0.5" />
                     <div className="text-slate-400">
-                      A visitor from <span className="font-semibold text-slate-200">{event.city}</span> {event.action} <a href="#" className="font-semibold text-sky-400 hover:underline">{event.target}</a>
+                      A visitor from <span className="font-semibold text-slate-200">{event.city}</span> {event.action} <a href="#" className="font-semibold text-amber-400 hover:underline">{event.target}</a>
                     </div>
                   </li>
                 ))}

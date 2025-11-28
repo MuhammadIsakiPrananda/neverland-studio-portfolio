@@ -15,21 +15,20 @@ const VideoModal: React.FC<VideoModalProps> = ({ showVideo, setShowVideo }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-          onClick={() => setShowVideo(false)}
+          className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4"
         >
           <motion.div 
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="relative max-w-4xl w-full bg-gray-900 rounded-2xl overflow-hidden border border-gray-700"
+            className="relative max-w-4xl w-full bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl shadow-black/50"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setShowVideo(false)}
-              className="absolute top-4 right-4 w-10 h-10 bg-gray-800/80 rounded-full flex items-center justify-center hover:bg-gray-700 transition-all z-10"
+              className="absolute top-4 right-4 w-10 h-10 bg-slate-800/50 rounded-full flex items-center justify-center hover:bg-slate-700 transition-colors z-10"
             >
-              <X className="w-5 h-5" />
+              <X className="w-6 h-6 text-slate-300" />
             </button>
             <div className="aspect-video relative">
               <iframe
@@ -41,8 +40,8 @@ const VideoModal: React.FC<VideoModalProps> = ({ showVideo, setShowVideo }) => {
                 className="absolute top-0 left-0 w-full h-full"
               ></iframe>
             </div>
-            <div className="p-6 border-t border-gray-800"> 
-            <h3 className="text-xl font-bold mb-2">Never Gonna Give You Up</h3>
+            <div className="p-6 border-t border-slate-800"> 
+            <h3 className="text-xl font-bold text-white mb-2">Never Gonna Give You Up</h3>
             <p className="text-slate-400 text-sm">Rick Astley - Official Music Video</p>
             </div>
           </motion.div>

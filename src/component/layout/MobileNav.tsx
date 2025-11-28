@@ -71,7 +71,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ isMenuOpen, setIsMenuOpen, active
                   <button 
                     onClick={() => { handleNavClick(item.name); setIsMenuOpen(false); }} 
                     className={`text-3xl font-bold tracking-wide transition-colors duration-300 px-4 py-2 rounded-lg ${
-                      activeSection === item.name ? 'text-teal-300' : 'text-slate-400 hover:text-white'
+                      activeSection === item.name ? 'text-amber-400' : 'text-slate-400 hover:text-white'
                     }`}
                   >
                     {item.name}
@@ -83,7 +83,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ isMenuOpen, setIsMenuOpen, active
               {isLoggedIn ? (
                 <p className="text-center text-slate-400">Signed in as <span className="font-bold text-white">{userProfile?.name}</span></p>
               ) : (
-                <button onClick={onLoginClick} className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-6 py-4 rounded-full text-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/30 transition-all transform hover:scale-105">
+                <button onClick={onLoginClick} className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-4 rounded-full text-lg font-semibold shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-105">
                   Login / Sign Up
                 </button>
               )}

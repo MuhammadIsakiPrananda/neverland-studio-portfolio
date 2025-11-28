@@ -87,8 +87,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
     // Mengganti motion.div dengan div biasa dan menambahkan animasi fade-in sederhana
     <div key="login" className="w-full animate-fade-in">
       <div className="text-center mb-8">
-        {/* Judul disederhanakan dari gradient menjadi warna solid */}
-        <h2 className="text-3xl font-bold text-cyan-400">
+        <h2 className="text-3xl font-bold text-amber-400">
           Welcome Back
         </h2>
         <p className="text-slate-400 mt-2">Sign in to continue to Neverland</p>
@@ -115,7 +114,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
                 setIdentifier(e.target.value);
                 setErrors(prev => ({ ...prev, identifier: undefined }));
               }}
-              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.identifier ? 'border-red-500/50' : 'border-slate-700'}`}
+              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.identifier ? 'border-red-500/50' : 'border-slate-700'}`}
               required
               disabled={isLoading}
             />
@@ -136,7 +135,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
                 setPassword(e.target.value);
                 setErrors(prev => ({ ...prev, password: undefined }));
               }}
-              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.password ? 'border-red-500/50' : 'border-slate-700'}`}
+              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.password ? 'border-red-500/50' : 'border-slate-700'}`}
               required
               disabled={isLoading}
             />
@@ -160,7 +159,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
               disabled={isLoading}
-              className="h-4 w-4 rounded border-slate-600 bg-slate-800 text-cyan-500 focus:ring-cyan-500/50 focus:ring-offset-0"
+              className="h-4 w-4 rounded border-slate-600 bg-slate-800 text-amber-500 focus:ring-amber-500/50 focus:ring-offset-0"
             />
             <label htmlFor="remember-me" className="text-slate-400 select-none">
               Remember for 30 days
@@ -169,7 +168,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
           <button
             type="button"
             onClick={() => onSwitchMode('forgotPassword')}
-            className="text-cyan-400 hover:underline disabled:opacity-50"
+            className="text-amber-400 hover:underline disabled:opacity-50"
             disabled={isLoading}
           >
             Forgot Password?
@@ -179,7 +178,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <><Loader className="w-5 h-5 animate-spin" /> Signing In...</>
@@ -198,7 +197,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
 
         <p className="text-center text-sm text-slate-400 pt-4 border-t border-slate-700/50">
           Don't have an account?{' '}
-          <button type="button" onClick={() => onSwitchMode('register')} className="font-semibold text-cyan-400 hover:underline disabled:opacity-50" disabled={isLoading}> 
+          <button type="button" onClick={() => onSwitchMode('register')} className="font-semibold text-amber-400 hover:underline disabled:opacity-50" disabled={isLoading}> 
             Sign Up
           </button>
         </p>

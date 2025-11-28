@@ -41,7 +41,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose }) => {
           onClick={onClose}
         >
           <motion.div
-            className="bg-slate-900/80 border border-slate-700/50 rounded-2xl shadow-2xl shadow-cyan-900/20 p-8 w-full max-w-lg relative"
+            className="bg-slate-900/80 border border-slate-700/50 rounded-2xl shadow-2xl shadow-amber-500/10 p-8 w-full max-w-lg relative"
             variants={modalVariants}
             onClick={(e) => e.stopPropagation()}
           >

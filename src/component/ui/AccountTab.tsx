@@ -51,7 +51,7 @@ export const AccountTabContent: React.FC = () => {
         description="Select your preferred payment method for your subscription."
         footer={
           <div className="flex justify-end">
-            <button onClick={handleSavePayment} disabled={isSaving} className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed">
+            <button onClick={handleSavePayment} disabled={isSaving} className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed">
               {isSaving ? <Loader className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
               <span className="font-semibold">{isSaving ? 'Saving...' : 'Save Changes'}</span>
             </button>
@@ -60,7 +60,7 @@ export const AccountTabContent: React.FC = () => {
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {paymentMethods.map(method => (
-            <label key={method.id} className={`flex items-center gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedPayment === method.id ? 'border-cyan-500 bg-slate-800/50' : 'border-slate-800 bg-slate-900/50 hover:border-slate-700'}`}>
+            <label key={method.id} className={`flex items-center gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedPayment === method.id ? 'border-amber-500 bg-amber-500/10' : 'border-slate-800 bg-slate-900/50 hover:border-slate-700'}`}>
               <input type="radio" name="paymentMethod" value={method.id} checked={selectedPayment === method.id} onChange={() => setSelectedPayment(method.id)} className="hidden" />
               {method.icon}
               <div>
@@ -80,7 +80,7 @@ export const AccountTabContent: React.FC = () => {
                     <label className="text-sm font-medium text-slate-400">Card Number</label>
                     <div className="relative mt-1">
                       <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                      <input type="text" placeholder="0000 0000 0000 0000" className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors" />
+                      <input type="text" placeholder="0000 0000 0000 0000" className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors" />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -88,14 +88,14 @@ export const AccountTabContent: React.FC = () => {
                       <label className="text-sm font-medium text-slate-400">Expiry Date</label>
                       <div className="relative mt-1">
                         <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                        <input type="text" placeholder="MM / YY" className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors" />
+                        <input type="text" placeholder="MM / YY" className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors" />
                       </div>
                     </div>
                     <div>
                       <label className="text-sm font-medium text-slate-400">CVV</label>
                       <div className="relative mt-1">
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                        <input type="password" placeholder="•••" maxLength={4} className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors" />
+                        <input type="password" placeholder="•••" maxLength={4} className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors" />
                       </div>
                     </div>
                   </div>
@@ -113,7 +113,7 @@ export const AccountTabContent: React.FC = () => {
         title="Billing History" 
         description="Download your past invoices for your records."
         headerActions={
-          <button onClick={fetchInvoices} disabled={isHistoryLoading} className="flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300 transition-colors disabled:opacity-50 disabled:cursor-wait">
+          <button onClick={fetchInvoices} disabled={isHistoryLoading} className="flex items-center gap-2 text-sm text-amber-400 hover:text-amber-300 transition-colors disabled:opacity-50 disabled:cursor-wait">
             <RefreshCw className={`w-4 h-4 ${isHistoryLoading ? 'animate-spin' : ''}`} />
             <span>Refresh</span>
           </button>
@@ -146,7 +146,7 @@ export const AccountTabContent: React.FC = () => {
                   <td className="p-3 text-slate-200 font-medium">{invoice.id}</td>
                   <td className="p-3">{invoice.date}</td>
                   <td className="p-3">{invoice.amount}</td>
-                  <td className="p-3 text-right"><button className="p-2 text-slate-400 hover:text-cyan-400 transition-colors"><Download className="w-4 h-4" /></button></td>
+                  <td className="p-3 text-right"><button className="p-2 text-slate-400 hover:text-amber-400 transition-colors"><Download className="w-4 h-4" /></button></td>
                 </tr>
               ))
             ) : (

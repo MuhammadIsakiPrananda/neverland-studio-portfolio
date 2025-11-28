@@ -72,13 +72,12 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onUpdateProfile, on
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4" aria-modal="true" role="dialog">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          onClick={(e) => e.stopPropagation()} // Mencegah klik di dalam modal menutup modal
           className="relative w-full max-w-6xl h-[90vh] bg-slate-900/70 backdrop-blur-xl rounded-2xl shadow-2xl shadow-black/30 border border-slate-700/50 text-slate-200 flex overflow-hidden"
         >
           {/* Overlay untuk sidebar mobile */}
@@ -109,7 +108,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onUpdateProfile, on
                 </div>
                 <div className="w-full bg-slate-700/50 rounded-full h-1.5">
                   <motion.div 
-                    className="bg-gradient-to-r from-teal-500 to-cyan-500 h-1.5 rounded-full"
+                    className="bg-gradient-to-r from-amber-500 to-orange-500 h-1.5 rounded-full"
                     initial={{ width: 0 }}
                     animate={{ width: `${profileCompletion}%` }}
                     transition={{ duration: 0.5, ease: 'easeOut' }}
@@ -127,9 +126,9 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onUpdateProfile, on
                   }} 
                   className={`relative flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${activeSection === item.id ? 'text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800/50'}`}>
                   {activeSection === item.id && (
-                    <motion.div layoutId="active-nav-pill" className="absolute inset-0 bg-gradient-to-r from-teal-500/20 to-cyan-500/20 rounded-lg border border-cyan-500/30" transition={{ type: 'spring', stiffness: 300, damping: 30 }} />
+                    <motion.div layoutId="active-nav-pill" className="absolute inset-0 bg-amber-500/10 rounded-lg border border-amber-500/30" transition={{ type: 'spring', stiffness: 300, damping: 30 }} />
                   )}
-                  <item.icon className={`relative w-5 h-5 ${activeSection === item.id ? 'text-cyan-400' : ''}`} />
+                  <item.icon className={`relative w-5 h-5 ${activeSection === item.id ? 'text-amber-400' : ''}`} />
                   <span className="relative">{item.label}</span>
                 </button>
               ))}

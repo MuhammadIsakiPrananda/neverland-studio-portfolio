@@ -46,7 +46,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ isLoading, setSectionRe
       variants={sectionVariants}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16"> 
-          <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">Contact Us</span>
+          <span className="text-amber-400 font-semibold text-sm uppercase tracking-wider">Contact Us</span>
           <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6">Get in Touch</h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto"> 
             We're here to help. Reach out to us with any questions or to start your next project.
@@ -68,7 +68,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ isLoading, setSectionRe
               }
             ].map((item, idx) => (
               <div key={idx} className="flex gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-emerald-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center flex-shrink-0">
                   {item.icon}
                 </div>
                 <div className="leading-snug">
@@ -78,7 +78,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ isLoading, setSectionRe
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-teal-400 text-sm mt-2 hover:underline inline-block"
+                    className="text-amber-400 text-sm mt-2 hover:underline inline-block"
                   >{item.action}</a>
                 </div>
               </div>
@@ -98,7 +98,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ isLoading, setSectionRe
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 bg-slate-800/50 border border-slate-700/50 rounded-lg flex items-center justify-center hover:scale-110 hover:bg-teal-500/20 hover:border-teal-500/50 transition-all"
+                    className="w-10 h-10 bg-slate-800/50 border border-slate-700/50 rounded-lg flex items-center justify-center hover:scale-110 hover:bg-amber-500/10 hover:border-amber-500/50 transition-all"
                   >
                     <Icon className="w-5 h-5 text-white" />
                   </a>
@@ -114,23 +114,23 @@ const ContactSection: React.FC<ContactSectionProps> = ({ isLoading, setSectionRe
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium mb-2">First Name</label>
-                  <input type="text" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-teal-500 focus:ring-teal-500/50 focus:outline-none transition-colors" placeholder="John" required />
+                  <input type="text" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors" placeholder="John" required />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Last Name</label>
-                  <input type="text" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-teal-500 focus:ring-teal-500/50 focus:outline-none transition-colors" placeholder="Doe" required />
+                  <input type="text" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors" placeholder="Doe" required />
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Email</label>
-                <input type="email" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-teal-500 focus:ring-teal-500/50 focus:outline-none transition-colors" placeholder="john.doe@example.com" required />
+                <input type="email" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors" placeholder="john.doe@example.com" required />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Service</label>
                 <select 
                   value={selectedService}
                   onChange={(e) => setSelectedService(e.target.value)}
-                  className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-teal-500 focus:ring-teal-500/50 focus:outline-none transition-colors appearance-none" 
+                  className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors appearance-none" 
                   required
                 >
                   <option value="">Select a service</option>
@@ -149,17 +149,17 @@ const ContactSection: React.FC<ContactSectionProps> = ({ isLoading, setSectionRe
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
                   >
                     <label className="block text-sm font-medium mb-2">Please specify the service</label>
-                    <input type="text" value={otherService} onChange={(e) => setOtherService(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-teal-500 focus:ring-teal-500/50 focus:outline-none transition-colors" placeholder="e.g., SEO Optimization" required />
+                    <input type="text" value={otherService} onChange={(e) => setOtherService(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors" placeholder="e.g., SEO Optimization" required />
                   </motion.div>
                 )}
               </AnimatePresence>
               <div>
                 <label className="block text-sm font-medium mb-2">Message</label>
-                <textarea rows={5} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-teal-500 focus:ring-teal-500/50 focus:outline-none transition-colors resize-none" placeholder="Your message..." required />
+                <textarea rows={5} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors resize-none" placeholder="Your message..." required />
               </div>
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-teal-500 to-emerald-600 text-white py-4 rounded-lg font-semibold hover:shadow-xl hover:shadow-emerald-500/30 transition-all transform hover:scale-105"
+                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-4 rounded-lg font-semibold shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-105"
               >
                 Send Message
               </button>

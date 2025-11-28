@@ -117,7 +117,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
   return (
     <div key="register" className="w-full animate-fade-in">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-cyan-400">
+        <h2 className="text-3xl font-bold text-amber-400">
           Create an Account
         </h2>
         <p className="text-slate-400 mt-2">Join us and start your journey</p>
@@ -139,7 +139,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
             <input id="name" type="text" placeholder="e.g. Alex Johnson" value={name} onChange={(e) => {
               setName(e.target.value);
               setErrors(prev => ({ ...prev, name: undefined }));
-            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.name ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
+            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.name ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
           </div>
           {errors.name && <p className="text-xs text-red-400 mt-1.5 ml-1 animate-fade-in">{errors.name}</p>}
         </div>
@@ -152,7 +152,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
             <input id="username" type="text" placeholder="e.g. alexj" value={username} onChange={(e) => {
               setUsername(e.target.value);
               setErrors(prev => ({ ...prev, username: undefined }));
-            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.username ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
+            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.username ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
           </div>
           {errors.username && <p className="text-xs text-red-400 mt-1.5 ml-1 animate-fade-in">{errors.username}</p>}
         </div>
@@ -165,7 +165,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
             <input id="email" type="email" placeholder="e.g. alex@example.com" value={email} onChange={(e) => {
               setEmail(e.target.value);
               setErrors(prev => ({ ...prev, email: undefined }));
-            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.email ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
+            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.email ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
           </div>
           {errors.email && <p className="text-xs text-red-400 mt-1.5 ml-1 animate-fade-in">{errors.email}</p>}
         </div>
@@ -178,7 +178,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
             <input id="password-reg" type={showPassword ? 'text' : 'password'} placeholder="Minimum 8 characters" value={password} onChange={(e) => {
               setPassword(e.target.value);
               setErrors(prev => ({ ...prev, password: undefined }));
-            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.password ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
+            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.password ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
@@ -200,7 +200,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
             <input id="confirm-password" type={showPassword ? 'text' : 'password'} placeholder="Repeat your password" value={confirmPassword} onChange={(e) => {
               setConfirmPassword(e.target.value);
               setErrors(prev => ({ ...prev, confirmPassword: undefined }));
-            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.confirmPassword ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
+            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.confirmPassword ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
           </div>
           {errors.confirmPassword && <p className="text-xs text-red-400 mt-1.5 ml-1 animate-fade-in">{errors.confirmPassword}</p>}
         </div>
@@ -221,13 +221,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
           {errors.recaptcha && <p className="text-xs text-red-400 mt-1.5 ml-1 animate-fade-in">{errors.recaptcha}</p>}
         </div>
 
-        <button type="submit" disabled={isLoading} className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-[1.02] mt-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none">
+        <button type="submit" disabled={isLoading} className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] mt-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none">
           {isLoading ? <><Loader className="w-5 h-5 animate-spin" /> Creating Account...</> : <><LogIn className="w-5 h-5" /> Sign Up</>}
         </button>
 
         <p className="text-center text-sm text-slate-400 pt-2">
           Already have an account?{' '}
-          <button type="button" onClick={() => onSwitchMode('login')} className="font-semibold text-cyan-400 hover:underline disabled:opacity-50" disabled={isLoading}>
+          <button type="button" onClick={() => onSwitchMode('login')} className="font-semibold text-amber-400 hover:underline disabled:opacity-50" disabled={isLoading}>
             Sign In
           </button>
         </p>

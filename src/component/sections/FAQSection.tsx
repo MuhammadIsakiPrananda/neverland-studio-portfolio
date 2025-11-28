@@ -48,7 +48,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({ isLoading }) => {
       variants={sectionVariants}> 
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">FAQ</span>
+          <span className="text-amber-400 font-semibold text-sm uppercase tracking-wider">FAQ</span>
           <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6">Frequently Asked Questions</h2>
           <p className="text-slate-400 text-lg">
             Find answers to common questions about our services and processes.
@@ -65,7 +65,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({ isLoading }) => {
                 onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
                 className="w-full text-left p-6 flex justify-between items-center cursor-pointer group"
               > 
-                <h3 className="text-lg font-bold text-white group-hover:text-teal-400 transition-colors">
+                <h3 className="text-lg font-bold text-white group-hover:text-amber-400 transition-colors">
                   {faqItem.q}
                 </h3>
                 <motion.div
@@ -73,7 +73,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({ isLoading }) => {
                   transition={{ duration: 0.3 }}
                   className="flex-shrink-0 ml-4"
                 >
-                  <ChevronDown className="w-5 h-5 text-slate-400 group-hover:text-teal-400 transition-colors" />
+                  <ChevronDown className="w-5 h-5 text-slate-400 group-hover:text-amber-400 transition-colors" />
                 </motion.div>
               </button>
               <AnimatePresence initial={false}>

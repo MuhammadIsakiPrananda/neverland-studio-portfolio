@@ -46,7 +46,7 @@ const TeamSection: React.FC<TeamSectionProps> = ({ isLoading, setSectionRef, onJ
       variants={sectionVariants}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">Our Team</span>
+          <span className="text-amber-400 font-semibold text-sm uppercase tracking-wider">Our Team</span>
           <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6">Meet the Experts</h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">The creative minds and passionate developers behind Neverland Studio's success.</p>
         </div>
@@ -56,7 +56,7 @@ const TeamSection: React.FC<TeamSectionProps> = ({ isLoading, setSectionRef, onJ
             <motion.div
               key={idx}
               variants={itemVariants}
-              className="bg-gradient-to-br from-slate-900/60 to-black/60 backdrop-blur-lg border border-slate-800/50 rounded-2xl overflow-hidden hover:border-teal-500/50 transition-all group transform hover:-translate-y-2"
+              className="bg-gradient-to-br from-slate-900/60 to-black/60 backdrop-blur-lg border border-slate-800/50 rounded-2xl overflow-hidden hover:border-amber-500/50 transition-all group transform hover:-translate-y-2"
             >
               <div className="aspect-square overflow-hidden">
                 <img
@@ -67,17 +67,17 @@ const TeamSection: React.FC<TeamSectionProps> = ({ isLoading, setSectionRef, onJ
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold mb-1">{member.name}</h3>
-                <p className="text-teal-400 text-sm mb-3">{member.role}</p>
+                <p className="text-amber-400 text-sm mb-3">{member.role}</p>
                 <p className="text-slate-400 text-sm mb-4">{member.bio}</p>
                 <div className="flex gap-3">
-                  <button className="w-9 h-9 bg-teal-500/10 rounded-lg flex items-center justify-center hover:bg-teal-500/20 transition-all">
-                    <Linkedin className="w-4 h-4 text-teal-300" />
+                  <button className="w-9 h-9 bg-amber-500/10 rounded-lg flex items-center justify-center hover:bg-amber-500/20 transition-all">
+                    <Linkedin className="w-4 h-4 text-amber-300" />
                   </button>
-                  <button className="w-9 h-9 bg-teal-500/10 rounded-lg flex items-center justify-center hover:bg-teal-500/20 transition-all">
-                    <Twitter className="w-4 h-4 text-teal-300" />
+                  <button className="w-9 h-9 bg-amber-500/10 rounded-lg flex items-center justify-center hover:bg-amber-500/20 transition-all">
+                    <Twitter className="w-4 h-4 text-amber-300" />
                   </button>
-                  <button className="w-9 h-9 bg-teal-500/10 rounded-lg flex items-center justify-center hover:bg-teal-500/20 transition-all">
-                    <Mail className="w-4 h-4 text-teal-300" />
+                  <button className="w-9 h-9 bg-amber-500/10 rounded-lg flex items-center justify-center hover:bg-amber-500/20 transition-all">
+                    <Mail className="w-4 h-4 text-amber-300" />
                   </button>
                 </div>
               </div>

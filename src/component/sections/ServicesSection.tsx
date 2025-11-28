@@ -43,7 +43,7 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({ children, className, ...p
       ref={cardRef}
       onMouseMove={handleMouseMove}
       variants={cardVariants}
-      className={`group relative rounded-2xl border border-slate-800 bg-slate-900 p-8 transition-colors duration-300 before:absolute before:-inset-px before:rounded-2xl before:border before:border-transparent before:bg-[radial-gradient(400px_at_var(--spotlight-x)_var(--spotlight-y),rgba(0,255,255,0.1),transparent_40%)] before:opacity-0 before:transition-opacity before:duration-300 hover:border-teal-500/40 hover:before:opacity-100 ${className || ''}`}
+      className={`group relative rounded-2xl border border-slate-800 bg-slate-900 p-8 transition-colors duration-300 before:absolute before:-inset-px before:rounded-2xl before:border before:border-transparent before:bg-[radial-gradient(400px_at_var(--spotlight-x)_var(--spotlight-y),rgba(251,191,36,0.1),transparent_40%)] before:opacity-0 before:transition-opacity before:duration-300 hover:border-amber-500/40 hover:before:opacity-100 ${className || ''}`}
       {...props}
     >
       {children}
@@ -94,7 +94,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ isLoading, setSection
       variants={sectionVariants}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-teal-400 font-semibold text-sm uppercase tracking-wider">Our Services</span>
+          <span className="text-amber-400 font-semibold text-sm uppercase tracking-wider">Our Services</span>
           <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6">What We Do</h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">We offer a comprehensive suite of digital services to bring your vision to life.</p>
         </div>
@@ -107,7 +107,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ isLoading, setSection
             >
               {/* The content is now inside a z-10 container to appear above the spotlight effect */}
               <div className="relative z-10 flex h-full flex-col">
-                <div className="w-16 h-16 mb-6 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform duration-300">
+                <div className="w-16 h-16 mb-6 bg-slate-800 border border-slate-700 rounded-xl flex items-center justify-center text-white shadow-lg shadow-black/20 group-hover:scale-105 group-hover:border-amber-500/50 transition-all duration-300">
                   {/* Render the icon directly as a component */}
                   <service.icon.type className="w-8 h-8" />
                 </div>
@@ -116,7 +116,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ isLoading, setSection
                   <p className="text-slate-400 leading-relaxed">{service.desc}</p>
                 </div>
                 <div className="mt-8">
-                  <div className="inline-flex cursor-pointer items-center gap-2 font-semibold text-teal-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <div className="inline-flex cursor-pointer items-center gap-2 font-semibold text-amber-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     Learn More <ArrowRight className="w-4 h-4" />
                   </div>
                 </div>

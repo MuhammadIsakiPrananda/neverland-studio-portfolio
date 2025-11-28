@@ -40,7 +40,7 @@ const Footer = () => {
                     key={idx}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 bg-slate-800/50 border border-slate-700/50 rounded-lg flex items-center justify-center hover:scale-110 hover:bg-teal-500/20 hover:border-teal-500/50 transition-all" 
+                    className="w-10 h-10 bg-slate-800/50 border border-slate-700/50 rounded-lg flex items-center justify-center hover:scale-110 hover:bg-amber-500/10 hover:border-amber-500/50 transition-all" 
                     aria-label={Icon.displayName || 'Social media link'}
                   >
                     <Icon className="w-5 h-5 text-white" />
@@ -54,19 +54,19 @@ const Footer = () => {
               <div>
                 <h4 className="font-bold mb-6 text-lg tracking-wider">Services</h4>
                 <ul className="space-y-3 text-slate-400 text-sm">
-                  <li><a href="#Services" className="hover:text-teal-400 transition-colors">Web Development</a></li>
-                  <li><a href="#Services" className="hover:text-teal-400 transition-colors">Mobile Apps</a></li>
-                  <li><a href="#Services" className="hover:text-teal-400 transition-colors">UI/UX Design</a></li>
-                  <li><a href="#Services" className="hover:text-teal-400 transition-colors">Digital Marketing</a></li>
+                  <li><a href="#Services" className="hover:text-amber-400 transition-colors">Web Development</a></li>
+                  <li><a href="#Services" className="hover:text-amber-400 transition-colors">Mobile Apps</a></li>
+                  <li><a href="#Services" className="hover:text-amber-400 transition-colors">UI/UX Design</a></li>
+                  <li><a href="#Services" className="hover:text-amber-400 transition-colors">Digital Marketing</a></li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-bold mb-6 text-lg tracking-wider">Company</h4>
                 <ul className="space-y-3 text-slate-400 text-sm">
-                  <li><a href="#Process" className="hover:text-teal-400 transition-colors">Our Process</a></li>
-                  <li><a href="#Team" className="hover:text-teal-400 transition-colors">Our Team</a></li>
-                  <li><a href="#Portfolio" className="hover:text-teal-400 transition-colors">Portfolio</a></li>
-                  <li><a href="#Contact" className="hover:text-teal-400 transition-colors">Contact</a></li>
+                  <li><a href="#Process" className="hover:text-amber-400 transition-colors">Our Process</a></li>
+                  <li><a href="#Team" className="hover:text-amber-400 transition-colors">Our Team</a></li>
+                  <li><a href="#Portfolio" className="hover:text-amber-400 transition-colors">Portfolio</a></li>
+                  <li><a href="#Contact" className="hover:text-amber-400 transition-colors">Contact</a></li>
                 </ul>
               </div>
             </div>
@@ -78,9 +78,9 @@ const Footer = () => {
               <form className="flex gap-2">
                 <div className="relative flex-grow">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                  <input type="email" placeholder="Your Email" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-teal-500 focus:ring-teal-500/50 focus:outline-none transition-colors text-sm" />
+                  <input type="email" placeholder="Your Email" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors text-sm" />
                 </div>
-                <button type="submit" className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-teal-500 to-emerald-600 rounded-lg flex items-center justify-center hover:scale-105 transition-transform" aria-label="Subscribe to newsletter">
+                <button type="submit" className="flex-shrink-0 w-12 h-12 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center hover:scale-105 hover:border-amber-500 transition-all" aria-label="Subscribe to newsletter">
                   <ArrowRight className="w-5 h-5 text-white" />
                 </button>
               </form>
@@ -92,8 +92,8 @@ const Footer = () => {
               © {new Date().getFullYear()} Neverland Studio. All rights reserved.
             </p>
             <div className="flex flex-wrap gap-6 text-sm text-slate-500">
-              <button onClick={() => setModalContent('privacy')} className="hover:text-teal-400 transition-colors">Privacy Policy</button>
-              <button onClick={() => setModalContent('terms')} className="hover:text-teal-400 transition-colors">Terms of Service</button>
+              <button onClick={() => setModalContent('privacy')} className="hover:text-amber-400 transition-colors">Privacy Policy</button>
+              <button onClick={() => setModalContent('terms')} className="hover:text-amber-400 transition-colors">Terms of Service</button>
             </div>
           </div>
         </div>
@@ -125,7 +125,7 @@ const Footer = () => {
                 </button>
               </div>
               <div className="overflow-y-auto p-8">
-                <div className="prose prose-invert prose-p:text-slate-300 prose-headings:text-white prose-strong:text-white prose-a:text-teal-400 hover:prose-a:text-teal-300">
+                <div className="prose prose-invert prose-p:text-slate-300 prose-headings:text-white prose-strong:text-white prose-a:text-amber-400 hover:prose-a:text-amber-300">
                   {modalContent === 'privacy' ? (
                     <>
                       <p><strong>Last Updated:</strong> {new Date().toLocaleDateString()}</p>

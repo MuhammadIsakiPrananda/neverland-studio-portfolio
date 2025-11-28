@@ -92,7 +92,7 @@ export const ApiKeysTabContent: React.FC = () => {
         title="API Keys"
         description="Manage your API keys for integrations. Keep them secret, keep them safe!"
         headerActions={
-          <button onClick={handleGenerateKey} disabled={isGenerating} className="flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300 transition-colors disabled:opacity-50">
+          <button onClick={handleGenerateKey} disabled={isGenerating} className="flex items-center gap-2 text-sm text-amber-400 hover:text-amber-300 transition-colors disabled:opacity-50">
             {isGenerating ? <Loader className="w-4 h-4 animate-spin" /> : <PlusCircle className="w-4 h-4" />}
             <span>{isGenerating ? 'Generating...' : 'Generate New Key'}</span>
           </button>
@@ -104,14 +104,14 @@ export const ApiKeysTabContent: React.FC = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, height: 0, padding: 0, margin: 0 }}
-              className="bg-emerald-900/50 border border-emerald-500/30 rounded-lg p-4 mb-6"
+              className="bg-amber-900/50 border border-amber-500/30 rounded-lg p-4 mb-6"
             >
-              <h4 className="text-md font-bold text-emerald-300">New API Key Generated</h4>
-              <p className="text-sm text-emerald-400/80 mt-1">Please copy this key and store it securely. You will not be able to see it again.</p>
+              <h4 className="text-md font-bold text-amber-300">New API Key Generated</h4>
+              <p className="text-sm text-amber-400/80 mt-1">Please copy this key and store it securely. You will not be able to see it again.</p>
               <div className="relative mt-3">
                 <input type="text" readOnly value={newlyGeneratedKey.token} className="w-full bg-slate-900/50 border border-slate-700 rounded-lg pl-3 pr-10 py-2 text-white font-mono text-sm" />
                 <button onClick={() => handleCopy(newlyGeneratedKey.token, newlyGeneratedKey.id)} className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white">
-                  {copiedKeyId === newlyGeneratedKey.id ? <Check className="w-5 h-5 text-emerald-400" /> : <Copy className="w-5 h-5" />}
+                  {copiedKeyId === newlyGeneratedKey.id ? <Check className="w-5 h-5 text-amber-400" /> : <Copy className="w-5 h-5" />}
                 </button>
               </div>
             </motion.div>
@@ -138,8 +138,8 @@ export const ApiKeysTabContent: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <button onClick={() => handleCopy(key.token, key.id)} className="p-2 text-slate-400 hover:text-cyan-400 transition-colors" title="Copy Key">
-                    {copiedKeyId === key.id ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                  <button onClick={() => handleCopy(key.token, key.id)} className="p-2 text-slate-400 hover:text-amber-400 transition-colors" title="Copy Key">
+                    {copiedKeyId === key.id ? <Check className="w-4 h-4 text-amber-400" /> : <Copy className="w-4 h-4" />}
                   </button>
                   <button onClick={() => handleRevokeClick(key)} className="p-2 text-slate-400 hover:text-red-400 transition-colors" title="Revoke Key"><Trash2 className="w-4 h-4" /></button>
                 </div>

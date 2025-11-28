@@ -95,7 +95,7 @@ export const SecurityTabContent: React.FC<any> = ({
             <button
               type="submit"
               disabled={isLoading}
-              className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
               <span className="font-semibold">{isLoading ? 'Saving...' : 'Update Password'}</span>
@@ -106,17 +106,17 @@ export const SecurityTabContent: React.FC<any> = ({
         <div className="space-y-4">
           <div>
             <label className="text-sm font-medium text-slate-400">Current Password</label>
-            <input type="password" name="currentPassword" value={passwordData.currentPassword} onChange={handlePasswordInputChange} className={`w-full bg-slate-800/60 border rounded-lg px-3 py-2 mt-1 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors ${passwordErrors.currentPassword ? 'border-red-500/50' : 'border-slate-700'}`} />
+            <input type="password" name="currentPassword" value={passwordData.currentPassword} onChange={handlePasswordInputChange} className={`w-full bg-slate-800/60 border rounded-lg px-3 py-2 mt-1 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors ${passwordErrors.currentPassword ? 'border-red-500/50' : 'border-slate-700'}`} />
             {passwordErrors.currentPassword && <p className="text-xs text-red-400 mt-1.5">{passwordErrors.currentPassword}</p>}
           </div>
           <div>
             <label className="text-sm font-medium text-slate-400">New Password</label>
-            <input type="password" name="newPassword" value={passwordData.newPassword} onChange={handlePasswordInputChange} className={`w-full bg-slate-800/60 border rounded-lg px-3 py-2 mt-1 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors ${passwordErrors.newPassword ? 'border-red-500/50' : 'border-slate-700'}`} />
+            <input type="password" name="newPassword" value={passwordData.newPassword} onChange={handlePasswordInputChange} className={`w-full bg-slate-800/60 border rounded-lg px-3 py-2 mt-1 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors ${passwordErrors.newPassword ? 'border-red-500/50' : 'border-slate-700'}`} />
             {passwordErrors.newPassword && <p className="text-xs text-red-400 mt-1.5">{passwordErrors.newPassword}</p>}
           </div>
           <div>
             <label className="text-sm font-medium text-slate-400">Confirm New Password</label>
-            <input type="password" name="confirmPassword" value={passwordData.confirmPassword} onChange={handlePasswordInputChange} className={`w-full bg-slate-800/60 border rounded-lg px-3 py-2 mt-1 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors ${passwordErrors.confirmPassword ? 'border-red-500/50' : 'border-slate-700'}`} />
+            <input type="password" name="confirmPassword" value={passwordData.confirmPassword} onChange={handlePasswordInputChange} className={`w-full bg-slate-800/60 border rounded-lg px-3 py-2 mt-1 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors ${passwordErrors.confirmPassword ? 'border-red-500/50' : 'border-slate-700'}`} />
             {passwordErrors.confirmPassword && <p className="text-xs text-red-400 mt-1.5">{passwordErrors.confirmPassword}</p>}
           </div>
           {passwordData.newPassword && (
@@ -149,7 +149,7 @@ export const SecurityTabContent: React.FC<any> = ({
           <button 
             type="button" 
             onClick={is2faEnabled ? handleDisable2FA : handleEnable2FA} 
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${is2faEnabled ? 'bg-red-600/20 text-red-400 border border-red-500/50 hover:bg-red-600/30' : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 hover:bg-cyan-500/30'}`}
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${is2faEnabled ? 'bg-red-600/20 text-red-400 border border-red-500/50 hover:bg-red-600/30' : 'bg-amber-500/10 text-amber-300 border border-amber-500/50 hover:bg-amber-500/20'}`}
           >
             {is2faEnabled ? 'Disable' : 'Enable'}
           </button>
@@ -191,11 +191,11 @@ export const SecurityTabContent: React.FC<any> = ({
                         value={twoFactorCode}
                         onChange={(e) => setTwoFactorCode(e.target.value)}
                         maxLength={6}
-                        className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white tracking-[0.5em] text-center focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors"
+                        className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white tracking-[0.5em] text-center focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors"
                       />
                     </div>
                     <div className="flex gap-3">
-                      <button type="submit" className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white py-2 rounded-lg font-semibold text-sm">Verify & Enable</button>
+                      <button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2 rounded-lg font-semibold text-sm">Verify & Enable</button>
                       <button type="button" onClick={() => setIsSettingUp2FA(false)} className="w-full bg-slate-700 text-slate-300 py-2 rounded-lg font-semibold hover:bg-slate-600 text-sm">Cancel</button>
                     </div>
                   </form>

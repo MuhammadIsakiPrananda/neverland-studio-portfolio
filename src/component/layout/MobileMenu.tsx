@@ -22,21 +22,21 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ activeSection, handleNavClick, 
         <motion.button
           key={item.name}
           onClick={() => handleNavClick(item.name)}
-          className={`flex items-center gap-4 w-full text-left transition-all duration-300 font-medium py-4 px-4 rounded-lg text-xl tracking-wide ${activeSection === item.name ? 'text-white bg-white/10' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
+          className={`flex items-center gap-4 w-full text-left transition-all duration-300 font-medium py-4 px-4 rounded-lg text-xl tracking-wide group ${activeSection === item.name ? 'text-white bg-amber-500/10' : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'}`}
           variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} 
         >
-          <span className="text-cyan-400">{item.icon}</span>
+          <span className={`transition-colors ${activeSection === item.name ? 'text-amber-400' : 'text-slate-500 group-hover:text-amber-400'}`}>{item.icon}</span>
           <span>{item.name}</span>
         </motion.button>
       ))}
       <div className="border-t border-white/10 pt-6 mt-4 space-y-4">
-        <motion.button onClick={onLoginClick} variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="flex items-center gap-4 w-full text-left text-gray-400 hover:text-white transition-colors font-medium py-3 text-xl tracking-wide"><User className="w-6 h-6" /> Login</motion.button>
-        <motion.button variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="flex items-center gap-4 w-full text-left text-gray-400 hover:text-white transition-colors font-medium py-3 text-xl tracking-wide"><Globe className="w-6 h-6" /> Language</motion.button>
+        <motion.button onClick={onLoginClick} variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="flex items-center gap-4 w-full text-left text-slate-400 hover:text-amber-400 transition-colors font-medium py-3 text-xl tracking-wide"><User className="w-6 h-6" /> Login</motion.button>
+        <motion.button variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="flex items-center gap-4 w-full text-left text-slate-400 hover:text-amber-400 transition-colors font-medium py-3 text-xl tracking-wide"><Globe className="w-6 h-6" /> Language</motion.button>
       </div>
       <motion.button 
         variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
         onClick={() => handleNavClick('Contact')}
-        className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-6 py-4 rounded-full hover:shadow-lg hover:shadow-cyan-500/30 transition-all mt-8 font-semibold text-lg tracking-wide">Get Started</motion.button>
+        className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-4 rounded-full shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all mt-8 font-semibold text-lg tracking-wide transform hover:scale-105">Get Started</motion.button>
     </motion.div>
   </motion.div>
 );

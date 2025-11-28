@@ -46,13 +46,13 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen }) => {
           <div className="flex items-center justify-between p-3 border-b border-white/10 flex-shrink-0">
             <div className="flex items-center gap-3">
               <div className="relative flex items-center justify-center w-10 h-10">
-                <div className="absolute w-full h-full bg-cyan-500 rounded-full blur-md opacity-40"></div>
-                <Bot className="w-6 h-6 text-cyan-300 z-10" />
+                <div className="absolute w-full h-full bg-amber-500 rounded-full blur-md opacity-30"></div>
+                <Bot className="w-6 h-6 text-amber-300 z-10" />
               </div>
               <div>
                 <h3 className="font-bold text-white">AI Assistant</h3>
-                <p className="text-xs text-emerald-400 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
+                <p className="text-xs text-amber-400 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 bg-amber-400 rounded-full"></span>
                   Online
                 </p>
               </div>
@@ -65,7 +65,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen }) => {
           </div>
 
           {/* Messages */}
-          <div className="flex-grow p-4 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#06b6d4 #0f172a' }}>
+          <div className="flex-grow p-4 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#f59e0b #0f172a' }}>
             <div className="space-y-5">
               {messages.map((msg) => {
                 const isBot = msg.sender === 'bot';
@@ -82,7 +82,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen }) => {
                   {isBot ? (
                     <BotMessage message={msg} />
                   ) : (
-                    <div className="max-w-xs px-4 py-2.5 rounded-xl text-sm bg-gradient-to-br from-cyan-500 to-teal-600 text-white rounded-tr-none shadow-lg shadow-black/20">
+                    <div className="max-w-xs px-4 py-2.5 rounded-xl text-sm bg-gradient-to-br from-amber-500 to-orange-600 text-white rounded-tr-none shadow-lg shadow-black/20">
                       <p>{msg.text}</p>
                     </div>
                   )}
@@ -95,7 +95,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen }) => {
                   animate={{ opacity: 1, y: 0 }}
                   className="flex items-end gap-3 justify-start"
                 >
-                  <div className="w-8 h-8 flex-shrink-0 rounded-full bg-slate-800 flex items-center justify-center"><Bot className="w-5 h-5 text-cyan-400" /></div>
+                  <div className="w-8 h-8 flex-shrink-0 rounded-full bg-slate-800 flex items-center justify-center"><Bot className="w-5 h-5 text-amber-400" /></div>
                   <div className="px-4 py-3 rounded-xl bg-slate-800 text-slate-200 rounded-bl-none shadow-lg shadow-black/20">
                     <div className="flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></span>

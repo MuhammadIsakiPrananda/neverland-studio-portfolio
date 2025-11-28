@@ -31,7 +31,7 @@ export const BillingTabContent: React.FC = () => {
         footer={
           !isAddingVA && (
             <div className="flex justify-end">
-              <button onClick={() => setIsAddingVA(true)} className="flex items-center gap-2 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
+              <button onClick={() => setIsAddingVA(true)} className="flex items-center gap-2 text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors">
                 <Wallet className="w-4 h-4" />
                 <span>Add Virtual Account</span>
               </button>
@@ -73,7 +73,7 @@ export const BillingTabContent: React.FC = () => {
                   {pm.isDefault && <div className="flex items-center gap-1 text-xs text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-full"><CheckCircle className="w-3 h-3" /> Default</div>}
                 </div>
                 <div className="flex items-center gap-4">
-                  {!pm.isDefault && <button onClick={() => setDefaultPaymentMethod(pm.id)} className="text-sm text-cyan-400 hover:underline">Set as default</button>}
+                  {!pm.isDefault && <button onClick={() => setDefaultPaymentMethod(pm.id)} className="text-sm text-amber-400 hover:underline">Set as default</button>}
                   <button onClick={() => deletePaymentMethod(pm.id)} className="text-slate-500 hover:text-red-400 transition-colors">
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -94,7 +94,7 @@ export const BillingTabContent: React.FC = () => {
               </div>
               <div className="flex items-center gap-4">
                 <span className="font-semibold text-white">{inv.amount}</span>
-                <a href={inv.pdfUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
+                <a href={inv.pdfUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-amber-400 hover:text-amber-300 transition-colors">
                   <Download className="w-4 h-4" /> PDF
                 </a>
               </div>

@@ -10,7 +10,7 @@ const Partners: React.FC = () => {
       <ul className="flex items-center justify-center md:justify-start [&_li]:mx-8 animate-infinite-scroll" style={{ animationDuration: '40s' }}>
         {extendedPartners.map((partner, index) => (
           <li key={index}>
-            <div className="flex items-center gap-4 text-slate-500 hover:text-white transition-colors duration-300 cursor-pointer" title={partner.name}>
+            <div className="flex items-center gap-4 text-slate-500 hover:text-amber-400 transition-colors duration-300 cursor-pointer" title={partner.name}>
               {partner.icon}
               <span className="text-xl font-semibold tracking-wider whitespace-nowrap">{partner.name}</span>
             </div>

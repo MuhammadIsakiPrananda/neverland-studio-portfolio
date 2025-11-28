@@ -16,7 +16,7 @@ const ReviewsPage = () => {
   return (
     <div className="text-white">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Inbox: Reviews</h1>
+        <h1 className="text-3xl font-bold text-amber-400">Inbox: Reviews</h1>
         <div className="flex items-center gap-2 text-sm bg-slate-800 px-3 py-1.5 rounded-full">
           <span className="font-semibold text-white">{testimonials.length}</span>
           <span className="text-slate-400">Total Reviews</span>
@@ -36,13 +36,13 @@ const ReviewsPage = () => {
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 transition-all hover:border-slate-600 hover:bg-slate-800"
+              className="group bg-slate-800/50 border border-slate-700 rounded-xl p-6 transition-all hover:border-amber-500/50 hover:bg-slate-800"
             >
               <div className="flex items-start gap-4">
                 <img
                   src={testimonial.image}
                   alt={testimonial.name}
-                  className="w-12 h-12 rounded-full border-2 border-slate-600"
+                  className="w-12 h-12 rounded-full border-2 border-slate-600 group-hover:scale-110 transition-transform duration-300"
                 />
                 <div className="flex-1">
                   <div className="flex justify-between items-center mb-2">

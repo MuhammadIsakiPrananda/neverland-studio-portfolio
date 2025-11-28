@@ -91,11 +91,11 @@ const DashboardModal: React.FC<DashboardModalProps> = ({ isOpen, onClose, userPr
       onClick={() => setTab(tab)}
       className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
         currentTab === tab
-          ? 'bg-slate-700/50 text-white'
+          ? 'bg-amber-500/10 text-white'
           : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
       }`}
     >
-      {icon}
+      <span className={currentTab === tab ? 'text-amber-400' : ''}>{icon}</span>
       {children}
     </button>
   );
@@ -146,10 +146,10 @@ const DashboardModal: React.FC<DashboardModalProps> = ({ isOpen, onClose, userPr
                             <p className="text-xs text-slate-500 mt-2">JPG, GIF or PNG. 1MB max.</p>
                           </div>
                         </div>
-                        <div className="relative"><label className="block text-sm font-medium mb-2 text-slate-300">Full Name</label><User className="absolute left-3 bottom-3.5 w-5 h-5 text-slate-400" /><input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors" required /></div>
-                        <div className="relative"><label className="block text-sm font-medium mb-2 text-slate-300">Email Address</label><Mail className="absolute left-3 bottom-3.5 w-5 h-5 text-slate-400" /><input type="email" placeholder="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors" required /></div>
+                        <div className="relative"><label className="block text-sm font-medium mb-2 text-slate-300">Full Name</label><User className="absolute left-3 bottom-3.5 w-5 h-5 text-slate-400" /><input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors" required /></div>
+                        <div className="relative"><label className="block text-sm font-medium mb-2 text-slate-300">Email Address</label><Mail className="absolute left-3 bottom-3.5 w-5 h-5 text-slate-400" /><input type="email" placeholder="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors" required /></div>
                         <div className="flex justify-end pt-4 border-t border-slate-800">
-                          <button type="submit" disabled={isLoading} className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-6 py-2.5 rounded-lg font-semibold flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-cyan-500/30 transition-all transform hover:scale-105 disabled:opacity-50">
+                          <button type="submit" disabled={isLoading} className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-2.5 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-105 disabled:opacity-50">
                             {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                             {isLoading ? 'Saving...' : 'Save Changes'}
                           </button>
@@ -165,10 +165,10 @@ const DashboardModal: React.FC<DashboardModalProps> = ({ isOpen, onClose, userPr
                         <div>
                           <h4 className="text-lg font-semibold text-slate-200 mb-4">Password</h4>
                           <form className="space-y-4 p-6 bg-slate-800/30 rounded-lg border border-slate-700/50">
-                            <div className="relative"><label className="block text-sm font-medium mb-2 text-slate-300">Current Password</label><KeyRound className="absolute left-3 bottom-3.5 w-5 h-5 text-slate-400" /><input type="password" placeholder="Enter current password" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors" /></div>
-                            <div className="relative"><label className="block text-sm font-medium mb-2 text-slate-300">New Password</label><KeyRound className="absolute left-3 bottom-3.5 w-5 h-5 text-slate-400" /><input type="password" placeholder="Enter new password" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors" /></div>
+                            <div className="relative"><label className="block text-sm font-medium mb-2 text-slate-300">Current Password</label><KeyRound className="absolute left-3 bottom-3.5 w-5 h-5 text-slate-400" /><input type="password" placeholder="Enter current password" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors" /></div>
+                            <div className="relative"><label className="block text-sm font-medium mb-2 text-slate-300">New Password</label><KeyRound className="absolute left-3 bottom-3.5 w-5 h-5 text-slate-400" /><input type="password" placeholder="Enter new password" className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors" /></div>
                             <div className="flex justify-end pt-2">
-                              <button type="submit" className="bg-slate-700 text-white px-5 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-slate-600 transition-colors disabled:opacity-50 text-sm">Update Password</button>
+                              <button type="submit" className="bg-amber-600 text-white px-5 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-amber-500 transition-colors disabled:opacity-50 text-sm">Update Password</button>
                             </div>
                           </form>
                         </div>
@@ -186,7 +186,7 @@ const DashboardModal: React.FC<DashboardModalProps> = ({ isOpen, onClose, userPr
                                 {is2faEnabled ? (
                                   <button onClick={() => setIs2faEnabled(false)} className="bg-red-500/20 text-red-300 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-500/30 transition-colors">Disable</button>
                                 ) : (
-                                  <button onClick={handleEnable2FA} className="bg-cyan-500/20 text-cyan-300 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-cyan-500/30 transition-colors">Enable</button>
+                                  <button onClick={handleEnable2FA} className="bg-amber-500/10 text-amber-300 border border-amber-500/50 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-500/20 transition-colors">Enable</button>
                                 )}
                               </div>
                             ) : (
@@ -197,9 +197,9 @@ const DashboardModal: React.FC<DashboardModalProps> = ({ isOpen, onClose, userPr
                                     <div className="p-3 bg-white rounded-lg"><QrCode className="w-32 h-32 text-black" /></div>
                                     <form onSubmit={handleVerify2FA} className="space-y-4 w-full">
                                       <p className="text-sm text-slate-300">Then, enter the 6-digit code from your app to verify.</p>
-                                      <div className="relative"><Smartphone className="absolute left-3 bottom-3.5 w-5 h-5 text-slate-400" /><input type="text" placeholder="6-digit code" value={twoFactorCode} onChange={(e) => setTwoFactorCode(e.target.value)} maxLength={6} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white tracking-[0.5em] text-center focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors" /></div>
+                                      <div className="relative"><Smartphone className="absolute left-3 bottom-3.5 w-5 h-5 text-slate-400" /><input type="text" placeholder="6-digit code" value={twoFactorCode} onChange={(e) => setTwoFactorCode(e.target.value)} maxLength={6} className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white tracking-[0.5em] text-center focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors" /></div>
                                       <div className="flex gap-2">
-                                        <button type="submit" className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white py-2 rounded-lg font-semibold">Verify</button>
+                                        <button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2 rounded-lg font-semibold">Verify</button>
                                         <button type="button" onClick={() => setIsSettingUp2FA(false)} className="w-full bg-slate-700 text-slate-300 py-2 rounded-lg font-semibold hover:bg-slate-600">Cancel</button>
                                       </div>
                                     </form>

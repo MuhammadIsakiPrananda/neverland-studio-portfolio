@@ -27,7 +27,7 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({ children, className = "",
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{
-          background: `radial-gradient(600px at ${position.x}px ${position.y}px, rgba(22, 163, 175, 0.15), transparent 80%)`,
+          background: `radial-gradient(600px at ${position.x}px ${position.y}px, rgba(251, 191, 36, 0.1), transparent 80%)`,
           opacity: opacity,
         }}
       />

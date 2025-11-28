@@ -8,7 +8,7 @@ export const TermsTabContent: React.FC = () => {
         title="Terms and Conditions"
         description="Last updated: June 10, 2024"
       >
-        <div className="prose prose-invert prose-slate max-w-none text-slate-300">
+        <div className="prose prose-invert max-w-none prose-p:text-slate-300 prose-headings:text-white prose-strong:text-white prose-a:text-amber-400 hover:prose-a:text-amber-300">
           <p>Welcome to Neverland Studio!</p>
           <p>These terms and conditions outline the rules and regulations for the use of Neverland Studio's Website, located at yourwebsite.com.</p>
           <p>By accessing this website we assume you accept these terms and conditions. Do not continue to use Neverland Studio if you do not agree to take all of the terms and conditions stated on this page.</p>

@@ -33,7 +33,7 @@ export const VirtualAccountForm: React.FC<VirtualAccountFormProps> = ({ onSucces
           <select
             value={bank}
             onChange={(e) => setBank(e.target.value)}
-            className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors"
+            className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors"
             required
           >
             <option value="" disabled>Select a bank</option>
@@ -42,12 +42,12 @@ export const VirtualAccountForm: React.FC<VirtualAccountFormProps> = ({ onSucces
         </div>
         <div>
           <label className="block text-sm font-medium mb-2 text-slate-300">Virtual Account Number</label>
-          <input type="text" value={number} onChange={(e) => setNumber(e.target.value)} placeholder="e.g., 88081234567890" className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/50 focus:outline-none transition-colors" required />
+          <input type="text" value={number} onChange={(e) => setNumber(e.target.value)} placeholder="e.g., 88081234567890" className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors" required />
         </div>
       </div>
       <div className="flex justify-end gap-3">
         <button type="button" onClick={onCancel} disabled={isLoading} className="px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 bg-slate-700 hover:bg-slate-600 transition-colors">Cancel</button>
-        <button type="submit" disabled={isLoading || !bank || !number} className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-cyan-600 hover:bg-cyan-500 transition-colors disabled:opacity-50">
+        <button type="submit" disabled={isLoading || !bank || !number} className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-amber-600 hover:bg-amber-500 transition-colors disabled:opacity-50">
           {isLoading ? <Loader className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           {isLoading ? 'Saving...' : 'Save Account'}
         </button>

@@ -59,7 +59,7 @@ const NotificationComponent: React.FC<NotificationProps> = ({ notification, onRe
         </div>
       </div>
       <motion.div
-        className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-teal-500 to-cyan-500"
+        className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-amber-500 to-orange-500"
         initial={{ width: '100%' }}
         animate={{ width: '0%' }}
         transition={{ duration: 5, ease: 'linear' }}

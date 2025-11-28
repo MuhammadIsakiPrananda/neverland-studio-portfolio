@@ -10,11 +10,11 @@ const AccordionItem = ({ question, answer }: { question: string, answer: string 
     <div className="border-b border-slate-800">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex justify-between items-center w-full py-4 text-left"
+        className="group flex justify-between items-center w-full py-4 text-left"
       >
-        <span className="font-medium text-white">{question}</span>
+        <span className="font-medium text-white group-hover:text-amber-400 transition-colors">{question}</span>
         <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-          <ChevronDown className="w-5 h-5 text-slate-400" />
+          <ChevronDown className="w-5 h-5 text-slate-400 group-hover:text-amber-400 transition-colors" />
         </motion.div>
       </button>
       <AnimatePresence>
@@ -70,7 +70,7 @@ export const SupportTabContent: React.FC = () => {
         description="Can't find an answer? Our support team is here to help."
         footer={
           <div className="flex justify-end">
-            <button onClick={handleSendMessage} disabled={isSending} className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed">
+            <button onClick={handleSendMessage} disabled={isSending} className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed">
               {isSending ? <Loader className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
               <span className="font-semibold">{isSending ? 'Sending...' : 'Send Message'}</span>
             </button>
@@ -80,11 +80,11 @@ export const SupportTabContent: React.FC = () => {
         <form className="space-y-4">
           <div>
             <label className="text-sm font-medium text-slate-400">Subject</label>
-            <input type="text" placeholder="e.g., Issue with billing" className="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 mt-1 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors" />
+            <input type="text" placeholder="e.g., Issue with billing" className="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 mt-1 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors" />
           </div>
           <div>
             <label className="text-sm font-medium text-slate-400">How can we help?</label>
-            <textarea rows={5} placeholder="Describe your issue in detail..." className="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 mt-1 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors resize-none" />
+            <textarea rows={5} placeholder="Describe your issue in detail..." className="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 mt-1 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors resize-none" />
           </div>
         </form>
       </SettingsCard>
@@ -95,7 +95,7 @@ export const SupportTabContent: React.FC = () => {
       >
         <div className="flex justify-between items-center">
           <p className="text-sm text-slate-300">Find everything you need to become an expert.</p>
-          <button className="flex items-center gap-2 bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-600 transition-colors">
+          <button className="flex items-center gap-2 bg-slate-800/50 border border-slate-700 text-slate-300 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-700/50 hover:text-white hover:border-amber-500/50 transition-colors">
             <BookOpen className="w-4 h-4" /> Visit Documentation
           </button>
         </div>
