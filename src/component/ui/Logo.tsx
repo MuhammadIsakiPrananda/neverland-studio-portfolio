@@ -11,10 +11,12 @@ const Logo = () => {
       >
         <img src="/images/Neverland Studio.webp" alt="Neverland Studio Logo" className="w-full h-full object-cover" />
       </motion.div>
-      <div className="flex flex-col -space-y-1.5">
+      <div className="flex flex-col">
         <span 
-          className="shimmer-text text-xl font-black tracking-tighter bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent"
-          style={{ filter: 'drop-shadow(0 1px 2px rgba(251, 191, 36, 0.3))' }}
+          className="text-xl font-black tracking-tighter text-transparent bg-clip-text 
+                     bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400
+                     animate-shimmer bg-[length:200%_auto]"
+          style={{ filter: 'drop-shadow(0 1px 3px rgba(251, 191, 36, 0.3))' }}
         >
           Neverland
         </span>

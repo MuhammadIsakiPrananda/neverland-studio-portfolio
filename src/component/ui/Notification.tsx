@@ -17,10 +17,10 @@ const icons = {
 };
 
 const borderColors = {
-  success: 'border-emerald-500',
-  error: 'border-red-500',
-  info: 'border-sky-500',
-  warning: 'border-amber-500',
+  success: 'bg-emerald-500',
+  error: 'bg-red-500',
+  info: 'bg-sky-500',
+  warning: 'bg-amber-500',
 };
 
 const NotificationComponent: React.FC<NotificationProps> = ({ notification, onRemove, index }) => {
@@ -41,10 +41,10 @@ const NotificationComponent: React.FC<NotificationProps> = ({ notification, onRe
       animate={{ opacity: 1, y: 0, scale: 1, x: 0 }}
       exit={{ opacity: 0, scale: 0.5, x: 200, transition: { duration: 0.4, ease: 'easeOut' } }}
       custom={index}
-      className={`relative w-full bg-slate-800/90 backdrop-blur-lg border border-slate-700/50 rounded-xl shadow-2xl shadow-black/50 overflow-hidden mb-4 border-l-4 ${borderColors[type]}`}
+      className="relative w-full max-w-sm bg-slate-800/80 backdrop-blur-lg border border-slate-700/50 rounded-xl shadow-2xl shadow-black/50 overflow-hidden"
     >
-      <div className="flex items-start p-5 gap-4">
-        <div className="flex-shrink-0 mt-0.5">{icons[type]}</div>
+      <div className="flex items-start p-4 gap-4">
+        <div className="flex-shrink-0">{icons[type]}</div>
         <div className="w-0 flex-1">
           <p className="text-base font-bold text-slate-100">{title}</p>
           <p className="mt-1 text-sm text-slate-300">{message}</p>
@@ -59,7 +59,7 @@ const NotificationComponent: React.FC<NotificationProps> = ({ notification, onRe
         </div>
       </div>
       <motion.div
-        className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-amber-500 to-orange-500"
+        className={`absolute bottom-0 left-0 h-1 ${borderColors[type]}`}
         initial={{ width: '100%' }}
         animate={{ width: '0%' }}
         transition={{ duration: 5, ease: 'linear' }}

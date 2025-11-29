@@ -77,9 +77,15 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onUpdateProfile, on
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="relative w-full max-w-6xl h-[90vh] bg-slate-900/70 backdrop-blur-xl rounded-2xl shadow-2xl shadow-black/30 border border-slate-700/50 text-slate-200 flex overflow-hidden"
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          className="relative w-full max-w-6xl h-[90vh] bg-gradient-to-br from-slate-900/70 to-slate-950/80 backdrop-blur-xl rounded-2xl shadow-2xl shadow-black/40 border border-slate-700/50 text-slate-200 flex overflow-hidden"
         >
+          {/* Aurora Background */}
+          <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-amber-500/10 rounded-full blur-3xl animate-pulse-slow opacity-50"></div>
+            <div className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-orange-500/10 rounded-full blur-3xl animate-pulse-slow animation-delay-4000 opacity-50"></div>
+          </div>
+
           {/* Overlay untuk sidebar mobile */}
           <AnimatePresence>
             {isSidebarOpen && (
@@ -87,7 +93,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onUpdateProfile, on
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/50 z-10 md:hidden"
+                className="fixed inset-0 bg-black/60 z-10 md:hidden"
                 onClick={() => setIsSidebarOpen(false)}
               />
             )}
@@ -139,7 +145,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onUpdateProfile, on
           <main className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#52525b #18181b' }}>
           {/* Mobile Header */}
           <div className="md:hidden sticky top-0 bg-slate-900/50 backdrop-blur-sm z-10 p-4 border-b border-slate-800 flex items-center gap-4">
-            <button onClick={() => setIsSidebarOpen(true)} className="text-slate-300">
+            <button onClick={() => setIsSidebarOpen(true)} className="text-slate-300 p-2 -m-2">
               <Menu className="w-6 h-6" />
             </button>
             <h3 className="text-lg font-semibold text-white">
@@ -152,7 +158,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onUpdateProfile, on
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.2, ease: 'easeInOut' }}
+              transition={{ duration: 0.25, ease: 'easeInOut' }}
               className="p-8"
             >
               {activeSection === 'profile' && (

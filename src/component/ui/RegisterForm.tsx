@@ -139,7 +139,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
             <input id="name" type="text" placeholder="e.g. Alex Johnson" value={name} onChange={(e) => {
               setName(e.target.value);
               setErrors(prev => ({ ...prev, name: undefined }));
-            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.name ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
+            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${errors.name ? 'border-red-500/50' : 'border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30'}`} required disabled={isLoading} />
           </div>
           {errors.name && <p className="text-xs text-red-400 mt-1.5 ml-1 animate-fade-in">{errors.name}</p>}
         </div>
@@ -152,7 +152,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
             <input id="username" type="text" placeholder="e.g. alexj" value={username} onChange={(e) => {
               setUsername(e.target.value);
               setErrors(prev => ({ ...prev, username: undefined }));
-            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.username ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
+            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${errors.username ? 'border-red-500/50' : 'border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30'}`} required disabled={isLoading} />
           </div>
           {errors.username && <p className="text-xs text-red-400 mt-1.5 ml-1 animate-fade-in">{errors.username}</p>}
         </div>
@@ -165,7 +165,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
             <input id="email" type="email" placeholder="e.g. alex@example.com" value={email} onChange={(e) => {
               setEmail(e.target.value);
               setErrors(prev => ({ ...prev, email: undefined }));
-            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.email ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
+            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${errors.email ? 'border-red-500/50' : 'border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30'}`} required disabled={isLoading} />
           </div>
           {errors.email && <p className="text-xs text-red-400 mt-1.5 ml-1 animate-fade-in">{errors.email}</p>}
         </div>
@@ -178,7 +178,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
             <input id="password-reg" type={showPassword ? 'text' : 'password'} placeholder="Minimum 8 characters" value={password} onChange={(e) => {
               setPassword(e.target.value);
               setErrors(prev => ({ ...prev, password: undefined }));
-            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.password ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
+            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${errors.password ? 'border-red-500/50' : 'border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30'}`} required disabled={isLoading} />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
@@ -200,7 +200,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
             <input id="confirm-password" type={showPassword ? 'text' : 'password'} placeholder="Repeat your password" value={confirmPassword} onChange={(e) => {
               setConfirmPassword(e.target.value);
               setErrors(prev => ({ ...prev, confirmPassword: undefined }));
-            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none transition-all disabled:opacity-50 ${errors.confirmPassword ? 'border-red-500/50' : 'border-slate-700'}`} required disabled={isLoading} />
+            }} className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${errors.confirmPassword ? 'border-red-500/50' : 'border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30'}`} required disabled={isLoading} />
           </div>
           {errors.confirmPassword && <p className="text-xs text-red-400 mt-1.5 ml-1 animate-fade-in">{errors.confirmPassword}</p>}
         </div>

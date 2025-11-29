@@ -1,4 +1,5 @@
 import React from 'react';
+import SpotlightCard from './SpotlightCard';
 
 interface SettingsCardProps {
   title: string;
@@ -12,7 +13,7 @@ interface SettingsCardProps {
 
 export const SettingsCard: React.FC<SettingsCardProps> = ({ title, description, children, footer, headerActions, icon, border }) => {
   return (
-    <div className={`bg-gradient-to-br from-slate-900/60 to-slate-950/60 backdrop-blur-sm border ${border || 'border-slate-800'} rounded-xl shadow-2xl shadow-black/30`}>
+    <SpotlightCard className={`bg-gradient-to-br from-slate-900/60 to-slate-950/60 backdrop-blur-sm border ${border || 'border-slate-800'} rounded-xl shadow-2xl shadow-black/30`}>
       <div className="p-6 border-b border-slate-800 flex justify-between items-start">
         <div className="flex items-start gap-4">
           {icon && <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-slate-800/70 rounded-lg border border-slate-700">{icon}</div>}
@@ -25,6 +26,6 @@ export const SettingsCard: React.FC<SettingsCardProps> = ({ title, description, 
       </div>
       <div className="p-6">{children}</div>
       {footer && <div className="px-6 py-4 bg-slate-900/30 border-t border-slate-800 rounded-b-xl">{footer}</div>}
-    </div>
+    </SpotlightCard>
   );
 };

@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import ForgotPasswordForm from './ForgotPasswordForm';
+import TermsModal from './TermsModal';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -15,6 +16,10 @@ type AuthMode = 'login' | 'register' | 'forgotPassword';
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }) => {
   const [mode, setMode] = useState<AuthMode>('login');
+  // State untuk TermsModal diangkat ke sini
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+  // State untuk persetujuan syarat dan ketentuan juga diangkat ke sini
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   // Efek untuk me-reset mode ke 'login' saat modal ditutup.
   // Ini memastikan pengguna selalu disambut dengan form login.
@@ -23,6 +28,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }
       // Tambahkan sedikit jeda agar reset terjadi setelah animasi penutupan selesai.
       const timer = setTimeout(() => {
         setMode('login');
+        setAgreedToTerms(false); // Reset juga persetujuan
       }, 200); // Durasi 200ms cocok dengan animasi 'leave'
       return () => clearTimeout(timer);
     }
@@ -30,6 +36,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }
 
   const handleSwitchMode = (newMode: AuthMode) => {
     setMode(newMode);
+  };
+
+  const handleAgreeToTerms = () => {
+    setAgreedToTerms(true);
+    setIsTermsModalOpen(false);
   };
 
   const renderContent = () => {
@@ -40,13 +51,21 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }
         return <ForgotPasswordForm onSwitchMode={handleSwitchMode} />;
       case 'login':
       default:
-        return <LoginForm onSwitchMode={handleSwitchMode} onLoginSuccess={onLoginSuccess} />;
+        return <LoginForm 
+          onSwitchMode={handleSwitchMode} 
+          onLoginSuccess={onLoginSuccess}
+          // Props baru untuk mengontrol TermsModal dari parent
+          onOpenTerms={() => setIsTermsModalOpen(true)}
+          agreedToTerms={agreedToTerms}
+          setAgreedToTerms={setAgreedToTerms}
+        />;
     }
   };
 
   return (
-    <Transition appear show={isOpen} as={Fragment}>
-      {/* 
+    <>
+      <Transition appear show={isOpen} as={Fragment}>
+        {/* 
         Properti onClose diubah menjadi fungsi kosong `() => {}` untuk mencegah modal tertutup saat mengklik di luar.
         Penutupan modal sekarang hanya dikontrol oleh tombol 'X' di dalam Dialog.Panel.
       */}
@@ -76,7 +95,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-slate-900/80 backdrop-blur-lg border border-slate-700/50 p-8 text-left align-middle shadow-2xl shadow-amber-500/10 transition-all">
+              <Dialog.Panel className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900/80 to-slate-950/80 backdrop-blur-xl border border-slate-700/50 p-8 text-left align-middle shadow-2xl shadow-black/40 transition-all">
+                {/* Aurora Effect */}
+                <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl animate-pulse-slow opacity-30"></div>
+                <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-orange-500/15 rounded-full blur-3xl animate-pulse-slow animation-delay-4000 opacity-30"></div>
+                
                 {/* Tombol Close (X) */}
                 <button
                   onClick={onClose}
@@ -91,7 +114,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }
           </div>
         </div>
       </Dialog>
-    </Transition>
+      </Transition>
+
+      {/* TermsModal dirender di sini, sebagai modal terpisah */}
+      <TermsModal 
+        isOpen={isTermsModalOpen}
+        onClose={() => setIsTermsModalOpen(false)}
+        onAgree={handleAgreeToTerms}
+      />
+    </>
   );
 };
 
