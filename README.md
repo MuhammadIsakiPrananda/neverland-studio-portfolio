@@ -1,279 +1,858 @@
-<div align="center">
-  <img src="https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/blob/main/public/images/Neverland%20Studio.webp?raw=true" alt="Logo" width="120" height="120">
-  <h1 align="center">Neverland Studio</h1>
-  <p align="center">
-    Showcase portofolio interaktif dan modern yang dibangun dengan tumpukan teknologi web terkini. <br />
-    Menghadirkan desain elegan, animasi yang imersif, dan pengalaman pengguna yang dinamis.
-    <br />
-    <a href="https://neverlandstudio.my.id"><strong>🚀 Lihat Demo Langsung »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/issues">🐞 Laporkan Bug</a>
-    ·
-    <a href="https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/issues">✨ Minta Fitur</a>
-  </p>
+# 🎨 Neverland Studio Portfolio
 
-  <p align="center">
-    <img src="https://img.shields.io/github/stars/MuhammadIsakiPrananda/neverland-studio-portfolio?style=for-the-badge" alt="GitHub Stars">
-    <img src="https://img.shields.io/github/forks/MuhammadIsakiPrananda/neverland-studio-portfolio?style=for-the-badge" alt="GitHub Forks">
-    <img src="https://img.shields.io/github/license/MuhammadIsakiPrananda/neverland-studio-portfolio?style=for-the-badge" alt="License">
-  </p>
+<div align="center">
+
+[![GitHub stars](https://img.shields.io/github/stars/MuhammadIsakiPrananda/neverland-studio-portfolio?style=for-the-badge&logo=github)](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio)
+[![GitHub forks](https://img.shields.io/github/forks/MuhammadIsakiPrananda/neverland-studio-portfolio?style=for-the-badge&logo=github)](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio)
+[![License MIT](https://img.shields.io/github/license/MuhammadIsakiPrananda/neverland-studio-portfolio?style=for-the-badge)](LICENSE)
+[![React](https://img.shields.io/badge/React-19.1.1-61DAFB?style=for-the-badge&logo=react)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite-7.1-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3-06B6D4?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com)
+
+**✨ Portofolio Web Interaktif Modern dengan Desain Elegan & Teknologi Terkini**
+
+[🚀 Lihat Demo](#demo) • [📖 Dokumentasi](#dokumentasi) • [🐞 Laporkan Bug](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/issues) • [✨ Minta Fitur](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/issues)
+
 </div>
 
 ---
 
-## 📜 Daftar Isi
+## 📑 Daftar Isi
 
-<details>
-  <summary>Buka Daftar Isi</summary>
-  <ol>
-    <li><a href="#-tentang-proyek">Tentang Proyek</a>
-      <ul>
-        <li><a href="#-dibangun-dengan">Dibangun Dengan</a></li>
-      </ul>
-    </li>
-    <li><a href="#-fitur-unggulan">Fitur Unggulan</a></li>
-    <li><a href="#-memulai">Memulai</a>
-      <ul>
-        <li><a href="#prasyarat">Prasyarat</a></li>
-        <li><a href="#instalasi-dan-konfigurasi">Instalasi dan Konfigurasi</a></li>
-      </ul>
-    </li>
-    <li><a href="#-skrip-yang-tersedia">Skrip yang Tersedia</a></li>
-    <li><a href="#-deployment-dengan-docker">Deployment dengan Docker</a>
-      <ul>
-        <li><a href="#manfaat-multi-stage-build">Manfaat Multi-Stage Build</a></li>
-        <li><a href="#langkah-langkah-deployment">Langkah-langkah Deployment</a></li>
-      </ul>
-    </li>
-    <li><a href="#-arsitektur-proyek">Arsitektur Proyek</a></li>
-    <li><a href="#-roadmap">Roadmap</a></li>
-    <li><a href="#-berkontribusi">Berkontribusi</a></li>
-    <li><a href="#-lisensi">Lisensi</a></li>
-    <li><a href="#-kontak">Kontak</a></li>
-    <li><a href="#-penghargaan">Penghargaan</a></li>
-  </ol>
-</details>
+- [🎯 Tentang Proyek](#-tentang-proyek)
+- [✨ Fitur Unggulan](#-fitur-unggulan)
+- [🛠️ Stack Teknologi](#%EF%B8%8F-stack-teknologi)
+- [📦 Instalasi](#-instalasi)
+- [🚀 Penggunaan](#-penggunaan)
+- [🐳 Docker & Deployment](#-docker--deployment)
+- [📂 Struktur Proyek](#-struktur-proyek)
+- [🏗️ Arsitektur & Design](#%EF%B8%8F-arsitektur--design)
+- [📊 Dependencies](#-dependencies)
+- [🗺️ Roadmap](#%EF%B8%8F-roadmap)
+- [🤝 Berkontribusi](#-berkontribusi)
+- [📄 Lisensi](#-lisensi)
+- [✉️ Kontak](#%EF%B8%8F-kontak)
 
 ---
 
-## 🌟 Tentang Proyek
+## 🎯 Tentang Proyek
 
-![Pratinjau Proyek](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/blob/main/public/images/Preview%20Web.png?raw=true)
+**Neverland Studio** adalah aplikasi web portfolio interaktif dan responsif yang dirancang khusus untuk studio digital, agensi kreatif, dan profesional yang ingin menampilkan karya, layanan, dan portofolio mereka dengan cara yang modern dan menarik.
 
-**Neverland Studio** adalah sebuah portofolio web yang dirancang untuk menampilkan proyek, layanan, dan keahlian sebuah studio digital atau agensi kreatif. Proyek ini bukan sekadar halaman statis, melainkan sebuah aplikasi web interaktif (SPA) yang kaya fitur, dibangun dengan fokus pada estetika modern, performa, dan pengalaman pengguna yang imersif.
+### 🎬 Preview
 
-Tujuan utama proyek ini adalah:
-*   **Menarik Klien Potensial**: Dengan *showcase* visual yang kuat dan informasi yang jelas.
-*   **Mendemonstrasikan Keahlian Teknis**: Menggunakan tumpukan teknologi modern untuk menunjukkan kemampuan dalam pengembangan web.
-*   **Memberikan Pengalaman Pengguna yang Luar Biasa**: Melalui desain responsif, animasi yang halus, dan interaksi yang intuitif.
+![Neverland Studio Preview](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/blob/main/public/images/Preview%20Web.png?raw=true)
 
-### 🛠️ Dibangun Dengan
+### 💡 Visi & Misi
 
-Tumpukan teknologi yang digunakan dalam proyek ini dipilih untuk performa, skalabilitas, dan pengalaman pengembangan terbaik.
-
-*   **Framework Utama**: **React** & **TypeScript**
-    *   *Kenapa?* React menyediakan arsitektur berbasis komponen yang kuat, sementara TypeScript menambahkan keamanan tipe statis untuk skalabilitas dan pemeliharaan kode yang lebih baik.
-*   **Build Tool**: **Vite**
-    *   *Kenapa?* Menawarkan *Hot Module Replacement* (HMR) yang sangat cepat selama pengembangan dan *build* produksi yang sangat teroptimasi.
-*   **Styling**: **Tailwind CSS**
-    *   *Kenapa?* Sebuah *utility-first CSS framework* yang memungkinkan pembuatan desain kustom dengan cepat tanpa meninggalkan HTML.
-*   **Animasi**: **Framer Motion**
-    *   *Kenapa?* Pustaka animasi deklaratif untuk React yang memudahkan pembuatan animasi kompleks dan interaktif dengan performa tinggi.
-*   **Ikon**: **Lucide React**
-    *   *Kenapa?* Pustaka ikon yang ringan, konsisten, dan mudah dikustomisasi.
-*   **Formulir & Validasi**: **React Hook Form** & **Google reCAPTCHA**
-    *   *Kenapa?* React Hook Form untuk manajemen state formulir yang performan dan Google reCAPTCHA untuk lapisan keamanan tambahan.
-*   **Deployment**: **Docker** & **Nginx**
-    *   *Kenapa?* Kontainerisasi dengan Docker memastikan konsistensi lingkungan, dan Nginx berfungsi sebagai web server yang ringan dan efisien untuk menyajikan aset statis.
+| Aspek | Deskripsi |
+|-------|-----------|
+| **Tujuan** | Menciptakan showcase portofolio yang tidak hanya terlihat indah, tetapi juga berfungsi dengan sempurna |
+| **Target Audience** | Studio digital, agensi kreatif, freelancer, dan professional yang ingin tampil profesional |
+| **Keunggulan Utama** | Performa tinggi, desain modern, dan user experience yang luar biasa |
+| **Inovasi** | Menggabungkan animasi halus dengan navigasi intuitif untuk engagement maksimal |
 
 ---
 
 ## ✨ Fitur Unggulan
 
-*   🎨 **Desain Modern & Responsif**: Dibangun dengan **Tailwind CSS**, memastikan tampilan sempurna di semua perangkat, dari ponsel hingga desktop 4K.
-*   ✨ **Animasi Halus & Interaktif**: Pengalaman pengguna yang dinamis dengan **Framer Motion** untuk transisi halaman dan interaksi komponen yang memukau.
-*   🔐 **Sistem Autentikasi Lengkap**:
-    *   Alur **Login**, **Registrasi**, dan **Lupa Password**.
-    *   Validasi formulir sisi klien secara *real-time*.
-    *   Integrasi **Google reCAPTCHA v3** untuk mencegah bot.
-*   👤 **Dashboard Pengguna**: Modal dashboard pribadi tempat pengguna dapat memperbarui profil mereka, termasuk nama, email, dan avatar.
-*   🤖 **AI Chatbot Assistant**: Asisten AI interaktif (konseptual) untuk menjawab pertanyaan pengunjung, meningkatkan *engagement*.
-*   🔔 **Sistem Notifikasi Toast**: Notifikasi yang elegan untuk memberikan umpan balik instan kepada pengguna setelah melakukan aksi (misalnya, login berhasil, profil diperbarui).
-*   🎬 **Modal Interaktif Canggih**:
-    *   Berbagai modal (Autentikasi, Video, Dashboard, Review).
-    *   Dikelola dengan `AnimatePresence` dari Framer Motion untuk animasi *enter/exit* yang mulus.
-*   🏗️ **Arsitektur Berbasis Komponen**: Kode yang sangat terorganisir, memisahkan antara UI, layout, section, dan data untuk kemudahan pemeliharaan dan skalabilitas.
-*   ⚡ **Performa Cepat**: Dibangun dengan **Vite** untuk pengembangan super cepat dan *build* produksi yang teroptimasi.
-*   🐳 **Siap Docker**: Dilengkapi dengan `Dockerfile` *multi-stage* untuk *build* yang efisien dan *deployment* yang konsisten.
+### 🎨 Visual & UX
+- ✅ **Desain Responsif Premium** - Sempurna di semua ukuran layar (mobile, tablet, desktop)
+- ✅ **Animasi Smooth & Interaktif** - Transisi halus yang meningkatkan pengalaman pengguna
+- ✅ **Dark/Light Mode Ready** - Siap untuk implementasi tema terang/gelap
+- ✅ **UI/UX Modern** - Mengikuti tren desain terkini dengan Tailwind CSS
+
+### 🔐 Keamanan & Autentikasi
+- ✅ **Sistem Autentikasi Lengkap**
+  - Pendaftaran (Register) dengan validasi
+  - Login dengan session management
+  - Lupa Password Recovery
+  - Google reCAPTCHA v3 untuk proteksi bot
+- ✅ **Validasi Form Real-time** - Feedback instan untuk user
+- ✅ **Session Management** - Manajemen session pengguna yang aman
+
+### 👤 Fitur Pengguna
+- ✅ **Dashboard Pribadi** - Area terisolasi untuk setiap pengguna
+- ✅ **Profile Management** - Edit nama, email, avatar
+- ✅ **Pengaturan Akun** - Keamanan, preferensi, dan pengaturan aplikasi
+- ✅ **API Keys Management** - Untuk integrasi pihak ketiga
+- ✅ **Billing & Subscription** - Sistem pembayaran terintegrasi
+
+### 🤖 Fitur Tambahan
+- ✅ **AI Chatbot Assistant** - Asisten interaktif untuk menjawab pertanyaan pengunjung
+- ✅ **Toast Notifications** - Notifikasi elegan untuk feedback aksi
+- ✅ **Multi-Modal Interface**
+  - Auth Modal (Login/Register/Forgot Password)
+  - Video Modal
+  - Dashboard Modal
+  - Review/Consultation Modal
+- ✅ **Contact Form** - Formulir kontak dengan reCAPTCHA protection
+- ✅ **FAQ Section** - Tanya jawab interaktif
+- ✅ **Review Section** - Testimonial dan ulasan pelanggan
+
+### ⚡ Performa & Developer Experience
+- ✅ **Hot Module Replacement (HMR)** - Refresh otomatis saat development
+- ✅ **Optimized Bundle** - Build produksi yang efisien
+- ✅ **TypeScript** - Type safety penuh untuk kode yang lebih aman
+- ✅ **ESLint** - Code linting untuk konsistensi kode
+- ✅ **Modular Architecture** - Kode yang terorganisir dan maintainable
+
+### 🐳 Deployment
+- ✅ **Multi-stage Docker Build** - Image yang ringan dan aman
+- ✅ **Nginx Configuration** - Web server production-ready
+- ✅ **Docker Compose Ready** - Setup development & production yang mudah
+- ✅ **Environment-based Config** - Konfigurasi fleksibel per environment
 
 ---
 
-## ⚙️ Memulai
+## 🛠️ Stack Teknologi
 
-Ikuti langkah-langkah ini untuk menyiapkan dan menjalankan salinan proyek di mesin lokal Anda untuk tujuan pengembangan dan pengujian.
+### Frontend Stack
 
-### Prasyarat
+| Teknologi | Versi | Fungsi |
+|-----------|-------|--------|
+| **React** | 19.1.1 | UI Framework utama dengan component-based architecture |
+| **TypeScript** | 5.9 | Type safety dan better developer experience |
+| **Vite** | 7.1.14 | Build tool dengan HMR super cepat |
+| **Tailwind CSS** | 3.3 | Utility-first CSS framework untuk styling |
+| **Framer Motion** | 12.23.24 | Animation library untuk transisi & interaksi smooth |
 
-Pastikan perangkat Anda telah terinstal:
-*   Node.js (v20.x atau lebih baru)
-*   npm (v10.x atau lebih baru) atau Yarn
-*   Docker & Docker Compose (Opsional, untuk deployment)
+### Utility Libraries
 
-### Instalasi dan Konfigurasi
+| Library | Versi | Fungsi |
+|---------|-------|--------|
+| **React Router DOM** | 7.9.6 | Client-side routing |
+| **Lucide React** | 0.552 | Icon library yang konsisten & modern |
+| **React Hook Form** | Latest | Form state management yang performan |
+| **React Google reCAPTCHA** | 3.1.0 | Bot protection & security |
+| **Recharts** | 3.4.1 | Data visualization & charts |
+| **Date-fns** | 4.1.0 | Date manipulation & formatting |
+| **Clsx** | 2.1.1 | Conditional CSS class merging |
+| **HeadlessUI** | 2.2.9 | Unstyled accessible components |
 
-1.  **Clone repositori:**
-    ```bash
-    git clone https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio.git
-    cd neverland-studio-portfolio
-    ```
+### Development Tools
 
-2.  **Instal dependensi proyek:**
-    ```bash
-    npm install
-    ```
+| Tool | Versi | Fungsi |
+|------|-------|--------|
+| **ESLint** | 9.36.0 | Code linting & quality check |
+| **Vitest** | 2.0.4 | Unit testing framework |
+| **TypeScript ESLint** | 8.45.0 | TypeScript-specific linting |
+| **Autoprefixer** | 10.4.21 | CSS vendor prefixing otomatis |
+| **PostCSS** | 8.5.6 | CSS transformation tool |
 
-3.  **Konfigurasi Environment Variables:**
-    Buat file `.env` di direktori root proyek dengan menyalin dari contoh yang ada.
-    ```bash
-    cp .env.example .env
-    ```
-    Kemudian, isi variabel yang diperlukan di dalam file `.env`:
-    ```env
-    VITE_RECAPTCHA_SITE_KEY="6Lc5EAgsAAAAAMBLswyP5OAl7Tzo8BYXLHWGKLZt"
-    ```
-    > **Penting**: Kunci di atas adalah contoh publik untuk pengujian. Untuk lingkungan produksi, sangat disarankan untuk membuat kunci Anda sendiri melalui Google reCAPTCHA Admin Console.
+### Infrastructure
 
----
-
-## 🚀 Skrip yang Tersedia
-
-Di dalam direktori proyek, Anda dapat menjalankan beberapa skrip:
-
-*   **`npm run dev`**
-    Menjalankan aplikasi dalam mode pengembangan dengan *Hot-Module-Replacement*.
-    Buka http://localhost:5173 untuk melihatnya di browser.
-
-*   **`npm run build`**
-    Membangun aplikasi untuk produksi ke dalam folder `dist`.
-    Ini menggabungkan React dengan benar dalam mode produksi dan mengoptimalkan *build* untuk performa terbaik.
-
-*   **`npm run lint`**
-    Menjalankan linter untuk memeriksa masalah gaya penulisan kode dan potensi error.
-
-*   **`npm run preview`**
-    Menjalankan server lokal untuk melihat hasil *build* produksi dari folder `dist`.
+| Teknologi | Fungsi |
+|-----------|--------|
+| **Docker** | Containerization untuk konsistensi environment |
+| **Nginx** | Web server ringan dan efisien untuk production |
+| **Node.js** | Runtime JavaScript untuk backend & tooling |
 
 ---
 
-## 🐳 Deployment dengan Docker
+## 📦 Instalasi
 
-Proyek ini dikonfigurasi untuk deployment yang mudah menggunakan Docker. `Dockerfile` kami menggunakan *multi-stage build* untuk menciptakan image yang ringan dan aman.
+### 📋 Prasyarat
 
-### Manfaat Multi-Stage Build
+Pastikan sistem Anda memiliki:
 
-1.  **Image Lebih Kecil**: Image produksi akhir hanya berisi aset statis dan Nginx, tanpa `node_modules` atau kode sumber, sehingga ukurannya jauh lebih kecil.
-2.  **Keamanan Lebih Baik**: Mengurangi *attack surface* karena *toolchain* pengembangan tidak disertakan dalam image akhir.
-3.  **Build yang Bersih**: Setiap *stage* dimulai dari lingkungan yang bersih, memastikan tidak ada artefak yang tidak perlu terbawa.
+```bash
+Node.js >= 20.x    # Cek dengan: node --version
+npm >= 10.x        # Cek dengan: npm --version
+Git                # Version control system
+Docker (optional)  # Untuk deployment dengan container
+```
 
-### Langkah-langkah Deployment
+### 🚀 Setup Awal
 
-1.  **Bangun Docker Image:**
-    Dari direktori root proyek, jalankan:
-    ```bash
-    docker build -t neverland-studio:latest .
-    ```
+#### Step 1: Clone Repository
 
-2.  **Jalankan Docker Container:**
-    Setelah image berhasil dibuat, jalankan sebagai container:
-    ```bash
-    docker run --rm -d -p 8080:80 --name neverland-app neverland-studio:latest
-    ```
-    *   `--rm`: Hapus container secara otomatis saat dihentikan.
-    *   `-d`: Jalankan dalam mode *detached* (di latar belakang).
-    *   `-p 8080:80`: Petakan port `8080` dari host ke port `80` di container.
-    *   `--name neverland-app`: Memberi nama pada container agar mudah dikelola.
+```bash
+git clone https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio.git
+cd neverland-studio-portfolio
+```
 
-Aplikasi Anda sekarang dapat diakses di `http://localhost:8080`.
+#### Step 2: Install Dependencies
+
+```bash
+# Menggunakan npm
+npm install
+
+# Atau menggunakan yarn (jika prefer)
+yarn install
+
+# Atau menggunakan pnpm
+pnpm install
+```
+
+#### Step 3: Konfigurasi Environment Variables
+
+```bash
+# Copy file contoh
+cp .env.example .env
+
+# Edit file .env dengan editor favorit Anda
+```
+
+**File `.env` template:**
+
+```env
+# === Google reCAPTCHA Configuration ===
+# Dapatkan dari: https://www.google.com/recaptcha/admin
+VITE_RECAPTCHA_SITE_KEY="your_recaptcha_site_key_here"
+
+# === API Configuration (optional) ===
+# VITE_API_URL=http://localhost:3000/api
+# VITE_API_TIMEOUT=10000
+
+# === App Configuration ===
+# VITE_APP_NAME="Neverland Studio"
+# VITE_APP_VERSION="1.0.0"
+```
+
+> **⚠️ Catatan Penting**: 
+> - Kunci reCAPTCHA di atas adalah contoh publik untuk testing
+> - Untuk production, buat kunci Anda sendiri di [Google reCAPTCHA Console](https://www.google.com/recaptcha/admin)
+> - Jangan commit file `.env` ke repository (sudah ada di `.gitignore`)
+
+#### Step 4: Verifikasi Instalasi
+
+```bash
+# Cek versi package
+npm list react vite tailwindcss framer-motion
+
+# Cek dependency tree
+npm list --depth=0
+```
 
 ---
 
-## 📂 Arsitektur Proyek
+## 🚀 Penggunaan
 
-Struktur file dirancang agar intuitif, modular, dan mudah diskalakan.
+### 🧑‍💻 Development Mode
 
-```text
-neverlandstudio/
-├── public/                 # Aset statis (favicon, gambar, font)
-├── src/
-│   ├── components/
-│   │   ├── common/         # Komponen bersama (Footer, FloatingButtons, Logo)
-│   │   ├── layout/         # Komponen struktur utama (Navbar, PageWrapper)
-│   │   ├── sections/       # Komponen untuk setiap bagian halaman (Hero, Services, About)
-│   │   └── ui/             # Komponen UI atomik (Button, Modal, Input, Toast)
-│   ├── data/               # Data statis aplikasi (navItems, services, team, testimonials)
-│   ├── hooks/              # Custom hooks (misal: useAuth, useModal)
-│   ├── contexts/           # Konteks React (misal: AuthContext, ThemeContext)
-│   ├── lib/                # Fungsi utilitas dan helper
-│   ├── styles/             # File CSS global
-│   ├── App.tsx             # Komponen root, routing, dan state management utama
-│   └── main.tsx            # Titik masuk aplikasi React (React DOM render)
-├── .env.example            # Contoh file environment variables
-├── .gitignore              # File yang diabaikan oleh Git
-├── Dockerfile              # Instruksi untuk membangun image Docker
-├── index.html              # Template HTML utama yang digunakan oleh Vite
-├── nginx.conf              # Konfigurasi Nginx untuk production di dalam Docker
-├── package.json            # Daftar dependensi dan skrip proyek
-├── README.md               # Anda sedang membacanya
-└── tsconfig.json           # Konfigurasi kompiler TypeScript
+#### Mode Develop Lokal
+```bash
+npm run dev
+```
+
+**Output:**
+```
+VITE v7.1.14  ready in 245 ms
+
+➜  Local:   http://localhost:5173/
+➜  press h + enter to show help
+```
+
+Buka browser ke `http://localhost:5173` untuk melihat aplikasi dengan live reload.
+
+**Fitur:**
+- ✅ Hot Module Replacement (HMR) - Perubahan kode langsung terlihat di browser
+- ✅ Fast Refresh - Perbaruan state tanpa reload full page
+- ✅ Error Overlay - Error handling yang user-friendly
+
+### 📦 Build untuk Production
+
+```bash
+npm run build
+```
+
+**Output:**
+- Build artifacts di folder `dist/`
+- Optimasi bundle ukuran & performance
+- Source map generation untuk debugging
+- Assets hashing untuk caching
+
+**Hasil:**
+```
+dist/
+├── index.html
+├── assets/
+│   ├── index-[hash].js (main bundle)
+│   ├── index-[hash].css (styles)
+│   └── [image-hash].webp (optimized images)
+```
+
+### 👁️ Preview Build
+
+```bash
+npm run preview
+```
+
+Jalankan local server untuk preview hasil build production tanpa perlu deploy.
+
+### 🔍 Linting & Code Quality
+
+```bash
+# Jalankan ESLint
+npm run lint
+
+# Lint dan fix otomatis
+npx eslint . --fix
+```
+
+### 🧪 Testing (Optional)
+
+```bash
+# Jalankan unit tests dengan Vitest
+npm run test
+
+# Watch mode
+npm run test -- --watch
+```
+
+---
+
+## 🐳 Docker & Deployment
+
+### 🐳 Build Docker Image
+
+#### Build Standard
+```bash
+docker build -t neverland-studio:latest .
+docker build -t neverland-studio:1.0.0 .  # Dengan tag versi
+```
+
+#### Build dengan Custom Registry
+```bash
+docker build -t your-registry/neverland-studio:latest .
+docker push your-registry/neverland-studio:latest
+```
+
+### ▶️ Jalankan Container
+
+#### Run Standalone
+```bash
+docker run -d \
+  --name neverland-app \
+  -p 8080:80 \
+  neverland-studio:latest
+```
+
+#### Run dengan Environment Variables
+```bash
+docker run -d \
+  --name neverland-app \
+  -p 8080:80 \
+  -e NODE_ENV=production \
+  neverland-studio:latest
+```
+
+#### Run dengan Volume Mounting
+```bash
+docker run -d \
+  --name neverland-app \
+  -p 8080:80 \
+  -v /path/to/logs:/var/log/nginx \
+  neverland-studio:latest
+```
+
+### 🐳 Docker Compose (Recommended)
+
+#### Jalankan seluruh stack
+```bash
+docker-compose up -d
+```
+
+#### Lihat logs
+```bash
+docker-compose logs -f
+```
+
+#### Stop services
+```bash
+docker-compose down
+```
+
+### 📊 Monitoring Container
+
+```bash
+# Lihat running containers
+docker ps
+
+# Lihat container details
+docker inspect neverland-app
+
+# Lihat logs real-time
+docker logs -f neverland-app
+
+# Lihat resource usage
+docker stats neverland-app
+```
+
+### 🎯 Multi-Stage Build Benefits
+
+| Benefit | Penjelasan |
+|---------|-----------|
+| **Ukuran Kecil** | Production image ~100-150MB (tanpa source code) |
+| **Keamanan** | Node.js dan build tools tidak included di final image |
+| **Cepat Deploy** | Pull & run image lebih cepat karena ukuran minimal |
+| **Clean** | Setiap stage fresh, tidak ada build cache artifact |
+
+---
+
+## 📂 Struktur Proyek
+
+### 📁 Organisasi File & Folder
+
+```
+neverland-studio-portfolio/
+│
+├── 📄 Configuration Files
+│   ├── package.json              # Dependencies & scripts
+│   ├── tsconfig.json             # TypeScript configuration
+│   ├── tsconfig.app.json         # App-specific TS config
+│   ├── tsconfig.node.json        # Node-specific TS config
+│   ├── vite.config.ts            # Vite bundler config
+│   ├── tailwind.config.js        # Tailwind CSS config
+│   ├── postcss.config.js         # PostCSS config
+│   ├── eslint.config.js          # ESLint configuration
+│   ├── .env.example              # Environment variables template
+│   ├── .gitignore                # Git ignore rules
+│   └── README.md                 # Documentation
+│
+├── 🐳 Docker & Deployment
+│   ├── Dockerfile                # Multi-stage Docker build
+│   ├── docker-compose.yml        # Docker Compose configuration
+│   ├── nginx.conf                # Nginx web server config
+│   └── neverland-backend/        # Backend service directory
+│
+├── 📄 Public Assets
+│   └── public/
+│       ├── images/               # Static images & media
+│       ├── fonts/                # Custom fonts
+│       └── favicon.ico           # Browser favicon
+│
+├── 🎨 Source Code
+│   └── src/
+│       ├── main.tsx              # React application entry point
+│       ├── index.css             # Global styles
+│       ├── setup.ts              # App initialization
+│       │
+│       ├── 🏗️ App Structure
+│       ├── App.tsx               # Root component & routing
+│       ├── App.css               # App-specific styles
+│       ├── SettingsContext.tsx   # Settings context provider
+│       ├── useSocialAuth.ts      # Social auth hook
+│       │
+│       ├── 🧩 Components
+│       ├── component/
+│       │   ├── common/           # Shared components
+│       │   │   ├── FloatingButtons.tsx
+│       │   │   ├── Footer.tsx
+│       │   │   ├── VideoModal.tsx
+│       │   │   └── Logo.tsx
+│       │   │
+│       │   ├── layout/           # Layout components
+│       │   │   ├── DesktopNav.tsx
+│       │   │   ├── MobileNav.tsx
+│       │   │   ├── MobileMenu.tsx
+│       │   │   └── ActionButtons.tsx
+│       │   │
+│       │   ├── sections/         # Page sections
+│       │   │   ├── HeroSection.tsx
+│       │   │   ├── ServicesSection.tsx
+│       │   │   ├── BenefitsSection.tsx
+│       │   │   ├── ProcessSection.tsx
+│       │   │   ├── PortfolioSection.tsx
+│       │   │   ├── PricingSection.tsx
+│       │   │   ├── FAQSection.tsx
+│       │   │   ├── TeamSection.tsx
+│       │   │   ├── TestimonialsSection.tsx
+│       │   │   ├── ReviewSection.tsx
+│       │   │   ├── ContactSection.tsx
+│       │   │   ├── CTASection.tsx
+│       │   │   └── ChatbotContext.tsx
+│       │   │
+│       │   ├── ui/               # UI components
+│       │   │   ├── AuthModal.tsx
+│       │   │   ├── LoginForm.tsx
+│       │   │   ├── RegisterForm.tsx
+│       │   │   ├── ForgotPasswordForm.tsx
+│       │   │   ├── Modal.tsx
+│       │   │   ├── ModalPortal.tsx
+│       │   │   ├── Chatbot.tsx
+│       │   │   ├── ChatInput.tsx
+│       │   │   ├── BotMessage.tsx
+│       │   │   ├── Notification.tsx
+│       │   │   ├── NotificationContainer.tsx
+│       │   │   ├── LoadingScreen.tsx
+│       │   │   └── ... (more UI components)
+│       │   │
+│       │   └── types/
+│       │       └── index.ts      # Component type definitions
+│       │
+│       ├── 📄 Context & State
+│       ├── context/
+│       │   ├── AuthContext.tsx   # Authentication context
+│       │   └── AccessDenied.tsx  # Auth access control
+│       │
+│       ├── 🎨 Styling & Assets
+│       ├── assets/               # Media assets (images, videos)
+│       │   ├── icons/
+│       │   ├── images/
+│       │   └── videos/
+│       │
+│       ├── 📊 Data & Configuration
+│       ├── data/
+│       │   ├── navItems.tsx      # Navigation menu items
+│       │   ├── services.tsx      # Services list
+│       │   ├── portfolio.tsx     # Portfolio projects
+│       │   ├── pricing.tsx       # Pricing plans
+│       │   ├── testimonials.tsx  # Customer testimonials
+│       │   ├── team.tsx          # Team members
+│       │   ├── faq.tsx           # FAQ items
+│       │   ├── benefits.tsx      # Benefits list
+│       │   ├── stats.tsx         # Statistics
+│       │   ├── partners.tsx      # Partner logos
+│       │   ├── process.tsx       # Process steps
+│       │   └── categories.tsx    # Service categories
+│       │
+│       ├── 📄 Pages
+│       ├── pages/
+│       │   ├── App.tsx           # Main app page
+│       │   ├── LandingPage.tsx   # Home/landing page
+│       │   ├── Dashboard.tsx     # User dashboard
+│       │   ├── Projects.tsx      # Projects page
+│       │   ├── RealtimeStats.tsx # Real-time statistics
+│       │   ├── LandingPageLayout.tsx
+│       │   └── dashboard/        # Dashboard sub-pages
+│       │       ├── AccountTab.tsx
+│       │       ├── ApiKeysTab.tsx
+│       │       ├── BillingTab.tsx
+│       │       ├── AppearanceTab.tsx
+│       │       └── ... (more tabs)
+│       │
+│       ├── 📋 Types & Interfaces
+│       └── types/
+│           └── user.ts          # User-related types
+│
+├── 🔄 Version Control
+│   └── .git/                     # Git repository data
+│
+└── 📦 Package Management
+    ├── node_modules/            # Installed packages (gitignored)
+    ├── package-lock.json        # Dependency lock file
+    └── pnpm-lock.yaml           # PNPM lock file (if using pnpm)
+```
+
+---
+
+## 🏗️ Arsitektur & Design
+
+### 🎯 Component Architecture
+
+```
+App (Root)
+├── Layout Components
+│   ├── DesktopNav
+│   ├── MobileNav
+│   └── Footer
+│
+├── Page Components
+│   ├── LandingPage
+│   │   ├── HeroSection
+│   │   ├── ServicesSection
+│   │   ├── BenefitsSection
+│   │   ├── ProcessSection
+│   │   ├── PortfolioSection
+│   │   ├── PricingSection
+│   │   ├── TeamSection
+│   │   ├── FAQSection
+│   │   ├── TestimonialsSection
+│   │   ├── ReviewSection
+│   │   └── ContactSection
+│   │
+│   ├── Dashboard
+│   │   ├── Sidebar/Navigation
+│   │   ├── AccountTab
+│   │   ├── ApiKeysTab
+│   │   ├── BillingTab
+│   │   ├── AppearanceTab
+│   │   └── HelpCenterTab
+│   │
+│   └── Other Pages
+│       ├── Projects
+│       ├── RealtimeStats
+│       └── ...
+│
+├── Modal Components (Global)
+│   ├── AuthModal (Login/Register)
+│   ├── DashboardModal
+│   ├── VideoModal
+│   ├── ConsultationModal
+│   └── JoinTeamModal
+│
+├── UI Components
+│   ├── Chatbot
+│   ├── NotificationContainer
+│   ├── LoadingScreen
+│   └── Various Inputs/Buttons/Cards
+│
+└── Context Providers
+    ├── AuthContext (User auth state)
+    ├── SettingsContext (App settings)
+    └── NotificationProvider (Toast notifications)
+```
+
+### 📊 State Management Pattern
+
+```
+Global State (Context)
+├── AuthContext
+│   ├── user: User | null
+│   ├── isAuthenticated: boolean
+│   ├── isLoading: boolean
+│   └── Methods: login, logout, register
+│
+├── SettingsContext
+│   ├── theme: 'light' | 'dark'
+│   ├── language: string
+│   └── userPreferences: object
+│
+└── NotificationProvider
+    ├── notifications: Notification[]
+    └── Methods: add, remove, clear
+```
+
+### 🎨 Styling Approach
+
+| Aspek | Implementasi |
+|-------|--------------|
+| **Framework** | Tailwind CSS (Utility-first) |
+| **Custom Styling** | CSS Modules & inline Tailwind |
+| **Responsive** | Mobile-first with breakpoints |
+| **Animations** | Framer Motion & Tailwind transitions |
+| **Theme** | CSS variables + Tailwind config |
+
+---
+
+## 📊 Dependencies
+
+### Production Dependencies (17)
+
+Berikut adalah library yang digunakan dalam production:
+
+```json
+{
+  "react": "^19.1.1",                    // UI library
+  "react-dom": "^19.1.1",                // React DOM rendering
+  "react-router-dom": "^7.9.6",          // Client-side routing
+  "framer-motion": "^12.23.24",          // Animation library
+  "tailwindcss": "^3.3.5",               // Styling framework
+  "lucide-react": "^0.552.0",            // Icon library
+  "@headlessui/react": "^2.2.9",         // Accessible components
+  "react-google-recaptcha": "^3.1.0",    // Bot protection
+  "recharts": "^3.4.1",                  // Data visualization
+  "date-fns": "^4.1.0",                  // Date utilities
+  "react-icons": "^5.5.0",               // Icon set
+  "react-qr-code": "^2.0.18",            // QR code generation
+  "otpauth": "^9.4.1",                   // OTP authentication
+  "clsx": "^2.1.1",                      // CSS utility
+  "socket.io-client": "^4.x.x"           // Real-time communication
+}
+```
+
+### Development Dependencies (21)
+
+Berikut adalah tool dan library untuk development:
+
+```json
+{
+  "typescript": "~5.9.3",                // Type checking
+  "@vitejs/plugin-react": "^4.3.1",      // Vite React plugin
+  "vite": "npm:rolldown-vite@7.1.14",    // Build tool
+  "vitest": "^2.0.4",                    // Testing framework
+  "eslint": "^9.36.0",                   // Linting
+  "autoprefixer": "^10.4.21",            // CSS vendor prefixing
+  "postcss": "^8.5.6",                   // CSS transformation
+  "@testing-library/react": "^16.0.0",   // Testing utilities
+  "@testing-library/jest-dom": "^6.4.8", // Testing DOM utilities
+  "typescript-eslint": "^8.45.0",        // TS-specific linting
+  "tailwindcss": "^3.3.5"                // Tailwind framework
+}
 ```
 
 ---
 
 ## 🗺️ Roadmap
 
--   [ ] Implementasi *backend* untuk sistem autentikasi.
--   [ ] Penambahan tema Terang/Gelap (*Light/Dark Mode*).
--   [ ] Integrasi dengan CMS *headless* untuk manajemen konten dinamis.
--   [ ] Penambahan halaman blog.
--   [ ] Peningkatan aksesibilitas (WCAG).
+### ✅ Completed Features
+- ✅ Authentication system (Login/Register)
+- ✅ Responsive design untuk semua device
+- ✅ AI Chatbot integration
+- ✅ User dashboard dengan profile management
+- ✅ Docker deployment dengan multi-stage build
+- ✅ Google reCAPTCHA v3 protection
+- ✅ Toast notification system
 
-Lihat issues terbuka untuk daftar lengkap fitur yang diusulkan (dan masalah yang diketahui).
+### 🔄 In Development
+- 🔄 Backend API integration
+- 🔄 User analytics dashboard
+- 🔄 Email notification system
+- 🔄 Payment gateway integration
+
+### 📋 Planned Features
+- [ ] Dark/Light theme toggle
+- [ ] Multi-language support (i18n) - EN, ID, JP
+- [ ] Blog system dengan CMS
+- [ ] Advanced SEO optimization
+- [ ] Progressive Web App (PWA)
+- [ ] Advanced analytics & reporting
+- [ ] Mobile app dengan React Native
+- [ ] WebSocket real-time features
+- [ ] Performance optimization (98+ Lighthouse score)
+- [ ] API documentation dengan OpenAPI/Swagger
+
+### 🚀 Future Enhancements
+- AI-powered content recommendations
+- Advanced user segmentation
+- A/B testing framework
+- Custom domain management
+- White-label solution
+- Headless CMS integration
 
 ---
 
 ## 🤝 Berkontribusi
 
-Kontribusi membuat komunitas open source menjadi tempat yang luar biasa untuk belajar, menginspirasi, dan berkreasi. Setiap kontribusi yang Anda buat sangat **dihargai**.
+Kontribusi adalah cara terbaik untuk membuat proyek ini lebih baik! Kami menghargai setiap kontribusi dari komunitas.
 
-Jika Anda memiliki saran untuk perbaikan, silakan *fork* repositori ini dan buat *pull request*. Anda juga dapat membuka *issue* dengan tag "enhancement". Jangan lupa untuk memberikan bintang pada proyek ini! Terima kasih!
+### 📋 Pedoman Kontribusi
 
-1.  Fork Proyek ini
-2.  Buat Branch Fitur Anda (`git checkout -b feature/AmazingFeature`)
-3.  Commit Perubahan Anda (`git commit -m 'feat: Add some AmazingFeature'`)
-4.  Push ke Branch (`git push origin feature/AmazingFeature`)
-5.  Buka sebuah *Pull Request*
+#### 1. Fork Repository
+```bash
+# Klik fork button di GitHub
+```
+
+#### 2. Clone Repository Anda
+```bash
+git clone https://github.com/YOUR_USERNAME/neverland-studio-portfolio.git
+cd neverland-studio-portfolio
+```
+
+#### 3. Buat Branch Feature
+```bash
+# Buat branch dengan nama descriptive
+git checkout -b feature/AmazingFeature
+
+# atau untuk bug fix
+git checkout -b fix/critical-bug
+```
+
+#### 4. Commit Perubahan
+```bash
+# Ikuti conventional commits
+git commit -m 'feat: add amazing feature'
+git commit -m 'fix: resolve bug #123'
+git commit -m 'docs: update README'
+git commit -m 'style: format code'
+git commit -m 'refactor: improve component'
+```
+
+#### 5. Push ke Branch
+```bash
+git push origin feature/AmazingFeature
+```
+
+#### 6. Buka Pull Request
+- Deskripsi perubahan yang jelas
+- Reference issues yang relevan
+- Screenshot untuk UI changes
+- Pastikan semua tests passed
+
+### 📝 Commit Message Convention
+
+```
+feat:    Menambah fitur baru
+fix:     Memperbaiki bug
+docs:    Mengubah dokumentasi
+style:   Format code (tidak mengubah logic)
+refactor: Mengubah code tanpa menambah fitur/fix bug
+test:    Menambah test
+chore:   Update dependencies, build config
+```
+
+### 🐛 Melaporkan Bug
+
+Jika menemukan bug, silakan buat issue dengan:
+- Deskripsi yang detail dan clear
+- Langkah-langkah untuk reproduce
+- Screenshot/video jika memungkinkan
+- Browser dan OS information
+- Expected behavior vs actual behavior
 
 ---
 
 ## 📄 Lisensi
 
-Didistribusikan di bawah Lisensi MIT. Lihat `LICENSE.txt` untuk informasi lebih lanjut.
+Proyek ini dilisensikan di bawah **MIT License** - lihat file [`LICENSE`](LICENSE) untuk detail lengkap.
+
+```
+MIT License
+
+Copyright (c) 2024 Muhammad Isaki Prananda
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software...
+```
 
 ---
 
 ## ✉️ Kontak
 
-Muhammad Isaki Prananda - arlianto032@gmail.com
+### 👤 Author
 
-Link Proyek: https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio
+**Muhammad Isaki Prananda**
+
+- 📧 Email: [arlianto032@gmail.com](mailto:arlianto032@gmail.com)
+- 🐙 GitHub: [@MuhammadIsakiPrananda](https://github.com/MuhammadIsakiPrananda)
+- 🔗 Portfolio: [neverlandstudio.my.id](https://neverlandstudio.my.id)
+
+### 🔗 Links Penting
+
+- 🚀 **Live Demo**: [neverlandstudio.my.id](https://neverlandstudio.my.id)
+- 📦 **Repository**: [GitHub Repository](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio)
+- 🐞 **Issues**: [Report a Bug](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/issues)
+- ✨ **Features**: [Request a Feature](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/issues)
 
 ---
 
-## 🎉 Penghargaan
+## 🎉 Ucapan Terima Kasih
 
-*   Vite
-*   React
-*   Tailwind CSS
-*   Framer Motion
-*   Shields.io untuk badge yang keren
+Terimakasih kepada semua kontributor dan library yang membuat proyek ini mungkin untuk berjalan dengan sempurna.
+
+### 🙏 Special Thanks
+
+- **React Team** - Untuk framework yang amazing dan powerful
+- **Vercel/Vite Team** - Build tool yang super cepat dan developer-friendly
+- **Tailwind Labs** - CSS framework yang powerful dan flexible
+- **Framer** - Animation library yang elegant dan smooth
+- **Community** - Untuk support, feedback, dan contribution
+
+### 📚 Resources & Documentation
+
+- [React Documentation](https://react.dev) - Official React Docs
+- [Tailwind CSS Docs](https://tailwindcss.com/docs) - Tailwind CSS Documentation
+- [Vite Documentation](https://vitejs.dev) - Vite Build Tool Docs
+- [Framer Motion Docs](https://www.framer.com/motion/) - Animation Library Docs
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/) - TypeScript Reference
+- [Docker Documentation](https://docs.docker.com) - Docker Official Docs
+
+---
+
+<div align="center">
+
+### ⭐ Jika proyek ini membantu, berikan bintang! ⭐
+
+Dengan memberi bintang, Anda membantu project ini menjadi lebih terkenal dan digunakan oleh lebih banyak developer.
+
+[⬆ Kembali ke Atas](#-neverland-studio-portfolio)
+
+Dibuat dengan ❤️ oleh Muhammad Isaki Prananda
+
+</div>

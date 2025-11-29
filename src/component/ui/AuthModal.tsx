@@ -46,7 +46,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={onClose}>
+      {/* 
+        Properti onClose diubah menjadi fungsi kosong `() => {}` untuk mencegah modal tertutup saat mengklik di luar.
+        Penutupan modal sekarang hanya dikontrol oleh tombol 'X' di dalam Dialog.Panel.
+      */}
+      <Dialog as="div" className="relative z-50" onClose={() => {}}>
         {/* Backdrop (overlay) dengan transisi fade dan efek blur */}
         <Transition.Child
           as={Fragment}

@@ -23,8 +23,8 @@ const DesktopNav: React.FC<DesktopNavProps> = ({ isScrolled, activeSection, hand
         className="mx-auto flex items-center gap-8 p-3 rounded-full transition-all duration-300"
         animate={{
           backgroundColor: isScrolled ? 'rgba(15, 23, 42, 0.8)' : 'rgba(15, 23, 42, 0.4)',
-          borderColor: isScrolled ? 'rgba(34, 211, 238, 0.3)' : 'rgba(51, 65, 85, 0.3)', // Warna cyan saat scroll
-          boxShadow: isScrolled ? '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' : 'none',
+          borderColor: isScrolled ? 'rgba(251, 191, 36, 0.3)' : 'rgba(51, 65, 85, 0.3)', // Warna amber saat scroll
+          boxShadow: isScrolled ? '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' : 'none'
         }}
         style={{ borderWidth: '1px' }}
       >

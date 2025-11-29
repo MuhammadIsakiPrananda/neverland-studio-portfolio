@@ -67,7 +67,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, isMenuOpen, setSec
       <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center relative z-1">
         <motion.div className="text-center lg:text-left z-10" variants={containerVariants} initial="hidden" animate={!isLoading ? "visible" : "hidden"} >
           <motion.div variants={itemVariants} className="inline-block bg-amber-500/10 border border-amber-500/30 text-amber-300 text-sm font-semibold tracking-wider px-4 py-1.5 rounded-full mb-4 hover:bg-amber-500/20 hover:border-amber-400/60 transition-all duration-300 cursor-default">
-            Where Ideas Take Flight
+            Your Partner in Digital Innovation
           </motion.div>
 
           <motion.h1 variants={titleContainer} className="text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tighter text-white balance-text mb-6 overflow-hidden">
@@ -79,8 +79,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, isMenuOpen, setSec
                 variants={wordVariant}
                 whileHover={{ scale: 1.03 }}
                 transition={{ type: 'spring', stiffness: 300 }}
-                // Terapkan class baru untuk efek kilau di dalam teks
-                className="text-shine-effect inline-block cursor-pointer"
+                // Menerapkan efek gradien untuk teks yang lebih modern
+                className="bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent inline-block cursor-pointer"
               >
                 Neverlands
               </motion.span>
@@ -93,8 +93,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, isMenuOpen, setSec
               />
             </div>
           </motion.h1>
-          <motion.p variants={itemVariants} className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto lg:mx-0 leading-relaxed balance-text mb-10">
-            We blend creative artistry with technical excellence to build digital solutions that are not only visually stunning but also deliver measurable results. Your vision, our expertise.
+          <motion.p variants={itemVariants} className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto lg:mx-0 leading-relaxed balance-text mb-10">
+            We blend <span className="text-amber-400 font-semibold">creative artistry</span> with <span className="text-amber-400 font-semibold">technical excellence</span> to build digital solutions that are not only visually stunning but also deliver <span className="text-amber-400 font-semibold">measurable results</span>. Your vision, our expertise.
           </motion.p>
 
           <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
@@ -149,20 +149,23 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isLoading, isMenuOpen, setSec
         </motion.div>
       </div>
 
-      {/* Bagian "Trusted By" dengan separator */}
+      {/* --- Bagian "Trusted By" yang Didesain Ulang --- */}
       <motion.div 
-        className="w-full max-w-7xl mx-auto mt-20 lg:mt-24 z-1"
+        className="w-full max-w-7xl mx-auto mt-24 lg:mt-32 z-1"
         variants={containerVariants}
         initial="hidden" 
         whileInView="visible" 
         viewport={{ once: true, amount: 0.5 }}
       >
-        {/* Animated Separator Outline */}
-        <motion.div variants={itemVariants} className="w-full max-w-3xl mx-auto">
-          <div className="h-px w-full bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"></div>
+        <motion.div variants={itemVariants} className="relative text-center">
+          <div className="absolute inset-0 flex items-center" aria-hidden="true">
+            <div className="w-full border-t border-slate-800/50" />
+          </div>
+          <div className="relative flex justify-center">
+            <span className="bg-slate-900 px-5 text-sm font-medium tracking-wider uppercase text-slate-400">Trusted By</span>
+          </div>
         </motion.div>
-        <motion.div variants={itemVariants} className="w-full pt-12 lg:pt-16">
-          <p className="text-center text-slate-400 font-medium tracking-widest text-sm uppercase mb-8">Trusted by Industry Leaders</p>
+        <motion.div variants={itemVariants} className="w-full pt-10 lg:pt-12">
           <Partners />
         </motion.div>
       </motion.div>

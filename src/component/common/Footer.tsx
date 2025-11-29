@@ -4,6 +4,16 @@ import { Mail, ArrowRight, Twitter, Instagram, Linkedin, Github, X } from 'lucid
 import Logo from '../ui/Logo'; // Pastikan path ini benar
 
 const Footer = () => {
+  const paymentMethods = [
+    { name: 'BCA', iconSrc: '/images/Logo BCA.webp' },
+    { name: 'Mandiri', iconSrc: '/images/Logo Mandiri.webp' },
+    { name: 'BNI', iconSrc: '/images/Logo BNI.webp' },
+    { name: 'BRI', iconSrc: '/images/Logo BRI.webp' },
+    { name: 'GoPay', iconSrc: '/images/Logo Gopay.webp' },
+    { name: 'OVO', iconSrc: '/images/Logo OVO.webp' },
+    { name: 'Dana', iconSrc: '/images/Logo DANA.webp' },
+  ];
+
   const [modalContent, setModalContent] = useState<'privacy' | 'terms' | null>(null);
 
   useEffect(() => {
@@ -21,7 +31,7 @@ const Footer = () => {
     <>
       <footer className="bg-slate-900/50 border-t border-slate-800/50 pt-16 pb-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             {/* Column 1: Logo & Socials */}
             <div className="space-y-6">
               <a href="#Home" className="inline-block mb-2"><Logo /></a>
@@ -49,8 +59,8 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Column 2: Links */}
-            <div className="grid grid-cols-2 gap-8">
+            {/* Column 2 & 3: Links & Payments */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:col-span-2 lg:col-span-2 gap-8">
               <div>
                 <h4 className="font-bold mb-6 text-lg tracking-wider">Services</h4>
                 <ul className="space-y-3 text-slate-400 text-sm">
@@ -69,9 +79,26 @@ const Footer = () => {
                   <li><a href="#Contact" className="hover:text-amber-400 transition-colors">Contact</a></li>
                 </ul>
               </div>
+              {/* Available Payments */}
+              <div className="sm:col-span-2">
+                <h4 className="font-bold mb-6 text-lg tracking-wider">Available Payment</h4>
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
+                  {paymentMethods.map((method) => (
+                    <div key={method.name} className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-0 h-14 flex items-center justify-center transition-all duration-300 hover:border-amber-500/50 hover:scale-110 hover:bg-slate-800">
+                      <img
+                        src={method.iconSrc}
+                        alt={method.name}
+                        // Menghapus padding agar logo mengisi seluruh kotak
+                        className="h-full w-full object-contain bg-white rounded-lg"
+                        loading="lazy"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            {/* Column 3: Newsletter */}
+            {/* Column 4: Newsletter */}
             <div>
               <h4 className="font-bold mb-6 text-lg tracking-wider">Stay Updated</h4>
               <p className="text-slate-400 text-sm mb-6">Subscribe to our newsletter for the latest news and updates.</p>

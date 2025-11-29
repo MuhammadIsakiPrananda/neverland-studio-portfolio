@@ -38,7 +38,7 @@ const JoinTeamModal: React.FC<JoinTeamModalProps> = ({ isOpen, onClose }) => {
           initial="hidden"
           animate="visible"
           exit="hidden"
-          onClick={onClose}
+          // onClick={onClose} // Dihapus agar tidak menutup saat backdrop diklik
         >
           <motion.div
             className="bg-slate-900/80 border border-slate-700/50 rounded-2xl shadow-2xl shadow-amber-500/10 p-8 w-full max-w-2xl relative"

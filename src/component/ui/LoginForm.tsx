@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User as UserIcon, Lock, LogIn, Loader, Eye, EyeOff, ShieldX } from 'lucide-react';
+import { User as UserIcon, Lock, LogIn, Loader, Eye, EyeOff, ShieldX, X } from 'lucide-react';
 import { useNotification } from './useNotification';
 import SocialLoginButtons from './SocialLoginButtons';
 
@@ -12,19 +12,24 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const [errors, setErrors] = useState<{ identifier?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ identifier?: string; password?: string; agreedToTerms?: string }>({});
   const { addNotification } = useNotification();
 
   const validate = () => {
-    const newErrors: Partial<typeof errors> = {};
+    const newErrors: { identifier?: string; password?: string; agreedToTerms?: string } = {};
     if (!identifier) {
       newErrors.identifier = 'Email or Username is required.';
     }
     if (!password) {
       newErrors.password = 'Password is required.';
+    }
+    if (!agreedToTerms) {
+      newErrors.agreedToTerms = 'You must agree to the terms and conditions.';
     }
     // Tambahkan validasi lain di sini jika perlu
     // Misalnya, validasi format email
@@ -175,6 +180,33 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
           </button>
         </div>
 
+        <div>
+          <div className="flex items-start gap-2">
+            <input
+              type="checkbox"
+              id="agree-terms"
+              checked={agreedToTerms}
+              onChange={(e) => {
+                setAgreedToTerms(e.target.checked);
+                setErrors(prev => ({ ...prev, agreedToTerms: undefined }));
+              }}
+              disabled={isLoading}
+              className="h-4 w-4 mt-0.5 rounded border-slate-600 bg-slate-800 text-amber-500 focus:ring-amber-500/50 focus:ring-offset-0"
+            />
+            <label htmlFor="agree-terms" className="text-sm text-slate-400 select-none">
+              I agree to the{' '}
+              <button
+                type="button"
+                onClick={() => setIsTermsModalOpen(true)}
+                className="text-amber-400 hover:underline disabled:opacity-50"
+              >
+                Terms & Conditions
+              </button>
+            </label>
+          </div>
+          {errors.agreedToTerms && <p className="text-xs text-red-400 mt-1.5 ml-1 animate-fade-in">{errors.agreedToTerms}</p>}
+        </div>
+
         <button
           type="submit"
           disabled={isLoading}
@@ -202,6 +234,47 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess }) =
           </button>
         </p>
       </form>
+
+      {isTermsModalOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex justify-center items-center p-4 animate-fade-in"
+          // onClick={() => setIsTermsModalOpen(false)} // Dihapus untuk mencegah tutup di sembarang tempat
+        >
+          <div 
+            className="bg-slate-900 border border-slate-700/50 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()} // Mencegah klik di dalam modal menutup modal
+          >
+            <div className="flex justify-between items-center p-6 border-b border-slate-800">
+              <h3 className="text-2xl font-bold text-amber-400">Terms & Conditions</h3>
+              <button
+                onClick={() => setIsTermsModalOpen(false)}
+                className="text-slate-500 hover:text-white hover:bg-slate-700/50 p-2 rounded-full transition-colors"
+                aria-label="Close modal"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto text-slate-300 space-y-4">
+              <p>Welcome to Neverland! By using our services, you agree to these terms. Please read them carefully.</p>
+              <h4 className="font-semibold text-slate-100 pt-2">1. Your Account</h4>
+              <p>You are responsible for safeguarding your account. Use a strong password and limit its use to this account. We cannot and will not be liable for any loss or damage arising from your failure to comply with the above.</p>
+              <h4 className="font-semibold text-slate-100 pt-2">2. Content</h4>
+              <p>Our Service allows you to post, link, store, share and otherwise make available certain information, text, graphics, videos, or other material. You are responsible for the Content that you post to the Service, including its legality, reliability, and appropriateness.</p>
+              <h4 className="font-semibold text-slate-100 pt-2">3. Prohibited Uses</h4>
+              <p>You may use the Service only for lawful purposes. You may not use the Service in any manner that could disable, overburden, damage, or impair the Service or interfere with any other party's use of the Service.</p>
+              <p className="pt-4 text-slate-400">By clicking "I agree", you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.</p>
+            </div>
+            <div className="p-6 border-t border-slate-800 flex justify-end items-center gap-4">
+              <button className="bg-slate-700/50 text-slate-200 py-2 px-6 rounded-lg font-semibold transition-colors cursor-not-allowed opacity-50">
+                Close
+              </button>
+              <button className="bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2 px-6 rounded-lg font-semibold hover:shadow-lg hover:shadow-amber-500/20 transition-shadow cursor-not-allowed opacity-50">
+                I Understand
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
