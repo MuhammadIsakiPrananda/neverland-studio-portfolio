@@ -4,6 +4,7 @@ import { Menu, X, MessageSquare, LogIn } from 'lucide-react';
 import Logo from '../ui/Logo';
 import { navItems as originalNavItems } from '../../data/navItems'; 
 import ProfileDropdown from '../sections/ProfileDropdown';
+import LanguageSwitcher from '../ui/LanguageSwitcher';
 
 interface MobileNavProps {
   isMenuOpen: boolean;
@@ -112,6 +113,11 @@ const MobileNav: React.FC<MobileNavProps> = ({ isMenuOpen, setIsMenuOpen, active
                     </motion.li>
                   ))}
                 </ul>
+                {/* Language Switcher Section */}
+                <motion.div variants={menuItemVariants} className="mt-6 pt-6 border-t border-slate-700/50 flex justify-center">
+                  <LanguageSwitcher />
+                </motion.div>
+
                 <motion.div variants={menuItemVariants} className="mt-6 pt-6 border-t border-slate-700/50">
                   {isLoggedIn ? (
                     <div className="flex items-center justify-center gap-3">

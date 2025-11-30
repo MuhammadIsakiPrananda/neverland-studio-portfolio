@@ -4,7 +4,6 @@ import { X } from 'lucide-react';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import ForgotPasswordForm from './ForgotPasswordForm';
-import TermsModal from './TermsModal';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -16,10 +15,6 @@ type AuthMode = 'login' | 'register' | 'forgotPassword';
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }) => {
   const [mode, setMode] = useState<AuthMode>('login');
-  // State untuk TermsModal diangkat ke sini
-  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
-  // State untuk persetujuan syarat dan ketentuan juga diangkat ke sini
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   // Efek untuk me-reset mode ke 'login' saat modal ditutup.
   // Ini memastikan pengguna selalu disambut dengan form login.
@@ -28,7 +23,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }
       // Tambahkan sedikit jeda agar reset terjadi setelah animasi penutupan selesai.
       const timer = setTimeout(() => {
         setMode('login');
-        setAgreedToTerms(false); // Reset juga persetujuan
       }, 200); // Durasi 200ms cocok dengan animasi 'leave'
       return () => clearTimeout(timer);
     }
@@ -38,26 +32,22 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }
     setMode(newMode);
   };
 
-  const handleAgreeToTerms = () => {
-    setAgreedToTerms(true);
-    setIsTermsModalOpen(false);
-  };
-
   const renderContent = () => {
     switch (mode) {
       case 'register':
-        return <RegisterForm onSwitchMode={handleSwitchMode} onRegisterSuccess={onLoginSuccess} />;
+        return <RegisterForm 
+          onSwitchMode={() => handleSwitchMode('login')} 
+          onRegisterSuccess={onLoginSuccess} 
+        />;
       case 'forgotPassword':
-        return <ForgotPasswordForm onSwitchMode={handleSwitchMode} />;
+        return <ForgotPasswordForm onSwitchMode={() => handleSwitchMode('login')} />;
       case 'login':
       default:
         return <LoginForm 
-          onSwitchMode={handleSwitchMode} 
           onLoginSuccess={onLoginSuccess}
-          // Props baru untuk mengontrol TermsModal dari parent
-          onOpenTerms={() => setIsTermsModalOpen(true)}
-          agreedToTerms={agreedToTerms}
-          setAgreedToTerms={setAgreedToTerms}
+          // Mengirim fungsi spesifik untuk setiap aksi, sesuai yang diharapkan LoginForm
+          onSwitchToRegister={() => handleSwitchMode('register')}
+          onSwitchToForgotPassword={() => handleSwitchMode('forgotPassword')}
         />;
     }
   };
@@ -100,7 +90,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }
                 <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl animate-pulse-slow opacity-30"></div>
                 <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-orange-500/15 rounded-full blur-3xl animate-pulse-slow animation-delay-4000 opacity-30"></div>
                 
-                {/* Tombol Close (X) */}
+                {/* Tombol Close (X) dipindahkan ke dalam Dialog.Panel */}
                 <button
                   onClick={onClose}
                   className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors z-10"
@@ -108,6 +98,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }
                 >
                   <X className="w-6 h-6" />
                 </button>
+
                 {renderContent()}
               </Dialog.Panel>
             </Transition.Child>
@@ -115,13 +106,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }
         </div>
       </Dialog>
       </Transition>
-
-      {/* TermsModal dirender di sini, sebagai modal terpisah */}
-      <TermsModal 
-        isOpen={isTermsModalOpen}
-        onClose={() => setIsTermsModalOpen(false)}
-        onAgree={handleAgreeToTerms}
-      />
     </>
   );
 };

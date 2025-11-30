@@ -2,7 +2,8 @@ import { motion } from 'framer-motion';
 import Logo from '../ui/Logo';
 import NavItems from '../ui/NavItems';
 import ProfileDropdown from '../sections/ProfileDropdown';
-import { Globe, LogIn } from 'lucide-react';
+import { LogIn } from 'lucide-react';
+import LanguageSwitcher from '../ui/LanguageSwitcher';
 
 interface DesktopNavProps {
   isScrolled: boolean;
@@ -33,9 +34,7 @@ const DesktopNav: React.FC<DesktopNavProps> = ({ isScrolled, activeSection, hand
         </a>
         <NavItems activeSection={activeSection} handleNavClick={handleNavClick} />
         <div className="flex items-center gap-4">
-          <button className="flex items-center justify-center w-10 h-10 text-slate-300 hover:text-white transition-colors rounded-full">
-            <Globe className="w-5 h-5" />
-          </button>
+          <LanguageSwitcher />
           {isLoggedIn ? (
             <>{userProfile && <ProfileDropdown userProfile={userProfile} onLogout={onLogout} onDashboardClick={onDashboardClick} />}</>
           ) : (

@@ -4,47 +4,59 @@ import { useNotification } from './useNotification';
 import SocialLoginButtons from './SocialLoginButtons';
 
 interface LoginFormProps {
-  onSwitchMode: (mode: 'register' | 'forgotPassword') => void; // Mode bisa register atau forgotPassword
   onLoginSuccess: (user: any, rememberMe: boolean) => void;
-  // Props baru dari AuthModal
-  onOpenTerms: () => void;
-  agreedToTerms: boolean;
-  setAgreedToTerms: (value: boolean) => void;
+  onSwitchToRegister: () => void;
+  onSwitchToForgotPassword: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess, onOpenTerms, agreedToTerms, setAgreedToTerms }) => {
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
+const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, onSwitchToRegister, onSwitchToForgotPassword }) => {
+  const [formData, setFormData] = useState({
+    identifier: '',
+    password: '',
+  });
   const [rememberMe, setRememberMe] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const [errors, setErrors] = useState<{ identifier?: string; password?: string; agreedToTerms?: string }>({});
+  const [errors, setErrors] = useState<Partial<typeof formData> & { agreedToTerms?: string }>({});
   const { addNotification } = useNotification();
 
-  const validate = () => {
-    const newErrors: { identifier?: string; password?: string; agreedToTerms?: string } = {};
-    if (!identifier) {
-      newErrors.identifier = 'Email or Username is required.';
+  const validate = (field?: keyof typeof formData) => {
+    const newErrors: Partial<typeof formData> & { agreedToTerms?: string } = { ...errors };
+    const { identifier, password } = formData;
+
+    const validateField = (key: keyof typeof formData) => {
+      switch (key) {
+        case 'identifier':
+          newErrors.identifier = identifier ? undefined : 'Email or Username is required.';
+          break;
+        case 'password':
+          newErrors.password = password ? undefined : 'Password is required.';
+          break;
+      }
+    };
+
+    if (field) {
+      validateField(field);
+    } else {
+      (Object.keys(formData) as Array<keyof typeof formData>).forEach(key => validateField(key));
+      // Validasi tambahan untuk persetujuan syarat dan ketentuan
+      if (!agreedToTerms) {
+        newErrors.agreedToTerms = 'You must agree to the terms and conditions.';
+      } else {
+        newErrors.agreedToTerms = undefined;
+      }
     }
-    if (!password) {
-      newErrors.password = 'Password is required.';
-    }
-    if (!agreedToTerms) {
-      newErrors.agreedToTerms = 'You must agree to the terms and conditions.';
-    }
-    // Tambahkan validasi lain di sini jika perlu
-    // Misalnya, validasi format email
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.values(newErrors).every(error => error === undefined);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setApiError(null);
 
-    // Jalankan validasi hanya saat submit
     if (!validate()) {
       return;
     }
@@ -63,7 +75,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess, onO
           'Content-Type': 'application/json',
         },
         // Kirim 'identifier' sesuai dengan yang diharapkan backend
-        body: JSON.stringify({ identifier, password }), 
+        body: JSON.stringify(formData), 
       });
 
       const data = await response.json();
@@ -89,6 +101,27 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess, onO
       setIsLoading(false);
     }
   };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({ ...prev, [id]: value }));
+    if (errors[id as keyof typeof errors]) {
+      setErrors(prev => ({ ...prev, [id]: undefined }));
+    }
+  };
+
+  const handleAgreeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = e.target.checked;
+    setAgreedToTerms(isChecked);
+    if (isChecked) {
+      setErrors(prev => ({ ...prev, agreedToTerms: undefined }));
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    validate(e.target.id as keyof typeof formData);
+  };
+
 
   return (
     // Mengganti motion.div dengan div biasa dan menambahkan animasi fade-in sederhana
@@ -116,11 +149,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess, onO
               id="identifier"
               type="text"
               placeholder="e.g. alex@example.com"
-              value={identifier}
-              onChange={(e) => {
-                setIdentifier(e.target.value);
-                setErrors(prev => ({ ...prev, identifier: undefined }));
-              }}
+              value={formData.identifier}
+              onChange={handleChange}
+              onBlur={handleBlur}
               className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${errors.identifier ? 'border-red-500/50' : 'border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30'}`}
               required
               disabled={isLoading}
@@ -137,11 +168,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess, onO
               id="password"
               type={showPassword ? 'text' : 'password'}
               placeholder="••••••••"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setErrors(prev => ({ ...prev, password: undefined }));
-              }}
+              value={formData.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
               className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${errors.password ? 'border-red-500/50' : 'border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30'}`}
               required
               disabled={isLoading}
@@ -164,7 +193,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess, onO
               type="checkbox"
               id="remember-me"
               checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
+              onChange={(e) => setRememberMe(e.target.checked)} // NOSONAR
               disabled={isLoading}
               className="h-4 w-4 rounded border-slate-600 bg-slate-800 text-amber-500 focus:ring-amber-500/50 focus:ring-offset-0"
             />
@@ -174,36 +203,18 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess, onO
           </div>
           <button
             type="button"
-            onClick={() => onSwitchMode('forgotPassword')}
-            className="text-amber-400 hover:underline disabled:opacity-50"
-            disabled={isLoading}
+            onClick={onSwitchToForgotPassword}
+            className="text-amber-400 hover:underline"
           >
             Forgot Password?
           </button>
         </div>
 
         <div>
-          <div className="flex items-start gap-2">
-            <input
-              type="checkbox"
-              id="agree-terms"
-              checked={agreedToTerms}
-              onChange={(e) => {
-                setAgreedToTerms(e.target.checked);
-                setErrors(prev => ({ ...prev, agreedToTerms: undefined }));
-              }}
-              disabled={isLoading}
-              className="h-4 w-4 mt-0.5 rounded border-slate-600 bg-slate-800 text-amber-500 focus:ring-amber-500/50 focus:ring-offset-0"
-            />
+          <div className="flex items-center gap-2">
+            <input type="checkbox" id="agree-terms" checked={agreedToTerms} onChange={handleAgreeChange} disabled={isLoading} className="h-4 w-4 rounded border-slate-600 bg-slate-800 text-amber-500 focus:ring-amber-500/50 focus:ring-offset-0" />
             <label htmlFor="agree-terms" className="text-sm text-slate-400 select-none">
-              I agree to the{' '}
-              <button
-                type="button"
-                onClick={onOpenTerms}
-                className="text-amber-400 hover:underline disabled:opacity-50"
-              >
-                Terms & Conditions
-              </button>
+              I agree to the <button type="button" className="text-amber-400 hover:underline">Terms & Conditions</button>
             </label>
           </div>
           {errors.agreedToTerms && <p className="text-xs text-red-400 mt-1.5 ml-1 animate-fade-in">{errors.agreedToTerms}</p>}
@@ -229,13 +240,18 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLoginSuccess, onO
 
         <SocialLoginButtons />
 
-        <p className="text-center text-sm text-slate-400 pt-4 border-t border-slate-700/50">
+        {/* Menggabungkan border dan link ke dalam satu div untuk memperbaiki masalah klik yang disebabkan oleh `space-y-5` */}
+      </form>
+
+      {/* Bagian ini dipindahkan ke luar <form> untuk memastikan tombol bisa diklik */}
+      <div className="pt-5 mt-5 border-t border-slate-700/50 relative z-10">
+        <p className="text-center text-sm text-slate-400">
           Don't have an account?{' '}
-          <button type="button" onClick={() => onSwitchMode('register')} className="font-semibold text-amber-400 hover:underline disabled:opacity-50" disabled={isLoading}> 
+          <button type="button" onClick={onSwitchToRegister} className="font-semibold text-amber-400 hover:underline"> 
             Sign Up
           </button>
         </p>
-      </form>
+      </div>
     </div>
   );
 };
