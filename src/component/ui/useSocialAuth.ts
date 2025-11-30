@@ -10,63 +10,31 @@ export const useSocialAuth = () => {
     setIsLoading(provider);
     setError(null);
 
-    // URL tempat penyedia otentikasi akan mengarahkan pengguna kembali setelah login.
-    // Pastikan URL ini terdaftar di Google Cloud Console dan Pengaturan Aplikasi GitHub Anda.
-    // Biasanya ini adalah halaman khusus seperti /auth/callback
-    const redirectUri = `${window.location.origin}/auth/callback`;
+    // Ambil URL dasar backend dari variabel lingkungan Vite.
+    // Ini harusnya 'http://localhost:5000' sesuai file .env Anda.
+    const backendUrl = import.meta.env.VITE_API_BASE_URL;
+
+    if (!backendUrl) {
+      const msg = 'VITE_API_BASE_URL tidak terdefinisi di file .env. Tidak bisa menghubungi backend.';
+      console.error(msg);
+      alert(msg);
+      setError(msg);
+      setIsLoading(null);
+      return;
+    }
 
     let authUrl = '';
 
-    switch (provider) {
-      case 'google': {
-        const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-        if (!googleClientId) {
-          const msg = 'VITE_GOOGLE_CLIENT_ID is not defined in .env file. Google login is not configured.';
-          console.error(msg);
-          alert(msg);
-          setError(msg);
-          setIsLoading(null);
-          return;
-        }
-        const params = new URLSearchParams({
-          client_id: googleClientId,
-          redirect_uri: redirectUri,
-          response_type: 'code',
-          scope: 'openid profile email',
-          access_type: 'offline',
-          prompt: 'consent',
-        });
-        authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
-        break;
-      }
-
-      case 'github': {
-        const githubClientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
-        if (!githubClientId) {
-          const msg = 'VITE_GITHUB_CLIENT_ID is not defined in .env file. GitHub login is not configured.';
-          console.error(msg);
-          alert(msg);
-          setError(msg);
-          setIsLoading(null);
-          return;
-        }
-        const params = new URLSearchParams({
-          client_id: githubClientId,
-          redirect_uri: redirectUri,
-          scope: 'read:user user:email',
-        });
-        authUrl = `https://github.com/login/oauth/authorize?${params.toString()}`;
-        break;
-      }
-
-      // Anda bisa menambahkan case untuk 'facebook' di sini jika diperlukan
-      default:
-        const msg = `Login with ${provider} is not supported yet.`;
-        console.error(msg);
-        alert(msg);
-        setError(msg);
-        setIsLoading(null);
-        return;
+    // Logika yang benar: Cukup arahkan ke endpoint backend yang sesuai.
+    // Backend akan menangani semua komunikasi dengan penyedia OAuth.
+    if (provider === 'google' || provider === 'github') {
+      authUrl = `${backendUrl}/api/auth/${provider}`;
+    } else {
+      const msg = `Login dengan ${provider} belum didukung.`;
+      console.error(msg);
+      setError(msg);
+      setIsLoading(null);
+      return;
     }
 
     // Mengarahkan pengguna ke halaman otentikasi

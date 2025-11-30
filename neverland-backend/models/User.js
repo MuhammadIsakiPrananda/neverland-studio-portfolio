@@ -8,6 +8,11 @@ const User = sequelize.define('User', {
     autoIncrement: true,
     primaryKey: true,
   },
+  googleId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: true,
+  },
   name: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -27,7 +32,11 @@ const User = sequelize.define('User', {
   },
   password: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true, // Diubah menjadi true agar pengguna Google tidak perlu password
+  },
+  image: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
 }, {
   // Opsi Model

@@ -3,6 +3,7 @@ import type { IconType } from 'react-icons';
 import { Loader } from 'lucide-react';
 import { useSocialAuth, type AuthProvider } from './useSocialAuth';
 type SocialProviderConfig = {
+
   name: AuthProvider;
   icon: IconType;
   label: string;
@@ -26,8 +27,12 @@ const socialProviders: SocialProviderConfig[] = [
   },
 ];
 
-const SocialLoginButtons = () => {
-  const { initiateLogin, isLoading } = useSocialAuth();
+interface SocialLoginButtonsProps {
+  onLoginSuccess: (user: any, provider: AuthProvider) => void;
+}
+
+const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({ onLoginSuccess }) => {
+  const { initiateLogin, isLoading } = useSocialAuth(onLoginSuccess);
 
   return (
     <div className="w-full">
