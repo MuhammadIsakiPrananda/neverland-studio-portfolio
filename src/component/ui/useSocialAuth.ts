@@ -41,5 +41,5 @@ export const useSocialAuth = () => {
     window.location.href = authUrl;
   };
 
-  return { initiateLogin, isLoading, error };
+  return { initiateLogin, isLoading: isLoading as AuthProvider | null, error };
 };

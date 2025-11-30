@@ -27,12 +27,8 @@ const socialProviders: SocialProviderConfig[] = [
   },
 ];
 
-interface SocialLoginButtonsProps {
-  onLoginSuccess: (user: any, provider: AuthProvider) => void;
-}
-
-const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({ onLoginSuccess }) => {
-  const { initiateLogin, isLoading } = useSocialAuth(onLoginSuccess);
+const SocialLoginButtons = () => {
+  const { initiateLogin, isLoading } = useSocialAuth();
 
   return (
     <div className="w-full">
