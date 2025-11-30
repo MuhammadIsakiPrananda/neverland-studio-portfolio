@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { User as UserIcon, Lock, Mail, LogIn, Loader, Eye, EyeOff, ShieldX, AtSign } from 'lucide-react';
 import { useNotification } from './useNotification';
 import PasswordStrengthMeter from './PasswordStrengthMeter';
@@ -10,6 +10,9 @@ interface RegisterFormProps {
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuccess }) => {
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [recaptchaSiteKey, setRecaptchaSiteKey] = useState<string | null>(null);
+  const [loadingRecaptcha, setLoadingRecaptcha] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
     username: '',
@@ -23,6 +26,25 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
   const [apiError, setApiError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Partial<typeof formData> & { agreedToTerms?: string }>({});
   const { addNotification } = useNotification();
+
+  // Fetch reCAPTCHA site key dari backend saat component mount
+  useEffect(() => {
+    const fetchRecaptchaKey = async () => {
+      try {
+        const response = await fetch('/api/config/recaptcha');
+        if (response.ok) {
+          const data = await response.json();
+          setRecaptchaSiteKey(data.siteKey);
+        }
+      } catch (error) {
+        console.error('Failed to load reCAPTCHA key:', error);
+      } finally {
+        setLoadingRecaptcha(false);
+      }
+    };
+    
+    fetchRecaptchaKey();
+  }, []);
 
   const validate = (field?: keyof typeof formData) => {
     const newErrors: Partial<typeof formData> & { agreedToTerms?: string } = { ...errors };
@@ -113,26 +135,59 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
       return;
     }
 
+    // Get reCAPTCHA token
+    if (!recaptchaRef.current) {
+      setApiError('reCAPTCHA failed to load');
+      return;
+    }
+
+    let recaptchaToken: string | null = null;
+    try {
+      // Gunakan getValue() untuk reCAPTCHA v2 (checkbox)
+      recaptchaToken = recaptchaRef.current.getValue();
+      console.log('reCAPTCHA token obtained:', !!recaptchaToken);
+      
+      if (!recaptchaToken) {
+        setApiError('Please verify the reCAPTCHA checkbox');
+        return;
+      }
+    } catch (error) {
+      console.error('reCAPTCHA error:', error);
+      setApiError('Failed to get reCAPTCHA token');
+      return;
+    }
+
     setIsLoading(true);
     try {
-      // Menggunakan URL relatif agar fleksibel antara localhost dan domain produksi.
-      // Permintaan akan dikirim ke domain yang sama dengan frontend.
-      // Contoh: http://localhost:5173/api/auth/register atau https://neverlandstudio.my.id/api/auth/register
-      // Pastikan server backend Anda (baik lokal maupun produksi) dapat menangani permintaan dari path ini.
+      console.log('Sending registration request with reCAPTCHA token...');
+      
       const apiUrl = '/api/auth/register';
+      const requestBody = {
+        name: formData.name,
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        recaptchaToken,
+      };
+      
+      console.log('Request body keys:', Object.keys(requestBody));
+      
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(requestBody),
       });
 
       const data = await response.json();
+      console.log('Response status:', response.status, 'Success:', data.success);
 
       if (!response.ok) {
         // Jika response dari server adalah error (4xx atau 5xx)
-        throw new Error(data.msg || 'An error occurred during registration.');
+        const errorMsg = data.msg || data.message || 'An error occurred during registration.';
+        console.error('Registration error:', errorMsg, data);
+        throw new Error(errorMsg);
       }
 
       // Jika registrasi berhasil
@@ -143,10 +198,16 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
       // Panggil onRegisterSuccess agar pengguna langsung login
       onRegisterSuccess(data.user, false); // Anggap 'remember me' false saat registrasi
 
-    } catch (error: any) {
-      const errorMessage = error.message || 'An unknown error occurred during registration.';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred during registration.';
+      console.error('Registration exception:', errorMessage);
       setApiError(errorMessage);
       addNotification('Registration Failed', errorMessage, 'error');
+      // Reset reCAPTCHA pada error
+      if (recaptchaRef.current) {
+        console.log('Resetting reCAPTCHA after error');
+        recaptchaRef.current.reset();
+      }
     } finally {
       setIsLoading(false);
     }
@@ -229,15 +290,23 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchMode, onRegisterSuc
         </div>
 
         <div className="pt-2">
-          {import.meta.env.VITE_RECAPTCHA_SITE_KEY ? (
+          {recaptchaSiteKey ? (
             <ReCAPTCHA
-              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+              ref={recaptchaRef}
+              sitekey={recaptchaSiteKey}
               theme="dark"
+              size="normal"
             />
           ) : (
             <div className="bg-yellow-900/40 border border-yellow-500/30 text-yellow-300 text-sm p-3 rounded-lg">
-              reCAPTCHA is not configured. Please set{" "}
-              <code className="bg-slate-700 px-1 py-0.5 rounded">VITE_RECAPTCHA_SITE_KEY</code> in your .env file and restart the server.
+              {loadingRecaptcha ? (
+                <span>Loading reCAPTCHA...</span>
+              ) : (
+                <>
+                  reCAPTCHA is not configured. Please set{" "}
+                  <code className="bg-slate-700 px-1 py-0.5 rounded">RECAPTCHA_SECRET_KEY</code> in your backend .env file and restart the server.
+                </>
+              )}
             </div>
           )}
         </div>

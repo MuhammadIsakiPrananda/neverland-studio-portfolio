@@ -5,64 +5,114 @@ dotenv.config();
 import express from 'express';
 import cors from 'cors';
 import passport from 'passport';
-import session from 'express-session';
-import sequelize from './config/database.js'; // Import koneksi sequelize
+import sequelize from './config/database.js';
 
 // Import model agar Sequelize tahu tabel apa yang harus dibuat
 import './models/User.js';
 
-// Jalankan konfigurasi Passport (ini akan mendaftarkan GoogleStrategy)
+// Jalankan konfigurasi Passport
 import './config/passport.js';
 
 // Import routes
-import authRoutes from './config/auth.js'; // Mengimpor semua rute autentikasi dari satu file
+import authRoutes from './config/authRoutes.js';
+import googleAuthRoutes from './config/googleAuthRoutes.js';
+import userRoutes from './config/userRoutes.js';
+import configRoutes from './config/configRoutes.js';
+
+// Import error handler
+import { errorHandler } from './utils/errors.js';
 
 const app = express();
 
-// Middleware (urutan ini penting)
-// 1. Aktifkan CORS untuk semua request
-app.use(cors());
+// ============= MIDDLEWARE =============
 
-// 2. Aktifkan parser untuk membaca JSON dari request body
-app.use(express.json());
+// 1. CORS Configuration
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+app.use(cors(corsOptions));
 
-// 3. Konfigurasi Session (diperlukan oleh Passport)
-app.use(
-  session({
-    secret: process.env.JWT_SECRET, // Gunakan secret yang sudah ada untuk session
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+// 2. Security Headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  res.setHeader('Content-Security-Policy', "default-src 'self'");
+  next();
+});
 
-// 4. Inisialisasi Passport
+// 3. Request Parser
+app.use(express.json({ limit: '10kb' })); // Limit payload size
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
+// 4. Passport Initialization
 app.use(passport.initialize());
-app.use(passport.session());
 
-// 5. Gunakan API Routes
+// ============= ROUTES =============
+
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// Authentication Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/auth', googleAuthRoutes);
 
-// Gunakan port dari .env atau default ke 5000
-const PORT = process.env.PORT || 5000; 
+// Configuration Routes (public)
+app.use('/api/config', configRoutes);
+
+// User Routes (protected)
+app.use('/api/user', userRoutes);
+
+// 404 Handler
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    msg: 'Route not found',
+    path: req.path,
+  });
+});
+
+// ============= ERROR HANDLER =============
+app.use(errorHandler);
+
+// ============= START SERVER =============
+const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   try {
     // Test Database Connection
     await sequelize.authenticate();
-    console.log('Koneksi Database berhasil.');
+    console.log('✓ Database connection successful');
 
-    // Sinkronisasi model dengan database.
-    // { alter: true } akan memeriksa status tabel saat ini di database (kolom apa yang ada, tipe datanya, dll),
-    // lalu melakukan perubahan yang diperlukan di tabel agar sesuai dengan model. Ini tidak akan menghapus data.
-    await sequelize.sync({ alter: true });
-    console.log('Semua model berhasil disinkronkan.');
+    // Synchronize Models
+    // Force: true akan drop dan recreate table (hanya development)
+    const forceSync = process.env.NODE_ENV !== 'production';
+    await sequelize.sync({ alter: !forceSync, force: forceSync });
+    console.log('✓ All models synchronized');
 
-    // PENTING: Mulai server HANYA SETELAH sinkronisasi selesai.
-    app.listen(PORT, () => console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`));
+    // Start Server
+    app.listen(PORT, () => {
+      const mode = process.env.NODE_ENV || 'development';
+      const frontend = process.env.FRONTEND_URL || 'http://localhost:5173';
+      
+      console.log('\n========================================');
+      console.log(`🚀 Server is running`);
+      console.log(`📱 Mode: ${mode}`);
+      console.log(`🔗 Port: ${PORT}`);
+      console.log(`🌐 Frontend: ${frontend}`);
+      console.log('========================================\n');
+    });
   } catch (err) {
-    console.error('Unable to start the server:', err);
-    process.exit(1); // Keluar dari proses jika server gagal start
+    console.error('✗ Unable to start the server:', err.message);
+    process.exit(1);
   }
 };
 
 startServer();
+

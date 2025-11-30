@@ -1,120 +1,196 @@
 import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
-import axios from 'axios'; // Import axios untuk membuat request HTTP
 import jwt from 'jsonwebtoken';
-import { promisify } from 'util';
-
-// Mengubah jwt.sign menjadi fungsi berbasis Promise agar bisa digunakan dengan async/await
-// Ini adalah praktik modern yang lebih aman daripada menggunakan callback.
-const signJwt = promisify(jwt.sign);
-
 import { Op } from 'sequelize';
+import { validateRegistrationInput, sanitizeString } from '../utils/validation.js';
+import { verifyRecaptcha } from '../utils/recaptcha.js';
+import { ValidationError, ConflictError, InternalError } from '../utils/errors.js';
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
-export const register = async (req, res) => {
-  // Terima `recaptchaToken` bersama data lainnya
-  const { name, username, email, password, recaptchaToken } = req.body;
-
-  // Validasi JWT_SECRET di awal untuk mencegah error yang tidak jelas
-  if (!process.env.JWT_SECRET || !process.env.RECAPTCHA_SECRET_KEY) {
-    console.error('FATAL ERROR: JWT_SECRET or RECAPTCHA_SECRET_KEY is not defined in .env file.');
-    return res.status(500).json({ msg: 'Server configuration error. Please contact administrator.' });
-  }
-
+export const register = async (req, res, next) => {
   try {
-    // --- Langkah Validasi reCAPTCHA ---
-    // 1. Pastikan token reCAPTCHA dikirim dari frontend
+    // Validasi konfigurasi
+    if (!process.env.JWT_SECRET || !process.env.RECAPTCHA_SECRET_KEY) {
+      console.error('FATAL ERROR: JWT_SECRET or RECAPTCHA_SECRET_KEY is not defined.');
+      throw new InternalError('Server configuration error');
+    }
+
+    // 1. Validasi input
+    let { name, username, email, password, recaptchaToken } = req.body;
+
+    const validation = validateRegistrationInput({ name, username, email, password });
+    if (!validation.isValid) {
+      return res.status(400).json({
+        success: false,
+        msg: 'Validation failed',
+        errors: validation.errors,
+      });
+    }
+
+    // Sanitasi input
+    name = sanitizeString(name);
+    username = sanitizeString(username).toLowerCase();
+    email = sanitizeString(email).toLowerCase();
+
+    // 2. Verifikasi reCAPTCHA
     if (!recaptchaToken) {
-      return res.status(400).json({ msg: 'reCAPTCHA verification is required.' });
+      return res.status(400).json({
+        success: false,
+        msg: 'reCAPTCHA verification is required',
+      });
     }
 
-    // 2. Kirim token ke Google untuk verifikasi
-    const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`;
-
-    const recaptchaResponse = await axios.post(verifyUrl);
-    const { success, score } = recaptchaResponse.data;
-
-    // 3. Periksa hasil verifikasi
-    // `success` harus true. Untuk reCAPTCHA v3, kita juga bisa memeriksa `score`.
-    // Untuk v2 (checkbox), cukup periksa `success`.
-    if (!success) {
-      console.warn('reCAPTCHA verification failed:', recaptchaResponse.data['error-codes']);
-      return res.status(400).json({ msg: 'Failed to verify reCAPTCHA. Please try again.' });
+    try {
+      await verifyRecaptcha(recaptchaToken);
+    } catch (err) {
+      console.error('reCAPTCHA verification failed during registration:', err.message);
+      return res.status(400).json({
+        success: false,
+        msg: 'reCAPTCHA verification failed. Please try again.',
+        details: { recaptcha: err.message },
+      });
     }
 
-    // --- Akhir Langkah Validasi reCAPTCHA ---
+    // 3. Cek apakah email atau username sudah terdaftar
+    const existingUser = await User.findOne({
+      where: { [Op.or]: [{ email }, { username }] },
+    });
 
-    // Pengecekan Email dan Username yang Sudah Ada (dibuat lebih efisien)
-    const existingUser = await User.findOne({ where: { [Op.or]: [{ email }, { username }] } });
     if (existingUser) {
       if (existingUser.email === email) {
-        return res.status(400).json({ msg: 'User with this email already exists' });
+        return res.status(409).json({
+          success: false,
+          msg: 'This email is already registered',
+          field: 'email',
+        });
       }
       if (existingUser.username === username) {
-        return res.status(400).json({ msg: 'This username is already taken' });
+        return res.status(409).json({
+          success: false,
+          msg: 'This username is already taken',
+          field: 'username',
+        });
       }
     }
-    // Buat user baru (hook hashing password akan berjalan otomatis)
-    let user = await User.create({ name, username, email, password });
 
-    // Siapkan data user yang akan dikirim kembali (tanpa password)
-    const userResponse = {
-      id: user.id,
-      name: user.name,
-      username: user.username,
-      email: user.email
-    };
+    // 4. Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Buat token JWT
+    // 5. Buat user baru
+    const user = await User.create({
+      name,
+      username,
+      email,
+      password: hashedPassword,
+      provider: 'email',
+    });
+
+    // 6. Generate JWT token
     const payload = { user: { id: user.id } };
-    const token = await signJwt(payload, process.env.JWT_SECRET, { expiresIn: '5h' });
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    // Kirim token dan data user sebagai respons
-    res.status(201).json({ token, user: userResponse });
+    // 7. Kirim respons sukses
+    res.status(201).json({
+      success: true,
+      msg: 'User registered successfully',
+      token: `Bearer ${token}`,
+      user: {
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+      },
+    });
   } catch (err) {
-    console.error(err.message);
-    // Selalu kirim JSON, bahkan saat error
-    res.status(500).json({ msg: 'Server error. Please try again later.' });
+    console.error('Registration error:', err.message);
+    return res.status(500).json({
+      success: false,
+      msg: 'An error occurred during registration',
+    });
   }
 };
 
+
 // @desc    Authenticate user & get token (Login)
 // @route   POST /api/auth/login
-export const login = async (req, res) => { 
-  const { identifier, password } = req.body;
-
-  // Validasi JWT_SECRET di awal
-  if (!process.env.JWT_SECRET) {
-    console.error('FATAL ERROR: JWT_SECRET is not defined in .env file.');
-    return res.status(500).json({ msg: 'Server configuration error. Please contact administrator.' });
-  }
-
+// @note    Login does NOT require reCAPTCHA - only Register does
+export const login = async (req, res, next) => {
   try {
-    // Sekarang kita bisa login dengan email ATAU username
-    let user = await User.findOne({
+    // Validasi konfigurasi
+    if (!process.env.JWT_SECRET) {
+      console.error('FATAL ERROR: JWT_SECRET is not defined.');
+      throw new InternalError('Server configuration error');
+    }
+
+    let { identifier, password } = req.body;
+
+    // 1. Validasi input dasar
+    if (!identifier || !password) {
+      return res.status(400).json({
+        success: false,
+        msg: 'Email/username and password are required',
+      });
+    }
+
+    // Sanitasi input
+    identifier = sanitizeString(identifier).toLowerCase();
+
+    // 3. Cari user berdasarkan email atau username
+    const user = await User.findOne({
       where: {
-        [Op.or]: [{ email: identifier }, { username: identifier }]
-      }
+        [Op.or]: [{ email: identifier }, { username: identifier }],
+      },
     });
+
     if (!user) {
-      return res.status(400).json({ msg: 'Invalid credentials. Please check your email and password.' });
+      // Jangan berikan informasi yang berbeda untuk email vs username
+      return res.status(401).json({
+        success: false,
+        msg: 'Invalid email/username or password',
+      });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ msg: 'Invalid credentials. Please check your email and password.' });
+    // 4. Cek jika user terdaftar via Google dan tidak punya password
+    if (!user.password) {
+      return res.status(401).json({
+        success: false,
+        msg: 'This account is registered with Google. Please use "Sign in with Google"',
+        provider: 'google',
+      });
     }
 
-    const userResponse = { id: user.id, name: user.name, username: user.username, email: user.email };
+    // 5. Bandingkan password
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatch) {
+      return res.status(401).json({
+        success: false,
+        msg: 'Invalid email/username or password',
+      });
+    }
 
+    // 6. Generate JWT token
     const payload = { user: { id: user.id } };
-    const token = await signJwt(payload, process.env.JWT_SECRET, { expiresIn: '5h' });
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    res.json({ token, user: userResponse });
+    // 7. Kirim respons sukses
+    res.status(200).json({
+      success: true,
+      msg: 'Login successful',
+      token: `Bearer ${token}`,
+      user: {
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+      },
+    });
   } catch (err) {
-    console.error(err.message);
-    // Selalu kirim JSON, bahkan saat error
-    res.status(500).json({ msg: 'Server error. Please try again later.' });
+    console.error('Login error:', err.message);
+    return res.status(500).json({
+      success: false,
+      msg: 'An error occurred during login',
+    });
   }
 };

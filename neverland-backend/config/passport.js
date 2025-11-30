@@ -7,59 +7,82 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: '/api/auth/google/callback',
+      callbackURL: `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/auth/google/callback`,
+      proxy: true, // Penting jika aplikasi berjalan di belakang proxy (Nginx, Heroku, dll)
     },
     async (accessToken, refreshToken, profile, done) => {
-      const googleId = profile.id;
-      const email = profile.emails[0].value;
-
       try {
-        // 1. Cek apakah pengguna dengan googleId ini sudah ada
-        let user = await User.findOne({ where: { googleId: googleId } });
-
-        if (user) {
-          return done(null, user);
+        // 1. Validasi data dari Google
+        if (!profile.id || !profile.emails || profile.emails.length === 0) {
+          console.error('Invalid Google profile data');
+          return done(new Error('Invalid Google profile data'), false);
         }
-
-        // 2. Jika tidak ada, cek apakah ada pengguna dengan email yang sama (sudah daftar manual)
-        user = await User.findOne({ where: { email: email } });
-
-        if (user) {
-          // Jika ada, tautkan akun Google ini ke pengguna yang sudah ada
-          user.googleId = googleId;
-          user.image = user.image || profile.photos[0].value; // Update gambar jika belum ada
-          await user.save();
-          return done(null, user);
-        }
-
-        // 3. Jika tidak ada sama sekali, buat pengguna baru
-        // Membuat username unik dari email dan menambahkan angka acak untuk menghindari duplikasi
-        const usernameFromEmail = email.split('@')[0].replace(/[^a-zA-Z0-9]/g, '') + Math.floor(100 + Math.random() * 900);
 
         const newUser = {
-          googleId: googleId,
-          email: email,
-          name: profile.displayName, // Mengisi kolom 'name' yang wajib
-          username: usernameFromEmail, // Mengisi kolom 'username' yang wajib dan unik
-          image: profile.photos[0].value,
-          // Kolom password dibiarkan null, karena model sudah mengizinkannya
+          googleId: profile.id,
+          name: profile.displayName || 'Google User',
+          email: profile.emails[0].value,
+          image: profile.photos?.[0]?.value || null,
         };
 
-        user = await User.create(newUser);
+        // 2. Cari user berdasarkan email
+        let user = await User.findOne({ where: { email: newUser.email } });
+
+        if (user) {
+          // 3a. User sudah ada
+          if (!user.googleId) {
+            // Update googleId jika belum ada (misal: user daftar via email lalu login Google)
+            user.googleId = newUser.googleId;
+            await user.save();
+          }
+          return done(null, user);
+        }
+
+        // 3b. Buat user baru dengan username yang unik
+        let username = newUser.email.split('@')[0]
+          .replace(/[^a-zA-Z0-9_]/g, '_')
+          .toLowerCase()
+          .substring(0, 20); // Limit ke 20 karakter
+
+        let isUsernameUnique = false;
+        let attempts = 0;
+        const maxAttempts = 10;
+
+        while (!isUsernameUnique && attempts < maxAttempts) {
+          const randomSuffix = Math.floor(Math.random() * 10000);
+          const testUsername = attempts === 0 ? username : `${username}_${randomSuffix}`;
+          
+          const existingUsername = await User.findOne({ where: { username: testUsername } });
+          if (!existingUsername) {
+            username = testUsername;
+            isUsernameUnique = true;
+          }
+          attempts++;
+        }
+
+        if (!isUsernameUnique) {
+          console.error('Failed to generate unique username after 10 attempts');
+          return done(new Error('Failed to create user account'), false);
+        }
+
+        // 4. Buat user baru
+        user = await User.create({
+          name: newUser.name,
+          email: newUser.email,
+          username: username,
+          googleId: newUser.googleId,
+          image: newUser.image,
+          provider: 'google',
+          // password tetap null untuk user Google
+        });
+
         return done(null, user);
       } catch (err) {
-        console.error('Error in Google Strategy:', err);
+        console.error('Passport Google Strategy Error:', err.message);
         return done(err, false);
       }
     }
   )
 );
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser(async (id, done) => {
-  const user = await User.findByPk(id);
-  done(null, user);
-});
+// Jangan set serializeUser/deserializeUser karena kita tidak menggunakan session
