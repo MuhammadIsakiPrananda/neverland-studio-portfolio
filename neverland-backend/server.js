@@ -12,6 +12,7 @@ import './models/User.js';
 // Import routes
 import registerHandler from './api/auth/register.js';
 import loginHandler from './api/auth/login.js';
+import deleteHandler from './api/auth/delete.js';
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(express.json());
 // Menggunakan handler secara langsung untuk setiap endpoint
 app.post('/api/auth/register', registerHandler);
 app.post('/api/auth/login', loginHandler);
+app.delete('/api/auth/delete', deleteHandler); // Tambahkan baris ini
 
 // Gunakan port dari .env atau default ke 5000
 const PORT = process.env.PORT || 5000; 
