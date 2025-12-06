@@ -1,0 +1,100 @@
+services:
+  backend:
+    build:
+      context: ./neverland-backend
+      dockerfile: Dockerfile
+    container_name: neverland_backend
+    ports:
+      - "127.0.0.1:5000:5000"
+    env_file:
+      - ./neverland-backend/.env
+    depends_on:
+      mariadb_neverland:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5000/api/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: https://api.neverlandstudio.my.id
+        VITE_GOOGLE_CLIENT_ID: 739120812976-gch5ncpko0n66chpd4gcltfhk5q42hqm.apps.googleusercontent.com
+        VITE_GITHUB_CLIENT_ID: Ov23livnDhhHPjH4UL44
+        VITE_RECAPTCHA_SITE_KEY: 6Led3hwsAAAAAMU7Ne3EN0LeVK5wgKu8py0560Wp
+    container_name: neverland_frontend
+    ports:
+      - "127.0.0.1:80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  mariadb_neverland:
+    image: mariadb:10.6
+    container_name: mariadb_neverland
+    restart: always
+    env_file:
+      - ./neverland-backend/.env
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "--silent" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: neverland_phpmyadmin
+    restart: always
+    ports:
+      - "127.0.0.1:8081:80"
+    environment:
+      PMA_HOST: mariadb_neverland
+      PMA_PORT: 3306
+    depends_on:
+      mariadb_neverland:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  wordpress:
+    image: wordpress:latest
+    container_name: neverland_wordpress
+    restart: always
+    ports:
+      - "127.0.0.1:8082:80"
+    environment:
+      WORDPRESS_DB_HOST: mariadb_neverland
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: root
+      WORDPRESS_TABLE_PREFIX: wp_
+    depends_on:
+      mariadb_neverland:
+        condition: service_healthy
+    volumes:
+      - wp-data:/var/www/html
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mariadb-data: {}
+  wp-data: {}
