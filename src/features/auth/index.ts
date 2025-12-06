@@ -14,7 +14,11 @@ export { default as PasswordStrengthMeter } from "./components/PasswordStrengthM
 export { default as AccessDenied } from "./pages/AccessDenied";
 
 // Context & Hooks
-export { AuthProvider, useAuth } from "./context/AuthContext";
+export {
+  AuthProvider,
+  useAuth,
+  UserProfileSchema,
+} from "./context/AuthContext";
 export type { UserProfile, AuthContextType } from "./context/AuthContext";
 
 // Services

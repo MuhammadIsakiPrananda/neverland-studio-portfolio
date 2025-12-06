@@ -1,7 +1,7 @@
 // src/services/index.ts - Central export for all services
 
-export { default as apiService, apiService as api } from './apiService'
-export { default as authService } from './authService'
+export { default as apiService, apiService as api } from "./apiService";
+export { authService } from "@/features/auth";
 
 // Add more services here as they are created
 // export { default as userService } from './userService'

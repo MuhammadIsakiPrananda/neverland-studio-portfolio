@@ -1,4 +1,4 @@
-import type { PricingPlan } from '../components/types';
+import type { PricingPlan } from "@/shared/types";
 
 export const pricing: PricingPlan[] = [
   {
@@ -11,9 +11,9 @@ export const pricing: PricingPlan[] = [
       "Basic SEO",
       "Contact form",
       "3 months support",
-      "Social media integration"
+      "Social media integration",
     ],
-    popular: false
+    popular: false,
   },
   {
     name: "Professional",
@@ -27,9 +27,9 @@ export const pricing: PricingPlan[] = [
       "E-commerce ready",
       "6 months support",
       "Analytics dashboard",
-      "Priority support"
+      "Priority support",
     ],
-    popular: true
+    popular: true,
   },
   {
     name: "Enterprise",
@@ -44,8 +44,8 @@ export const pricing: PricingPlan[] = [
       "12 months support",
       "Dedicated manager",
       "24/7 priority support",
-      "Training included"
+      "Training included",
     ],
-    popular: false
-  }
+    popular: false,
+  },
 ];

@@ -89,9 +89,11 @@ const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                   <div className="w-full h-px bg-gradient-to-r from-amber-500/30 via-slate-700 to-transparent"></div>
                   {/* Render detailed description paragraphs */}
                   <div className="space-y-4 leading-relaxed">
-                    {(service.detailedDesc || []).map((paragraph, index) => (
-                      <p key={index}>{paragraph}</p>
-                    ))}
+                    {(service.detailedDesc || []).map(
+                      (paragraph: string, index: number) => (
+                        <p key={index}>{paragraph}</p>
+                      )
+                    )}
                   </div>
                 </div>
 
@@ -102,24 +104,26 @@ const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                       Key Features
                     </h4>
                     <ul className="space-y-3">
-                      {(service.features || []).map((feature, index) => (
-                        <motion.li
-                          key={index}
-                          className="flex items-start gap-3"
-                          initial={{ opacity: 0, x: -15 }}
-                          animate={{
-                            opacity: 1,
-                            x: 0,
-                            transition: {
-                              delay: 0.2 + index * 0.1,
-                              ease: "easeOut",
-                            },
-                          }}
-                        >
-                          <CheckCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
-                          <span className="text-slate-300">{feature}</span>
-                        </motion.li>
-                      ))}
+                      {(service.features || []).map(
+                        (feature: string, index: number) => (
+                          <motion.li
+                            key={index}
+                            className="flex items-start gap-3"
+                            initial={{ opacity: 0, x: -15 }}
+                            animate={{
+                              opacity: 1,
+                              x: 0,
+                              transition: {
+                                delay: 0.2 + index * 0.1,
+                                ease: "easeOut",
+                              },
+                            }}
+                          >
+                            <CheckCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                            <span className="text-slate-300">{feature}</span>
+                          </motion.li>
+                        )
+                      )}
                     </ul>
                   </div>
                 </div>
