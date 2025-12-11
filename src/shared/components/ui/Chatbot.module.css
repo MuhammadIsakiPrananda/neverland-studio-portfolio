@@ -1,0 +1,28 @@
+.chatScroll {
+  scrollbar-width: thin;
+  scrollbar-color: #f59e0b #0f172a;
+}
+
+.pulseDot {
+  animation: pulseDot 1.2s infinite;
+}
+
+.pulseDot:nth-child(1) {
+  animation-delay: 0s;
+}
+.pulseDot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.pulseDot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}

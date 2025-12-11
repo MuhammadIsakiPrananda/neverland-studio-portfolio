@@ -1,0 +1,1 @@
+export const categories = ['All', 'Web', 'Mobile', 'Design', 'Video', 'Photography', 'Animation'];

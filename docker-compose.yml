@@ -1,0 +1,66 @@
+services:
+  backend:
+    build: ./neverland-backend
+    container_name: neverland_backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=mariadb_neverland
+      - DB_PORT=3306
+      - DB_NAME=${DB_NAME:-neverlandstudio}
+      - DB_USER=${DB_USER:-root}
+      - DB_PASSWORD=${DB_PASSWORD}
+    env_file:
+      - ./neverland-backend/.env
+    depends_on:
+      - mariadb_neverland
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  frontend:
+    build: .
+    container_name: neverland_frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  mariadb_neverland:
+    image: mariadb:11.2
+    container_name: mariadb_neverland
+    restart: always
+    env_file:
+      - ./neverland-backend/.env
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: neverland_phpmyadmin
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mariadb_neverland
+      PMA_PORT: 3306
+    depends_on:
+      - mariadb_neverland
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mariadb-data: {}

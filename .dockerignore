@@ -1,0 +1,34 @@
+# Abaikan node_modules dari host
+node_modules
+npm-debug.log
+
+# Abaikan folder backend (karena ada di subfolder terpisah)
+neverland-backend/
+
+# Abaikan file git
+.git
+.gitignore
+
+# Abaikan IDE configs
+.vscode
+.idea
+
+# Abaikan environment files
+.env
+.env.local
+.env.production
+
+# Abaikan markdown documentation (kecuali yang di-include explicit)
+*.md
+!package*.json
+
+# Abaikan file-file temporary
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Abaikan artifacts dan compiled files
+dist/
+build/
+coverage/
