@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Backend API for Neverland Studio Portfolio",
   "main": "server.js",
-  "type": "module",
   "scripts": {
     "start": "node server.js",
     "dev": "set NODE_ENV=development&& nodemon server.js",
