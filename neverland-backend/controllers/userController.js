@@ -1,9 +1,8 @@
 // controllers/userController.js
 import User from '../models/User.js'; //
 import bcrypt from 'bcryptjs';
-import { sanitizeString, isValidUsername } from '../utils/validation.js';
+import { sanitizeString } from '../utils/validation.js';
 import logger from '../utils/logger.js';
-import dayjs from 'dayjs';
 
 // Helper untuk memformat respons pengguna, memastikan tidak ada data sensitif yang bocor.
 const formatUserResponse = (user) => {
@@ -27,7 +26,7 @@ const formatUserResponse = (user) => {
 // @desc    Get current user profile
 // @route   GET /api/user/profile
 // @access  Private (Protected)
-const getCurrentUser = async (req, res, next) => {
+export const getCurrentUser = async (req, res, next) => {
   try {
     // req.user.id berasal dari middleware auth (verifyToken)
     const userId = req.user.id;
@@ -51,7 +50,7 @@ const getCurrentUser = async (req, res, next) => {
 // @desc    Get user profile by username (public)
 // @route   GET /api/user/profile/:username
 // @access  Public
-const getUserByUsername = async (req, res, next) => {
+export const getUserByUsername = async (req, res, next) => {
   try {
     const { username } = req.params;
 
@@ -81,7 +80,7 @@ const getUserByUsername = async (req, res, next) => {
 // @desc    Update user profile
 // @route   PUT /api/user/profile
 // @access  Private (Protected)
-const updateProfile = async (req, res, next) => {
+export const updateProfile = async (req, res, next) => {
   try {
     const userId = req.user.id;
     // Hanya izinkan field yang aman untuk diperbarui
@@ -125,7 +124,7 @@ const updateProfile = async (req, res, next) => {
 // @desc    Change user password
 // @route   PUT /api/user/change-password
 // @access  Private (Protected)
-const changePassword = async (req, res, next) => {
+export const changePassword = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const { currentPassword, newPassword } = req.body;
@@ -137,51 +136,6 @@ const changePassword = async (req, res, next) => {
 
     const user = await User.findByPk(userId);
     if (!user) {
-// @desc    Update username (max 3x per month)
-// @route   PUT /api/user/username
-// @access  Private (Protected)
-const updateUsername = async (req, res, next) => {
-  try {
-    const userId = req.user.id;
-    const { username } = req.body;
-    if (!username) {
-      return res.status(400).json({ success: false, msg: 'Username is required' });
-    }
-    const sanitizedUsername = sanitizeString(username.toLowerCase());
-    if (!isValidUsername(sanitizedUsername)) {
-      return res.status(400).json({ success: false, msg: 'Invalid username format' });
-    }
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).json({ success: false, msg: 'User not found' });
-    }
-    if (user.username === sanitizedUsername) {
-      return res.status(400).json({ success: false, msg: 'Username is the same as current' });
-    }
-    const existing = await User.findOne({ where: { username: sanitizedUsername } });
-    if (existing) {
-      return res.status(400).json({ success: false, msg: 'Username already taken' });
-    }
-    // Hitung bulan sekarang (format: YYYYMM)
-    const nowMonth = parseInt(dayjs().format('YYYYMM'));
-    // Reset count jika bulan sudah berganti
-    if (user.username_changes_month !== nowMonth) {
-      user.username_changes_month = nowMonth;
-      user.username_changes_count = 0;
-    }
-    if (user.username_changes_count >= 3) {
-      return res.status(429).json({ success: false, msg: 'Username can only be changed 3 times per month' });
-    }
-    user.username = sanitizedUsername;
-    user.username_changes_count += 1;
-    user.username_changes_month = nowMonth;
-    await user.save();
-    res.json({ success: true, msg: 'Username updated successfully', user: { username: user.username, username_changes_count: user.username_changes_count } });
-  } catch (err) {
-    logger.error('Update username error:', err);
-    next(err);
-  }
-};
       return res.status(404).json({ success: false, msg: 'User not found' });
     }
 
@@ -216,12 +170,4 @@ const updateUsername = async (req, res, next) => {
     logger.error('Change password error:', err);
     next(err);
   }
-};
-
-module.exports = {
-  getCurrentUser,
-  getUserByUsername,
-  updateProfile,
-  changePassword,
-  updateUsername
 };

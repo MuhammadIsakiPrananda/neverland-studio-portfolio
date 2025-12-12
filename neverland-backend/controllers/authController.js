@@ -110,8 +110,6 @@ export const register = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // 6. Create user
-    // Set username_changes_count to 0 and username_changes_month to current month (1-12)
-    const now = new Date();
     const user = await User.create({
       name,
       username,
@@ -120,9 +118,7 @@ export const register = async (req, res, next) => {
       provider: "email",
       role: "user",
       isVerified: true, // Auto-verify for immediate login capability
-      lastLogin: now,
-      username_changes_count: 0,
-      username_changes_month: now.getMonth() + 1, // JS months are 0-based
+      lastLogin: new Date(),
     });
 
     logAuthEvent("USER_REGISTERED", user.id, {

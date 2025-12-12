@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend API for Neverland Studio Portfolio",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "node server.js",
     "dev": "set NODE_ENV=development&& nodemon server.js",
@@ -31,7 +32,6 @@
     "compression": "^1.7.4",
     "connect-session-sequelize": "^7.1.7",
     "cors": "^2.8.5",
-    "dayjs": "^1.11.19",
     "dotenv": "^16.4.5",
     "express": "^4.21.2",
     "express-rate-limit": "^7.4.1",

@@ -1,8 +1,7 @@
-const express = require("express");
-const { verifyToken } = require("../config/auth.js");
-const User = require("../models/User.js");
-const logger = require("../utils/logger.js");
-const { updateUsername } = require('../controllers/userController.js');
+import express from "express";
+import { verifyToken } from "../config/auth.js";
+import User from "../models/User.js";
+import logger from "../utils/logger.js";
 
 const router = express.Router();
 
@@ -27,6 +26,7 @@ router.get("/me", verifyToken, async (req, res) => {
     if (!user) {
       return res.status(404).json({ success: false, msg: "User not found." });
     }
+
     // Send back the user's public profile data
     res.json({ success: true, user });
   } catch (error) {
@@ -43,7 +43,4 @@ router.get("/me", verifyToken, async (req, res) => {
   }
 });
 
-// Endpoint untuk update username (max 3x per bulan)
-router.put('/username', verifyToken, updateUsername);
-
-module.exports = router;
+export default router;

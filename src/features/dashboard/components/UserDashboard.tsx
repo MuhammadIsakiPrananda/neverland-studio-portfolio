@@ -72,7 +72,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
     { id: "profile", label: "Profile", icon: UserCircle },
     { id: "security", label: "Security", icon: Shield },
     { id: "account", label: "Account & Billing", icon: CreditCard },
-    { id: "notifications", label: "Notifications & Appearance", icon: (props: any) => <Bell {...props} className="w-6 h-6 group-hover:text-amber-300 transition-colors" /> },
+    { id: "notifications", label: "Notifications & Appearance", icon: Bell },
     { id: "support", label: "Support", icon: LifeBuoy },
     { id: "apiKeys", label: "API Keys", icon: KeyRound },
     { id: "terms", label: "Terms & Conditions", icon: FileText },
@@ -163,7 +163,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
               isSidebarOpen ? "translate-x-0" : "-translate-x-full"
             } md:translate-x-0`}
           >
-            <h2 className="text-2xl font-extrabold text-white mb-8 tracking-tight">Settings</h2>
+            <h2 className="text-xl font-bold text-white mb-8">Settings</h2>
             <div className="flex flex-col gap-6">
               <ProfileHeader
                 user={internalUser}
@@ -171,23 +171,23 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
                 onAvatarClick={() => fileInputRef.current?.click()}
               />
               <div className="space-y-2">
-                <div className="flex justify-between text-xs text-slate-400 font-semibold">
+                <div className="flex justify-between text-xs text-slate-400">
                   <span>Profile Completion</span>
-                  <span className="font-bold text-amber-400">
+                  <span className="font-semibold text-white">
                     {Math.round(profileCompletion)}%
                   </span>
                 </div>
-                <div className="w-full bg-slate-700/50 rounded-full h-2 mt-1">
+                <div className="w-full bg-slate-700/50 rounded-full h-1.5">
                   <motion.div
-                    className="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full"
+                    className="bg-gradient-to-r from-amber-500 to-orange-500 h-1.5 rounded-full"
                     initial={{ width: 0 }}
                     animate={{ width: `${profileCompletion}%` }}
-                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
                   />
                 </div>
               </div>
             </div>
-            <nav className="mt-10 flex flex-col gap-2 flex-grow text-left">
+            <nav className="mt-10 flex flex-col gap-2 flex-grow">
               {navItems.map((item) => (
                 <button
                   key={item.id}
@@ -195,16 +195,16 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
                     setActiveSection(item.id);
                     setIsSidebarOpen(false); // Tutup sidebar di mobile setelah memilih
                   }}
-                  className={`relative flex items-center gap-3 px-5 py-3 rounded-lg text-base font-semibold transition-colors group text-left ${
+                  className={`relative flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                     activeSection === item.id
-                      ? "text-white bg-gradient-to-r from-amber-500/20 to-orange-500/10 shadow-md"
+                      ? "text-white"
                       : "text-slate-400 hover:text-white hover:bg-slate-800/50"
                   }`}
                 >
                   {activeSection === item.id && (
                     <motion.div
                       layoutId="active-nav-pill"
-                      className="absolute inset-0 bg-amber-500/10 rounded-lg border border-amber-500/30 z-0"
+                      className="absolute inset-0 bg-amber-500/10 rounded-lg border border-amber-500/30"
                       transition={{
                         type: "spring",
                         stiffness: 300,
@@ -213,11 +213,11 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
                     />
                   )}
                   <item.icon
-                    className={`relative w-6 h-6 mr-1 ${
-                      activeSection === item.id ? "text-amber-400" : "group-hover:text-amber-300"
+                    className={`relative w-5 h-5 ${
+                      activeSection === item.id ? "text-amber-400" : ""
                     }`}
                   />
-                  <span className="relative z-10 tracking-wide">{item.label}</span>
+                  <span className="relative">{item.label}</span>
                 </button>
               ))}
             </nav>

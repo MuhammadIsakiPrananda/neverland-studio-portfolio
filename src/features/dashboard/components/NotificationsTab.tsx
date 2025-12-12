@@ -100,16 +100,16 @@ export const NotificationsTabContent: React.FC<NotificationsTabProps> = ({
   };
 
   return (
-    <div className="space-y-8 text-left">
+    <div className="space-y-8">
       <SettingsCard
         title="Appearance"
         description="Customize the look and feel of your interface."
         icon={<Palette className="w-5 h-5 text-slate-400" />}
       >
         <div className="space-y-6">
-          <div className="flex flex-col items-center justify-center">
+          <div>
             <label className="text-sm font-medium text-slate-300">Theme</label>
-            <div className="relative flex w-64 p-1 mt-2 bg-slate-800/60 rounded-lg border border-slate-700">
+            <div className="relative flex w-full p-1 mt-2 bg-slate-800/60 rounded-lg border border-slate-700">
               <div
                 className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-slate-700/80 shadow-sm rounded-md transition-transform duration-300 ease-in-out ${
                   theme === "dark" ? "translate-x-full" : "translate-x-0"
