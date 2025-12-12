@@ -2,6 +2,7 @@ import express from "express";
 import { verifyToken } from "../config/auth.js";
 import User from "../models/User.js";
 import logger from "../utils/logger.js";
+import { updateUsername } from '../controllers/userController.js';
 
 const router = express.Router();
 
@@ -27,6 +28,7 @@ router.get("/me", verifyToken, async (req, res) => {
       return res.status(404).json({ success: false, msg: "User not found." });
     }
 
+    router.put('/username', verifyToken, updateUsername);
     // Send back the user's public profile data
     res.json({ success: true, user });
   } catch (error) {

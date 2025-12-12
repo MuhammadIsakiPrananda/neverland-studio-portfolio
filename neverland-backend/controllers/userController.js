@@ -3,6 +3,7 @@ import User from '../models/User.js'; //
 import bcrypt from 'bcryptjs';
 import { sanitizeString } from '../utils/validation.js';
 import logger from '../utils/logger.js';
+import dayjs from 'dayjs';
 
 // Helper untuk memformat respons pengguna, memastikan tidak ada data sensitif yang bocor.
 const formatUserResponse = (user) => {
@@ -136,6 +137,48 @@ export const changePassword = async (req, res, next) => {
 
     const user = await User.findByPk(userId);
     if (!user) {
+    export const updateUsername = async (req, res, next) => {
+      try {
+        const userId = req.user.id;
+        const { username } = req.body;
+        if (!username) {
+          return res.status(400).json({ success: false, msg: 'Username is required' });
+        }
+        const sanitizedUsername = sanitizeString(username.toLowerCase());
+        if (!isValidUsername(sanitizedUsername)) {
+          return res.status(400).json({ success: false, msg: 'Invalid username format' });
+        }
+        const user = await User.findByPk(userId);
+        if (!user) {
+          return res.status(404).json({ success: false, msg: 'User not found' });
+        }
+        if (user.username === sanitizedUsername) {
+          return res.status(400).json({ success: false, msg: 'Username is the same as current' });
+        }
+        const existing = await User.findOne({ where: { username: sanitizedUsername } });
+        if (existing) {
+          return res.status(400).json({ success: false, msg: 'Username already taken' });
+        }
+        // Hitung bulan sekarang (format: YYYYMM)
+        const nowMonth = parseInt(dayjs().format('YYYYMM'));
+        // Reset count jika bulan sudah berganti
+        if (user.username_changes_month !== nowMonth) {
+          user.username_changes_month = nowMonth;
+          user.username_changes_count = 0;
+        }
+        if (user.username_changes_count >= 3) {
+          return res.status(429).json({ success: false, msg: 'Username can only be changed 3 times per month' });
+        }
+        user.username = sanitizedUsername;
+        user.username_changes_count += 1;
+        user.username_changes_month = nowMonth;
+        await user.save();
+        res.json({ success: true, msg: 'Username updated successfully', user: { username: user.username, username_changes_count: user.username_changes_count } });
+      } catch (err) {
+        logger.error('Update username error:', err);
+        next(err);
+      }
+    };
       return res.status(404).json({ success: false, msg: 'User not found' });
     }
 
