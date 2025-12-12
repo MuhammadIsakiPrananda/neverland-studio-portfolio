@@ -114,7 +114,6 @@ const User = sequelize.define(
       type: DataTypes.DATE,
       allowNull: true,
     },
-    },
     twoFactorSecret: {
       type: DataTypes.STRING(255),
       allowNull: true,
@@ -128,7 +127,7 @@ const User = sequelize.define(
       type: DataTypes.TEXT, // JSON string array
       allowNull: true,
     },
-  {
+  },
     // Mengaktifkan soft deletes. `destroy()` akan set `deletedAt` daripada menghapus permanen.
     paranoid: true,
     timestamps: true,
