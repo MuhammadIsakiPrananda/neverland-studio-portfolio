@@ -46,7 +46,6 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "sequelize": "^6.37.5",
-    "speakeasy": "^2.0.0",
     "winston": "^3.17.0",
     "xss-clean": "^0.1.4"
   },
