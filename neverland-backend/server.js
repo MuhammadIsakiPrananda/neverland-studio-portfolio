@@ -1,40 +1,44 @@
 // server.js - SIMPLIFIED VERSION
-import dotenv from "dotenv";
+const dotenv = require("dotenv");
 dotenv.config(); // Load .env file
 
-import express from "express"; // Must be after dotenv
-import cors from "cors";
-import passport from "passport";
-import connectSessionSequelize from "connect-session-sequelize";
-import session from "express-session";
-import helmet from "helmet";
-import rateLimit from "express-rate-limit";
-import xss from "xss-clean";
-import compression from "compression";
+const express = require("express"); // Must be after dotenv
+const cors = require("cors");
+const passport = require("passport");
+const connectSessionSequelize = require("connect-session-sequelize");
+const session = require("express-session");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const xss = require("xss-clean");
+const compression = require("compression");
 
 // Database & Models
-import sequelize from "./config/database.js";
-import User from "./models/User.js"; // Impor model User secara langsung
+const sequelize = require("./config/database.js");
+const User = require("./models/User.js"); // Impor model User secara langsung
 
 // Configurations
-import config, { validateConfig } from "./config/config.js";
-import configurePassport from "./config/passport.js";
-import configureGithubStrategy from "./config/passportGithub.js";
-import configureGoogleStrategy from "./config/passportGoogle.js";
-import { validateUrls } from "./utils/urlConfig.js";
-import logger, { requestLogger } from "./utils/logger.js";
-import {
-  runMigrations,
-  ensureMigrationsTable,
-} from "./utils/migrationRunner.js";
+const configObj = require("./config/config.js");
+const config = configObj.default || configObj;
+const validateConfig = configObj.validateConfig || configObj.default?.validateConfig;
+const configurePassport = require("./config/passport.js");
+const configureGithubStrategy = require("./config/passportGithub.js");
+const configureGoogleStrategy = require("./config/passportGoogle.js");
+const { validateUrls } = require("./utils/urlConfig.js");
+const loggerObj = require("./utils/logger.js");
+const logger = loggerObj.default || loggerObj;
+const requestLogger = loggerObj.requestLogger || loggerObj.default?.requestLogger;
+const migrationRunner = require("./utils/migrationRunner.js");
+const runMigrations = migrationRunner.runMigrations || migrationRunner.default?.runMigrations;
+const ensureMigrationsTable = migrationRunner.ensureMigrationsTable || migrationRunner.default?.ensureMigrationsTable;
 
 // Routes
-import authRoutes from "./routes/auth.js";
-import userRoutes from "./routes/user.js";
-import configRoutes from "./routes/config.js";
-import healthRoutes from "./routes/health.js";
+const authRoutes = require("./routes/auth.js");
+const userRoutes = require("./routes/user.js");
+const configRoutes = require("./routes/config.js");
+const healthRoutes = require("./routes/health.js");
 
-import { errorHandler } from "./utils/errors.js";
+const errorsObj = require("./utils/errors.js");
+const errorHandler = errorsObj.errorHandler || errorsObj.default?.errorHandler;
 
 // --- INITIALIZATION ---
 const app = express();
@@ -460,4 +464,4 @@ const startServer = async () => {
 // Start the server
 startServer();
 
-export default app;
+module.exports = app;
