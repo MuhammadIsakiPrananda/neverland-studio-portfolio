@@ -128,6 +128,7 @@ const User = sequelize.define(
       allowNull: true,
     },
   },
+  {
     // Mengaktifkan soft deletes. `destroy()` akan set `deletedAt` daripada menghapus permanen.
     paranoid: true,
     timestamps: true,
