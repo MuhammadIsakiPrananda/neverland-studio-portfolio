@@ -280,12 +280,17 @@ const DashboardModal: React.FC<DashboardModalProps> = ({
                             )}
                           </div>
                           <div>
+                            <label htmlFor="avatar-upload" className="sr-only">
+                              Upload Profile Photo
+                            </label>
                             <input
+                              id="avatar-upload"
                               type="file"
                               ref={fileInputRef}
                               onChange={handleAvatarChange}
                               accept="image/*"
                               className="hidden"
+                              title="Upload Profile Photo"
                             />
                             <button
                               type="button"
