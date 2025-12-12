@@ -141,8 +141,8 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
         >
           {/* Aurora Background */}
           <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-amber-500/10 rounded-full blur-3xl animate-pulse-slow opacity-50"></div>
-            <div className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-orange-500/10 rounded-full blur-3xl animate-pulse-slow animation-delay-4000 opacity-50"></div>
+            <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-cyan-500/10 rounded-full blur-3xl animate-pulse-slow opacity-50"></div>
+            <div className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow animation-delay-4000 opacity-50"></div>
           </div>
 
           {/* Overlay untuk sidebar mobile */}
@@ -179,7 +179,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
                 </div>
                 <div className="w-full bg-slate-700/50 rounded-full h-1.5">
                   <motion.div
-                    className="bg-gradient-to-r from-amber-500 to-orange-500 h-1.5 rounded-full"
+                    className="bg-gradient-to-r from-cyan-500 to-blue-500 h-1.5 rounded-full"
                     initial={{ width: 0 }}
                     animate={{ width: `${profileCompletion}%` }}
                     transition={{ duration: 0.5, ease: "easeOut" }}
@@ -195,7 +195,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
                     setActiveSection(item.id);
                     setIsSidebarOpen(false); // Tutup sidebar di mobile setelah memilih
                   }}
-                  className={`relative flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`relative w-full flex items-center justify-start gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors text-left ${
                     activeSection === item.id
                       ? "text-white"
                       : "text-slate-400 hover:text-white hover:bg-slate-800/50"
@@ -204,7 +204,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
                   {activeSection === item.id && (
                     <motion.div
                       layoutId="active-nav-pill"
-                      className="absolute inset-0 bg-amber-500/10 rounded-lg border border-amber-500/30"
+                      className="absolute inset-0 bg-cyan-500/10 rounded-lg border border-cyan-500/30"
                       transition={{
                         type: "spring",
                         stiffness: 300,
@@ -213,11 +213,11 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
                     />
                   )}
                   <item.icon
-                    className={`relative w-5 h-5 ${
-                      activeSection === item.id ? "text-amber-400" : ""
+                    className={`relative w-5 h-5 flex-shrink-0 ${
+                      activeSection === item.id ? "text-cyan-400" : ""
                     }`}
                   />
-                  <span className="relative">{item.label}</span>
+                  <span className="relative truncate">{item.label}</span>
                 </button>
               ))}
             </nav>

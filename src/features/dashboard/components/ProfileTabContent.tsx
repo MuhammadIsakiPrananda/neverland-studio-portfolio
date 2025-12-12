@@ -69,7 +69,7 @@ export const ProfileTabContent: React.FC<ProfileTabContentProps> = ({
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              className="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 mt-1 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors"
+              className="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 mt-1 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors"
             />
           </div>
           <div>
@@ -87,7 +87,7 @@ export const ProfileTabContent: React.FC<ProfileTabContentProps> = ({
               value={formData.username}
               onChange={handleInputChange}
               disabled={isUsernameChangeDisabled || isLoading}
-              className="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 mt-1 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors disabled:bg-slate-800/40 disabled:cursor-not-allowed disabled:text-slate-500"
+              className="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 mt-1 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors disabled:bg-slate-800/40 disabled:cursor-not-allowed disabled:text-slate-500"
               aria-describedby="username-help"
             />
           </div>
@@ -98,7 +98,7 @@ export const ProfileTabContent: React.FC<ProfileTabContentProps> = ({
               value={formData.bio || ""}
               onChange={handleInputChange}
               rows={3}
-              className="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 mt-1 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors resize-none"
+              className="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 mt-1 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors resize-none"
               placeholder="Tell us a little about yourself..."
             />
           </div>
@@ -118,7 +118,7 @@ export const ProfileTabContent: React.FC<ProfileTabContentProps> = ({
               value={formData.socials?.github || ""}
               onChange={handleInputChange}
               placeholder="github.com/username"
-              className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-9 pr-3 py-2 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors"
+              className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-9 pr-3 py-2 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors"
             />
           </div>
           <div className="relative">
@@ -129,7 +129,7 @@ export const ProfileTabContent: React.FC<ProfileTabContentProps> = ({
               value={formData.socials?.linkedin || ""}
               onChange={handleInputChange}
               placeholder="linkedin.com/in/username"
-              className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-9 pr-3 py-2 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors"
+              className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-9 pr-3 py-2 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors"
             />
           </div>
           <div className="relative">
@@ -140,7 +140,7 @@ export const ProfileTabContent: React.FC<ProfileTabContentProps> = ({
               value={formData.socials?.twitter || ""}
               onChange={handleInputChange}
               placeholder="twitter.com/username"
-              className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-9 pr-3 py-2 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors"
+              className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-9 pr-3 py-2 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors"
             />
           </div>
         </div>
@@ -161,7 +161,7 @@ export const ProfileTabContent: React.FC<ProfileTabContentProps> = ({
             <button
               onClick={handleSaveChanges}
               disabled={isLoading}
-              className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <Loader className="w-5 h-5 animate-spin" />
@@ -181,7 +181,7 @@ export const ProfileTabContent: React.FC<ProfileTabContentProps> = ({
           </label>
           <div
             onClick={() => coverPhotoInputRef.current?.click()}
-            className="mt-2 flex justify-center items-center w-full h-32 border-2 border-dashed border-slate-700 rounded-lg cursor-pointer hover:border-amber-500 transition-colors bg-slate-800/50"
+            className="mt-2 flex justify-center items-center w-full h-32 border-2 border-dashed border-slate-700 rounded-lg cursor-pointer hover:border-cyan-500 transition-colors bg-slate-800/50"
           >
             <div className="text-center text-slate-500">
               <ImageIcon className="mx-auto h-8 w-8" />

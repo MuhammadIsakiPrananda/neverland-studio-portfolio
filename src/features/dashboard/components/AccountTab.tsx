@@ -99,7 +99,7 @@ export const AccountTabContent: React.FC = () => {
             <button
               onClick={handleSavePayment}
               disabled={isSaving}
-              className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? (
                 <Loader className="w-5 h-5 animate-spin" />
@@ -119,7 +119,7 @@ export const AccountTabContent: React.FC = () => {
               key={method.id}
               className={`flex items-center gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all ${
                 selectedPayment === method.id
-                  ? "border-amber-500 bg-amber-500/10"
+                  ? "border-cyan-500 bg-cyan-500/10"
                   : "border-slate-800 bg-slate-900/50 hover:border-slate-700"
               }`}
             >
@@ -158,7 +158,7 @@ export const AccountTabContent: React.FC = () => {
                   <input
                     type="text"
                     placeholder="0000 0000 0000 0000"
-                    className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors"
+                    className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -172,7 +172,7 @@ export const AccountTabContent: React.FC = () => {
                     <input
                       type="text"
                       placeholder="MM / YY"
-                      className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors"
+                      className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors"
                     />
                   </div>
                 </div>
@@ -186,7 +186,7 @@ export const AccountTabContent: React.FC = () => {
                       type="password"
                       placeholder="•••"
                       maxLength={4}
-                      className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors"
+                      className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors"
                     />
                   </div>
                 </div>
@@ -211,7 +211,7 @@ export const AccountTabContent: React.FC = () => {
           <button
             onClick={fetchInvoices}
             disabled={isHistoryLoading}
-            className="flex items-center gap-2 text-sm text-amber-400 hover:text-amber-300 transition-colors disabled:opacity-50 disabled:cursor-wait"
+            className="flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300 transition-colors disabled:opacity-50 disabled:cursor-wait"
           >
             <RefreshCw
               className={`w-4 h-4 ${isHistoryLoading ? "animate-spin" : ""}`}
@@ -264,7 +264,7 @@ export const AccountTabContent: React.FC = () => {
                   <td className="p-3">{invoice.date}</td>
                   <td className="p-3">{invoice.amount}</td>
                   <td className="p-3 text-right">
-                    <button className="p-2 text-slate-400 hover:text-amber-400 transition-colors">
+                    <button className="p-2 text-slate-400 hover:text-cyan-400 transition-colors">
                       <Download className="w-4 h-4" />
                     </button>
                   </td>
