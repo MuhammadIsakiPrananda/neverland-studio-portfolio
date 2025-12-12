@@ -18,5 +18,5 @@ RUN mkdir -p logs
 # Expose port
 EXPOSE 5000
 
-# Start application
-CMD ["node", "server.js"]
+# Jalankan migrasi sebelum start server
+CMD npx sequelize-cli db:migrate && node server.js

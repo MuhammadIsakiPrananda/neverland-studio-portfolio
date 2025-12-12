@@ -8,7 +8,15 @@ import {
   forgotPassword,
   resetPassword,
   verifyResetToken,
+  setup2FA,
+  verify2FA,
+  download2FARecovery,
 } from "../controllers/authController.js";
+// --- 2FA ROUTES (require auth middleware) ---
+import { requireAuth } from "../middleware/authMiddleware.js";
+router.post("/2fa/setup", requireAuth, setup2FA);
+router.post("/2fa/verify", requireAuth, verify2FA);
+router.get("/2fa/recovery", requireAuth, download2FARecovery);
 import deleteHandler from "./delete.js";
 import generateToken from "../utils/generateToken.js";
 import {

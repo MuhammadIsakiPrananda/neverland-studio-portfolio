@@ -1,3 +1,101 @@
+// 2FA dependencies
+import speakeasy from "speakeasy";
+import qrcode from "qrcode";
+/**
+ * @desc    Generate 2FA secret and QR
+ * @route   POST /api/auth/2fa/setup
+ * @access  Private (user must be logged in)
+ */
+export const setup2FA = async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.user.id);
+    if (!user)
+      return res.status(404).json({ success: false, msg: "User not found" });
+    if (user.twoFactorEnabled)
+      return res
+        .status(400)
+        .json({ success: false, msg: "2FA already enabled" });
+
+    const secret = speakeasy.generateSecret({
+      name: `Neverland Studio (${user.email})`,
+    });
+    user.twoFactorSecret = secret.base32;
+    // Generate 8 recovery codes
+    const recoveryCodes = Array.from({ length: 8 }, () =>
+      crypto.randomBytes(8).toString("hex")
+    );
+    user.twoFactorRecoveryCodes = JSON.stringify(recoveryCodes);
+    await user.save();
+
+    // Generate QR code data URL
+    const otpauthUrl = secret.otpauth_url;
+    const qr = await qrcode.toDataURL(otpauthUrl);
+
+    res.json({
+      success: true,
+      qr,
+      secret: secret.base32,
+      recoveryCodes,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @desc    Verify 2FA code and enable 2FA
+ * @route   POST /api/auth/2fa/verify
+ * @access  Private
+ */
+export const verify2FA = async (req, res, next) => {
+  try {
+    const { code } = req.body;
+    const user = await User.findByPk(req.user.id);
+    if (!user || !user.twoFactorSecret)
+      return res
+        .status(400)
+        .json({ success: false, msg: "2FA not initialized" });
+
+    const verified = speakeasy.totp.verify({
+      secret: user.twoFactorSecret,
+      encoding: "base32",
+      token: code,
+      window: 1,
+    });
+    if (!verified)
+      return res.status(400).json({ success: false, msg: "Invalid 2FA code" });
+
+    user.twoFactorEnabled = true;
+    await user.save();
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @desc    Download recovery codes
+ * @route   GET /api/auth/2fa/recovery
+ * @access  Private
+ */
+export const download2FARecovery = async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.user.id);
+    if (!user || !user.twoFactorRecoveryCodes)
+      return res
+        .status(404)
+        .json({ success: false, msg: "No recovery codes found" });
+    const codes = JSON.parse(user.twoFactorRecoveryCodes);
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="recovery-codes.txt"'
+    );
+    res.setHeader("Content-Type", "text/plain");
+    res.send(codes.join("\n"));
+  } catch (err) {
+    next(err);
+  }
+};
 // controllers/authController.js - SECURE VERSION with enhanced validation
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";

@@ -1,18 +1,15 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
-module.exports = function (req, res, next) {
-  // Ambil token dari header 'Authorization'
+export function requireAuth(req, res, next) {
   const token = req.header("Authorization")?.replace("Bearer ", "");
-
   if (!token) {
     return res.status(401).json({ msg: "No token, authorization denied" });
   }
-
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded.user; // Asumsi payload token adalah { user: { id: '...' } }
+    req.user = decoded.user;
     next();
   } catch (err) {
     res.status(401).json({ msg: "Token is not valid" });
   }
-};
+}

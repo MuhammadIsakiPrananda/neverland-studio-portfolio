@@ -17,6 +17,7 @@ import {
   type ReactNode,
   type FormEvent,
 } from "react";
+import apiService from "@/services/apiService";
 import { useNotification } from "@/shared/components";
 
 type UserProfile = {
@@ -50,7 +51,10 @@ const DashboardModal: React.FC<DashboardModalProps> = ({
   const [activeTab, setActiveTab] = useState<Tab>("profile");
   const [isSettingUp2FA, setIsSettingUp2FA] = useState(false);
   const [twoFactorCode, setTwoFactorCode] = useState("");
-  const [is2faEnabled, setIs2faEnabled] = useState(false); // Mock state
+  const [is2faEnabled, setIs2faEnabled] = useState(false);
+  const [qrUrl, setQrUrl] = useState<string | null>(null);
+  const [recoveryCodes, setRecoveryCodes] = useState<string[]>([]);
+  const [showRecovery, setShowRecovery] = useState(false);
 
   const { addNotification } = useNotification();
 
@@ -87,20 +91,62 @@ const DashboardModal: React.FC<DashboardModalProps> = ({
     }, 1500);
   };
 
-  const handleEnable2FA = () => {
+  const handleEnable2FA = async () => {
     setIsSettingUp2FA(true);
+    try {
+      const res = await apiService.post("/auth/2fa/setup");
+      setQrUrl(res.data.qr);
+      setRecoveryCodes(res.data.recoveryCodes);
+    } catch (err: any) {
+      addNotification(
+        "2FA Error",
+        err?.response?.data?.msg || "Failed to setup 2FA",
+        "error"
+      );
+      setIsSettingUp2FA(false);
+    }
   };
 
-  const handleVerify2FA = (e: FormEvent) => {
+  const handleVerify2FA = async (e: FormEvent) => {
     e.preventDefault();
-    // Mock verification
-    addNotification(
-      "2FA Enabled",
-      "Two-factor authentication has been successfully enabled.",
-      "success"
-    );
-    setIs2faEnabled(true);
-    setIsSettingUp2FA(false);
+    try {
+      await apiService.post("/auth/2fa/verify", { code: twoFactorCode });
+      addNotification(
+        "2FA Enabled",
+        "Two-factor authentication has been successfully enabled.",
+        "success"
+      );
+      setIs2faEnabled(true);
+      setIsSettingUp2FA(false);
+      setQrUrl(null);
+    } catch (err: any) {
+      addNotification(
+        "2FA Error",
+        err?.response?.data?.msg || "Invalid code",
+        "error"
+      );
+    }
+  };
+
+  const handleDownloadRecovery = async () => {
+    try {
+      const res = await apiService.get("/auth/2fa/recovery", {
+        responseType: "blob",
+      });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "recovery-codes.txt");
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+    } catch (err: any) {
+      addNotification(
+        "Download Error",
+        err?.response?.data?.msg || "Failed to download recovery codes",
+        "error"
+      );
+    }
   };
 
   const backdropVariants: Variants = {
@@ -370,12 +416,20 @@ const DashboardModal: React.FC<DashboardModalProps> = ({
                                   </p>
                                 </div>
                                 {is2faEnabled ? (
-                                  <button
-                                    onClick={() => setIs2faEnabled(false)}
-                                    className="bg-red-500/20 text-red-300 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-500/30 transition-colors"
-                                  >
-                                    Disable
-                                  </button>
+                                  <>
+                                    <button
+                                      className="bg-green-600/20 text-green-300 px-4 py-2 rounded-lg text-sm font-semibold cursor-not-allowed opacity-60"
+                                      disabled
+                                    >
+                                      Enabled
+                                    </button>
+                                    <button
+                                      onClick={handleDownloadRecovery}
+                                      className="ml-2 bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-600 transition-colors"
+                                    >
+                                      Download Recovery Codes
+                                    </button>
+                                  </>
                                 ) : (
                                   <button
                                     onClick={handleEnable2FA}
@@ -398,8 +452,37 @@ const DashboardModal: React.FC<DashboardModalProps> = ({
                                   </p>
                                   <div className="flex flex-col sm:flex-row items-center gap-6">
                                     <div className="p-3 bg-white rounded-lg">
-                                      <QrCode className="w-32 h-32 text-black" />
+                                      {qrUrl ? (
+                                        <img
+                                          src={qrUrl}
+                                          alt="2FA QR Code"
+                                          className="w-32 h-32"
+                                        />
+                                      ) : (
+                                        <QrCode className="w-32 h-32 text-black" />
+                                      )}
                                     </div>
+                                    {recoveryCodes.length > 0 && (
+                                      <div className="mt-2">
+                                        <button
+                                          type="button"
+                                          className="text-xs text-amber-400 underline"
+                                          onClick={() =>
+                                            setShowRecovery((v) => !v)
+                                          }
+                                        >
+                                          {showRecovery ? "Hide" : "Show"}{" "}
+                                          Recovery Codes
+                                        </button>
+                                        {showRecovery && (
+                                          <div className="bg-slate-900 border border-slate-700 rounded p-2 mt-1 text-xs text-slate-200">
+                                            {recoveryCodes.map((code) => (
+                                              <div key={code}>{code}</div>
+                                            ))}
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
                                     <form
                                       onSubmit={handleVerify2FA}
                                       className="space-y-4 w-full"
