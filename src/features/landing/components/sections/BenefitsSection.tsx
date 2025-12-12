@@ -38,7 +38,7 @@ const BenefitsSection: React.FC<BenefitsSectionProps> = ({ isLoading }) => {
 
   return (
     <motion.section
-      className="py-16 sm:py-20 bg-slate-900/50"
+      className="py-20 sm:py-28 bg-slate-950 relative overflow-hidden"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.3 }}
@@ -52,7 +52,7 @@ const BenefitsSection: React.FC<BenefitsSectionProps> = ({ isLoading }) => {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <span className="text-amber-400 font-semibold text-sm uppercase tracking-wider">
+          <span className="text-cyan-400 font-semibold text-sm uppercase tracking-wider">
             {t("benefits.title")}
           </span>
           <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6 text-white">
@@ -134,7 +134,7 @@ const BenefitCard: React.FC<BenefitCardProps> = ({ benefit, variants }) => {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       variants={variants}
-      className="relative border border-slate-800 rounded-xl overflow-hidden group transition-all duration-300 hover:border-slate-700/80 hover:bg-slate-800/30 hover:-translate-y-1"
+      className="relative border border-white/10 rounded-2xl overflow-hidden group transition-all duration-500 hover:border-cyan-500/30 hover:shadow-2xl hover:shadow-cyan-500/10"
       style={{
         perspective: "1000px",
         rotateX,
@@ -144,38 +144,40 @@ const BenefitCard: React.FC<BenefitCardProps> = ({ benefit, variants }) => {
     >
       {/* Glowing Outline Effect */}
       <div
-        className="absolute -inset-px rounded-xl opacity-0 group-hover:opacity-70 transition-opacity duration-500"
+        className="absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
         style={{
-          background: `radial-gradient(600px circle at ${spotlightPosition.x}px ${spotlightPosition.y}px, rgba(251, 191, 36, 0.1), transparent 40%)`,
+          background: `radial-gradient(600px circle at ${spotlightPosition.x}px ${spotlightPosition.y}px, rgba(6, 182, 212, 0.15), transparent 40%)`,
           filter: "blur(20px)",
         }}
       />
 
       {/* Spotlight Effect */}
       <div
-        className="absolute inset-0 transition-all duration-300 opacity-0 group-hover:opacity-100"
+        className="absolute inset-0 transition-all duration-500 opacity-0 group-hover:opacity-100"
         style={{
-          background: `radial-gradient(300px at ${spotlightPosition.x}px ${spotlightPosition.y}px, rgba(251, 191, 36, 0.1), transparent 80%)`,
+          background: `radial-gradient(400px at ${spotlightPosition.x}px ${spotlightPosition.y}px, rgba(6, 182, 212, 0.1), transparent 80%)`,
           transform: "translateZ(20px)", // Push spotlight slightly forward
         }}
       />
       <div
-        className="relative h-full bg-slate-900/70 p-6 rounded-lg text-center flex flex-col"
+        className="relative h-full bg-slate-900/80 backdrop-blur-sm p-8 rounded-xl text-center flex flex-col border border-white/5"
         style={{ transform: "translateZ(40px)" }}
       >
-        <div className="flex justify-center mb-4">
+        <div className="flex justify-center mb-6">
           <div
-            className={`w-16 h-16 rounded-full bg-slate-800/70 flex items-center justify-center border border-slate-700 group-hover:border-amber-500/50 transition-colors duration-300`}
+            className={`w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center border border-white/10 group-hover:border-cyan-500/50 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all duration-500`}
           >
-            {benefit.icon}
+            <div className="text-slate-400 group-hover:text-cyan-400 transition-colors duration-300">
+              {benefit.icon}
+            </div>
           </div>
         </div>
         <div
           className="flex-grow flex flex-col"
           style={{ transform: "translateZ(20px)" }}
         >
-          <h3 className="text-lg font-bold text-white mb-2">{benefit.title}</h3>
-          <p className="text-sm text-slate-400 leading-relaxed flex-grow">
+          <h3 className="text-xl font-bold text-white mb-3 group-hover:text-cyan-200 transition-colors duration-300">{benefit.title}</h3>
+          <p className="text-sm text-slate-400 leading-relaxed flex-grow group-hover:text-slate-300 transition-colors duration-300">
             {benefit.description}
           </p>
           {benefit.details && (

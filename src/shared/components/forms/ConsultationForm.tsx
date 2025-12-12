@@ -125,7 +125,7 @@ const ConsultationForm: React.FC<ConsultationFormProps> = ({ onClose }) => {
               placeholder="Full Name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors"
+              className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors"
               required
             />
           </div>
@@ -137,7 +137,7 @@ const ConsultationForm: React.FC<ConsultationFormProps> = ({ onClose }) => {
               placeholder="Email Address"
               value={formData.email}
               onChange={handleChange}
-              className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors"
+              className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors"
               required
             />
           </div>
@@ -151,7 +151,7 @@ const ConsultationForm: React.FC<ConsultationFormProps> = ({ onClose }) => {
             placeholder="Company Name (Optional)"
             value={formData.company}
             onChange={handleChange}
-            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors"
+            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors"
           />
         </motion.div>
 
@@ -161,7 +161,7 @@ const ConsultationForm: React.FC<ConsultationFormProps> = ({ onClose }) => {
             name="topic"
             value={formData.topic}
             onChange={handleChange}
-            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors appearance-none"
+            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors appearance-none"
             required
           >
             <option value="" disabled>
@@ -194,7 +194,7 @@ const ConsultationForm: React.FC<ConsultationFormProps> = ({ onClose }) => {
                   placeholder="Please specify your topic"
                   value={formData.otherTopic}
                   onChange={handleChange}
-                  className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors"
+                  className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors"
                   required
                 />
               </div>
@@ -213,7 +213,7 @@ const ConsultationForm: React.FC<ConsultationFormProps> = ({ onClose }) => {
               name="date"
               value={formData.date}
               onChange={handleChange}
-              className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors"
+              className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors"
               required
             />
           </div>
@@ -224,7 +224,7 @@ const ConsultationForm: React.FC<ConsultationFormProps> = ({ onClose }) => {
               name="time"
               value={formData.time}
               onChange={handleChange}
-              className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors"
+              className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors"
               required
             />
           </div>
@@ -238,7 +238,7 @@ const ConsultationForm: React.FC<ConsultationFormProps> = ({ onClose }) => {
             value={formData.details}
             onChange={handleChange}
             rows={3}
-            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors resize-none"
+            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors resize-none"
           />
         </motion.div>
 
@@ -246,7 +246,7 @@ const ConsultationForm: React.FC<ConsultationFormProps> = ({ onClose }) => {
           variants={itemVariants}
           type="submit"
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <Loader className="w-5 h-5 animate-spin" />

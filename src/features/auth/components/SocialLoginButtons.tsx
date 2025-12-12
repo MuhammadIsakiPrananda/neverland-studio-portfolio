@@ -32,7 +32,7 @@ const SocialLoginButtons = () => {
             key={provider.name}
             onClick={() => initiateLogin(provider.name)}
             disabled={!!isLoading}
-            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-slate-700 rounded-lg text-slate-300 hover:text-white hover:bg-amber-500/10 hover:border-amber-500/50 transition-colors disabled:opacity-50 disabled:cursor-wait"
+            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-slate-700 rounded-lg text-slate-300 hover:text-white hover:bg-violet-500/10 hover:border-violet-500/50 transition-colors disabled:opacity-50 disabled:cursor-wait"
           >
             {isLoading === provider.name ? (
               <Loader className="h-5 w-5 animate-spin" />

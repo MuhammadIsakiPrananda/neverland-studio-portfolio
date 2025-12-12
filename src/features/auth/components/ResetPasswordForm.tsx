@@ -129,7 +129,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
   if (isVerifying) {
     return (
       <div className="w-full animate-fade-in text-center p-8">
-        <Loader className="w-8 h-8 animate-spin mx-auto text-amber-400 mb-4" />
+        <Loader className="w-8 h-8 animate-spin mx-auto text-violet-400 mb-4" />
         <p className="text-slate-400">Verifying reset link...</p>
       </div>
     );
@@ -153,8 +153,8 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
   if (success) {
     return (
       <div className="w-full animate-fade-in text-center p-8">
-        <div className="w-16 h-16 mx-auto mb-5 flex items-center justify-center bg-green-500/10 rounded-full border-2 border-green-500/20">
-          <CheckCircle className="w-8 h-8 text-green-400" />
+        <div className="w-16 h-16 mx-auto mb-5 flex items-center justify-center bg-violet-500/10 rounded-full border-2 border-violet-500/20">
+          <CheckCircle className="w-8 h-8 text-violet-400" />
         </div>
         <h2 className="text-2xl font-bold text-white mb-3">Password Reset</h2>
         <p className="text-slate-400 max-w-sm mx-auto">
@@ -168,7 +168,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
   return (
     <div className="w-full animate-fade-in">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-amber-400">Reset Password</h2>
+        <h2 className="text-3xl font-bold text-violet-400">Reset Password</h2>
         <p className="text-slate-400 mt-2">Enter your new password below</p>
       </div>
 
@@ -196,7 +196,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
               placeholder="Enter new password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-10 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none transition-all disabled:opacity-50 ${
+              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-10 py-2.5 text-white placeholder-slate-500 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 focus:outline-none transition-all disabled:opacity-50 ${
                 error ? "border-red-500/50" : "border-slate-700"
               }`}
               required
@@ -205,7 +205,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-violet-400 transition-colors"
               disabled={isLoading}
             >
               {showPassword ? (
@@ -234,7 +234,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
               placeholder="Confirm new password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-10 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none transition-all disabled:opacity-50 ${
+              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-10 py-2.5 text-white placeholder-slate-500 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 focus:outline-none transition-all disabled:opacity-50 ${
                 error ? "border-red-500/50" : "border-slate-700"
               }`}
               required
@@ -243,7 +243,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-violet-400 transition-colors"
               disabled={isLoading}
             >
               {showConfirmPassword ? (
@@ -256,7 +256,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
           {password && confirmPassword && (
             <div className="mt-2">
               {password === confirmPassword ? (
-                <p className="text-xs text-green-400">✓ Passwords match</p>
+                <p className="text-xs text-violet-400">✓ Passwords match</p>
               ) : (
                 <p className="text-xs text-red-400">✗ Passwords do not match</p>
               )}
@@ -272,28 +272,28 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
           <ul className="text-xs text-slate-400 space-y-1">
             <li
               className={
-                password.length >= 8 ? "text-green-400" : "text-slate-400"
+                password.length >= 8 ? "text-violet-400" : "text-slate-400"
               }
             >
               ✓ At least 8 characters
             </li>
             <li
               className={
-                /[A-Z]/.test(password) ? "text-green-400" : "text-slate-400"
+                /[A-Z]/.test(password) ? "text-violet-400" : "text-slate-400"
               }
             >
               ✓ One uppercase letter
             </li>
             <li
               className={
-                /[a-z]/.test(password) ? "text-green-400" : "text-slate-400"
+                /[a-z]/.test(password) ? "text-violet-400" : "text-slate-400"
               }
             >
               ✓ One lowercase letter
             </li>
             <li
               className={
-                /\d/.test(password) ? "text-green-400" : "text-slate-400"
+                /\d/.test(password) ? "text-violet-400" : "text-slate-400"
               }
             >
               ✓ One number
@@ -301,7 +301,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             <li
               className={
                 /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
-                  ? "text-green-400"
+                  ? "text-violet-400"
                   : "text-slate-400"
               }
             >
@@ -313,7 +313,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
         <button
           type="submit"
           disabled={isLoading || !password || !confirmPassword}
-          className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-violet-500/20 hover:shadow-xl hover:shadow-violet-500/40 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <>

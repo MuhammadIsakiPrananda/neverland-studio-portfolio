@@ -73,7 +73,7 @@ const Footer = () => {
                     key={idx}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 bg-slate-800/50 border border-slate-700/50 rounded-lg flex items-center justify-center hover:scale-110 hover:bg-amber-500/10 hover:border-amber-500/50 transition-all"
+                    className="w-10 h-10 bg-slate-800/50 border border-slate-700/50 rounded-lg flex items-center justify-center hover:scale-110 hover:bg-cyan-500/10 hover:border-cyan-500/50 transition-all"
                     aria-label={Icon.displayName || "Social media link"}
                   >
                     <Icon className="w-5 h-5 text-white" />
@@ -92,7 +92,7 @@ const Footer = () => {
                   <li>
                     <a
                       href="#Services"
-                      className="hover:text-amber-400 transition-colors"
+                      className="hover:text-cyan-400 transition-colors"
                     >
                       {t("footer.webDev")}
                     </a>
@@ -100,7 +100,7 @@ const Footer = () => {
                   <li>
                     <a
                       href="#Services"
-                      className="hover:text-amber-400 transition-colors"
+                      className="hover:text-cyan-400 transition-colors"
                     >
                       {t("footer.mobileDev")}
                     </a>
@@ -108,7 +108,7 @@ const Footer = () => {
                   <li>
                     <a
                       href="#Services"
-                      className="hover:text-amber-400 transition-colors"
+                      className="hover:text-cyan-400 transition-colors"
                     >
                       {t("footer.uiux")}
                     </a>
@@ -116,7 +116,7 @@ const Footer = () => {
                   <li>
                     <a
                       href="#Services"
-                      className="hover:text-amber-400 transition-colors"
+                      className="hover:text-cyan-400 transition-colors"
                     >
                       {t("footer.digitalMarketing")}
                     </a>
@@ -131,7 +131,7 @@ const Footer = () => {
                   <li>
                     <a
                       href="#Process"
-                      className="hover:text-amber-400 transition-colors"
+                      className="hover:text-cyan-400 transition-colors"
                     >
                       {t("footer.ourProcess")}
                     </a>
@@ -139,7 +139,7 @@ const Footer = () => {
                   <li>
                     <a
                       href="#Team"
-                      className="hover:text-amber-400 transition-colors"
+                      className="hover:text-cyan-400 transition-colors"
                     >
                       {t("footer.ourTeam")}
                     </a>
@@ -147,7 +147,7 @@ const Footer = () => {
                   <li>
                     <a
                       href="#Portfolio"
-                      className="hover:text-amber-400 transition-colors"
+                      className="hover:text-cyan-400 transition-colors"
                     >
                       {t("footer.portfolio")}
                     </a>
@@ -155,7 +155,7 @@ const Footer = () => {
                   <li>
                     <a
                       href="#Contact"
-                      className="hover:text-amber-400 transition-colors"
+                      className="hover:text-cyan-400 transition-colors"
                     >
                       {t("footer.contact")}
                     </a>
@@ -165,11 +165,11 @@ const Footer = () => {
               {/* Available Payments */}
               <div className="sm:col-span-2">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"></div>
-                  <h4 className="font-bold text-base tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 whitespace-nowrap">
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent"></div>
+                  <h4 className="font-bold text-base tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-cyan-500 to-blue-600 whitespace-nowrap">
                     {t("footer.paymentMethods")}
                   </h4>
-                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"></div>
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent"></div>
                 </div>
                 <p className="text-slate-400 text-xs mb-5 text-center font-medium">
                   {t("footer.paymentDescription")}
@@ -186,13 +186,13 @@ const Footer = () => {
                         stiffness: 200,
                         damping: 15,
                       }}
-                      className="group relative bg-white border-2 border-slate-200 rounded-lg p-2 aspect-[3/2] flex items-center justify-center transition-all duration-300 hover:border-amber-400 hover:shadow-xl hover:shadow-amber-500/20 hover:scale-105 overflow-hidden"
+                      className="group relative bg-white border-2 border-slate-200 rounded-lg p-2 aspect-[3/2] flex items-center justify-center transition-all duration-300 hover:border-cyan-400 hover:shadow-xl hover:shadow-cyan-500/20 hover:scale-105 overflow-hidden"
                     >
                       {/* Shine effect on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-amber-500/0 to-transparent group-hover:via-amber-500/10 transition-all duration-500 group-hover:translate-x-full -translate-x-full"></div>
+                      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-500/0 to-transparent group-hover:via-cyan-500/10 transition-all duration-500 group-hover:translate-x-full -translate-x-full"></div>
 
                       {/* Glow effect */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-transparent to-amber-600/0 group-hover:from-amber-500/5 group-hover:to-amber-600/5 transition-all duration-300"></div>
+                      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/0 via-transparent to-blue-600/0 group-hover:from-cyan-500/5 group-hover:to-blue-600/5 transition-all duration-300"></div>
 
                       {/* Logo container with better fit */}
                       <div className="relative z-10 w-full h-full flex items-center justify-center p-1.5">
@@ -205,7 +205,7 @@ const Footer = () => {
                       </div>
 
                       {/* Bottom indicator */}
-                      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 group-hover:w-full transition-all duration-300 rounded-t-full"></div>
+                      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-cyan-500 via-cyan-400 to-blue-500 group-hover:w-full transition-all duration-300 rounded-t-full"></div>
 
                       {/* Category badge (optional - hidden by default) */}
                       <div className="absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -255,12 +255,12 @@ const Footer = () => {
                   <input
                     type="email"
                     placeholder="Your Email"
-                    className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors text-sm"
+                    className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors text-sm"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="flex-shrink-0 w-12 h-12 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center hover:scale-105 hover:border-amber-500 transition-all"
+                  className="flex-shrink-0 w-12 h-12 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center hover:scale-105 hover:border-cyan-500 transition-all"
                   aria-label="Subscribe to newsletter"
                 >
                   <ArrowRight className="w-5 h-5 text-white" />
@@ -277,13 +277,13 @@ const Footer = () => {
             <div className="flex flex-wrap gap-6 text-sm text-slate-500">
               <button
                 onClick={() => setModalContent("privacy")}
-                className="hover:text-amber-400 transition-colors"
+                className="hover:text-cyan-400 transition-colors"
               >
                 Privacy Policy
               </button>
               <button
                 onClick={() => setModalContent("terms")}
-                className="hover:text-amber-400 transition-colors"
+                className="hover:text-cyan-400 transition-colors"
               >
                 Terms of Service
               </button>
@@ -323,7 +323,7 @@ const Footer = () => {
                 </button>
               </div>
               <div className="overflow-y-auto p-8">
-                <div className="prose prose-invert prose-p:text-slate-300 prose-headings:text-white prose-strong:text-white prose-a:text-amber-400 hover:prose-a:text-amber-300">
+                <div className="prose prose-invert prose-p:text-slate-300 prose-headings:text-white prose-strong:text-white prose-a:text-cyan-400 hover:prose-a:text-cyan-300">
                   {modalContent === "privacy" ? (
                     <>
                       <p>

@@ -331,7 +331,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   return (
     <div key="register" className="w-full animate-fade-in">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-amber-400">Create an Account</h2>
+        <h2 className="text-3xl font-bold text-violet-400">Create an Account</h2>
         <p className="text-slate-400 mt-2">Join us and start your journey</p>
       </div>
 
@@ -363,7 +363,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${
                 errors.name
                   ? "border-red-500/50"
-                  : "border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30"
+                  : "border-slate-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30"
               }`}
               required
               disabled={isFormDisabled}
@@ -396,7 +396,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${
                 errors.username
                   ? "border-red-500/50"
-                  : "border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30"
+                  : "border-slate-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30"
               }`}
               required
               disabled={isFormDisabled}
@@ -429,7 +429,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${
                 errors.email
                   ? "border-red-500/50"
-                  : "border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30"
+                  : "border-slate-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30"
               }`}
               required
               disabled={isFormDisabled}
@@ -462,7 +462,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${
                 errors.password
                   ? "border-red-500/50"
-                  : "border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30"
+                  : "border-slate-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30"
               }`}
               required
               disabled={isFormDisabled}
@@ -508,7 +508,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${
                 errors.confirmPassword
                   ? "border-red-500/50"
-                  : "border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30"
+                  : "border-slate-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30"
               }`}
               required
               disabled={isFormDisabled}
@@ -546,7 +546,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         <button
           type="submit"
           disabled={isFormDisabled}
-          className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] mt-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
+          className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-violet-500/20 hover:shadow-xl hover:shadow-violet-500/40 transition-all transform hover:scale-[1.02] mt-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
         >
           {status.loading && (
             <>
@@ -572,7 +572,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
           <button
             type="button"
             onClick={() => onSwitchMode("login")}
-            className="font-semibold text-amber-400 hover:underline"
+            className="font-semibold text-violet-400 hover:text-violet-300 hover:underline transition-colors"
           >
             Sign In
           </button>

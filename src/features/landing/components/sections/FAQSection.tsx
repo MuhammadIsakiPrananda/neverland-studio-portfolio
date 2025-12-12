@@ -55,14 +55,14 @@ const FAQSection: React.FC<FAQSectionProps> = ({ isLoading }) => {
   return (
     <motion.section
       ref={sectionRef}
-      className="py-20 px-4 sm:px-6 lg:px-8"
+      className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-950"
       initial="hidden"
       animate={!isLoading && isInView ? "visible" : "hidden"}
       variants={sectionVariants}
     >
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-amber-400 font-semibold text-sm uppercase tracking-wider">
+          <span className="text-cyan-400 font-semibold text-sm uppercase tracking-wider">
             {t("faq.title")}
           </span>
           <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6">
@@ -75,13 +75,13 @@ const FAQSection: React.FC<FAQSectionProps> = ({ isLoading }) => {
           {faq.map((faqItem, idx) => (
             <motion.div
               key={idx}
-              className="bg-slate-900/60 backdrop-blur-lg border border-slate-800/50 rounded-xl overflow-hidden"
+              className="bg-slate-900/60 backdrop-blur-lg border border-white/10 rounded-xl overflow-hidden"
             >
               <button
                 onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
                 className="w-full text-left p-6 flex justify-between items-center cursor-pointer group"
               >
-                <h3 className="text-lg font-bold text-white group-hover:text-amber-400 transition-colors">
+                <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">
                   {faqItem.q}
                 </h3>
                 <motion.div
@@ -89,7 +89,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({ isLoading }) => {
                   transition={{ duration: 0.3 }}
                   className="flex-shrink-0 ml-4"
                 >
-                  <ChevronDown className="w-5 h-5 text-slate-400 group-hover:text-amber-400 transition-colors" />
+                  <ChevronDown className="w-5 h-5 text-slate-400 group-hover:text-cyan-400 transition-colors" />
                 </motion.div>
               </button>
               <AnimatePresence initial={false}>
@@ -117,7 +117,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({ isLoading }) => {
                 .getElementById("Contact")
                 ?.scrollIntoView({ behavior: "smooth" })
             }
-            className="border border-slate-700 px-8 py-4 rounded-full font-semibold hover:bg-slate-800/50 transition-all transform hover:scale-105 flex items-center gap-2 mx-auto "
+            className="border border-white/10 px-8 py-4 rounded-full font-semibold hover:bg-cyan-500/10 hover:border-cyan-500/50 hover:text-cyan-400 transition-all transform hover:scale-105 flex items-center gap-2 mx-auto"
           >
             <MessageSquare className="w-5 h-5" />
             {t("faq.contactSupport")}

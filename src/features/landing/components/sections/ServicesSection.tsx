@@ -57,7 +57,7 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
       ref={cardRef}
       onMouseMove={handleMouseMove}
       variants={cardVariants}
-      className={`group relative rounded-2xl border border-slate-800 bg-slate-900 p-8 transition-colors duration-300 before:absolute before:-inset-px before:rounded-2xl before:border before:border-transparent before:bg-[radial-gradient(400px_at_var(--spotlight-x)_var(--spotlight-y),rgba(251,191,36,0.1),transparent_40%)] before:opacity-0 before:transition-opacity before:duration-300 hover:border-amber-500/40 hover:before:opacity-100 ${
+      className={`group relative rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-lg p-8 transition-colors duration-300 before:absolute before:-inset-px before:rounded-2xl before:border before:border-transparent before:bg-[radial-gradient(400px_at_var(--spotlight-x)_var(--spotlight-y),rgba(6,182,212,0.15),transparent_40%)] before:opacity-0 before:transition-opacity before:duration-300 hover:border-cyan-500/40 hover:before:opacity-100 ${
         className || ""
       }`}
       {...props}
@@ -112,14 +112,14 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
         sectionRef.current = el;
       }}
       id="Services"
-      className="py-20 px-4 sm:px-6 lg:px-8"
+      className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-950"
       initial="hidden"
       animate={!isLoading && isInView ? "visible" : "hidden"}
       variants={sectionVariants}
     >
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-amber-400 font-semibold text-sm uppercase tracking-wider">
+          <span className="text-cyan-400 font-semibold text-sm uppercase tracking-wider">
             {t("services.title")}
           </span>
           <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6">
@@ -141,20 +141,20 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
             >
               {/* The content is now inside a z-10 container to appear above the spotlight effect */}
               <div className="relative z-10 flex h-full flex-col">
-                <div className="w-16 h-16 mb-6 bg-slate-800 border border-slate-700 rounded-xl flex items-center justify-center text-white shadow-lg shadow-black/20 group-hover:scale-105 group-hover:border-amber-500/50 transition-all duration-300">
+                <div className="w-16 h-16 mb-6 bg-slate-900 border border-white/10 rounded-xl flex items-center justify-center text-cyan-400 shadow-lg shadow-black/20 group-hover:scale-105 group-hover:border-cyan-500/50 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all duration-300">
                   {/* Render the icon directly as a component */}
                   <service.icon.type className="w-8 h-8" />
                 </div>
                 <div className="flex-grow">
-                  <h3 className="text-2xl font-bold text-white mb-3">
+                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-cyan-200 transition-colors">
                     {service.title}
                   </h3>
-                  <p className="text-slate-400 leading-relaxed">
+                  <p className="text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors">
                     {service.desc}
                   </p>
                 </div>
                 <div className="mt-8">
-                  <div className="inline-flex cursor-pointer items-center gap-2 font-semibold text-amber-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <div className="inline-flex cursor-pointer items-center gap-2 font-semibold text-cyan-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     Learn More <ArrowRight className="w-4 h-4" />
                   </div>
                 </div>

@@ -18,7 +18,7 @@ const Partners: React.FC = () => {
             title={partner.name}
           >
             <div
-              className={`flex items-center justify-center h-16 w-16 bg-slate-800/50 border border-slate-700/50 rounded-full transition-all duration-300 group-hover:bg-slate-800 group-hover:border-amber-500/50 ${
+              className={`flex items-center justify-center h-16 w-16 bg-slate-800/50 border border-slate-700/50 rounded-full transition-all duration-300 group-hover:bg-slate-800 group-hover:border-cyan-500/50 ${
                 partner.name === "Blibli" || partner.name === "Bukalapak"
                   ? "p-2" // Padding lebih kecil agar logo tampak lebih besar
                   : "p-3"
@@ -30,7 +30,7 @@ const Partners: React.FC = () => {
                 className="h-full w-full object-contain filter grayscale opacity-70 transition-all duration-300 group-hover:grayscale-0 group-hover:opacity-100"
               />
             </div>
-            <span className="text-sm font-medium text-slate-400 transition-colors duration-300 group-hover:text-amber-400">
+            <span className="text-sm font-medium text-slate-400 transition-colors duration-300 group-hover:text-cyan-400">
               {partner.name}
             </span>
           </li>

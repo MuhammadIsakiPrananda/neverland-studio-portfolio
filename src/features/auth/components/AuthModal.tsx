@@ -94,15 +94,15 @@ const AuthModal: React.FC<AuthModalProps> = ({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900/80 to-slate-950/80 backdrop-blur-xl border border-slate-700/50 p-8 text-left align-middle shadow-2xl shadow-black/40 transition-all">
+                <Dialog.Panel className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900/80 to-slate-950/80 backdrop-blur-xl border border-violet-500/20 p-8 text-left align-middle shadow-2xl shadow-black/40 transition-all">
                   {/* Aurora Effect */}
-                  <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl animate-pulse-slow opacity-30"></div>
-                  <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-orange-500/15 rounded-full blur-3xl animate-pulse-slow animation-delay-4000 opacity-30"></div>
+                  <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-violet-500/20 rounded-full blur-3xl animate-pulse-slow opacity-30"></div>
+                  <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-indigo-500/15 rounded-full blur-3xl animate-pulse-slow animation-delay-4000 opacity-30"></div>
 
                   {/* Tombol Close (X) dipindahkan ke dalam Dialog.Panel */}
                   <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors z-10"
+                    className="absolute top-4 right-4 text-slate-400 hover:text-violet-300 transition-colors z-10"
                     aria-label="Close"
                   >
                     <X className="w-6 h-6" />

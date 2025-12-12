@@ -159,7 +159,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
     // Mengganti motion.div dengan div biasa dan menambahkan animasi fade-in sederhana
     <div key="login" className="w-full animate-fade-in">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-amber-400">Welcome Back</h2>
+        <h2 className="text-3xl font-bold text-violet-400">Welcome Back</h2>
         <p className="text-slate-400 mt-2">Sign in to continue to Neverland</p>
       </div>
 
@@ -190,7 +190,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
               className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${
                 errors.identifier
                   ? "border-red-500/50"
-                  : "border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30"
+                  : "border-slate-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30"
               }`}
               required
               disabled={isLoading}
@@ -222,7 +222,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
               className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${
                 errors.password
                   ? "border-red-500/50"
-                  : "border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30"
+                  : "border-slate-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30"
               }`}
               required
               disabled={isLoading}
@@ -255,7 +255,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)} // NOSONAR
               disabled={isLoading}
-              className="h-4 w-4 rounded border-slate-600 bg-slate-800 text-amber-500 focus:ring-amber-500/50 focus:ring-offset-0"
+              className="h-4 w-4 rounded border-slate-600 bg-slate-800 text-violet-500 focus:ring-violet-500/50 focus:ring-offset-0"
             />
             <label htmlFor="remember-me" className="text-slate-400 select-none">
               Remember for 30 days
@@ -264,7 +264,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           <button
             type="button"
             onClick={onSwitchToForgotPassword}
-            className="text-amber-400 hover:underline"
+            className="text-violet-400 hover:text-violet-300 hover:underline transition-colors"
           >
             Forgot Password?
           </button>
@@ -278,14 +278,14 @@ const LoginForm: React.FC<LoginFormProps> = ({
               checked={agreedToTerms}
               onChange={handleAgreeChange}
               disabled={isLoading}
-              className="h-4 w-4 rounded border-slate-600 bg-slate-800 text-amber-500 focus:ring-amber-500/50 focus:ring-offset-0"
+              className="h-4 w-4 rounded border-slate-600 bg-slate-800 text-violet-500 focus:ring-violet-500/50 focus:ring-offset-0"
             />
             <label
               htmlFor="agree-terms"
               className="text-sm text-slate-400 select-none"
             >
               I agree to the{" "}
-              <button type="button" className="text-amber-400 hover:underline">
+              <button type="button" className="text-violet-400 hover:text-violet-300 hover:underline transition-colors">
                 Terms & Conditions
               </button>
             </label>
@@ -300,7 +300,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-violet-500/20 hover:shadow-xl hover:shadow-violet-500/40 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <>
@@ -331,7 +331,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           <button
             type="button"
             onClick={onSwitchToRegister}
-            className="font-semibold text-amber-400 hover:underline"
+            className="font-semibold text-violet-400 hover:text-violet-300 hover:underline transition-colors"
           >
             Sign Up
           </button>

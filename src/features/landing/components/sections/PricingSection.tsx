@@ -44,7 +44,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
         // We don't need a separate ref for useInView here because the whole section animates at once.
       }}
       id="Pricing"
-      className="py-20 px-4 sm:px-6 lg:px-8"
+      className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-950"
       initial="hidden"
       whileInView={!isLoading ? "visible" : "hidden"}
       viewport={{ once: true, amount: 0.2 }}
@@ -52,7 +52,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
     >
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-amber-400 font-semibold text-sm uppercase tracking-wider">
+          <span className="text-cyan-400 font-semibold text-sm uppercase tracking-wider">
             {t("pricing.title")}
           </span>
           <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6">
@@ -72,13 +72,13 @@ const PricingSection: React.FC<PricingSectionProps> = ({
               key={idx}
               className={`bg-gradient-to-br from-slate-900/80 to-black/80 backdrop-blur-lg border rounded-2xl p-8 hover:transform hover:-translate-y-2 transition-all ${
                 plan.popular
-                  ? "border-amber-500 shadow-xl shadow-amber-500/20 scale-105"
-                  : "border-slate-800/50"
+                  ? "border-cyan-500 shadow-xl shadow-cyan-500/20 scale-105"
+                  : "border-white/10"
               }`}
             >
               <div className="relative z-10">
                 {plan.popular && (
-                  <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-bold py-2 px-4 rounded-full inline-block mb-4">
+                  <div className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white text-sm font-bold py-2 px-4 rounded-full inline-block mb-4">
                     {t("pricing.popular")}
                   </div>
                 )}
@@ -95,7 +95,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((feature: string, i: number) => (
                     <li key={i} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                      <Check className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
                       <span className="text-gray-300">{feature}</span>
                     </li>
                   ))}
@@ -104,8 +104,8 @@ const PricingSection: React.FC<PricingSectionProps> = ({
                   onClick={onGetStartedClick}
                   className={`w-full py-4 rounded-full font-semibold transition-all transform hover:scale-105 ${
                     plan.popular
-                      ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30"
-                      : "border border-slate-700 hover:bg-slate-800/50 hover:border-amber-500/50"
+                      ? "bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30"
+                      : "border border-slate-700 hover:bg-slate-800/50 hover:border-cyan-500/50"
                   }`}
                 >
                   {t("pricing.getStarted")}
@@ -116,7 +116,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
         </motion.div>
 
         <motion.div
-          className="bg-slate-800/30 border border-amber-500/30 rounded-2xl p-8 text-center"
+          className="bg-slate-800/30 border border-cyan-500/30 rounded-2xl p-8 text-center"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -130,7 +130,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
           <div className="flex flex-wrap gap-4 justify-center">
             <button
               onClick={onScheduleConsultationClick}
-              className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-8 py-4 rounded-full font-semibold shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-105 flex items-center gap-3 group"
+              className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-8 py-4 rounded-full font-semibold shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-105 flex items-center gap-3 group"
             >
               <Phone className="w-5 h-5" />
               {t("pricing.scheduleCall")}
@@ -138,7 +138,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
             <a
               href="/pricing-guide.pdf"
               download="Neverland-Studio-Pricing-Guide.pdf"
-              className="bg-slate-800/50 border border-slate-700 px-8 py-4 rounded-full font-semibold hover:bg-slate-800 hover:border-amber-500/50 transition-all transform hover:scale-105 flex items-center gap-3 group"
+              className="bg-slate-800/50 border border-slate-700 px-8 py-4 rounded-full font-semibold hover:bg-slate-800 hover:border-cyan-500/50 transition-all transform hover:scale-105 flex items-center gap-3 group"
             >
               <Download className="w-5 h-5" />
               {t("pricing.downloadBrochure")}

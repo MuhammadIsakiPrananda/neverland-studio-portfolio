@@ -67,13 +67,13 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
     <div className="w-full animate-fade-in">
       {isSubmitted ? (
         <div key="success" className="text-center p-4">
-          <div className="w-16 h-16 mx-auto mb-5 flex items-center justify-center bg-green-500/10 rounded-full border-2 border-green-500/20">
-            <MailCheck className="w-8 h-8 text-green-400" />
+          <div className="w-16 h-16 mx-auto mb-5 flex items-center justify-center bg-violet-500/10 rounded-full border-2 border-violet-500/20">
+            <MailCheck className="w-8 h-8 text-violet-400" />
           </div>
           <h2 className="text-2xl font-bold text-white">Check Your Inbox</h2>
           <p className="text-slate-400 mt-2 max-w-sm mx-auto">
             A password reset link has been sent to <br />
-            <span className="font-semibold text-amber-400">{email}</span>
+            <span className="font-semibold text-violet-400">{email}</span>
             <br /> if it's associated with an account.
           </p>
           <p className="text-sm text-slate-500 mt-4">
@@ -81,7 +81,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
           </p>
           <button
             onClick={() => onSwitchMode("login")}
-            className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-amber-400 hover:underline"
+            className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-violet-400 hover:text-violet-300 hover:underline transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Sign In
@@ -90,7 +90,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
       ) : (
         <div key="form">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-amber-400">
+            <h2 className="text-3xl font-bold text-violet-400">
               Forgot Password?
             </h2>
             <p className="text-slate-400 mt-2">
@@ -120,7 +120,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
                   placeholder="Enter your account email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none transition-all disabled:opacity-50 ${
+                  className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 focus:outline-none transition-all disabled:opacity-50 ${
                     error ? "border-red-500/50" : "border-slate-700"
                   }`}
                   required
@@ -131,7 +131,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-violet-500/20 hover:shadow-xl hover:shadow-violet-500/40 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <>
@@ -147,7 +147,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
               <button
                 type="button"
                 onClick={() => onSwitchMode("login")}
-                className="font-semibold text-amber-400 hover:underline disabled:opacity-50 inline-flex items-center gap-2"
+                className="font-semibold text-violet-400 hover:text-violet-300 hover:underline disabled:opacity-50 inline-flex items-center gap-2 transition-colors"
                 disabled={isLoading}
               >
                 <ArrowLeft className="w-4 h-4" /> Back to Sign In

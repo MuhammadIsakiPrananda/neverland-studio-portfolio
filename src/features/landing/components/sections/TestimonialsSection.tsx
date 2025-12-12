@@ -55,7 +55,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
   return (
     <motion.section
       ref={sectionRef}
-      className="py-20 px-4 sm:px-6 lg:px-8"
+      className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-950"
       initial="hidden"
       animate={!isLoading && isInView ? "visible" : "hidden"}
       variants={sectionVariants}
@@ -63,10 +63,10 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <div className="flex justify-center mb-6">
-            <div className="relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-slate-800/50 px-4 py-1.5 text-sm font-medium border border-amber-500/30 shadow-lg shadow-amber-900/50">
-              <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-orange-500/10 opacity-60 blur-lg animate-pulse-slow"></div>
-              <Star className="relative w-4 h-4 text-amber-300" />
-              <span className="relative bg-gradient-to-r from-amber-300 to-orange-300 bg-clip-text font-semibold text-transparent">
+            <div className="relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-slate-800/50 px-4 py-1.5 text-sm font-medium border border-cyan-500/30 shadow-lg shadow-cyan-900/50">
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 opacity-60 blur-lg animate-pulse-slow"></div>
+              <Star className="relative w-4 h-4 text-cyan-300" />
+              <span className="relative bg-gradient-to-r from-cyan-300 to-blue-300 bg-clip-text font-semibold text-transparent">
                 Testimonials
               </span>
             </div>
@@ -87,13 +87,13 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
           {testimonials.map((testimonial, idx) => (
             <SpotlightCard
               key={idx}
-              className="bg-gradient-to-br from-slate-900/80 to-black/80 backdrop-blur-lg border border-slate-800/50 rounded-2xl p-8 transition-all flex flex-col group transform hover:-translate-y-2 hover:border-amber-500/50"
+              className="bg-gradient-to-br from-slate-900/80 to-black/80 backdrop-blur-lg border border-white/10 rounded-2xl p-8 transition-all flex flex-col group transform hover:-translate-y-2 hover:border-cyan-500/50"
             >
               <motion.div
                 whileHover={{ y: -4 }}
                 className="relative z-10 flex flex-col h-full"
               >
-                <Quote className="w-12 h-12 text-amber-500/20 mb-4" />
+                <Quote className="w-12 h-12 text-cyan-500/20 mb-4" />
                 <p className="text-slate-300 mb-6 italic leading-relaxed flex-grow">
                   “{testimonial.text}”
                 </p>
@@ -103,7 +103,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                       <img
                         src={testimonial.image}
                         alt={testimonial.name}
-                        className="w-12 h-12 rounded-full object-cover border-2 border-slate-700 group-hover:border-amber-500/50 transition-colors"
+                        className="w-12 h-12 rounded-full object-cover border-2 border-slate-700 group-hover:border-cyan-500/50 transition-colors"
                       />
                       <div>
                         <div className="font-bold text-white">
@@ -114,7 +114,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                         </div>
                       </div>
                     </div>
-                    <div className="flex-shrink-0 flex gap-1 text-amber-400 ml-4">
+                    <div className="flex-shrink-0 flex gap-1 text-cyan-400 ml-4">
                       <AnimatePresence>
                         {[...Array(testimonial.rating)].map((_, i) => (
                           <motion.div
@@ -140,7 +140,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
         <div className="text-center mt-12">
           <button
             onClick={onAddReviewClick}
-            className="flex items-center gap-2 bg-amber-500/10 text-amber-300 font-semibold px-6 py-3 rounded-lg border border-amber-500/20 hover:bg-amber-500/20 hover:border-amber-500/40 transition-all duration-300 shadow-lg shadow-amber-500/5 mx-auto transform hover:scale-105"
+            className="flex items-center gap-2 bg-cyan-500/10 text-cyan-300 font-semibold px-6 py-3 rounded-lg border border-cyan-500/20 hover:bg-cyan-500/20 hover:border-cyan-500/40 transition-all duration-300 shadow-lg shadow-cyan-500/5 mx-auto transform hover:scale-105"
           >
             <Edit className="w-5 h-5" />
             Write a Review
