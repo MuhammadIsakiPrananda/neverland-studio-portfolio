@@ -72,7 +72,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
     { id: "profile", label: "Profile", icon: UserCircle },
     { id: "security", label: "Security", icon: Shield },
     { id: "account", label: "Account & Billing", icon: CreditCard },
-    { id: "notifications", label: "Notifications & Appearance", icon: Bell },
+    { id: "notifications", label: "Notifications & Appearance", icon: (props: any) => <Bell {...props} className="w-6 h-6 group-hover:text-amber-300 transition-colors" /> },
     { id: "support", label: "Support", icon: LifeBuoy },
     { id: "apiKeys", label: "API Keys", icon: KeyRound },
     { id: "terms", label: "Terms & Conditions", icon: FileText },

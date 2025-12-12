@@ -106,10 +106,10 @@ export const NotificationsTabContent: React.FC<NotificationsTabProps> = ({
         description="Customize the look and feel of your interface."
         icon={<Palette className="w-5 h-5 text-slate-400" />}
       >
-        <div className="space-y-6 text-left">
-          <div>
-            <label className="text-sm font-medium text-slate-300 text-left block">Theme</label>
-            <div className="relative flex w-full p-1 mt-2 bg-slate-800/60 rounded-lg border border-slate-700 text-left">
+        <div className="space-y-6">
+          <div className="flex flex-col items-center justify-center">
+            <label className="text-sm font-medium text-slate-300">Theme</label>
+            <div className="relative flex w-64 p-1 mt-2 bg-slate-800/60 rounded-lg border border-slate-700">
               <div
                 className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-slate-700/80 shadow-sm rounded-md transition-transform duration-300 ease-in-out ${
                   theme === "dark" ? "translate-x-full" : "translate-x-0"
@@ -117,7 +117,7 @@ export const NotificationsTabContent: React.FC<NotificationsTabProps> = ({
               />
               <button
                 onClick={() => onThemeChange("light")}
-                className="relative z-10 flex-1 flex items-center justify-start gap-2 py-2 text-sm font-medium transition-colors"
+                className="relative z-10 flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium transition-colors"
               >
                 <Sun
                   className={`w-5 h-5 transition-colors ${
@@ -134,7 +134,7 @@ export const NotificationsTabContent: React.FC<NotificationsTabProps> = ({
               </button>
               <button
                 onClick={() => onThemeChange("dark")}
-                className="relative z-10 flex-1 flex items-center justify-start gap-2 py-2 text-sm font-medium transition-colors"
+                className="relative z-10 flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium transition-colors"
               >
                 <Moon
                   className={`w-5 h-5 transition-colors ${
