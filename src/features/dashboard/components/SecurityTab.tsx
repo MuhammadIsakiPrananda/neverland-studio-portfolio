@@ -242,8 +242,8 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
     "bg-red-500",
     "bg-orange-500",
     "bg-yellow-500",
-    "bg-premium-champagne-gold-500",
-    "bg-premium-champagne-gold-500",
+    "bg-emerald-500",
+    "bg-violet-500",
   ][strength];
 
   return (
@@ -257,7 +257,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
               <button
                 type="submit"
                 disabled={isLoading}
-                className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <Loader className="w-5 h-5 animate-spin" />
@@ -281,10 +281,10 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                 name="currentPassword"
                 value={passwordData.currentPassword}
                 onChange={handlePasswordInputChange}
-                className={`w-full bg-slate-800/60 border rounded-lg px-3 py-2 mt-1 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors ${
+                className={`w-full bg-slate-950/50 border rounded-lg px-3 py-2 mt-1 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-colors ${
                   passwordErrors.currentPassword
                     ? "border-red-500/50"
-                    : "border-slate-700"
+                    : "border-slate-800"
                 }`}
               />
               <button
@@ -317,10 +317,10 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                 name="newPassword"
                 value={passwordData.newPassword}
                 onChange={handlePasswordInputChange}
-                className={`w-full bg-slate-800/60 border rounded-lg px-3 py-2 mt-1 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors ${
+                className={`w-full bg-slate-950/50 border rounded-lg px-3 py-2 mt-1 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-colors ${
                   passwordErrors.newPassword
                     ? "border-red-500/50"
-                    : "border-slate-700"
+                    : "border-slate-800"
                 }`}
               />
               <button
@@ -351,10 +351,10 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                 name="confirmPassword"
                 value={passwordData.confirmPassword}
                 onChange={handlePasswordInputChange}
-                className={`w-full bg-slate-800/60 border rounded-lg px-3 py-2 mt-1 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-colors ${
+                className={`w-full bg-slate-950/50 border rounded-lg px-3 py-2 mt-1 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-colors ${
                   passwordErrors.confirmPassword
                     ? "border-red-500/50"
-                    : "border-slate-700"
+                    : "border-slate-800"
                 }`}
               />
               <button
@@ -406,7 +406,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
               <p
                 className={`text-sm ${
                   is2faEnabled
-                    ? "text-premium-champagne-gold-400"
+                    ? "text-indigo-400"
                     : "text-slate-400"
                 }`}
               >
@@ -419,7 +419,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
               className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
                 is2faEnabled
                   ? "bg-red-600/20 text-red-400 border border-red-500/50 hover:bg-red-600/30"
-                  : "bg-amber-500/10 text-amber-300 border border-amber-500/50 hover:bg-amber-500/20"
+                  : "bg-indigo-500/10 text-indigo-300 border border-indigo-500/50 hover:bg-indigo-500/20"
               }`}
             >
               {is2faEnabled ? "Disable" : "Enable"}
@@ -446,7 +446,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                       digunakan untuk mengakses akun Anda jika Anda kehilangan
                       akses ke aplikasi authenticator.
                     </p>
-                    <div className="my-6 grid grid-cols-2 gap-x-8 gap-y-3 bg-slate-800/50 p-6 rounded-lg border border-slate-700">
+                    <div className="my-6 grid grid-cols-2 gap-x-8 gap-y-3 bg-slate-950/30 p-6 rounded-lg border border-slate-800">
                       {recoveryCodes.map((code) => (
                         <p
                           key={code}
@@ -478,7 +478,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                         className="w-full flex items-center justify-center gap-2 bg-slate-700 text-slate-200 py-2 rounded-lg font-semibold hover:bg-slate-600 text-sm transition-colors"
                       >
                         {copied ? (
-                          <Check className="w-4 h-4 text-premium-champagne-gold-400" />
+                          <Check className="w-4 h-4 text-indigo-400" />
                         ) : (
                           <Copy className="w-4 h-4" />
                         )}
@@ -489,7 +489,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                       <button
                         type="button"
                         onClick={() => handleFinish2FASetup?.()}
-                        className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2.5 rounded-lg font-semibold"
+                        className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-2.5 rounded-lg font-semibold"
                       >
                         Selesaikan Pengaturan
                       </button>
@@ -516,7 +516,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                               type="text"
                               readOnly
                               value={totp.secret.base32}
-                              className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-3 pr-10 py-2 text-slate-300 font-mono text-sm"
+                              className="w-full bg-slate-950/50 border border-slate-800 rounded-lg pl-3 pr-10 py-2 text-slate-300 font-mono text-sm"
                             />
                             <button
                               type="button"
@@ -526,7 +526,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                               className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white"
                             >
                               {copied ? (
-                                <Check className="w-4 h-4 text-premium-champagne-gold-400" />
+                                <Check className="w-4 h-4 text-indigo-400" />
                               ) : (
                                 <Copy className="w-4 h-4" />
                               )}
@@ -550,13 +550,13 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                                   setTwoFactorCode(e.target.value)
                                 }
                                 maxLength={6}
-                                className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white tracking-[0.5em] text-center focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors"
+                                className="w-full bg-slate-950/50 border border-slate-800 rounded-lg pl-10 pr-4 py-3 text-white tracking-[0.5em] text-center focus:border-indigo-500 focus:ring-indigo-500/20 focus:outline-none transition-colors"
                               />
                             </div>
                             <div className="flex gap-3">
                               <button
                                 type="submit"
-                                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2 rounded-lg font-semibold text-sm"
+                                className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-2 rounded-lg font-semibold text-sm"
                               >
                                 Verifikasi & Aktifkan
                               </button>
@@ -624,7 +624,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                         <Globe className="w-3 h-3" /> {session.location}{" "}
                         &middot;{" "}
                         {session.isCurrent ? (
-                          <span className="text-premium-champagne-gold-400 font-semibold">
+                          <span className="text-indigo-400 font-semibold">
                             Active now
                           </span>
                         ) : (
