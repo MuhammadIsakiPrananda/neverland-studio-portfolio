@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import {
   Download,
   CreditCard,
@@ -39,19 +40,41 @@ const ModernSelect: React.FC<ModernSelectProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 });
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
+        !containerRef.current.contains(event.target as Node) &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false);
       }
     };
+
+    const handleScroll = (event: Event) => {
+      if (
+        dropdownRef.current &&
+        dropdownRef.current.contains(event.target as Node)
+      ) {
+        return;
+      }
+      if (isOpen) setIsOpen(false);
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    window.addEventListener("scroll", handleScroll, true);
+    window.addEventListener("resize", handleScroll);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll, true);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, [isOpen]);
 
   const selectedOption = options.find((opt) => opt.value === value);
 
@@ -62,10 +85,22 @@ const ModernSelect: React.FC<ModernSelectProps> = ({
     return acc;
   }, {} as Record<string, SelectOption[]>);
 
+  const handleToggle = () => {
+    if (!isOpen && containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      setCoords({
+        top: rect.bottom + window.scrollY + 8,
+        left: rect.left + window.scrollX,
+        width: rect.width,
+      });
+    }
+    setIsOpen(!isOpen);
+  };
+
   return (
     <div className="relative" ref={containerRef}>
       <div
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggle}
         className={`w-full bg-slate-950/50 border ${
           isOpen
             ? "border-amber-500/50 ring-2 ring-amber-500/20"
@@ -83,8 +118,16 @@ const ModernSelect: React.FC<ModernSelectProps> = ({
         />
       </div>
 
-      {isOpen && (
-        <div className="absolute z-50 w-full mt-2 bg-slate-900 border border-white/10 rounded-xl shadow-xl max-h-60 overflow-y-auto overflow-x-hidden animate-fade-in">
+      {isOpen && createPortal(
+        <div
+          ref={dropdownRef}
+          style={{
+            top: coords.top,
+            left: coords.left,
+            width: coords.width,
+          }}
+          className="absolute z-[9999] bg-slate-900 border border-white/10 rounded-xl shadow-xl max-h-60 overflow-y-auto overflow-x-hidden animate-fade-in"
+        >
           {Object.entries(groupedOptions).map(([group, groupOptions]) => (
             <div key={group}>
               <div className="px-4 py-2 text-xs font-semibold text-slate-500 bg-slate-950/50 sticky top-0 backdrop-blur-sm">
@@ -109,7 +152,8 @@ const ModernSelect: React.FC<ModernSelectProps> = ({
               ))}
             </div>
           ))}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
@@ -475,13 +519,13 @@ export const AccountTabContent: React.FC = () => {
               <h4 className="text-md font-semibold text-white mb-2">
                 E-Wallet Configuration
               </h4>
-              <div className="flex flex-col items-center justify-center p-6 bg-white rounded-xl">
+              <div className="flex flex-col items-center justify-center p-8 bg-white rounded-2xl">
                 <img
                   src="/images/QRIS.jpg"
                   alt="QRIS Payment"
-                  className="w-48 h-auto object-contain"
+                  className="w-full max-w-sm h-auto object-contain"
                 />
-                <p className="text-slate-900 text-sm font-medium mt-2">Scan QRIS</p>
+                <p className="text-slate-900 text-lg font-bold mt-4">Scan QRIS</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-slate-400">
