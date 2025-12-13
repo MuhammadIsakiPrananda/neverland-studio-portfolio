@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Download,
   CreditCard,
@@ -10,8 +10,110 @@ import {
   Calendar,
   Lock,
   RefreshCw,
+  ChevronDown,
+  Check,
+  User,
 } from "lucide-react";
 import { SettingsCard } from "@/shared/components";
+
+interface SelectOption {
+  value: string;
+  label: string;
+  group?: string;
+}
+
+interface ModernSelectProps {
+  options: SelectOption[];
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  icon: React.ElementType;
+}
+
+const ModernSelect: React.FC<ModernSelectProps> = ({
+  options,
+  value,
+  onChange,
+  placeholder,
+  icon: Icon,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const selectedOption = options.find((opt) => opt.value === value);
+
+  const groupedOptions = options.reduce((acc, option) => {
+    const group = option.group || "Other";
+    if (!acc[group]) acc[group] = [];
+    acc[group].push(option);
+    return acc;
+  }, {} as Record<string, SelectOption[]>);
+
+  return (
+    <div className="relative" ref={containerRef}>
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full bg-slate-950/50 border ${
+          isOpen
+            ? "border-amber-500/50 ring-2 ring-amber-500/20"
+            : "border-white/10"
+        } rounded-xl pl-10 pr-10 py-3 text-white cursor-pointer transition-all flex items-center justify-between group hover:border-amber-500/30`}
+      >
+        <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-hover:text-slate-400 transition-colors" />
+        <span className={selectedOption ? "text-white" : "text-slate-500"}>
+          {selectedOption ? selectedOption.label : placeholder}
+        </span>
+        <ChevronDown
+          className={`absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 transition-transform duration-200 ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
+      </div>
+
+      {isOpen && (
+        <div className="absolute z-50 w-full mt-2 bg-slate-900 border border-white/10 rounded-xl shadow-xl max-h-60 overflow-y-auto overflow-x-hidden animate-fade-in">
+          {Object.entries(groupedOptions).map(([group, groupOptions]) => (
+            <div key={group}>
+              <div className="px-4 py-2 text-xs font-semibold text-slate-500 bg-slate-950/50 sticky top-0 backdrop-blur-sm">
+                {group}
+              </div>
+              {groupOptions.map((option) => (
+                <div
+                  key={option.value}
+                  onClick={() => {
+                    onChange(option.value);
+                    setIsOpen(false);
+                  }}
+                  className={`px-4 py-2.5 text-sm cursor-pointer flex items-center justify-between transition-colors ${
+                    value === option.value
+                      ? "bg-amber-500/10 text-amber-500"
+                      : "text-slate-300 hover:bg-white/5 hover:text-white"
+                  }`}
+                >
+                  <span>{option.label}</span>
+                  {value === option.value && <Check className="w-4 h-4" />}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const AccountTabContent: React.FC = () => {
   const paymentMethods = [
@@ -53,10 +155,80 @@ export const AccountTabContent: React.FC = () => {
     walletProvider: "",
     walletNumber: "",
     retailOutlet: "",
+    bankAccountNumber: "",
+    bankAccountName: "",
   });
+
+  const bankOptions = [
+    { group: "Bank BUMN", value: "mandiri", label: "Bank Mandiri" },
+    { group: "Bank BUMN", value: "bri", label: "Bank Rakyat Indonesia (BRI)" },
+    { group: "Bank BUMN", value: "bni", label: "Bank Negara Indonesia (BNI)" },
+    { group: "Bank BUMN", value: "btn", label: "Bank Tabungan Negara (BTN)" },
+    { group: "Bank Swasta Nasional", value: "bca", label: "Bank Central Asia (BCA)" },
+    { group: "Bank Swasta Nasional", value: "cimb", label: "CIMB Niaga" },
+    { group: "Bank Swasta Nasional", value: "danamon", label: "Bank Danamon" },
+    { group: "Bank Swasta Nasional", value: "permata", label: "Permata Bank" },
+    { group: "Bank Swasta Nasional", value: "maybank", label: "Maybank Indonesia" },
+    { group: "Bank Swasta Nasional", value: "panin", label: "Panin Bank" },
+    { group: "Bank Swasta Nasional", value: "ocbc", label: "OCBC NISP" },
+    { group: "Bank Swasta Nasional", value: "uob", label: "UOB Indonesia" },
+    { group: "Bank Swasta Nasional", value: "mega", label: "Bank Mega" },
+    { group: "Bank Swasta Nasional", value: "bukopin", label: "KB Bukopin" },
+    { group: "Bank Swasta Nasional", value: "sinarmas", label: "Bank Sinarmas" },
+    { group: "Bank Digital", value: "jago", label: "Bank Jago" },
+    { group: "Bank Digital", value: "seabank", label: "SeaBank" },
+    { group: "Bank Digital", value: "neo", label: "Bank Neo Commerce" },
+    { group: "Bank Digital", value: "jenius_btpn", label: "Jenius / BTPN" },
+    { group: "Bank Digital", value: "allo", label: "Allo Bank" },
+    { group: "Bank Syariah", value: "bsi", label: "Bank Syariah Indonesia (BSI)" },
+    { group: "Bank Syariah", value: "muamalat", label: "Bank Muamalat" },
+    { group: "Bank Syariah", value: "bca_syariah", label: "BCA Syariah" },
+    { group: "Bank Syariah", value: "cimb_syariah", label: "CIMB Niaga Syariah" },
+    { group: "Bank Pembangunan Daerah (BPD)", value: "bjb", label: "Bank BJB" },
+    { group: "Bank Pembangunan Daerah (BPD)", value: "dki", label: "Bank DKI" },
+    { group: "Bank Pembangunan Daerah (BPD)", value: "jateng", label: "Bank Jateng" },
+    { group: "Bank Pembangunan Daerah (BPD)", value: "jatim", label: "Bank Jatim" },
+    { group: "Bank Pembangunan Daerah (BPD)", value: "bali", label: "Bank BPD Bali" },
+    { group: "Bank Pembangunan Daerah (BPD)", value: "sumut", label: "Bank Sumut" },
+  ];
+
+  const walletOptions = [
+    { group: "Major E-Wallets", value: "gopay", label: "GoPay" },
+    { group: "Major E-Wallets", value: "ovo", label: "OVO" },
+    { group: "Major E-Wallets", value: "dana", label: "DANA" },
+    { group: "Major E-Wallets", value: "shopeepay", label: "ShopeePay" },
+    { group: "Major E-Wallets", value: "linkaja", label: "LinkAja" },
+    { group: "Banking Wallets", value: "jenius", label: "Jenius Pay" },
+    { group: "Banking Wallets", value: "sakuku", label: "Sakuku (BCA)" },
+    { group: "Banking Wallets", value: "octo", label: "OCTO Mobile (CIMB)" },
+    { group: "Banking Wallets", value: "jakone", label: "JakOne Mobile" },
+    { group: "Other E-Wallets", value: "astrapay", label: "AstraPay" },
+    { group: "Other E-Wallets", value: "isaku", label: "i.Saku" },
+    { group: "Other E-Wallets", value: "doku", label: "DOKU Wallet" },
+    { group: "Other E-Wallets", value: "paytren", label: "Paytren" },
+    { group: "Other E-Wallets", value: "spin", label: "SpinPay" },
+  ];
+
+  const retailOptions = [
+    { group: "Alfamart Group", value: "alfamart", label: "Alfamart" },
+    { group: "Alfamart Group", value: "alfamidi", label: "Alfamidi" },
+    { group: "Alfamart Group", value: "lawson", label: "Lawson" },
+    { group: "Alfamart Group", value: "dandan", label: "Dan+Dan" },
+    { group: "Indomaret Group", value: "indomaret", label: "Indomaret" },
+    { group: "Other Outlets", value: "pos", label: "Kantor Pos (Pos Indonesia)" },
+    { group: "Other Outlets", value: "pegadaian", label: "Pegadaian" },
+  ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+
+    // Validasi: Hanya angka yang diperbolehkan untuk Nomor Rekening
+    if (name === "bankAccountNumber") {
+      const numericValue = value.replace(/\D/g, "");
+      setFormData((prev) => ({ ...prev, [name]: numericValue }));
+      return;
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -203,47 +375,99 @@ export const AccountTabContent: React.FC = () => {
               <h4 className="text-md font-semibold text-white mb-2">
                 Virtual Account Details
               </h4>
+              
+              {/* Bank Card Visualization */}
+              <div className="relative w-full max-w-md mx-auto h-56 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 shadow-2xl border border-white/10 overflow-hidden group transition-all hover:scale-[1.02] mb-6">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-amber-500/10 rounded-full -ml-12 -mb-12 blur-xl"></div>
+                
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-xs text-slate-400 font-medium tracking-wider uppercase">Bank Name</p>
+                      <h3 className="text-xl font-bold text-white mt-1">
+                        {formData.vaBank ? bankOptions.find(b => b.value === formData.vaBank)?.label : "Select Bank"}
+                      </h3>
+                    </div>
+                    <Banknote className="w-8 h-8 text-amber-500/80" />
+                  </div>
+
+                  <div className="space-y-6">
+                    <div>
+                      <p className="text-xs text-slate-400 font-medium tracking-wider uppercase mb-1">Account Number</p>
+                      <p className="text-2xl font-mono text-white tracking-widest">
+                        {formData.bankAccountNumber || "•••• •••• ••••"}
+                      </p>
+                    </div>
+                    
+                    <div className="flex justify-between items-end">
+                      <div>
+                        <p className="text-xs text-slate-400 font-medium tracking-wider uppercase mb-1">Account Holder</p>
+                        <p className="text-sm font-medium text-white uppercase tracking-wide">
+                          {formData.bankAccountName || "Bank Account Name"}
+                        </p>
+                      </div>
+                      <div className="w-12 h-8 bg-amber-500/20 rounded flex items-center justify-center border border-amber-500/30">
+                        <div className="w-6 h-4 border border-amber-500/50 rounded-sm"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <label className="text-sm font-medium text-slate-400">
                   Select Bank
                 </label>
-                <div className="relative mt-1">
-                  <Banknote className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                  <select
-                    name="vaBank"
+                <div className="mt-1">
+                  <ModernSelect
+                    options={bankOptions}
                     value={formData.vaBank}
-                    onChange={handleInputChange}
-                    className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors"
-                  >
-                    <option value="" disabled>
-                      Choose a bank
-                    </option>
-                    <option value="bca">BCA Virtual Account</option>
-                    <option value="mandiri">Mandiri Virtual Account</option>
-                    <option value="bni">BNI Virtual Account</option>
-                    <option value="bri">BRI Virtual Account</option>
-                    <option value="permata">Permata Virtual Account</option>
-                    <option value="cimb">CIMB Niaga Virtual Account</option>
-                    <option value="danamon">Danamon Virtual Account</option>
-                    <option value="bsi">BSI (Bank Syariah Indonesia)</option>
-                    <option value="btn">BTN Virtual Account</option>
-                    <option value="maybank">Maybank Virtual Account</option>
-                    <option value="mega">Bank Mega Virtual Account</option>
-                    <option value="sinarmas">Sinarmas Virtual Account</option>
-                    <option value="ocbc">OCBC NISP Virtual Account</option>
-                    <option value="panin">Panin Bank Virtual Account</option>
-                    <option value="uob">UOB Virtual Account</option>
-                    <option value="hana">Hana Bank Virtual Account</option>
-                  </select>
+                    onChange={(value) =>
+                      setFormData((prev) => ({ ...prev, vaBank: value }))
+                    }
+                    placeholder="Choose a bank"
+                    icon={Banknote}
+                  />
                 </div>
               </div>
-              <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl">
-                <p className="text-sm text-amber-200">
-                  A virtual account number will be generated for you after saving.
-                  You can use this number to pay via ATM, Mobile Banking, or
-                  Internet Banking.
-                </p>
-              </div>
+              
+              {formData.vaBank && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
+                  <div>
+                    <label className="text-sm font-medium text-slate-400">
+                      Account Number
+                    </label>
+                    <div className="relative mt-1">
+                      <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                      <input
+                        type="text"
+                        name="bankAccountNumber"
+                        value={formData.bankAccountNumber}
+                        onChange={handleInputChange}
+                        placeholder="e.g. 1234567890"
+                        className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors font-mono"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-400">
+                      Account Holder Name
+                    </label>
+                    <div className="relative mt-1">
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                      <input
+                        type="text"
+                        name="bankAccountName"
+                        value={formData.bankAccountName}
+                        onChange={handleInputChange}
+                        placeholder="e.g. John Doe"
+                        className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
           {selectedPayment === "e-wallet" && (
@@ -251,32 +475,28 @@ export const AccountTabContent: React.FC = () => {
               <h4 className="text-md font-semibold text-white mb-2">
                 E-Wallet Configuration
               </h4>
+              <div className="flex flex-col items-center justify-center p-6 bg-white rounded-xl">
+                <img
+                  src="/images/QRIS.jpg"
+                  alt="QRIS Payment"
+                  className="w-48 h-auto object-contain"
+                />
+                <p className="text-slate-900 text-sm font-medium mt-2">Scan QRIS</p>
+              </div>
               <div>
                 <label className="text-sm font-medium text-slate-400">
                   Select Provider
                 </label>
-                <div className="relative mt-1">
-                  <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                  <select
-                    name="walletProvider"
+                <div className="mt-1">
+                  <ModernSelect
+                    options={walletOptions}
                     value={formData.walletProvider}
-                    onChange={handleInputChange}
-                    className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors"
-                  >
-                    <option value="" disabled>
-                      Choose provider
-                    </option>
-                    <option value="gopay">GoPay</option>
-                    <option value="ovo">OVO</option>
-                    <option value="dana">DANA</option>
-                    <option value="shopeepay">ShopeePay</option>
-                    <option value="linkaja">LinkAja</option>
-                    <option value="jenius">Jenius Pay</option>
-                    <option value="astrapay">AstraPay</option>
-                    <option value="isaku">i.Saku</option>
-                    <option value="sakuku">Sakuku</option>
-                    <option value="doku">Doku Wallet</option>
-                  </select>
+                    onChange={(value) =>
+                      setFormData((prev) => ({ ...prev, walletProvider: value }))
+                    }
+                    placeholder="Choose provider"
+                    icon={Wallet}
+                  />
                 </div>
               </div>
               <div>
@@ -303,20 +523,16 @@ export const AccountTabContent: React.FC = () => {
                 <label className="text-sm font-medium text-slate-400">
                   Select Outlet
                 </label>
-                <div className="relative mt-1">
-                  <Store className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                  <select
-                    name="retailOutlet"
+                <div className="mt-1">
+                  <ModernSelect
+                    options={retailOptions}
                     value={formData.retailOutlet}
-                    onChange={handleInputChange}
-                    className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors"
-                  >
-                    <option value="" disabled>
-                      Choose outlet
-                    </option>
-                    <option value="alfamart">Alfamart Group (Alfamart, Alfamidi, Lawson, Dan+Dan)</option>
-                    <option value="indomaret">Indomaret</option>
-                  </select>
+                    onChange={(value) =>
+                      setFormData((prev) => ({ ...prev, retailOutlet: value }))
+                    }
+                    placeholder="Choose outlet"
+                    icon={Store}
+                  />
                 </div>
               </div>
               <div className="p-4 bg-slate-800/50 border border-white/10 rounded-xl">
