@@ -49,12 +49,12 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen }) => {
             {/* Avatar & Status */}
             <div className="flex items-center gap-3">
               <div className="relative flex items-center justify-center w-10 h-10">
-                <div className="absolute w-full h-full bg-amber-400 rounded-full blur-md opacity-30"></div>
-                <Bot className="w-6 h-6 text-amber-400 z-10" />
+                <div className="absolute w-full h-full bg-cyan-400 rounded-full blur-md opacity-30"></div>
+                <Bot className="w-6 h-6 text-cyan-400 z-10" />
               </div>
               <div className="hidden md:block">
-                <p className="text-xs text-amber-400 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></span>
+                <p className="text-xs text-cyan-400 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse"></span>
                   Online
                 </p>
               </div>
@@ -117,7 +117,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen }) => {
                     {isBot ? (
                       <BotMessage message={msg} />
                     ) : (
-                      <div className="max-w-xs px-4 py-2.5 rounded-xl text-base md:text-lg bg-gradient-to-br from-amber-500 to-orange-600 text-white rounded-tr-none shadow-lg shadow-black/20">
+                      <div className="max-w-xs px-4 py-2.5 rounded-xl text-base md:text-lg bg-gradient-to-br from-cyan-500 to-blue-600 text-white rounded-tr-none shadow-lg shadow-cyan-500/20">
                         <p className="leading-relaxed">{msg.text}</p>
                       </div>
                     )}
@@ -131,7 +131,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen }) => {
                   className="flex items-end gap-3 justify-start"
                 >
                   <div className="w-8 h-8 flex-shrink-0 rounded-full bg-slate-800 flex items-center justify-center">
-                    <Bot className="w-5 h-5 text-amber-400" />
+                    <Bot className="w-5 h-5 text-cyan-400" />
                   </div>
                   <div className="px-4 py-3 rounded-xl bg-slate-800 text-slate-200 rounded-bl-none shadow-lg shadow-black/20">
                     <div className="flex items-center gap-1.5">
@@ -164,7 +164,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen }) => {
                   <button
                     key={q}
                     onClick={() => handleSuggestionClick(q)}
-                    className="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-full transition-colors"
+                    className="px-3 py-1.5 text-xs bg-slate-800 border border-slate-700 hover:border-cyan-500/50 hover:text-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.15)] text-slate-300 rounded-full transition-all duration-300"
                   >
                     {q}
                   </button>

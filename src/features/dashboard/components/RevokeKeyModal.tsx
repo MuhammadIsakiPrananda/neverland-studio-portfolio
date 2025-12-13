@@ -23,8 +23,8 @@ export const RevokeKeyModal: React.FC<RevokeKeyModalProps> = ({ isOpen, onClose,
           className="w-full max-w-md bg-slate-900 rounded-xl shadow-lg border border-slate-800 p-6"
         >
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0">
-              <AlertTriangle className="w-6 h-6 text-red-400" />
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center flex-shrink-0 shadow-lg shadow-cyan-500/10">
+              <AlertTriangle className="w-6 h-6 text-cyan-400" />
             </div>
             <div>
               <h2 className="text-xl font-bold text-white">Revoke API Key?</h2>
@@ -33,7 +33,7 @@ export const RevokeKeyModal: React.FC<RevokeKeyModalProps> = ({ isOpen, onClose,
           </div>
           <div className="flex justify-end gap-3 mt-6">
             <button onClick={onClose} disabled={isRevoking} className="py-2 px-4 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors text-sm font-semibold disabled:opacity-50">Cancel</button>
-            <button onClick={onConfirm} disabled={isRevoking} className="flex items-center gap-2 py-2 px-4 rounded-lg bg-red-600 hover:bg-red-500 transition-colors text-sm font-semibold text-white disabled:opacity-50 disabled:bg-red-600/50">
+            <button onClick={onConfirm} disabled={isRevoking} className="flex items-center gap-2 py-2 px-4 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 transition-all text-sm font-semibold text-white disabled:opacity-50 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40">
               {isRevoking ? <Loader className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
               {isRevoking ? 'Revoking...' : 'Revoke Key'}
             </button>

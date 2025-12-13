@@ -120,7 +120,7 @@ export const AccountTabContent: React.FC = () => {
               className={`flex items-center gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all ${
                 selectedPayment === method.id
                   ? "border-cyan-500 bg-cyan-500/10"
-                  : "border-slate-800 bg-slate-900/50 hover:border-slate-700"
+                : "border-slate-800 bg-slate-900/50 hover:border-cyan-500/50 hover:bg-cyan-500/5"
               }`}
             >
               <input
@@ -256,7 +256,7 @@ export const AccountTabContent: React.FC = () => {
               invoices.map((invoice) => (
                 <tr
                   key={invoice.id}
-                  className="border-b border-slate-800 text-sm last:border-b-0 hover:bg-slate-800/30 transition-colors"
+                className="border-b border-slate-800 text-sm last:border-b-0 hover:bg-cyan-500/5 transition-colors"
                 >
                   <td className="p-3 text-slate-200 font-medium">
                     {invoice.id}
