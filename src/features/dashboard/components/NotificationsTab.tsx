@@ -50,7 +50,7 @@ const ToggleSwitch = ({
         checked={checked}
         onChange={onChange}
       />
-      <div className="w-11 h-6 bg-slate-700 rounded-full peer peer-focus:ring-2 peer-focus:ring-cyan-500/50 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
+      <div className="w-11 h-6 bg-slate-800 rounded-full peer peer-focus:ring-2 peer-focus:ring-indigo-500/50 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500"></div>
     </label>
   </div>
 );
@@ -109,9 +109,9 @@ export const NotificationsTabContent: React.FC<NotificationsTabProps> = ({
         <div className="space-y-6">
           <div>
             <label className="text-sm font-medium text-slate-300">Theme</label>
-            <div className="relative flex w-full p-1 mt-2 bg-slate-800/60 rounded-lg border border-slate-700">
+            <div className="relative flex w-full p-1 mt-2 bg-slate-950/50 rounded-xl border border-white/10">
               <div
-                className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-slate-700/80 shadow-sm rounded-md transition-transform duration-300 ease-in-out ${
+                className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-slate-800 shadow-sm rounded-lg transition-transform duration-300 ease-in-out ${
                   theme === "dark" ? "translate-x-full" : "translate-x-0"
                 }`}
               />
@@ -121,7 +121,7 @@ export const NotificationsTabContent: React.FC<NotificationsTabProps> = ({
               >
                 <Sun
                   className={`w-5 h-5 transition-colors ${
-                    theme === "light" ? "text-cyan-400" : "text-slate-400"
+                    theme === "light" ? "text-indigo-400" : "text-slate-400"
                   }`}
                 />
                 <span
@@ -138,7 +138,7 @@ export const NotificationsTabContent: React.FC<NotificationsTabProps> = ({
               >
                 <Moon
                   className={`w-5 h-5 transition-colors ${
-                    theme === "dark" ? "text-cyan-400" : "text-slate-400"
+                    theme === "dark" ? "text-indigo-400" : "text-slate-400"
                   }`}
                 />
                 <span
@@ -161,7 +161,7 @@ export const NotificationsTabContent: React.FC<NotificationsTabProps> = ({
             <button
               onClick={handleSaveChanges}
               disabled={isSaving}
-              className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/40 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? (
                 <Loader className="w-5 h-5 animate-spin" />
@@ -175,7 +175,7 @@ export const NotificationsTabContent: React.FC<NotificationsTabProps> = ({
           </div>
         }
       >
-        <div className="divide-y divide-slate-800">
+        <div className="divide-y divide-white/5">
           <ToggleSwitch
             id="comments"
             label="Comments"
@@ -205,7 +205,7 @@ export const NotificationsTabContent: React.FC<NotificationsTabProps> = ({
         description="Set your preferences for push notifications."
         icon={<ShoppingBag className="w-5 h-5 text-slate-400" />}
       >
-        <div className="divide-y divide-slate-800">
+        <div className="divide-y divide-white/5">
           <ToggleSwitch
             id="productUpdates"
             label="Product Updates"

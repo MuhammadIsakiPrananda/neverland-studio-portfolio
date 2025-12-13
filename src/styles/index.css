@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --color-background: #faf8f5; /* Warm Ivory */
-  --color-text-base: #1a1f2e; /* Deep Navy */
-  --color-accent-primary: #4a5f7f; /* Slate Blue */
-  --color-accent-secondary: #b8860b; /* Champagne Gold */
-  --color-accent-gold: #d4af37; /* Rich Gold */
-  --color-accent-copper: #b87333; /* Copper */
-  --color-text-secondary: #6b7280; /* Warm Gray */
-  --color-border-shadow: #2d3748;
+  --color-background: #18181b; /* Zinc 900 */
+  --color-text-base: #d4d4d8; /* Zinc 300 */
+  --color-accent-primary: #d97706; /* Amber 600 */
+  --color-accent-secondary: #f59e0b; /* Amber 500 */
+  --color-accent-gold: #fbbf24; /* Amber 400 */
+  --color-accent-copper: #92400e; /* Amber 800 */
+  --color-text-secondary: #a1a1aa; /* Zinc 400 */
+  --color-border-shadow: #27272a; /* Zinc 800 */
   --color-text-on-accent: #ffffff;
 }
 

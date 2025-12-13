@@ -159,8 +159,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
     // Mengganti motion.div dengan div biasa dan menambahkan animasi fade-in sederhana
     <div key="login" className="w-full animate-fade-in">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-violet-400">Welcome Back</h2>
-        <p className="text-slate-400 mt-2">Sign in to continue to Neverland</p>
+        <h2 className="text-3xl font-bold text-amber-400">Welcome Back</h2>
+        <p className="text-zinc-400 mt-2">Sign in to continue to Neverland</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -174,12 +174,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <div>
           <label
             htmlFor="identifier"
-            className="text-sm font-medium text-slate-400 mb-2 block"
+            className="text-sm font-medium text-zinc-400 mb-2 block"
           >
             Email or Username
           </label>
           <div className="relative">
-            <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+            <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
             <input
               id="identifier"
               type="text"
@@ -187,10 +187,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
               value={formData.identifier}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${
+              className={`w-full bg-zinc-900/50 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-zinc-600 focus:outline-none transition-all disabled:opacity-50 ${
                 errors.identifier
                   ? "border-red-500/50"
-                  : "border-slate-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30"
+                  : "border-zinc-800 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
               }`}
               required
               disabled={isLoading}
@@ -206,12 +206,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <div>
           <label
             htmlFor="password"
-            className="text-sm font-medium text-slate-400 mb-2 block"
+            className="text-sm font-medium text-zinc-400 mb-2 block"
           >
             Password
           </label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
             <input
               id="password"
               type={showPassword ? "text" : "password"}
@@ -219,10 +219,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
               value={formData.password}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${
+              className={`w-full bg-zinc-900/50 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-zinc-600 focus:outline-none transition-all disabled:opacity-50 ${
                 errors.password
                   ? "border-red-500/50"
-                  : "border-slate-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30"
+                  : "border-zinc-800 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
               }`}
               required
               disabled={isLoading}
@@ -230,7 +230,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? (
@@ -255,16 +255,16 @@ const LoginForm: React.FC<LoginFormProps> = ({
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)} // NOSONAR
               disabled={isLoading}
-              className="h-4 w-4 rounded border-slate-600 bg-slate-800 text-violet-500 focus:ring-violet-500/50 focus:ring-offset-0"
+              className="h-4 w-4 rounded border-zinc-700 bg-zinc-900 text-amber-500 focus:ring-amber-500/40 focus:ring-offset-0"
             />
-            <label htmlFor="remember-me" className="text-slate-400 select-none">
+            <label htmlFor="remember-me" className="text-zinc-400 select-none">
               Remember for 30 days
             </label>
           </div>
           <button
             type="button"
             onClick={onSwitchToForgotPassword}
-            className="text-violet-400 hover:text-violet-300 hover:underline transition-colors"
+            className="text-amber-400 hover:text-amber-300 hover:underline transition-colors"
           >
             Forgot Password?
           </button>
@@ -278,14 +278,14 @@ const LoginForm: React.FC<LoginFormProps> = ({
               checked={agreedToTerms}
               onChange={handleAgreeChange}
               disabled={isLoading}
-              className="h-4 w-4 rounded border-slate-600 bg-slate-800 text-violet-500 focus:ring-violet-500/50 focus:ring-offset-0"
+              className="h-4 w-4 rounded border-zinc-700 bg-zinc-900 text-amber-500 focus:ring-amber-500/40 focus:ring-offset-0"
             />
             <label
               htmlFor="agree-terms"
-              className="text-sm text-slate-400 select-none"
+              className="text-sm text-zinc-400 select-none"
             >
               I agree to the{" "}
-              <button type="button" className="text-violet-400 hover:text-violet-300 hover:underline transition-colors">
+              <button type="button" className="text-amber-400 hover:text-amber-300 hover:underline transition-colors">
                 Terms & Conditions
               </button>
             </label>
@@ -300,7 +300,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-violet-500/20 hover:shadow-xl hover:shadow-violet-500/40 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/40 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <>
@@ -314,9 +314,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
         </button>
 
         <div className="relative flex py-3 items-center">
-          <div className="flex-grow border-t border-slate-700/50"></div>
-          <span className="flex-shrink mx-4 text-slate-400 text-sm">OR</span>
-          <div className="flex-grow border-t border-slate-700/50"></div>
+          <div className="flex-grow border-t border-zinc-800"></div>
+          <span className="flex-shrink mx-4 text-zinc-400 text-sm">OR</span>
+          <div className="flex-grow border-t border-zinc-800"></div>
         </div>
 
         <SocialLoginButtons />
@@ -325,13 +325,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
       </form>
 
       {/* Bagian ini dipindahkan ke luar <form> untuk memastikan tombol bisa diklik */}
-      <div className="pt-5 mt-5 border-t border-slate-700/50 relative z-10">
-        <p className="text-center text-sm text-slate-400">
+      <div className="pt-5 mt-5 border-t border-zinc-800 relative z-10">
+        <p className="text-center text-sm text-zinc-400">
           Don't have an account?{" "}
           <button
             type="button"
             onClick={onSwitchToRegister}
-            className="font-semibold text-violet-400 hover:text-violet-300 hover:underline transition-colors"
+            className="font-semibold text-amber-400 hover:text-amber-300 hover:underline transition-colors"
           >
             Sign Up
           </button>

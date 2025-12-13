@@ -8,7 +8,7 @@ export const TermsTabContent: React.FC = () => {
         title="Terms and Conditions"
         description="Last updated: June 10, 2024"
       >
-        <div className="prose prose-invert max-w-none prose-p:text-blue-200 prose-headings:text-cyan-400 prose-strong:text-cyan-200 prose-a:text-blue-400 hover:prose-a:text-blue-300">
+        <div className="prose prose-invert max-w-none prose-p:text-slate-300 prose-headings:text-amber-300 prose-strong:text-amber-200 prose-a:text-amber-300 hover:prose-a:text-amber-200 [&_li]:text-slate-300 [&_li::marker]:text-amber-300">
           <p>Welcome to Neverland Studio!</p>
           <p>
             These terms and conditions outline the rules and regulations for the
@@ -20,14 +20,14 @@ export const TermsTabContent: React.FC = () => {
             agree to take all of the terms and conditions stated on this page.
           </p>
 
-          <h4 className="text-cyan-400">Cookies</h4>
+          <h4 className="text-amber-300">Cookies</h4>
           <p>
             We employ the use of cookies. By accessing Neverland Studio, you
             agreed to use cookies in agreement with the Neverland Studio's
             Privacy Policy.
           </p>
 
-          <h4 className="text-cyan-400">License</h4>
+          <h4 className="text-amber-300">License</h4>
           <p>
             Unless otherwise stated, Neverland Studio and/or its licensors own
             the intellectual property rights for all material on Neverland

@@ -42,19 +42,19 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen }) => {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 50, scale: 0.95 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="fixed bottom-28 right-4 sm:right-8 w-[calc(100%-2rem)] max-w-lg h-[75vh] max-h-[650px] bg-slate-950/80 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl shadow-black/30 flex flex-col z-50 origin-bottom-right"
+          className="fixed bottom-28 right-4 sm:right-8 w-[calc(100%-2rem)] max-w-lg h-[75vh] max-h-[650px] bg-zinc-950/80 backdrop-blur-2xl border border-zinc-800 rounded-2xl shadow-2xl shadow-black/30 flex flex-col z-50 origin-bottom-right"
         >
           {/* Header */}
-          <div className="relative flex items-center justify-between p-3 border-b border-white/10 flex-shrink-0">
+          <div className="relative flex items-center justify-between p-3 border-b border-zinc-800 flex-shrink-0">
             {/* Avatar & Status */}
             <div className="flex items-center gap-3">
               <div className="relative flex items-center justify-center w-10 h-10">
-                <div className="absolute w-full h-full bg-cyan-400 rounded-full blur-md opacity-30"></div>
-                <Bot className="w-6 h-6 text-cyan-400 z-10" />
+                <div className="absolute w-full h-full bg-amber-400 rounded-full blur-md opacity-30"></div>
+                <Bot className="w-6 h-6 text-amber-400 z-10" />
               </div>
               <div className="hidden md:block">
-                <p className="text-xs text-cyan-400 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse"></span>
+                <p className="text-xs text-amber-400 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></span>
                   Online
                 </p>
               </div>
@@ -69,7 +69,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen }) => {
             <div className="flex items-center gap-2 ml-auto mr-8">
               <button
                 onClick={reset}
-                className="p-2 text-slate-400 hover:text-white transition-colors rounded-full hover:bg-white/10"
+                className="p-2 text-zinc-400 hover:text-white transition-colors rounded-full hover:bg-white/10"
                 aria-label="Reset chat"
                 style={{ position: "relative", zIndex: 10 }}
               >
@@ -79,7 +79,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen }) => {
             {/* Tombol Close di pojok kanan atas, di luar flex */}
             <button
               onClick={() => setIsChatOpen && setIsChatOpen(false)}
-              className="absolute top-3 right-3 p-2 text-slate-400 hover:text-red-500 transition-colors rounded-full hover:bg-red-500/10 z-20"
+              className="absolute top-3 right-3 p-2 text-zinc-400 hover:text-red-500 transition-colors rounded-full hover:bg-red-500/10 z-20"
               aria-label="Close chat"
             >
               <svg
@@ -117,7 +117,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen }) => {
                     {isBot ? (
                       <BotMessage message={msg} />
                     ) : (
-                      <div className="max-w-xs px-4 py-2.5 rounded-xl text-base md:text-lg bg-gradient-to-br from-cyan-500 to-blue-600 text-white rounded-tr-none shadow-lg shadow-cyan-500/20">
+                      <div className="max-w-xs px-4 py-2.5 rounded-xl text-base md:text-lg bg-gradient-to-br from-amber-600 to-yellow-600 text-white rounded-tr-none shadow-lg shadow-amber-500/20">
                         <p className="leading-relaxed">{msg.text}</p>
                       </div>
                     )}
@@ -130,19 +130,19 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen }) => {
                   animate={{ opacity: 1, y: 0 }}
                   className="flex items-end gap-3 justify-start"
                 >
-                  <div className="w-8 h-8 flex-shrink-0 rounded-full bg-slate-800 flex items-center justify-center">
-                    <Bot className="w-5 h-5 text-cyan-400" />
+                  <div className="w-8 h-8 flex-shrink-0 rounded-full bg-zinc-900 flex items-center justify-center">
+                    <Bot className="w-5 h-5 text-amber-400" />
                   </div>
-                  <div className="px-4 py-3 rounded-xl bg-slate-800 text-slate-200 rounded-bl-none shadow-lg shadow-black/20">
+                  <div className="px-4 py-3 rounded-xl bg-zinc-900 text-zinc-200 rounded-bl-none shadow-lg shadow-black/20">
                     <div className="flex items-center gap-1.5">
                       <span
-                        className={`w-1.5 h-1.5 bg-slate-400 rounded-full ${styles.pulseDot}`}
+                        className={`w-1.5 h-1.5 bg-zinc-400 rounded-full ${styles.pulseDot}`}
                       ></span>
                       <span
-                        className={`w-1.5 h-1.5 bg-slate-400 rounded-full ${styles.pulseDot}`}
+                        className={`w-1.5 h-1.5 bg-zinc-400 rounded-full ${styles.pulseDot}`}
                       ></span>
                       <span
-                        className={`w-1.5 h-1.5 bg-slate-400 rounded-full ${styles.pulseDot}`}
+                        className={`w-1.5 h-1.5 bg-zinc-400 rounded-full ${styles.pulseDot}`}
                       ></span>
                     </div>
                   </div>
@@ -153,18 +153,18 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen }) => {
           </div>
 
           {/* Input */}
-          <div className="p-3 border-t border-white/10">
-            {messages.length <= 1 && !isLoading && (
+          <div className="p-3 border-t border-zinc-800">
+            {!isLoading && messages.length > 0 && messages[messages.length - 1].sender === "bot" && (
               <div className="mb-3 flex flex-wrap gap-2">
                 {[
                   "What services do you offer?",
-                  "Tell me about your process.",
+                  "What are your pricing plans?",
                   "How can I contact you?",
                 ].map((q) => (
                   <button
                     key={q}
                     onClick={() => handleSuggestionClick(q)}
-                    className="px-3 py-1.5 text-xs bg-slate-800 border border-slate-700 hover:border-cyan-500/50 hover:text-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.15)] text-slate-300 rounded-full transition-all duration-300"
+                    className="px-3 py-1.5 text-xs bg-zinc-900 border border-zinc-800 hover:border-amber-500/50 hover:text-amber-400 hover:shadow-[0_0_15px_rgba(245,158,11,0.15)] text-zinc-300 rounded-full transition-all duration-300"
                   >
                     {q}
                   </button>

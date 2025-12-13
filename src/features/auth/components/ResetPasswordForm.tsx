@@ -168,13 +168,13 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
   return (
     <div className="w-full animate-fade-in">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-violet-400">Reset Password</h2>
+        <h2 className="text-3xl font-bold text-white tracking-tight">Reset Password</h2>
         <p className="text-slate-400 mt-2">Enter your new password below</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {error && (
-          <div className="bg-red-900/40 border border-red-500/30 text-red-300 text-sm p-3 rounded-lg flex items-start gap-3 animate-shake">
+          <div className="bg-red-500/10 border border-red-500/20 text-red-200 text-sm p-4 rounded-xl flex items-start gap-3 animate-shake">
             <ShieldX className="w-5 h-5 flex-shrink-0" />
             <span>{error}</span>
           </div>
@@ -196,8 +196,8 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
               placeholder="Enter new password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-10 py-2.5 text-white placeholder-slate-500 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 focus:outline-none transition-all disabled:opacity-50 ${
-                error ? "border-red-500/50" : "border-slate-700"
+              className={`w-full bg-slate-950/50 border rounded-xl pl-10 pr-10 py-3 text-white placeholder-slate-500 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-all disabled:opacity-50 ${
+                error ? "border-red-500/50" : "border-white/10 hover:border-white/20"
               }`}
               required
               disabled={isLoading}
@@ -205,7 +205,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-violet-400 transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
               disabled={isLoading}
             >
               {showPassword ? (
@@ -234,8 +234,8 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
               placeholder="Confirm new password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-10 py-2.5 text-white placeholder-slate-500 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 focus:outline-none transition-all disabled:opacity-50 ${
-                error ? "border-red-500/50" : "border-slate-700"
+              className={`w-full bg-slate-950/50 border rounded-xl pl-10 pr-10 py-3 text-white placeholder-slate-500 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-all disabled:opacity-50 ${
+                error ? "border-red-500/50" : "border-white/10 hover:border-white/20"
               }`}
               required
               disabled={isLoading}
@@ -243,7 +243,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-violet-400 transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
               disabled={isLoading}
             >
               {showConfirmPassword ? (
@@ -265,7 +265,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
         </div>
 
         {/* Password Requirements */}
-        <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-3">
+        <div className="bg-black/20 border border-white/5 rounded-xl p-4">
           <p className="text-xs font-medium text-slate-300 mb-2">
             Password requirements:
           </p>
@@ -313,7 +313,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
         <button
           type="submit"
           disabled={isLoading || !password || !confirmPassword}
-          className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-violet-500/20 hover:shadow-xl hover:shadow-violet-500/40 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <>

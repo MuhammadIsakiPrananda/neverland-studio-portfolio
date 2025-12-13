@@ -34,7 +34,7 @@ export const BillingTabContent: React.FC = () => {
             <div className="flex justify-end">
               <button
                 onClick={() => setIsAddingVA(true)}
-                className="flex items-center gap-2 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors"
+                className="flex items-center gap-2 text-sm font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
               >
                 <Wallet className="w-4 h-4" />
                 <span>Add Virtual Account</span>
@@ -66,7 +66,7 @@ export const BillingTabContent: React.FC = () => {
             {paymentMethods.map((pm) => (
               <li
                 key={pm.id}
-                className="flex items-center justify-between p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg"
+                className="flex items-center justify-between p-4 bg-slate-950/30 border border-white/5 rounded-xl"
               >
                 <div className="flex items-center gap-4">
                   {pm.type === "card" ? (
@@ -94,7 +94,7 @@ export const BillingTabContent: React.FC = () => {
                     </div>
                   )}
                   {pm.isDefault && (
-                    <div className="flex items-center gap-1 text-xs text-cyan-400 bg-cyan-500/10 px-2 py-1 rounded-full">
+                    <div className="flex items-center gap-1 text-xs text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded-full">
                       <CheckCircle className="w-3 h-3" /> Default
                     </div>
                   )}
@@ -103,7 +103,7 @@ export const BillingTabContent: React.FC = () => {
                   {!pm.isDefault && (
                     <button
                       onClick={() => setDefaultPaymentMethod(pm.id)}
-                      className="text-sm text-cyan-400 hover:underline"
+                      className="text-sm text-indigo-400 hover:underline"
                     >
                       Set as default
                     </button>
@@ -125,11 +125,11 @@ export const BillingTabContent: React.FC = () => {
         title="Billing History"
         description="Review your past invoices and payments."
       >
-        <ul className="divide-y divide-slate-800 -mx-6">
+        <ul className="divide-y divide-white/5 -mx-6">
           {billingHistory.map((inv) => (
             <li
               key={inv.id}
-              className="flex items-center justify-between px-6 py-4"
+              className="flex items-center justify-between px-6 py-4 hover:bg-indigo-500/5 transition-colors"
             >
               <div>
                 <p className="font-semibold text-white">
@@ -143,7 +143,7 @@ export const BillingTabContent: React.FC = () => {
                   href={inv.pdfUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
+                  className="flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
                 >
                   <Download className="w-4 h-4" /> PDF
                 </a>

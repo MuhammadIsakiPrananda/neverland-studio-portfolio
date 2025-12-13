@@ -79,7 +79,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
+            <div className="fixed inset-0 bg-black/90 backdrop-blur-sm" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
@@ -94,15 +94,15 @@ const AuthModal: React.FC<AuthModalProps> = ({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900/80 to-slate-950/80 backdrop-blur-xl border border-violet-500/20 p-8 text-left align-middle shadow-2xl shadow-black/40 transition-all">
+                <Dialog.Panel className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-slate-950/95 backdrop-blur-xl border border-white/5 p-8 text-left align-middle shadow-2xl shadow-black transition-all">
                   {/* Aurora Effect */}
-                  <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-violet-500/20 rounded-full blur-3xl animate-pulse-slow opacity-30"></div>
-                  <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-indigo-500/15 rounded-full blur-3xl animate-pulse-slow animation-delay-4000 opacity-30"></div>
+                  <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl animate-pulse-slow opacity-30"></div>
+                  <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl animate-pulse-slow animation-delay-4000 opacity-30"></div>
 
                   {/* Tombol Close (X) dipindahkan ke dalam Dialog.Panel */}
                   <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-slate-400 hover:text-violet-300 transition-colors z-10"
+                    className="absolute top-4 right-4 text-slate-500 hover:text-slate-200 transition-colors z-10"
                     aria-label="Close"
                   >
                     <X className="w-6 h-6" />

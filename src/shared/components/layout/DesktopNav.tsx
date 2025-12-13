@@ -35,11 +35,11 @@ const DesktopNav: React.FC<DesktopNavProps> = ({
         className="mx-auto flex items-center gap-8 p-3 rounded-full transition-all duration-300"
         animate={{
           backgroundColor: isScrolled
-            ? "rgba(15, 23, 42, 0.8)"
-            : "rgba(15, 23, 42, 0.4)",
+            ? "rgba(24, 24, 27, 0.8)"
+            : "rgba(24, 24, 27, 0.4)",
           borderColor: isScrolled
-            ? "rgba(6, 182, 212, 0.3)"
-            : "rgba(51, 65, 85, 0.3)", // Warna amber saat scroll
+            ? "rgba(245, 158, 11, 0.3)"
+            : "rgba(63, 63, 70, 0.3)", // Warna amber saat scroll
           boxShadow: isScrolled
             ? "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
             : "none",
@@ -74,7 +74,7 @@ const DesktopNav: React.FC<DesktopNavProps> = ({
           ) : (
             <button
               onClick={onLoginClick}
-              className="flex items-center gap-1.5 rounded-full bg-slate-800/50 border border-slate-700 px-4 py-2 text-sm font-medium text-slate-300 tracking-wide transition-all hover:-translate-y-0.5 hover:bg-slate-700/50 hover:border-cyan-500/50 hover:text-white"
+              className="flex items-center gap-1.5 rounded-full bg-zinc-900/50 border border-zinc-800 px-4 py-2 text-sm font-medium text-zinc-300 tracking-wide transition-all hover:-translate-y-0.5 hover:bg-zinc-800/50 hover:border-amber-500/50 hover:text-white"
             >
               <LogIn className="w-4 h-4" />
               {t("nav.login")}
@@ -82,7 +82,7 @@ const DesktopNav: React.FC<DesktopNavProps> = ({
           )}
           <button
             onClick={onQuoteClick}
-            className="whitespace-nowrap rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 tracking-wide transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-500/40"
+            className="whitespace-nowrap rounded-full bg-gradient-to-r from-amber-600 to-yellow-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 tracking-wide transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-amber-500/40"
           >
             {t("hero.getStarted")}
           </button>

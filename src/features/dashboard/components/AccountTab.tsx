@@ -99,7 +99,7 @@ export const AccountTabContent: React.FC = () => {
             <button
               onClick={handleSavePayment}
               disabled={isSaving}
-              className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/40 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? (
                 <Loader className="w-5 h-5 animate-spin" />
@@ -117,10 +117,10 @@ export const AccountTabContent: React.FC = () => {
           {paymentMethods.map((method) => (
             <label
               key={method.id}
-              className={`flex items-center gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all ${
+              className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
                 selectedPayment === method.id
-                  ? "border-cyan-500 bg-cyan-500/10"
-                : "border-slate-800 bg-slate-900/50 hover:border-cyan-500/50 hover:bg-cyan-500/5"
+                  ? "border-indigo-500 bg-indigo-500/10"
+                  : "border-white/5 bg-slate-950/30 hover:border-indigo-500/30 hover:bg-indigo-500/5"
               }`}
             >
               <input
@@ -143,7 +143,7 @@ export const AccountTabContent: React.FC = () => {
         </div>
 
         {/* --- FORMULIR DINAMIS DITAMBAHKAN DI SINI --- */}
-        <div className="mt-6 border-t border-slate-800 pt-6">
+        <div className="mt-6 border-t border-white/5 pt-6">
           {selectedPayment === "credit-card" && (
             <div className="space-y-4 animate-fade-in">
               <h4 className="text-md font-semibold text-white mb-2">
@@ -158,7 +158,7 @@ export const AccountTabContent: React.FC = () => {
                   <input
                     type="text"
                     placeholder="0000 0000 0000 0000"
-                    className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors"
+                    className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -172,7 +172,7 @@ export const AccountTabContent: React.FC = () => {
                     <input
                       type="text"
                       placeholder="MM / YY"
-                      className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors"
+                      className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-colors"
                     />
                   </div>
                 </div>
@@ -186,7 +186,7 @@ export const AccountTabContent: React.FC = () => {
                       type="password"
                       placeholder="•••"
                       maxLength={4}
-                      className="w-full bg-slate-800/60 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors"
+                      className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-colors"
                     />
                   </div>
                 </div>
@@ -194,7 +194,7 @@ export const AccountTabContent: React.FC = () => {
             </div>
           )}
           {selectedPayment !== "credit-card" && (
-            <div className="text-center text-slate-400 p-4 bg-slate-800/50 rounded-lg animate-fade-in">
+            <div className="text-center text-slate-400 p-4 bg-slate-950/30 border border-white/5 rounded-xl animate-fade-in">
               <p>
                 Payment details and instructions will be provided upon saving
                 changes.
@@ -211,7 +211,7 @@ export const AccountTabContent: React.FC = () => {
           <button
             onClick={fetchInvoices}
             disabled={isHistoryLoading}
-            className="flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300 transition-colors disabled:opacity-50 disabled:cursor-wait"
+            className="flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300 transition-colors disabled:opacity-50 disabled:cursor-wait"
           >
             <RefreshCw
               className={`w-4 h-4 ${isHistoryLoading ? "animate-spin" : ""}`}
@@ -222,7 +222,7 @@ export const AccountTabContent: React.FC = () => {
       >
         <table className="w-full text-left">
           <thead>
-            <tr className="border-b border-slate-800 text-sm text-slate-400">
+            <tr className="border-b border-white/5 text-sm text-slate-400">
               <th className="p-3 font-medium">Invoice</th>
               <th className="p-3 font-medium">Date</th>
               <th className="p-3 font-medium">Amount</th>
@@ -235,19 +235,19 @@ export const AccountTabContent: React.FC = () => {
               [...Array(3)].map((_, index) => (
                 <tr
                   key={index}
-                  className="border-b border-slate-800 last:border-b-0"
+                  className="border-b border-white/5 last:border-b-0"
                 >
                   <td className="p-3">
-                    <div className="h-4 bg-slate-700/50 rounded animate-pulse w-3/4"></div>
+                    <div className="h-4 bg-slate-800/50 rounded animate-pulse w-3/4"></div>
                   </td>
                   <td className="p-3">
-                    <div className="h-4 bg-slate-700/50 rounded animate-pulse w-1/2"></div>
+                    <div className="h-4 bg-slate-800/50 rounded animate-pulse w-1/2"></div>
                   </td>
                   <td className="p-3">
-                    <div className="h-4 bg-slate-700/50 rounded animate-pulse w-1/4"></div>
+                    <div className="h-4 bg-slate-800/50 rounded animate-pulse w-1/4"></div>
                   </td>
                   <td className="p-3 text-right">
-                    <div className="h-6 w-6 bg-slate-700/50 rounded-full animate-pulse ml-auto"></div>
+                    <div className="h-6 w-6 bg-slate-800/50 rounded-full animate-pulse ml-auto"></div>
                   </td>
                 </tr>
               ))
@@ -256,7 +256,7 @@ export const AccountTabContent: React.FC = () => {
               invoices.map((invoice) => (
                 <tr
                   key={invoice.id}
-                className="border-b border-slate-800 text-sm last:border-b-0 hover:bg-cyan-500/5 transition-colors"
+                  className="border-b border-white/5 text-sm last:border-b-0 hover:bg-indigo-500/5 transition-colors"
                 >
                   <td className="p-3 text-slate-200 font-medium">
                     {invoice.id}
@@ -264,7 +264,7 @@ export const AccountTabContent: React.FC = () => {
                   <td className="p-3">{invoice.date}</td>
                   <td className="p-3">{invoice.amount}</td>
                   <td className="p-3 text-right">
-                    <button className="p-2 text-slate-400 hover:text-cyan-400 transition-colors">
+                    <button className="p-2 text-slate-400 hover:text-indigo-400 transition-colors">
                       <Download className="w-4 h-4" />
                     </button>
                   </td>

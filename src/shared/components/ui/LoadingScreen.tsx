@@ -34,12 +34,12 @@ const LoadingScreen = () => {
       initial="initial"
       animate="animate"
       exit="exit"
-      className="fixed inset-0 bg-gradient-to-br from-gray-900 via-gray-950 to-gray-900 z-[200] flex items-center justify-center"
+      className="fixed inset-0 bg-gradient-to-br from-zinc-900 via-zinc-950 to-zinc-900 z-[200] flex items-center justify-center"
     >
       <div className="flex items-center space-x-4">
         <motion.div 
           variants={textVariant}
-          className="w-12 h-12 rounded-full overflow-hidden shadow-lg shadow-cyan-500/20 border-2 border-cyan-500/50"
+          className="w-12 h-12 rounded-full overflow-hidden shadow-lg shadow-amber-500/20 border-2 border-amber-500/50"
         >
           <img src="/images/Neverland Studio.webp" alt="Neverland Studio Logo" className="w-full h-full object-cover" />
         </motion.div>
@@ -47,10 +47,10 @@ const LoadingScreen = () => {
           variants={{ animate: { transition: { staggerChildren: 0.1 } } }}
           className="flex flex-col justify-center"
         >
-          <motion.span variants={textVariant} className="block text-2xl font-bold tracking-wider leading-none bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"> 
+          <motion.span variants={textVariant} className="block text-2xl font-bold tracking-wider leading-none bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent"> 
             Neverland
           </motion.span>
-          <motion.span variants={textVariant} className="block text-base font-medium tracking-widest leading-none text-slate-300"> 
+          <motion.span variants={textVariant} className="block text-base font-medium tracking-widest leading-none text-zinc-300"> 
             Studio
           </motion.span>
         </motion.div>

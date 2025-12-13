@@ -16,8 +16,9 @@ export const useChat = () => {
         id: Date.now(),
         sender: "bot",
         text:
-          "Welcome to Live Chat! Our team is here to help you with your questions.\n\n" +
-          "You can ask us about:\n- Our **Services** (e.g., 'What services do you offer?')\n- **Pricing** information\n- How to **Contact** us",
+          "Welcome to **Neverland Studio**.\n\n" +
+          "We are dedicated to crafting exceptional digital experiences. How may we assist you today?\n" +
+          "Feel free to ask about:\n- **Premium Services**\n- **Pricing & Plans**\n- **Contact Support**",
       },
     ]);
   }, []);
@@ -28,21 +29,21 @@ export const useChat = () => {
       lowerCaseMessage.includes("layanan") ||
       lowerCaseMessage.includes("service")
     ) {
-      return "We offer **Web Development**, **UI/UX Design**, and **Digital Consultation** services.";
+      return "We offer premium **Web Development**, **UI/UX Design**, and **Digital Consultation** services tailored to elevate your brand.\n\nIs there anything else I can help you with?";
     }
     if (
       lowerCaseMessage.includes("harga") ||
       lowerCaseMessage.includes("pricing")
     ) {
-      return "For pricing information, please visit our Pricing page or contact us for a custom quote.";
+      return "For exclusive pricing and tailored packages, please visit our **Pricing** page or contact us directly for a custom quote.\n\nWould you like to know about our services?";
     }
     if (
       lowerCaseMessage.includes("kontak") ||
       lowerCaseMessage.includes("contact")
     ) {
-      return "You can contact us via email at **arlianto032@gmail.com** or by filling out the form on our Contact page.";
+      return "You can reach our support team via email at **arlianto032@gmail.com** or by filling out the form on our **Contact** page.\n\nFeel free to ask if you need more details.";
     }
-    return "I'm sorry, I don't understand that question. Try asking about services, pricing, or contact information.";
+    return "I apologize, I didn't quite catch that. Could you please ask about our **Services**, **Pricing**, or **Contact** information?";
   };
 
   const addMessage = useCallback((text: string) => {
@@ -77,8 +78,9 @@ export const useChat = () => {
         id: Date.now(),
         sender: "bot",
         text:
-          "Welcome to Live Chat! Our team is here to help you with your questions.\n\n" +
-          "You can ask us about:\n- Our **Services** (e.g., 'What services do you offer?')\n- **Pricing** information\n- How to **Contact** us",
+          "Welcome to **Neverland Studio**.\n\n" +
+          "We are dedicated to crafting exceptional digital experiences. How may we assist you today?\n" +
+          "Feel free to ask about:\n- **Premium Services**\n- **Pricing & Plans**\n- **Contact Support**",
       },
     ]);
     setIsLoading(false);

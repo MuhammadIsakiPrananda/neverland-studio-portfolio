@@ -150,7 +150,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
 
   return (
     <ChatbotProvider>
-      <div className="bg-gray-900 text-slate-300 min-h-screen relative">
+      <div className="bg-zinc-900 text-zinc-300 min-h-screen relative">
         <AuroraBackground />
         <AnimatePresence mode="wait">
           {isLoading && <LoadingScreen />}
@@ -294,13 +294,13 @@ const LandingPage: React.FC<LandingPageProps> = ({
             background: transparent;
           }
           .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: rgba(100, 116, 139, 0.5); /* slate-500 with 50% opacity */
+            background-color: rgba(113, 113, 122, 0.5); /* zinc-500 with 50% opacity */
             border-radius: 10px;
             border: 2px solid transparent;
             background-clip: content-box;
           }
           .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background-color: rgba(100, 116, 139, 0.8);
+            background-color: rgba(113, 113, 122, 0.8);
           }
         `}</style>
       </div>

@@ -120,7 +120,7 @@ export const ApiKeysTabContent: React.FC = () => {
           <button
             onClick={handleGenerateKey}
             disabled={isGenerating}
-            className="flex items-center gap-2 text-sm text-amber-400 hover:text-amber-300 transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300 transition-colors disabled:opacity-50"
           >
             {isGenerating ? (
               <Loader className="w-4 h-4 animate-spin" />
@@ -137,12 +137,12 @@ export const ApiKeysTabContent: React.FC = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, height: 0, padding: 0, margin: 0 }}
-              className="bg-amber-900/50 border border-amber-500/30 rounded-lg p-4 mb-6"
+              className="bg-indigo-900/20 border border-indigo-500/30 rounded-xl p-4 mb-6"
             >
-              <h4 className="text-md font-bold text-amber-300">
+              <h4 className="text-md font-bold text-indigo-300">
                 New API Key Generated
               </h4>
-              <p className="text-sm text-amber-400/80 mt-1">
+              <p className="text-sm text-indigo-200/70 mt-1">
                 Please copy this key and store it securely. You will not be able
                 to see it again.
               </p>
@@ -151,7 +151,7 @@ export const ApiKeysTabContent: React.FC = () => {
                   type="text"
                   readOnly
                   value={newlyGeneratedKey.token}
-                  className="w-full bg-slate-900/50 border border-slate-700 rounded-lg pl-3 pr-10 py-2 text-white font-mono text-sm"
+                  className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-3 pr-10 py-3 text-white font-mono text-sm"
                 />
                 <button
                   onClick={() =>
@@ -160,7 +160,7 @@ export const ApiKeysTabContent: React.FC = () => {
                   className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white"
                 >
                   {copiedKeyId === newlyGeneratedKey.id ? (
-                    <Check className="w-5 h-5 text-amber-400" />
+                    <Check className="w-5 h-5 text-indigo-400" />
                   ) : (
                     <Copy className="w-5 h-5" />
                   )}
@@ -170,7 +170,7 @@ export const ApiKeysTabContent: React.FC = () => {
           )}
         </AnimatePresence>
 
-        <ul className="divide-y divide-slate-800 -mx-6">
+        <ul className="divide-y divide-white/5 -mx-6">
           <AnimatePresence initial={false}>
             {apiKeys.map((key) => (
               <motion.li
@@ -179,10 +179,10 @@ export const ApiKeysTabContent: React.FC = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, x: -100, transition: { duration: 0.3 } }}
-                className="px-6 flex items-center justify-between hover:bg-slate-800/30 transition-colors"
+                className="px-6 flex items-center justify-between hover:bg-indigo-500/5 transition-colors"
               >
                 <div className="flex items-center gap-4 py-4">
-                  <div className="p-2 bg-slate-700/50 rounded-full">
+                  <div className="p-2 bg-white/5 rounded-full">
                     <KeyRound className="w-5 h-5 text-slate-400" />
                   </div>
                   <div>
@@ -198,11 +198,11 @@ export const ApiKeysTabContent: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => handleCopy(key.token, key.id)}
-                    className="p-2 text-slate-400 hover:text-amber-400 transition-colors"
+                    className="p-2 text-slate-400 hover:text-indigo-400 transition-colors"
                     title="Copy Key"
                   >
                     {copiedKeyId === key.id ? (
-                      <Check className="w-4 h-4 text-amber-400" />
+                      <Check className="w-4 h-4 text-indigo-400" />
                     ) : (
                       <Copy className="w-4 h-4" />
                     )}

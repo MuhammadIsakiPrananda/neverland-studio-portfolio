@@ -56,7 +56,7 @@ const TeamSection: React.FC<TeamSectionProps> = ({
     >
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-cyan-400 font-semibold text-sm uppercase tracking-wider">
+          <span className="text-amber-400 font-semibold text-sm uppercase tracking-wider">
             {t("team.title")}
           </span>
           <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6">
@@ -75,7 +75,7 @@ const TeamSection: React.FC<TeamSectionProps> = ({
             <motion.div
               key={idx}
               variants={itemVariants}
-              className="bg-gradient-to-br from-slate-900/60 to-black/60 backdrop-blur-lg border border-white/10 rounded-2xl overflow-hidden hover:border-cyan-500/50 transition-all group transform hover:-translate-y-2"
+              className="bg-gradient-to-br from-slate-900/60 to-black/60 backdrop-blur-lg border border-white/10 rounded-2xl overflow-hidden hover:border-amber-500/50 transition-all group transform hover:-translate-y-2"
             >
               <div className="aspect-square overflow-hidden">
                 <img
@@ -86,17 +86,17 @@ const TeamSection: React.FC<TeamSectionProps> = ({
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold mb-1">{member.name}</h3>
-                <p className="text-cyan-400 text-sm mb-3">{member.role}</p>
+                <p className="text-amber-400 text-sm mb-3">{member.role}</p>
                 <p className="text-slate-400 text-sm mb-4">{member.bio}</p>
                 <div className="flex gap-3">
-                  <button className="w-9 h-9 bg-slate-800/50 border border-white/10 rounded-lg flex items-center justify-center hover:bg-cyan-500/10 hover:border-cyan-500/50 transition-all group/icon">
-                    <Linkedin className="w-4 h-4 text-slate-400 group-hover/icon:text-cyan-400 transition-colors" />
+                  <button className="w-9 h-9 bg-slate-800/50 border border-white/10 rounded-lg flex items-center justify-center hover:bg-amber-500/10 hover:border-amber-500/50 transition-all group/icon">
+                    <Linkedin className="w-4 h-4 text-slate-400 group-hover/icon:text-amber-400 transition-colors" />
                   </button>
-                  <button className="w-9 h-9 bg-slate-800/50 border border-white/10 rounded-lg flex items-center justify-center hover:bg-cyan-500/10 hover:border-cyan-500/50 transition-all group/icon">
-                    <Twitter className="w-4 h-4 text-slate-400 group-hover/icon:text-cyan-400 transition-colors" />
+                  <button className="w-9 h-9 bg-slate-800/50 border border-white/10 rounded-lg flex items-center justify-center hover:bg-amber-500/10 hover:border-amber-500/50 transition-all group/icon">
+                    <Twitter className="w-4 h-4 text-slate-400 group-hover/icon:text-amber-400 transition-colors" />
                   </button>
-                  <button className="w-9 h-9 bg-slate-800/50 border border-white/10 rounded-lg flex items-center justify-center hover:bg-cyan-500/10 hover:border-cyan-500/50 transition-all group/icon">
-                    <Mail className="w-4 h-4 text-slate-400 group-hover/icon:text-cyan-400 transition-colors" />
+                  <button className="w-9 h-9 bg-slate-800/50 border border-white/10 rounded-lg flex items-center justify-center hover:bg-amber-500/10 hover:border-amber-500/50 transition-all group/icon">
+                    <Mail className="w-4 h-4 text-slate-400 group-hover/icon:text-amber-400 transition-colors" />
                   </button>
                 </div>
               </div>
@@ -106,7 +106,7 @@ const TeamSection: React.FC<TeamSectionProps> = ({
         <div className="text-center mt-12">
           <button
             onClick={onJoinTeamClick}
-            className="border border-white/10 px-8 py-4 rounded-full font-semibold hover:bg-cyan-500/10 hover:border-cyan-500/50 hover:text-cyan-400 transition-all transform hover:scale-105"
+            className="border border-white/10 px-8 py-4 rounded-full font-semibold hover:bg-amber-500/10 hover:border-amber-500/50 hover:text-amber-400 transition-all transform hover:scale-105"
           >
             {t("team.joinTeam")}
           </button>

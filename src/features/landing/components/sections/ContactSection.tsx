@@ -69,7 +69,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
     >
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-cyan-400 font-semibold text-sm uppercase tracking-wider">
+          <span className="text-amber-400 font-semibold text-sm uppercase tracking-wider">
             {t("contact.title")}
           </span>
           <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6">
@@ -129,7 +129,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-cyan-400 text-sm mt-2 hover:underline inline-block"
+                      className="text-amber-400 text-sm mt-2 hover:underline inline-block"
                     >
                       {item.action}
                     </a>
@@ -160,7 +160,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                       href={href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-10 h-10 bg-slate-800/50 border border-slate-700/50 rounded-lg flex items-center justify-center hover:scale-110 hover:bg-cyan-500/10 hover:border-cyan-500/50 transition-all"
+                      className="w-10 h-10 bg-slate-800/50 border border-slate-700/50 rounded-lg flex items-center justify-center hover:scale-110 hover:bg-amber-500/10 hover:border-amber-500/50 transition-all"
                     >
                       <Icon className="w-5 h-5 text-white" />
                     </a>
@@ -180,7 +180,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                     </label>
                     <input
                       type="text"
-                      className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors"
+                      className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors"
                       placeholder="John"
                       required
                     />
@@ -191,7 +191,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                     </label>
                     <input
                       type="text"
-                      className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors"
+                      className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors"
                       placeholder="Doe"
                       required
                     />
@@ -203,7 +203,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                   </label>
                   <input
                     type="email"
-                    className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors"
+                    className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors"
                     placeholder="john.doe@example.com"
                     required
                   />
@@ -215,7 +215,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                   <select
                     value={selectedService}
                     onChange={(e) => setSelectedService(e.target.value)}
-                    className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors appearance-none"
+                    className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors appearance-none"
                     required
                   >
                     <option value="">{t("contact.form.selectService")}</option>
@@ -250,7 +250,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                         type="text"
                         value={otherService}
                         onChange={(e) => setOtherService(e.target.value)}
-                        className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors"
+                        className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors"
                         placeholder="e.g., SEO Optimization"
                         required
                       />
@@ -263,14 +263,14 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                   </label>
                   <textarea
                     rows={5}
-                    className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors resize-none"
+                    className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors resize-none"
                     placeholder={t("contact.message")}
                     required
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-4 rounded-lg font-semibold shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-105"
+                  className="w-full bg-gradient-to-r from-amber-400 to-amber-600 text-white py-4 rounded-lg font-semibold shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-105"
                 >
                   {t("contact.send")}
                 </button>

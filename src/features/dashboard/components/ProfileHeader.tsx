@@ -10,9 +10,9 @@ interface ProfileHeaderProps {
 export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, currentAvatar, onAvatarClick }) => (
   <div className="flex flex-col items-center text-center gap-4 p-2">
     <div className="relative group w-24 h-24">
-      <img className="w-full h-full rounded-full object-cover border-2 border-slate-700/50 shadow-lg group-hover:border-cyan-500/50 transition-colors" src={currentAvatar} alt="User avatar" />
+      <img className="w-full h-full rounded-full object-cover border-2 border-white/10 shadow-2xl shadow-black/50 group-hover:border-indigo-500/50 transition-all duration-300" src={currentAvatar} alt="User avatar" />
       <button onClick={onAvatarClick} className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-        <Camera className="w-6 h-6 text-cyan-400" />
+        <Camera className="w-6 h-6 text-indigo-400" />
       </button>
     </div>
     <div>

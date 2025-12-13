@@ -12,7 +12,7 @@ const AccordionItem = ({
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
-    <div className="border-b border-slate-800">
+    <div className="border-b border-white/5">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex justify-between items-center w-full py-4 text-left"
@@ -81,7 +81,7 @@ export const HelpCenterTabContent: React.FC = () => {
             <input
               type="text"
               placeholder="e.g., Issue with billing"
-              className="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 mt-1 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors"
+              className="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-3 mt-1 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-colors"
             />
           </div>
           <div>
@@ -91,13 +91,13 @@ export const HelpCenterTabContent: React.FC = () => {
             <textarea
               rows={5}
               placeholder="Describe your issue in detail..."
-              className="w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 mt-1 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-colors resize-none"
+              className="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-3 mt-1 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-colors resize-none"
             />
           </div>
           <div className="flex justify-end">
             <button
               type="submit"
-              className="flex items-center gap-2 py-2 px-5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-[1.02]"
+              className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/40 transition-all transform hover:scale-[1.02]"
             >
               <Send className="w-5 h-5" />
               <span className="font-semibold">Send Message</span>

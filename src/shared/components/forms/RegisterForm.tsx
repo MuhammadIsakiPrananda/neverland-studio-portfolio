@@ -331,8 +331,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   return (
     <div key="register" className="w-full animate-fade-in">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-violet-400">Create an Account</h2>
-        <p className="text-slate-400 mt-2">Join us and start your journey</p>
+        <h2 className="text-3xl font-bold text-amber-400">Create an Account</h2>
+        <p className="text-zinc-400 mt-2">Join us and start your journey</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -347,12 +347,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         <div>
           <label
             htmlFor="name"
-            className="text-sm font-medium text-slate-400 mb-2 block"
+            className="text-sm font-medium text-zinc-400 mb-2 block"
           >
             Full Name
           </label>
           <div className="relative">
-            <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+            <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
             <input
               id="name"
               type="text"
@@ -360,10 +360,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               value={formData.name}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${
+              className={`w-full bg-zinc-900/50 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-zinc-600 focus:outline-none transition-all disabled:opacity-50 ${
                 errors.name
                   ? "border-red-500/50"
-                  : "border-slate-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30"
+                  : "border-zinc-800 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
               }`}
               required
               disabled={isFormDisabled}
@@ -380,12 +380,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         <div>
           <label
             htmlFor="username"
-            className="text-sm font-medium text-slate-400 mb-2 block"
+            className="text-sm font-medium text-zinc-400 mb-2 block"
           >
             Username
           </label>
           <div className="relative">
-            <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+            <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
             <input
               id="username"
               type="text"
@@ -393,10 +393,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               value={formData.username}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${
+              className={`w-full bg-zinc-900/50 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-zinc-600 focus:outline-none transition-all disabled:opacity-50 ${
                 errors.username
                   ? "border-red-500/50"
-                  : "border-slate-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30"
+                  : "border-zinc-800 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
               }`}
               required
               disabled={isFormDisabled}
@@ -413,12 +413,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         <div>
           <label
             htmlFor="email"
-            className="text-sm font-medium text-slate-400 mb-2 block"
+            className="text-sm font-medium text-zinc-400 mb-2 block"
           >
             Email Address
           </label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
             <input
               id="email"
               type="email"
@@ -426,10 +426,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               value={formData.email}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${
+              className={`w-full bg-zinc-900/50 border rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-zinc-600 focus:outline-none transition-all disabled:opacity-50 ${
                 errors.email
                   ? "border-red-500/50"
-                  : "border-slate-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30"
+                  : "border-zinc-800 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
               }`}
               required
               disabled={isFormDisabled}
@@ -446,12 +446,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         <div>
           <label
             htmlFor="password"
-            className="text-sm font-medium text-slate-400 mb-2 block"
+            className="text-sm font-medium text-zinc-400 mb-2 block"
           >
             Password
           </label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
             <input
               id="password"
               type={showPassword ? "text" : "password"}
@@ -459,10 +459,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               value={formData.password}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${
+              className={`w-full bg-zinc-900/50 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-zinc-600 focus:outline-none transition-all disabled:opacity-50 ${
                 errors.password
                   ? "border-red-500/50"
-                  : "border-slate-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30"
+                  : "border-zinc-800 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
               }`}
               required
               disabled={isFormDisabled}
@@ -470,7 +470,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? (
@@ -492,12 +492,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         <div>
           <label
             htmlFor="confirmPassword"
-            className="text-sm font-medium text-slate-400 mb-2 block"
+            className="text-sm font-medium text-zinc-400 mb-2 block"
           >
             Confirm Password
           </label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
             <input
               id="confirmPassword"
               type={showPassword ? "text" : "password"}
@@ -505,10 +505,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               value={formData.confirmPassword}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`w-full bg-slate-800/60 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-slate-500 focus:outline-none transition-all disabled:opacity-50 ${
+              className={`w-full bg-zinc-900/50 border rounded-lg pl-10 pr-12 py-2.5 text-white placeholder-zinc-600 focus:outline-none transition-all disabled:opacity-50 ${
                 errors.confirmPassword
                   ? "border-red-500/50"
-                  : "border-slate-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30"
+                  : "border-zinc-800 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
               }`}
               required
               disabled={isFormDisabled}
@@ -546,7 +546,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         <button
           type="submit"
           disabled={isFormDisabled}
-          className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-violet-500/20 hover:shadow-xl hover:shadow-violet-500/40 transition-all transform hover:scale-[1.02] mt-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
+          className="w-full bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/40 transition-all transform hover:scale-[1.02] mt-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
         >
           {status.loading && (
             <>
@@ -566,13 +566,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         </button>
       </form>
 
-      <div className="pt-5 mt-5 border-t border-slate-700/50 relative z-10">
-        <p className="text-center text-sm text-slate-400">
+      <div className="pt-5 mt-5 border-t border-zinc-800 relative z-10">
+        <p className="text-center text-sm text-zinc-400">
           Already have an account?{" "}
           <button
             type="button"
             onClick={() => onSwitchMode("login")}
-            className="font-semibold text-violet-400 hover:text-violet-300 hover:underline transition-colors"
+            className="font-semibold text-amber-400 hover:text-amber-300 hover:underline transition-colors"
           >
             Sign In
           </button>

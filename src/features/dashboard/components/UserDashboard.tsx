@@ -123,7 +123,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
     `https://ui-avatars.com/api/?name=${internalUser.name.replace(
       " ",
       "+"
-    )}&background=0d9488&color=fff&size=128`;
+    )}&background=d97706&color=fff&size=128`;
 
   return (
     <>
@@ -141,8 +141,8 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
         >
           {/* Aurora Background */}
           <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-cyan-500/10 rounded-full blur-3xl animate-pulse-slow opacity-50"></div>
-            <div className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow animation-delay-4000 opacity-50"></div>
+            <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-amber-500/10 rounded-full blur-3xl animate-pulse-slow opacity-50"></div>
+            <div className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-amber-600/10 rounded-full blur-3xl animate-pulse-slow animation-delay-4000 opacity-50"></div>
           </div>
 
           {/* Overlay untuk sidebar mobile */}
@@ -179,7 +179,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
                 </div>
                 <div className="w-full bg-slate-700/50 rounded-full h-1.5">
                   <motion.div
-                    className="bg-gradient-to-r from-cyan-500 to-blue-500 h-1.5 rounded-full"
+                    className="bg-gradient-to-r from-amber-400 to-amber-600 h-1.5 rounded-full"
                     initial={{ width: 0 }}
                     animate={{ width: `${profileCompletion}%` }}
                     transition={{ duration: 0.5, ease: "easeOut" }}
@@ -204,7 +204,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
                   {activeSection === item.id && (
                     <motion.div
                       layoutId="active-nav-pill"
-                      className="absolute inset-0 bg-cyan-500/10 rounded-lg border border-cyan-500/30"
+                      className="absolute inset-0 bg-amber-500/10 rounded-lg border border-amber-500/30"
                       transition={{
                         type: "spring",
                         stiffness: 300,
@@ -214,7 +214,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
                   )}
                   <item.icon
                     className={`relative w-5 h-5 flex-shrink-0 ${
-                      activeSection === item.id ? "text-cyan-400" : ""
+                      activeSection === item.id ? "text-amber-400" : ""
                     }`}
                   />
                   <span className="relative truncate">{item.label}</span>
@@ -228,7 +228,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
             className="flex-1 overflow-y-auto"
             style={{
               scrollbarWidth: "thin",
-              scrollbarColor: "#52525b #18181b",
+              scrollbarColor: "#475569 #0f172a",
             }}
           >
             {/* Header untuk Mobile dan Desktop */}

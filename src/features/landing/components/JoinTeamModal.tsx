@@ -46,13 +46,13 @@ const JoinTeamModal: React.FC<JoinTeamModalProps> = ({ isOpen, onClose }) => {
           // onClick={onClose} // Dihapus agar tidak menutup saat backdrop diklik
         >
           <motion.div
-            className="bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-cyan-500/10 p-8 w-full max-w-2xl relative"
+            className="bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-amber-500/10 p-8 w-full max-w-2xl relative"
             variants={modalVariants}
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 text-slate-400 hover:text-cyan-400 transition-colors z-10"
+              className="absolute top-4 right-4 text-slate-400 hover:text-amber-400 transition-colors z-10"
             >
               <X className="w-6 h-6" />
             </button>

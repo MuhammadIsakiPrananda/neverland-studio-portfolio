@@ -50,7 +50,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ userProfile, onLogout
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <button onClick={() => setIsOpen(!isOpen)} className="w-10 h-10 rounded-full overflow-hidden border-2 border-slate-600 hover:border-cyan-400 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500/50">
+      <button onClick={() => setIsOpen(!isOpen)} className="w-10 h-10 rounded-full overflow-hidden border-2 border-slate-600 hover:border-amber-400 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/50">
         {userProfile.avatar ? (
           <img src={userProfile.avatar} alt={userProfile.name} className="w-full h-full object-cover" />
         ) : (
@@ -77,18 +77,18 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ userProfile, onLogout
               <motion.button 
                 variants={menuItemVariants} 
                 onClick={() => handleItemClick('profile')}
-                className="w-full text-left px-4 py-2.5 text-sm text-slate-200 hover:bg-cyan-500/10 hover:text-cyan-100 flex items-center gap-3.5 rounded-lg transition-colors group"
-              ><Settings className="w-5 h-5 text-slate-400 group-hover:text-cyan-400 transition-colors" /> Profile Settings</motion.button>
+                className="w-full text-left px-4 py-2.5 text-sm text-slate-200 hover:bg-amber-500/10 hover:text-amber-100 flex items-center gap-3.5 rounded-lg transition-colors group"
+              ><Settings className="w-5 h-5 text-slate-400 group-hover:text-amber-400 transition-colors" /> Profile Settings</motion.button>
               <motion.button 
                 variants={menuItemVariants} 
                 onClick={() => handleItemClick('support')}
-                className="w-full text-left px-4 py-2.5 text-sm text-slate-200 hover:bg-cyan-500/10 hover:text-cyan-100 flex items-center gap-3.5 rounded-lg transition-colors group"
-              ><LifeBuoy className="w-5 h-5 text-slate-400 group-hover:text-cyan-400 transition-colors" /> Help Center</motion.button>
+                className="w-full text-left px-4 py-2.5 text-sm text-slate-200 hover:bg-amber-500/10 hover:text-amber-100 flex items-center gap-3.5 rounded-lg transition-colors group"
+              ><LifeBuoy className="w-5 h-5 text-slate-400 group-hover:text-amber-400 transition-colors" /> Help Center</motion.button>
               <motion.button 
                 variants={menuItemVariants} 
                 onClick={() => handleItemClick('terms')}
-                className="w-full text-left px-4 py-2.5 text-sm text-slate-200 hover:bg-cyan-500/10 hover:text-cyan-100 flex items-center gap-3.5 rounded-lg transition-colors group"
-              ><FileText className="w-5 h-5 text-slate-400 group-hover:text-cyan-400 transition-colors" /> Terms & Conditions</motion.button>
+                className="w-full text-left px-4 py-2.5 text-sm text-slate-200 hover:bg-amber-500/10 hover:text-amber-100 flex items-center gap-3.5 rounded-lg transition-colors group"
+              ><FileText className="w-5 h-5 text-slate-400 group-hover:text-amber-400 transition-colors" /> Terms & Conditions</motion.button>
               
               <div className="border-t border-white/10 my-1.5"></div>
 

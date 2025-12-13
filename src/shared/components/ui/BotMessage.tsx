@@ -24,8 +24,8 @@ const BotMessage: React.FC<BotMessageProps> = ({ message }) => {
 
   return (
     <>
-      <div className="w-8 h-8 flex-shrink-0 mt-1 rounded-full bg-slate-800 flex items-center justify-center shadow-lg shadow-cyan-500/10"><Bot className="w-5 h-5 text-cyan-400" /></div>
-      <div className="max-w-xs px-4 py-2.5 rounded-xl text-sm shadow-md bg-slate-800 border border-slate-700/50 text-slate-300 rounded-bl-none">
+      <div className="w-8 h-8 flex-shrink-0 mt-1 rounded-full bg-zinc-900 flex items-center justify-center shadow-lg shadow-amber-500/10"><Bot className="w-5 h-5 text-amber-400" /></div>
+      <div className="max-w-xs px-4 py-2.5 rounded-xl text-sm shadow-md bg-zinc-900 border border-zinc-800 text-zinc-300 rounded-bl-none">
         <div className="prose prose-sm prose-invert max-w-none leading-relaxed">{renderContent(displayText)}</div>
       </div>
     </>

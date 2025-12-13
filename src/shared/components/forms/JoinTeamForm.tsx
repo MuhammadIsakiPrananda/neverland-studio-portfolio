@@ -121,24 +121,24 @@ const JoinTeamForm: React.FC<JoinTeamFormProps> = ({ onClose }) => {
           className="grid grid-cols-1 sm:grid-cols-2 gap-4"
         >
           <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
             <input
               type="text"
               placeholder="Full Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors"
+              className="w-full bg-zinc-900/50 border border-zinc-800 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none transition-colors"
               required
             />
           </div>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
             <input
               type="email"
               placeholder="Email Address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors"
+              className="w-full bg-zinc-900/50 border border-zinc-800 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none transition-colors"
               required
             />
           </div>
@@ -149,29 +149,29 @@ const JoinTeamForm: React.FC<JoinTeamFormProps> = ({ onClose }) => {
           className="grid grid-cols-1 sm:grid-cols-2 gap-4"
         >
           <div className="relative">
-            <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
             <input
               type="url"
               placeholder="Portfolio/LinkedIn URL"
               value={portfolio}
               onChange={(e) => setPortfolio(e.target.value)}
-              className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors"
+              className="w-full bg-zinc-900/50 border border-zinc-800 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none transition-colors"
               required
             />
           </div>
           <div className="relative">
-            <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
             <select
               value={position}
               onChange={(e) => setPosition(e.target.value)}
-              className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors appearance-none"
-              required
+              className="w-full bg-zinc-900/50 border border-zinc-800 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none transition-colors appearance-none"
+             required
             >
               <option value="" disabled>
                 Position Applying For
               </option>
               {positions.map((p) => (
-                <option key={p} value={p} className="bg-slate-900">
+                <option key={p} value={p} className="bg-zinc-900">
                   {p}
                 </option>
               ))}
@@ -188,13 +188,13 @@ const JoinTeamForm: React.FC<JoinTeamFormProps> = ({ onClose }) => {
               exit="hidden"
               className="relative"
             >
-              <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+              <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
               <input
                 type="text"
                 placeholder="Please specify position"
                 value={otherPosition}
                 onChange={(e) => setOtherPosition(e.target.value)}
-                className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors"
+                className="w-full bg-zinc-900/50 border border-zinc-800 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none transition-colors"
                 required
               />
             </motion.div>
@@ -202,24 +202,24 @@ const JoinTeamForm: React.FC<JoinTeamFormProps> = ({ onClose }) => {
         </AnimatePresence>
 
         <motion.div variants={itemVariants} className="relative">
-          <MessageSquare className="absolute left-3 top-4 w-5 h-5 text-slate-400" />
+          <MessageSquare className="absolute left-3 top-4 w-5 h-5 text-zinc-500" />
           <textarea
             placeholder="Why do you want to join us?"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             rows={4}
-            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500/30 focus:outline-none transition-colors resize-none"
+            className="w-full bg-zinc-900/50 border border-zinc-800 rounded-lg pl-10 pr-4 py-3 text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none transition-colors resize-none"
             required
           />
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <label className="block text-sm font-medium mb-2 text-slate-300">
+          <label className="block text-sm font-medium mb-2 text-zinc-400">
             Upload Resume/CV (PDF, max 5MB)
           </label>
-          <div className="relative border-2 border-dashed border-slate-700 rounded-lg p-6 text-center hover:border-cyan-500 transition-colors">
-            <Paperclip className="mx-auto h-8 w-8 text-slate-500" />
-            <p className="mt-2 text-sm text-slate-400">
+          <div className="relative border-2 border-dashed border-zinc-800 rounded-lg p-6 text-center hover:border-amber-500 transition-colors bg-zinc-900/30">
+             <Paperclip className="mx-auto h-8 w-8 text-zinc-500" />
+            <p className="mt-2 text-sm text-zinc-400">
               {resume ? resume.name : "Drag and drop or click to upload"}
             </p>
             <input
@@ -235,7 +235,7 @@ const JoinTeamForm: React.FC<JoinTeamFormProps> = ({ onClose }) => {
           variants={itemVariants}
           type="submit"
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/40 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <Loader className="w-5 h-5 animate-spin" />

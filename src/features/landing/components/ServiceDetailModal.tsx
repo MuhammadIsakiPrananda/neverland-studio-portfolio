@@ -48,16 +48,16 @@ const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
           <motion.div
             variants={modalVariants}
             onClick={(e) => e.stopPropagation()}
-            className="relative flex flex-col bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl shadow-cyan-500/10"
+            className="relative flex flex-col bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl shadow-amber-500/10"
           >
             {/* Sticky Header with Close Button */}
             <div className="sticky top-0 p-4 sm:p-6 flex justify-between items-center bg-slate-900/80 backdrop-blur-lg border-b border-white/10 z-10 flex-shrink-0">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-slate-800/50 border border-white/10 rounded-lg flex items-center justify-center text-cyan-400 flex-shrink-0">
+                <div className="w-12 h-12 bg-slate-800/50 border border-white/10 rounded-lg flex items-center justify-center text-amber-400 flex-shrink-0">
                   <service.icon.type className="w-6 h-6" />
                 </div>
                 <div>
-                  <p className="text-sm text-cyan-400 font-semibold">
+                  <p className="text-sm text-amber-400 font-semibold">
                     Service Spotlight
                   </p>
                   <h2 className="text-xl font-bold text-white">
@@ -67,7 +67,7 @@ const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
               </div>
               <button
                 onClick={onClose}
-                className="w-10 h-10 bg-slate-800/50 rounded-full flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-cyan-400 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                className="w-10 h-10 bg-slate-800/50 rounded-full flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-amber-400 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -86,7 +86,7 @@ const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                       {service.desc}
                     </p>
                   </div>
-                  <div className="w-full h-px bg-gradient-to-r from-cyan-500/30 via-slate-700 to-transparent"></div>
+                  <div className="w-full h-px bg-gradient-to-r from-amber-500/30 via-slate-700 to-transparent"></div>
                   {/* Render detailed description paragraphs */}
                   <div className="space-y-4 leading-relaxed">
                     {(service.detailedDesc || []).map(
@@ -119,7 +119,7 @@ const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                               },
                             }}
                           >
-                            <CheckCircle className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
+                            <CheckCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
                             <span className="text-slate-300">{feature}</span>
                           </motion.li>
                         )

@@ -23,10 +23,10 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading }) => {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="Type your message..."
-            className="w-full bg-slate-800/50 border border-slate-700 rounded-full pl-4 pr-12 py-2.5 text-white focus:border-amber-500 focus:ring-amber-500/30 focus:outline-none transition-colors"
+            className="w-full bg-zinc-900/50 border border-zinc-800 rounded-full pl-4 pr-12 py-2.5 text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none transition-colors"
             disabled={isLoading}
           />
-          <button type="submit" className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center hover:bg-amber-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled={isLoading || !inputValue}>
+          <button type="submit" className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-amber-600 to-yellow-600 rounded-full flex items-center justify-center hover:from-amber-500 hover:to-yellow-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-amber-500/20" disabled={isLoading || !inputValue}>
             <Send className="w-4 h-4 text-white -mr-0.5" />
           </button>
     </form>

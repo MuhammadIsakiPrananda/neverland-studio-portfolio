@@ -48,8 +48,8 @@ const NavItems: React.FC<NavItemsProps> = ({
         <div key={item.name} className="relative group">
           <button
             onClick={() => handleNavClick(item.name)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium tracking-wide transition-colors duration-300 relative z-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50 ${
-              activeSection === item.name ? "text-white" : "text-slate-300"
+            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium tracking-wide transition-colors duration-300 relative z-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/50 ${
+              activeSection === item.name ? "text-white" : "text-zinc-300"
             }`}
           >
             {item.icon} {getNavTranslation(item.name)}
@@ -57,14 +57,14 @@ const NavItems: React.FC<NavItemsProps> = ({
           {activeSection === item.name && (
             <motion.div
               layoutId="active-pill"
-              className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full shadow-lg shadow-cyan-500/10 ring-1 ring-cyan-500/50 ring-offset-2 ring-offset-slate-900"
+              className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-yellow-500/20 rounded-full shadow-lg shadow-amber-500/10 ring-1 ring-amber-500/50 ring-offset-2 ring-offset-zinc-900"
               style={{ borderRadius: 9999 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             />
           )}
           {/* Efek Hover Pill untuk item yang tidak aktif. Hanya muncul jika item tidak aktif. */}
           {activeSection !== item.name && (
-            <div className="absolute inset-0 bg-slate-800/80 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+            <div className="absolute inset-0 bg-zinc-800/80 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
           )}
         </div>
       ))}

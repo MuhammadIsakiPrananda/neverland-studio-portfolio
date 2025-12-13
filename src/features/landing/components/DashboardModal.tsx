@@ -166,7 +166,7 @@ const DashboardModal: React.FC<DashboardModalProps> = ({
           onClick={onClose} // This should close the modal
         >
           <motion.div
-            className="bg-slate-900/80 border border-slate-700/50 rounded-2xl shadow-2xl shadow-cyan-900/20 w-full max-w-4xl h-[70vh] flex relative overflow-hidden"
+            className="bg-slate-900/80 border border-slate-700/50 rounded-2xl shadow-2xl shadow-amber-900/20 w-full max-w-4xl h-[70vh] flex relative overflow-hidden"
             variants={modalVariants}
             onClick={(e) => e.stopPropagation()}
           >
@@ -285,7 +285,7 @@ const DashboardModal: React.FC<DashboardModalProps> = ({
                           <button
                             type="submit"
                             disabled={isLoading}
-                            className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-2.5 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-105 disabled:opacity-50"
+                            className="bg-gradient-to-r from-amber-400 to-amber-600 text-white px-6 py-2.5 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-105 disabled:opacity-50"
                           >
                             {isLoading ? (
                               <Loader className="w-5 h-5 animate-spin" />
@@ -335,7 +335,7 @@ const DashboardModal: React.FC<DashboardModalProps> = ({
                             <div className="flex justify-end pt-2">
                               <button
                                 type="submit"
-                                className="bg-amber-600 text-white px-5 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-amber-500 transition-colors disabled:opacity-50 text-sm"
+                                className="bg-gradient-to-r from-amber-400 to-amber-600 text-white px-5 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-105 disabled:opacity-50 text-sm"
                               >
                                 Update Password
                               </button>
@@ -424,7 +424,7 @@ const DashboardModal: React.FC<DashboardModalProps> = ({
                                       <div className="flex gap-2">
                                         <button
                                           type="submit"
-                                          className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2 rounded-lg font-semibold"
+                                          className="w-full bg-gradient-to-r from-amber-400 to-amber-600 text-white py-2 rounded-lg font-semibold shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-105"
                                         >
                                           Verify
                                         </button>

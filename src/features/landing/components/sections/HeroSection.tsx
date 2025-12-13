@@ -98,7 +98,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         >
           <motion.div
             variants={itemVariants}
-            className="inline-block bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-sm font-semibold tracking-wider px-4 py-1.5 rounded-full mb-4 hover:bg-cyan-500/20 hover:border-cyan-400/60 transition-all duration-300 cursor-default"
+            className="inline-block bg-amber-500/10 border border-amber-500/30 text-amber-300 text-sm font-semibold tracking-wider px-4 py-1.5 rounded-full mb-4 hover:bg-amber-500/20 hover:border-amber-400/60 transition-all duration-300 cursor-default"
           >
             {t("hero.badge")}
           </motion.div>
@@ -120,13 +120,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 whileHover={{ scale: 1.03 }}
                 transition={{ type: "spring", stiffness: 300 }}
                 // Menerapkan efek gradien untuk teks yang lebih modern
-                className="bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent inline-block cursor-pointer"
+                className="bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent inline-block cursor-pointer"
               >
                 {t("hero.highlight")}
               </motion.span>
 
               <motion.div
-                className="absolute -bottom-3 left-0 h-[3px] bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full"
+                className="absolute -bottom-3 left-0 h-[3px] bg-gradient-to-r from-amber-500 to-amber-600 rounded-full"
                 initial={{ width: 0 }}
                 animate={!isLoading ? { width: "100%" } : { width: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut", delay: 0.8 }}
@@ -147,9 +147,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             {stats.map((stat, idx) => (
               <div
                 key={idx}
-                className="text-center p-4 rounded-xl bg-slate-800/30 border border-slate-700/50 hover:border-cyan-500/50 hover:bg-slate-800/50 transition-all duration-300 group transform hover:-translate-y-1.5"
+                className="text-center p-4 rounded-xl bg-slate-800/30 border border-slate-700/50 hover:border-amber-500/50 hover:bg-slate-800/50 transition-all duration-300 group transform hover:-translate-y-1.5"
               >
-                <div className="w-12 h-12 bg-slate-900/50 border border-slate-700 rounded-full flex items-center justify-center text-cyan-400 mx-auto mb-3 group-hover:bg-cyan-500/10 group-hover:text-cyan-300 transition-all duration-300">
+                <div className="w-12 h-12 bg-slate-900/50 border border-slate-700 rounded-full flex items-center justify-center text-amber-400 mx-auto mb-3 group-hover:bg-amber-500/10 group-hover:text-amber-300 transition-all duration-300">
                   {stat.icon}
                 </div>
                 <div>
@@ -181,14 +181,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           >
             <button
               onClick={handleGetStartedClick}
-              className="group inline-flex items-center justify-center px-7 py-3 text-base font-bold text-white transition-all duration-300 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-full shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-cyan-500 transform hover:scale-105 flex-1 sm:flex-none"
+              className="group inline-flex items-center justify-center px-7 py-3 text-base font-bold text-white transition-all duration-300 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-amber-500 transform hover:scale-105 flex-1 sm:flex-none"
             >
               {t("hero.getStarted")}
               <ChevronRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
             </button>
             <button
               onClick={() => setShowVideo(true)}
-              className="group inline-flex items-center justify-center px-7 py-3 text-base font-medium text-slate-200 bg-transparent border-2 border-slate-700 rounded-full transition-all duration-300 hover:border-cyan-500 hover:bg-cyan-500/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-cyan-600 transform hover:scale-105 flex-1 sm:flex-none"
+              className="group inline-flex items-center justify-center px-7 py-3 text-base font-medium text-slate-200 bg-transparent border-2 border-slate-700 rounded-full transition-all duration-300 hover:border-amber-500 hover:bg-amber-500/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-amber-600 transform hover:scale-105 flex-1 sm:flex-none"
             >
               <Play className="w-4 h-4 mr-2 fill-current" />
               {t("hero.watchDemo")}
@@ -209,36 +209,36 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Github"
-                className="group w-10 h-10 flex items-center justify-center rounded-full border border-slate-700 hover:border-cyan-500 transition-all bg-slate-900/60 hover:bg-cyan-500/10 shadow-lg hover:scale-110"
+                className="group w-10 h-10 flex items-center justify-center rounded-full border border-slate-700 hover:border-amber-500 transition-all bg-slate-900/60 hover:bg-amber-500/10 shadow-lg hover:scale-110"
               >
-                <Github className="w-6 h-6 text-white group-hover:text-cyan-400 transition-colors" strokeWidth={1.5} />
+                <Github className="w-6 h-6 text-white group-hover:text-amber-400 transition-colors" strokeWidth={1.5} />
               </a>
               <a
                 href="https://www.linkedin.com/in/muhammad-isaki-prananda-454668240/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
-                className="group w-10 h-10 flex items-center justify-center rounded-full border border-slate-700 hover:border-cyan-500 transition-all bg-slate-900/60 hover:bg-cyan-500/10 shadow-lg hover:scale-110"
+                className="group w-10 h-10 flex items-center justify-center rounded-full border border-slate-700 hover:border-amber-500 transition-all bg-slate-900/60 hover:bg-amber-500/10 shadow-lg hover:scale-110"
               >
-                <Linkedin className="w-6 h-6 text-white group-hover:text-cyan-400 transition-colors" strokeWidth={1.5} />
+                <Linkedin className="w-6 h-6 text-white group-hover:text-amber-400 transition-colors" strokeWidth={1.5} />
               </a>
               <a
                 href="https://www.instagram.com/tuanmudazaky_/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
-                className="group w-10 h-10 flex items-center justify-center rounded-full border border-slate-700 hover:border-cyan-500 transition-all bg-slate-900/60 hover:bg-cyan-500/10 shadow-lg hover:scale-110"
+                className="group w-10 h-10 flex items-center justify-center rounded-full border border-slate-700 hover:border-amber-500 transition-all bg-slate-900/60 hover:bg-amber-500/10 shadow-lg hover:scale-110"
               >
-                <Instagram className="w-6 h-6 text-white group-hover:text-cyan-400 transition-colors" strokeWidth={1.5} />
+                <Instagram className="w-6 h-6 text-white group-hover:text-amber-400 transition-colors" strokeWidth={1.5} />
               </a>
               <a
                 href="#"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Twitter"
-                className="group w-10 h-10 flex items-center justify-center rounded-full border border-slate-700 hover:border-cyan-500 transition-all bg-slate-900/60 hover:bg-cyan-500/10 shadow-lg hover:scale-110"
+                className="group w-10 h-10 flex items-center justify-center rounded-full border border-slate-700 hover:border-amber-500 transition-all bg-slate-900/60 hover:bg-amber-500/10 shadow-lg hover:scale-110"
               >
-                <Twitter className="w-6 h-6 text-white group-hover:text-cyan-400 transition-colors" strokeWidth={1.5} />
+                <Twitter className="w-6 h-6 text-white group-hover:text-amber-400 transition-colors" strokeWidth={1.5} />
               </a>
             </div>
           </motion.div>
@@ -250,15 +250,15 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           <motion.img
             src="/images/Neverland Studio.webp"
             alt="Neverland Studio Showcase"
-            className="w-full h-auto max-w-md rounded-2xl object-contain shadow-2xl shadow-cyan-500/10 cursor-pointer"
+            className="w-full h-auto max-w-md rounded-2xl object-contain shadow-2xl shadow-amber-500/10 cursor-pointer"
             whileHover={{ scale: 1.05 }}
             animate={{
               y: [0, -10, 0], // Efek melayang naik-turun
               boxShadow: [
                 // Efek cahaya berdenyut
-                "0 25px 50px -12px rgba(6, 182, 212, 0.1)",
-                "0 25px 50px -12px rgba(6, 182, 212, 0.2)",
-                "0 25px 50px -12px rgba(6, 182, 212, 0.1)",
+                "0 25px 50px -12px rgba(245, 158, 11, 0.1)",
+                "0 25px 50px -12px rgba(245, 158, 11, 0.2)",
+                "0 25px 50px -12px rgba(245, 158, 11, 0.1)",
               ],
             }}
             transition={{
