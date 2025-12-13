@@ -1,3 +1,4 @@
+
 # 🎨 Neverland Studio Portfolio
 
 <div align="center">
@@ -12,7 +13,7 @@
 
 **✨ Modern Interactive Web Portfolio with Elegant Design & Latest Technology**
 
-[🚀 View Demo](#demo) • [📖 Documentation](#documentation) • [🐞 Report Bug](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/issues) • [✨ Request Feature](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/issues)
+[🚀 Live Demo](https://neverlandstudio.my.id) • [📖 Documentation](#-about-the-project) • [🐞 Report Bug](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/issues) • [✨ Request Feature](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/issues)
 
 </div>
 
@@ -20,21 +21,21 @@
 
 ## 📑 Table of Contents
 
-- [🎯 About The Project](#-about-the-project)
-- [✨ Key Features](#-key-features)
-- [🛠️ Technology Stack](#%EF%B8%8F-technology-stack)
-- [📦 Installation](#-installation)
-- [🚀 Usage](#-usage)
-- [🐳 Docker & Deployment](#-docker--deployment)
-- [📂 Project Structure](#-project-structure)
-- [🏗️ Architecture & Design](#%EF%B8%8F-architecture--design)
-- [🔧 Configuration](#-configuration)
-- [📊 Dependencies](#-dependencies)
-- [🧪 Testing](#-testing)
-- [🗺️ Roadmap](#%EF%B8%8F-roadmap)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-- [✉️ Contact](#%EF%B8%8F-contact)
+- [About The Project](#-about-the-project)
+- [Key Features](#-key-features)
+- [Technology Stack](#-technology-stack)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Docker & Deployment](#-docker--deployment)
+- [Project Structure](#-project-structure)
+- [Architecture & Design](#-architecture--design)
+- [Configuration](#-configuration)
+- [Dependencies](#-dependencies)
+- [Testing](#-testing)
+- [Roadmap](#-roadmap)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Contact](#-contact)
 
 ---
 
@@ -135,6 +136,7 @@
 
 ---
 
+
 ## 🛠️ Technology Stack
 
 ### Frontend
@@ -178,50 +180,34 @@
 | **XSS Clean**          | 0.1      | XSS sanitization                 |
 | **dotenv**             | 16.4     | Environment variables management |
 
-### DevOps & Tools
-
-| Tool               | Purpose                       |
-| ------------------ | ----------------------------- |
-| **Docker**         | Containerization              |
-| **Docker Compose** | Multi-container orchestration |
-| **Nginx**          | Reverse proxy and web server  |
-| **PM2**            | Process manager for Node.js   |
-| **ESLint**         | JavaScript linting            |
-| **Vitest**         | Unit testing framework        |
-| **Nodemon**        | Auto-restart for development  |
-
 ---
 
 ## 📦 Installation
 
 ### Prerequisites
 
-Before starting, ensure you have the following installed:
-
-- **Node.js** >= 18.0.0 ([Download](https://nodejs.org/))
-- **npm** >= 9.0.0 (comes with Node.js)
+- **Node.js** >= 18.x ([Download](https://nodejs.org/))
+- **npm** >= 9.x (comes with Node.js)
 - **Git** ([Download](https://git-scm.com/))
-- **MySQL** or **MariaDB** (for backend)
+- **MySQL**/**MariaDB** (for backend)
+- **Docker** (optional, for containerized deployment)
 
 ### Quick Start
 
-#### 1. Clone the Repository
-
 ```bash
+# Clone repository
 git clone https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio.git
 cd neverland-studio-portfolio
-```
 
-#### 2. Frontend Setup
-
-```bash
-# Install frontend dependencies
+# Install dependencies (choose one)
 npm install
+# or
 
-# Create environment file
+# or
+pnpm install
+
+# Copy environment file
 cp .env.example .env
-
-# Configure your environment variables in .env file
 # Edit .env with your settings
 ```
 
@@ -231,26 +217,10 @@ cp .env.example .env
 VITE_API_BASE_URL=http://localhost:3000/api
 VITE_RECAPTCHA_SITE_KEY=your_recaptcha_site_key_here
 VITE_GOOGLE_CLIENT_ID=your_google_oauth_client_id
-VITE_GITHUB_CLIENT_ID=your_github_oauth_client_id
+VITE_GITHUB_CLIENT_ID=your_github_client_id
 VITE_ENABLE_CHATBOT=true
 VITE_APP_NAME=Neverland Studio
 VITE_APP_URL=http://localhost:5173
-```
-
-#### 3. Backend Setup
-
-```bash
-# Navigate to backend directory
-cd neverland-backend
-
-# Install backend dependencies
-npm install
-
-# Create environment file
-cp .env.example .env
-
-# Configure your database and environment variables
-# Edit .env with your settings
 ```
 
 **Backend Environment Variables (`neverland-backend/.env`):**
@@ -260,80 +230,32 @@ cp .env.example .env
 NODE_ENV=development
 PORT=3000
 HOST=localhost
-
-# Database Configuration
-DB_HOST=localhost
-DB_PORT=3306
-DB_NAME=neverland_db
-DB_USER=root
-DB_PASSWORD=your_database_password
-DB_DIALECT=mysql
-
-# JWT Configuration
-JWT_SECRET=your_jwt_secret_key_here_minimum_32_characters
-JWT_EXPIRES_IN=7d
-JWT_REFRESH_SECRET=your_refresh_secret_key_here
-JWT_REFRESH_EXPIRES_IN=30d
-
-# Session Configuration
-SESSION_SECRET=your_session_secret_key_here_minimum_32_characters
-SESSION_COOKIE_MAX_AGE=86400000
-
-# OAuth Configuration - Google
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-GOOGLE_CALLBACK_URL=http://localhost:3000/api/auth/google/callback
-
-# OAuth Configuration - GitHub
-GITHUB_CLIENT_ID=your_github_client_id
-GITHUB_CLIENT_SECRET=your_github_client_secret
-GITHUB_CALLBACK_URL=http://localhost:3000/api/auth/github/callback
-
-# reCAPTCHA Configuration
-RECAPTCHA_SECRET_KEY=your_recaptcha_secret_key
-
-# Frontend URL
-FRONTEND_URL=http://localhost:5173
-
-# Email Configuration (Optional)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your_email@gmail.com
-SMTP_PASSWORD=your_email_password
-EMAIL_FROM=noreply@neverlandstudio.com
-
-# Rate Limiting
-RATE_LIMIT_WINDOW_MS=900000
-RATE_LIMIT_MAX_REQUESTS=100
-
-# Logging
-LOG_LEVEL=info
-LOG_FILE_PATH=./logs
+# ... (see .env.example for full list)
 ```
 
-#### 4. Database Setup
+### Database Setup
 
 ```bash
-# Still in neverland-backend directory
-# Run migrations
+# Run migrations (from neverland-backend)
+cd neverland-backend
 npm run db:migrate
-
-# Seed database with sample data (optional)
-npm run db:seed
-```
-
-#### 5. Start Development Servers
-
-**Terminal 1 - Frontend:**
-
-```bash
-# From root directory
-npm run dev
-```
-
+# Seed database (optional)
 **Terminal 2 - Backend:**
+```
+
+### Start Development Servers
 
 ```bash
+# Frontend (from root)
+
+# Backend (from neverland-backend)
+```bash
+```
+
+Frontend: http://localhost:5173  
+Backend: http://localhost:3000
+
+---
 # From root directory
 cd neverland-backend
 npm run dev
@@ -899,62 +821,7 @@ The project includes:
 
 ## 🤝 Contributing
 
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-### How to Contribute
-
-1. **Fork the Project**
-
-   ```bash
-   git fork https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio.git
-   ```
-
-2. **Create your Feature Branch**
-
-   ```bash
-   git checkout -b feature/AmazingFeature
-   ```
-
-3. **Make your Changes**
-
-   - Write clean, documented code
-   - Follow the existing code style
-   - Add tests if applicable
-
-4. **Commit your Changes**
-
-   ```bash
-   git commit -m 'Add some AmazingFeature'
-   ```
-
-5. **Push to the Branch**
-
-   ```bash
-   git push origin feature/AmazingFeature
-   ```
-
-6. **Open a Pull Request**
-   - Describe your changes in detail
-   - Reference any related issues
-
-### Code Style Guidelines
-
-- Use TypeScript for type safety
-- Follow ESLint rules
-- Write meaningful commit messages
-- Add comments for complex logic
-- Keep components small and focused
-- Use meaningful variable and function names
-
-### Reporting Bugs
-
-If you find a bug, please open an issue with:
-
-- Clear description of the bug
-- Steps to reproduce
-- Expected behavior
-- Screenshots (if applicable)
-- Environment details
+Contributions are welcome! Please fork the repository, create a feature branch, commit your changes, and open a pull request. Follow the code style, add tests if possible, and use clear commit messages. For bug reports, open an issue with details and steps to reproduce.
 
 ---
 
@@ -962,38 +829,14 @@ If you find a bug, please open an issue with:
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-```
-MIT License
-
-Copyright (c) 2024 Muhammad Isaki Prananda
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
 ---
 
 ## ✉️ Contact
 
 **Muhammad Isaki Prananda**
 
-- 🌐 Website: [neverlandstudio.com](https://neverlandstudio.com)
-- 📧 Email: muhammadisaki@neverlandstudio.com
+- 🌐 Website: [neverlandstudio.my.id](https://neverlandstudio.my.id)
+- 📧 Email: [arlianto032@gmail.com](mailto:arlianto032@gmail.com)
 - 💼 LinkedIn: [Muhammad Isaki Prananda](https://linkedin.com/in/muhammadisaki)
 - 🐱 GitHub: [@MuhammadIsakiPrananda](https://github.com/MuhammadIsakiPrananda)
 - 🐦 Twitter: [@neverlandstudio](https://twitter.com/neverlandstudio)
@@ -1002,13 +845,14 @@ SOFTWARE.
 
 ---
 
+
 <div align="center">
 
 ### ⭐ Star this repository if you find it helpful!
 
 **Made with ❤️ by Muhammad Isaki Prananda**
 
-[Back to Top ↑](#-neverland-studio-portfolio)
+[⬆ Back to Top](#-neverland-studio-portfolio)
 
 </div>
 
