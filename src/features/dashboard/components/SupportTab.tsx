@@ -139,7 +139,7 @@ export const SupportTabContent: React.FC = () => {
           <p className="text-sm text-slate-300">
             Find everything you need to become an expert.
           </p>
-          <button className="flex items-center gap-2 bg-slate-950/50 border border-white/10 text-slate-300 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/5 hover:text-white hover:border-amber-500/50 transition-colors">
+          <button className="flex items-center gap-2 bg-slate-950/50 border border-white/10 text-slate-300 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-amber-500/5 hover:text-amber-400 hover:border-amber-500/50 transition-all">
             <BookOpen className="w-4 h-4" /> Visit Documentation
           </button>
         </div>

@@ -24,13 +24,13 @@ export const AccountTabContent: React.FC = () => {
     {
       id: "virtual-account",
       name: "Virtual Account",
-      description: "Instant verification via BCA, Mandiri, BNI, BRI, Permata.",
+      description: "Instant verification via BCA, Mandiri, BNI, BRI, Permata, CIMB, Danamon, BSI, etc.",
       icon: <Banknote className="w-6 h-6 text-slate-400" />,
     },
     {
       id: "e-wallet",
       name: "E-Wallet / QRIS",
-      description: "Scan QR or link GoPay, OVO, DANA, ShopeePay.",
+      description: "Scan QR or link GoPay, OVO, DANA, ShopeePay, LinkAja, Jenius, etc.",
       icon: <Wallet className="w-6 h-6 text-slate-400" />,
     },
     {
@@ -45,6 +45,20 @@ export const AccountTabContent: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [invoices, setInvoices] = useState<any[]>([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
+  const [formData, setFormData] = useState({
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
+    vaBank: "",
+    walletProvider: "",
+    walletNumber: "",
+    retailOutlet: "",
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSavePayment = () => {
     setIsSaving(true);
@@ -139,6 +153,9 @@ export const AccountTabContent: React.FC = () => {
                   <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                   <input
                     type="text"
+                    name="cardNumber"
+                    value={formData.cardNumber}
+                    onChange={handleInputChange}
                     placeholder="0000 0000 0000 0000"
                     className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors"
                   />
@@ -153,6 +170,9 @@ export const AccountTabContent: React.FC = () => {
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                     <input
                       type="text"
+                      name="expiryDate"
+                      value={formData.expiryDate}
+                      onChange={handleInputChange}
                       placeholder="MM / YY"
                       className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors"
                     />
@@ -166,6 +186,9 @@ export const AccountTabContent: React.FC = () => {
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                     <input
                       type="password"
+                      name="cvv"
+                      value={formData.cvv}
+                      onChange={handleInputChange}
                       placeholder="•••"
                       maxLength={4}
                       className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors"
@@ -186,8 +209,13 @@ export const AccountTabContent: React.FC = () => {
                 </label>
                 <div className="relative mt-1">
                   <Banknote className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                  <select className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors">
-                    <option value="" disabled selected>
+                  <select
+                    name="vaBank"
+                    value={formData.vaBank}
+                    onChange={handleInputChange}
+                    className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors"
+                  >
+                    <option value="" disabled>
                       Choose a bank
                     </option>
                     <option value="bca">BCA Virtual Account</option>
@@ -195,6 +223,17 @@ export const AccountTabContent: React.FC = () => {
                     <option value="bni">BNI Virtual Account</option>
                     <option value="bri">BRI Virtual Account</option>
                     <option value="permata">Permata Virtual Account</option>
+                    <option value="cimb">CIMB Niaga Virtual Account</option>
+                    <option value="danamon">Danamon Virtual Account</option>
+                    <option value="bsi">BSI (Bank Syariah Indonesia)</option>
+                    <option value="btn">BTN Virtual Account</option>
+                    <option value="maybank">Maybank Virtual Account</option>
+                    <option value="mega">Bank Mega Virtual Account</option>
+                    <option value="sinarmas">Sinarmas Virtual Account</option>
+                    <option value="ocbc">OCBC NISP Virtual Account</option>
+                    <option value="panin">Panin Bank Virtual Account</option>
+                    <option value="uob">UOB Virtual Account</option>
+                    <option value="hana">Hana Bank Virtual Account</option>
                   </select>
                 </div>
               </div>
@@ -218,14 +257,25 @@ export const AccountTabContent: React.FC = () => {
                 </label>
                 <div className="relative mt-1">
                   <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                  <select className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors">
-                    <option value="" disabled selected>
+                  <select
+                    name="walletProvider"
+                    value={formData.walletProvider}
+                    onChange={handleInputChange}
+                    className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors"
+                  >
+                    <option value="" disabled>
                       Choose provider
                     </option>
                     <option value="gopay">GoPay</option>
                     <option value="ovo">OVO</option>
                     <option value="dana">DANA</option>
                     <option value="shopeepay">ShopeePay</option>
+                    <option value="linkaja">LinkAja</option>
+                    <option value="jenius">Jenius Pay</option>
+                    <option value="astrapay">AstraPay</option>
+                    <option value="isaku">i.Saku</option>
+                    <option value="sakuku">Sakuku</option>
+                    <option value="doku">Doku Wallet</option>
                   </select>
                 </div>
               </div>
@@ -235,6 +285,9 @@ export const AccountTabContent: React.FC = () => {
                 </label>
                 <input
                   type="tel"
+                  name="walletNumber"
+                  value={formData.walletNumber}
+                  onChange={handleInputChange}
                   placeholder="08xx xxxx xxxx"
                   className="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-3 mt-1 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors text-slate-200"
                 />
@@ -252,11 +305,16 @@ export const AccountTabContent: React.FC = () => {
                 </label>
                 <div className="relative mt-1">
                   <Store className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                  <select className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors">
-                    <option value="" disabled selected>
+                  <select
+                    name="retailOutlet"
+                    value={formData.retailOutlet}
+                    onChange={handleInputChange}
+                    className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors"
+                  >
+                    <option value="" disabled>
                       Choose outlet
                     </option>
-                    <option value="alfamart">Alfamart / Alfamidi</option>
+                    <option value="alfamart">Alfamart Group (Alfamart, Alfamidi, Lawson, Dan+Dan)</option>
                     <option value="indomaret">Indomaret</option>
                   </select>
                 </div>

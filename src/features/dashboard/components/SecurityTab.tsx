@@ -243,13 +243,14 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
     "bg-orange-500",
     "bg-yellow-500",
     "bg-emerald-500",
-    "bg-blue-500",
+    "bg-amber-500",
   ][strength];
 
   return (
     <>
-      <form onSubmit={handlePasswordChangeSubmit} className="space-y-8">
-        <SettingsCard
+      <div className="space-y-8">
+        <form onSubmit={handlePasswordChangeSubmit}>
+          <SettingsCard
           title="Change Password"
           description="Update your password for enhanced security. Use a strong, unique password."
           footer={
@@ -257,7 +258,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
               <button
                 type="submit"
                 disabled={isLoading}
-                className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/40 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-gradient-to-r from-amber-600 to-yellow-500 text-white shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <Loader className="w-5 h-5 animate-spin" />
@@ -281,7 +282,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                 name="currentPassword"
                 value={passwordData.currentPassword}
                 onChange={handlePasswordInputChange}
-                className={`w-full bg-slate-950/50 border rounded-xl px-4 py-3 mt-1 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-colors ${
+                className={`w-full bg-slate-950/50 border rounded-xl px-4 py-3 mt-1 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors ${
                   passwordErrors.currentPassword
                     ? "border-red-500/50"
                     : "border-white/10"
@@ -317,7 +318,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                 name="newPassword"
                 value={passwordData.newPassword}
                 onChange={handlePasswordInputChange}
-                className={`w-full bg-slate-950/50 border rounded-xl px-4 py-3 mt-1 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-colors ${
+                className={`w-full bg-slate-950/50 border rounded-xl px-4 py-3 mt-1 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors ${
                   passwordErrors.newPassword
                     ? "border-red-500/50"
                     : "border-white/10"
@@ -351,7 +352,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                 name="confirmPassword"
                 value={passwordData.confirmPassword}
                 onChange={handlePasswordInputChange}
-                className={`w-full bg-slate-950/50 border rounded-xl px-4 py-3 mt-1 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-colors ${
+                className={`w-full bg-slate-950/50 border rounded-xl px-4 py-3 mt-1 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors ${
                   passwordErrors.confirmPassword
                     ? "border-red-500/50"
                     : "border-white/10"
@@ -395,6 +396,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
             )}
           </div>
         </SettingsCard>
+        </form>
 
         <SettingsCard
           title="Two-Factor Authentication"
@@ -406,7 +408,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
               <p
                 className={`text-sm ${
                   is2faEnabled
-                    ? "text-indigo-400"
+                    ? "text-amber-400"
                     : "text-slate-400"
                 }`}
               >
@@ -419,7 +421,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
               className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
                 is2faEnabled
                   ? "bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20"
-                  : "bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 hover:bg-indigo-500/20"
+                  : "bg-amber-500/10 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20"
               }`}
             >
               {is2faEnabled ? "Disable" : "Enable"}
@@ -460,7 +462,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                       <button
                         type="button"
                         onClick={handleDownloadRecoveryCodes}
-                        className="w-full flex items-center justify-center gap-2 bg-slate-950/50 border border-white/10 text-slate-200 py-2.5 rounded-xl font-semibold hover:bg-white/5 text-sm transition-colors"
+                        className="w-full flex items-center justify-center gap-2 bg-slate-950/50 border border-white/10 text-slate-200 py-2.5 rounded-xl font-semibold hover:bg-amber-500/5 hover:border-amber-500/50 hover:text-amber-400 text-sm transition-all"
                       >
                         <Download className="w-4 h-4" />
                         Unduh
@@ -475,10 +477,10 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                             "success"
                           );
                         }}
-                        className="w-full flex items-center justify-center gap-2 bg-slate-950/50 border border-white/10 text-slate-200 py-2.5 rounded-xl font-semibold hover:bg-white/5 text-sm transition-colors"
+                        className="w-full flex items-center justify-center gap-2 bg-slate-950/50 border border-white/10 text-slate-200 py-2.5 rounded-xl font-semibold hover:bg-amber-500/5 hover:border-amber-500/50 hover:text-amber-400 text-sm transition-all"
                       >
                         {copied ? (
-                          <Check className="w-4 h-4 text-indigo-400" />
+                          <Check className="w-4 h-4 text-amber-400" />
                         ) : (
                           <Copy className="w-4 h-4" />
                         )}
@@ -489,7 +491,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                       <button
                         type="button"
                         onClick={() => handleFinish2FASetup?.()}
-                        className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-3 rounded-xl font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40"
+                        className="w-full bg-gradient-to-r from-amber-600 to-yellow-500 text-white py-3 rounded-xl font-semibold shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30"
                       >
                         Selesaikan Pengaturan
                       </button>
@@ -526,7 +528,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                               className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white"
                             >
                               {copied ? (
-                                <Check className="w-4 h-4 text-indigo-400" />
+                                <Check className="w-4 h-4 text-amber-400" />
                               ) : (
                                 <Copy className="w-4 h-4" />
                               )}
@@ -550,20 +552,20 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                                   setTwoFactorCode(e.target.value)
                                 }
                                 maxLength={6}
-                                className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white tracking-[0.5em] text-center focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-colors"
+                                className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white tracking-[0.5em] text-center focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 focus:outline-none transition-colors"
                               />
                             </div>
                             <div className="flex gap-3">
                               <button
                                 type="submit"
-                                className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-indigo-500/25"
+                                className="w-full bg-gradient-to-r from-amber-600 to-yellow-500 text-white py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-amber-500/20"
                               >
                                 Verifikasi & Aktifkan
                               </button>
                               <button
                                 type="button"
                                 onClick={() => setIsSettingUp2FA(false)}
-                                className="w-full bg-slate-950/50 border border-white/10 text-slate-300 py-2.5 rounded-xl font-semibold hover:bg-white/5 text-sm"
+                                className="w-full bg-slate-950/50 border border-white/10 text-slate-300 py-2.5 rounded-xl font-semibold hover:bg-amber-500/5 hover:border-amber-500/50 hover:text-amber-400 text-sm transition-all"
                               >
                                 Batal
                               </button>
@@ -605,7 +607,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, x: -300, transition: { duration: 0.3 } }}
-                  className="flex items-center justify-between px-6 py-4 hover:bg-indigo-500/5 transition-colors"
+                  className="flex items-center justify-between px-6 py-4 hover:bg-amber-500/5 transition-colors"
                 >
                   <div className="flex items-center gap-4">
                     {session.device.includes("Windows") ? (
@@ -624,7 +626,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
                         <Globe className="w-3 h-3" /> {session.location}{" "}
                         &middot;{" "}
                         {session.isCurrent ? (
-                          <span className="text-indigo-400 font-semibold">
+                          <span className="text-amber-400 font-semibold">
                             Active now
                           </span>
                         ) : (
@@ -669,7 +671,7 @@ export const SecurityTabContent: React.FC<SecurityTabContentProps> = ({
             </button>
           </div>
         </SettingsCard>
-      </form>
+      </div>
 
       <DeleteAccountModal
         isOpen={isDeleteModalOpen}
