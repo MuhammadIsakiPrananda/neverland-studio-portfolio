@@ -50,7 +50,7 @@ const ToggleSwitch = ({
         checked={checked}
         onChange={onChange}
       />
-      <div className="w-11 h-6 bg-slate-800 rounded-full peer peer-focus:ring-2 peer-focus:ring-indigo-500/50 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500"></div>
+      <div className="w-11 h-6 bg-slate-800 rounded-full peer peer-focus:ring-2 peer-focus:ring-amber-500/50 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
     </label>
   </div>
 );
@@ -121,7 +121,7 @@ export const NotificationsTabContent: React.FC<NotificationsTabProps> = ({
               >
                 <Sun
                   className={`w-5 h-5 transition-colors ${
-                    theme === "light" ? "text-indigo-400" : "text-slate-400"
+                    theme === "light" ? "text-amber-400" : "text-slate-400"
                   }`}
                 />
                 <span
@@ -138,7 +138,7 @@ export const NotificationsTabContent: React.FC<NotificationsTabProps> = ({
               >
                 <Moon
                   className={`w-5 h-5 transition-colors ${
-                    theme === "dark" ? "text-indigo-400" : "text-slate-400"
+                    theme === "dark" ? "text-amber-400" : "text-slate-400"
                   }`}
                 />
                 <span
@@ -161,7 +161,7 @@ export const NotificationsTabContent: React.FC<NotificationsTabProps> = ({
             <button
               onClick={handleSaveChanges}
               disabled={isSaving}
-              className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/40 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-gradient-to-r from-amber-600 to-yellow-500 text-white shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? (
                 <Loader className="w-5 h-5 animate-spin" />

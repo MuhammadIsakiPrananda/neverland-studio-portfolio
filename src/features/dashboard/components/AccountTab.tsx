@@ -18,24 +18,25 @@ export const AccountTabContent: React.FC = () => {
     {
       id: "credit-card",
       name: "Credit/Debit Card",
+      description: "Supports Visa, Mastercard, JCB. Secure encrypted transaction.",
       icon: <CreditCard className="w-6 h-6 text-slate-400" />,
     },
     {
       id: "virtual-account",
       name: "Virtual Account",
-      description: "BCA, Mandiri, BNI, etc.",
+      description: "Instant verification via BCA, Mandiri, BNI, BRI, Permata.",
       icon: <Banknote className="w-6 h-6 text-slate-400" />,
     },
     {
       id: "e-wallet",
-      name: "E-Wallet",
-      description: "GoPay, OVO, DANA",
+      name: "E-Wallet / QRIS",
+      description: "Scan QR or link GoPay, OVO, DANA, ShopeePay.",
       icon: <Wallet className="w-6 h-6 text-slate-400" />,
     },
     {
       id: "retail",
       name: "Retail Outlet",
-      description: "Alfamart, Indomaret",
+      description: "Pay cash at Alfamart, Indomaret, Lawson, Dan+Dan.",
       icon: <Store className="w-6 h-6 text-slate-400" />,
     },
   ];
@@ -59,26 +60,7 @@ export const AccountTabContent: React.FC = () => {
     setIsHistoryLoading(true);
     // Simulate fetching data from an API
     setTimeout(() => {
-      const fetchedInvoices = [
-        {
-          id: "INV-2024-003",
-          date: "May 1, 2024",
-          amount: "$25.00",
-          status: "Paid",
-        },
-        {
-          id: "INV-2024-002",
-          date: "April 1, 2024",
-          amount: "$25.00",
-          status: "Paid",
-        },
-        {
-          id: "INV-2024-001",
-          date: "March 1, 2024",
-          amount: "$25.00",
-          status: "Paid",
-        },
-      ];
+      const fetchedInvoices: any[] = [];
       setInvoices(fetchedInvoices);
       setIsHistoryLoading(false);
     }, 1200);
@@ -99,7 +81,7 @@ export const AccountTabContent: React.FC = () => {
             <button
               onClick={handleSavePayment}
               disabled={isSaving}
-              className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/40 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-gradient-to-r from-amber-600 to-yellow-500 text-white shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? (
                 <Loader className="w-5 h-5 animate-spin" />
@@ -119,8 +101,8 @@ export const AccountTabContent: React.FC = () => {
               key={method.id}
               className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
                 selectedPayment === method.id
-                  ? "border-indigo-500 bg-indigo-500/10"
-                  : "border-white/5 bg-slate-950/30 hover:border-indigo-500/30 hover:bg-indigo-500/5"
+                  ? "border-amber-500 bg-amber-500/10"
+                  : "border-white/5 bg-slate-950/30 hover:border-amber-500/30 hover:bg-amber-500/5"
               }`}
             >
               <input
@@ -158,7 +140,7 @@ export const AccountTabContent: React.FC = () => {
                   <input
                     type="text"
                     placeholder="0000 0000 0000 0000"
-                    className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-colors"
+                    className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -172,7 +154,7 @@ export const AccountTabContent: React.FC = () => {
                     <input
                       type="text"
                       placeholder="MM / YY"
-                      className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-colors"
+                      className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors"
                     />
                   </div>
                 </div>
@@ -186,19 +168,105 @@ export const AccountTabContent: React.FC = () => {
                       type="password"
                       placeholder="•••"
                       maxLength={4}
-                      className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-colors"
+                      className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors"
                     />
                   </div>
                 </div>
               </div>
             </div>
           )}
-          {selectedPayment !== "credit-card" && (
-            <div className="text-center text-slate-400 p-4 bg-slate-950/30 border border-white/5 rounded-xl animate-fade-in">
-              <p>
-                Payment details and instructions will be provided upon saving
-                changes.
-              </p>
+          {selectedPayment === "virtual-account" && (
+            <div className="space-y-4 animate-fade-in">
+              <h4 className="text-md font-semibold text-white mb-2">
+                Virtual Account Details
+              </h4>
+              <div>
+                <label className="text-sm font-medium text-slate-400">
+                  Select Bank
+                </label>
+                <div className="relative mt-1">
+                  <Banknote className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                  <select className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors">
+                    <option value="" disabled selected>
+                      Choose a bank
+                    </option>
+                    <option value="bca">BCA Virtual Account</option>
+                    <option value="mandiri">Mandiri Virtual Account</option>
+                    <option value="bni">BNI Virtual Account</option>
+                    <option value="bri">BRI Virtual Account</option>
+                    <option value="permata">Permata Virtual Account</option>
+                  </select>
+                </div>
+              </div>
+              <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl">
+                <p className="text-sm text-amber-200">
+                  A virtual account number will be generated for you after saving.
+                  You can use this number to pay via ATM, Mobile Banking, or
+                  Internet Banking.
+                </p>
+              </div>
+            </div>
+          )}
+          {selectedPayment === "e-wallet" && (
+            <div className="space-y-4 animate-fade-in">
+              <h4 className="text-md font-semibold text-white mb-2">
+                E-Wallet Configuration
+              </h4>
+              <div>
+                <label className="text-sm font-medium text-slate-400">
+                  Select Provider
+                </label>
+                <div className="relative mt-1">
+                  <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                  <select className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors">
+                    <option value="" disabled selected>
+                      Choose provider
+                    </option>
+                    <option value="gopay">GoPay</option>
+                    <option value="ovo">OVO</option>
+                    <option value="dana">DANA</option>
+                    <option value="shopeepay">ShopeePay</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-slate-400">
+                  Mobile Number
+                </label>
+                <input
+                  type="tel"
+                  placeholder="08xx xxxx xxxx"
+                  className="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-3 mt-1 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors text-slate-200"
+                />
+              </div>
+            </div>
+          )}
+          {selectedPayment === "retail" && (
+            <div className="space-y-4 animate-fade-in">
+              <h4 className="text-md font-semibold text-white mb-2">
+                Retail Outlet Payment
+              </h4>
+              <div>
+                <label className="text-sm font-medium text-slate-400">
+                  Select Outlet
+                </label>
+                <div className="relative mt-1">
+                  <Store className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                  <select className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors">
+                    <option value="" disabled selected>
+                      Choose outlet
+                    </option>
+                    <option value="alfamart">Alfamart / Alfamidi</option>
+                    <option value="indomaret">Indomaret</option>
+                  </select>
+                </div>
+              </div>
+              <div className="p-4 bg-slate-800/50 border border-white/10 rounded-xl">
+                <p className="text-sm text-slate-300">
+                  Show the payment code to the cashier to complete your
+                  transaction. The code will be valid for 24 hours.
+                </p>
+              </div>
             </div>
           )}
         </div>
@@ -211,7 +279,7 @@ export const AccountTabContent: React.FC = () => {
           <button
             onClick={fetchInvoices}
             disabled={isHistoryLoading}
-            className="flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300 transition-colors disabled:opacity-50 disabled:cursor-wait"
+            className="flex items-center gap-2 text-sm text-amber-400 hover:text-amber-300 transition-colors disabled:opacity-50 disabled:cursor-wait"
           >
             <RefreshCw
               className={`w-4 h-4 ${isHistoryLoading ? "animate-spin" : ""}`}
@@ -256,7 +324,7 @@ export const AccountTabContent: React.FC = () => {
               invoices.map((invoice) => (
                 <tr
                   key={invoice.id}
-                  className="border-b border-white/5 text-sm last:border-b-0 hover:bg-indigo-500/5 transition-colors"
+                  className="border-b border-white/5 text-sm last:border-b-0 hover:bg-amber-500/5 transition-colors"
                 >
                   <td className="p-3 text-slate-200 font-medium">
                     {invoice.id}
@@ -264,7 +332,7 @@ export const AccountTabContent: React.FC = () => {
                   <td className="p-3">{invoice.date}</td>
                   <td className="p-3">{invoice.amount}</td>
                   <td className="p-3 text-right">
-                    <button className="p-2 text-slate-400 hover:text-indigo-400 transition-colors">
+                    <button className="p-2 text-slate-400 hover:text-amber-400 transition-colors">
                       <Download className="w-4 h-4" />
                     </button>
                   </td>

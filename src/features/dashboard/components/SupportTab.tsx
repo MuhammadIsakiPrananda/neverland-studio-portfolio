@@ -18,14 +18,14 @@ const AccordionItem = ({
         onClick={() => setIsOpen(!isOpen)}
         className="group flex justify-between items-center w-full py-4 text-left"
       >
-        <span className="font-medium text-white group-hover:text-indigo-400 transition-colors">
+        <span className="font-medium text-white group-hover:text-amber-300 transition-colors">
           {question}
         </span>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          <ChevronDown className="w-5 h-5 text-slate-400 group-hover:text-indigo-400 transition-colors" />
+          <ChevronDown className="w-5 h-5 text-slate-400 group-hover:text-amber-300 transition-colors" />
         </motion.div>
       </button>
       <AnimatePresence>
@@ -93,7 +93,7 @@ export const SupportTabContent: React.FC = () => {
             <button
               onClick={handleSendMessage}
               disabled={isSending}
-              className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/40 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-gradient-to-r from-amber-600 to-yellow-500 text-white shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSending ? (
                 <Loader className="w-5 h-5 animate-spin" />
@@ -115,7 +115,7 @@ export const SupportTabContent: React.FC = () => {
             <input
               type="text"
               placeholder="e.g., Issue with billing"
-              className="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-3 mt-1 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-colors text-slate-200"
+              className="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-3 mt-1 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors text-slate-200"
             />
           </div>
           <div>
@@ -125,7 +125,7 @@ export const SupportTabContent: React.FC = () => {
             <textarea
               rows={5}
               placeholder="Describe your issue in detail..."
-              className="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-3 mt-1 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-colors resize-none text-slate-200"
+              className="w-full bg-slate-950/50 border border-white/10 rounded-xl px-4 py-3 mt-1 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 outline-none transition-colors resize-none text-slate-200"
             />
           </div>
         </form>
@@ -139,7 +139,7 @@ export const SupportTabContent: React.FC = () => {
           <p className="text-sm text-slate-300">
             Find everything you need to become an expert.
           </p>
-          <button className="flex items-center gap-2 bg-slate-950/50 border border-white/10 text-slate-300 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/5 hover:text-white hover:border-indigo-500/50 transition-colors">
+          <button className="flex items-center gap-2 bg-slate-950/50 border border-white/10 text-slate-300 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/5 hover:text-white hover:border-amber-500/50 transition-colors">
             <BookOpen className="w-4 h-4" /> Visit Documentation
           </button>
         </div>
