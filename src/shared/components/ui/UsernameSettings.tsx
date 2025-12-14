@@ -37,14 +37,23 @@ const Button = ({
   </button>
 );
 
-export const UsernameSettings = () => {
+interface UsernameSettingsProps {
+  username: string;
+  newUsername: string;
+  usernameError: string;
+  usernameChangeInfo: { count: number; lastChangeMonth: number };
+  handleUsernameInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleUsernameChange: (e: React.FormEvent) => void;
+}
+
+export const UsernameSettings: React.FC<UsernameSettingsProps> = () => {
   const {
     username,
     newUsername,
     usernameError,
     usernameChangeInfo,
     handleUsernameInputChange,
-    handleUsernameChangeSubmit,
+    handleUsernameChange,
   } = useSecurityState();
 
   const changesLeft = 3 - usernameChangeInfo.count;
@@ -56,7 +65,7 @@ export const UsernameSettings = () => {
           Nama pengguna Anda saat ini:{" "}
           <strong className="text-gray-900 dark:text-white">{username}</strong>
         </p>
-        <form onSubmit={handleUsernameChangeSubmit} className="space-y-4">
+        <form onSubmit={handleUsernameChange} className="space-y-4">
           <div>
             <label
               htmlFor="newUsername"
