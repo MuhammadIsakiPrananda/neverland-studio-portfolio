@@ -40,6 +40,21 @@ const loginHistory = [
   },
 ];
 
+// API Base URL helper
+const getAPIBaseUrl = () => {
+  return (
+    import.meta.env.VITE_API_BASE_URL ||
+    (import.meta.env.PROD
+      ? "https://api.neverlandstudio.my.id"
+      : "http://localhost:5000")
+  );
+};
+
+// Get auth token helper
+const getAuthToken = () => {
+  return localStorage.getItem("token") || sessionStorage.getItem("token");
+};
+
 export const useSecurityState = () => {
   const [username, setUsername] = useState("current_user_name"); // This would be loaded from user data
   const [newUsername, setNewUsername] = useState("");
@@ -60,11 +75,29 @@ export const useSecurityState = () => {
   const [is2faEnabled, setIs2faEnabled] = useState(false); // This would be loaded from user data
   const [sessions, setSessions] = useState(initialSessions);
   const [totp, setTotp] = useState<OTPAuth.TOTP | null>(null);
+  const [recoveryCodes, setRecoveryCodes] = useState<string[] | null>(null);
+  const [showRecoveryCodes, setShowRecoveryCodes] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [tempSecret, setTempSecret] = useState<string | null>(null);
+  
   const { addNotification } = useNotification();
   const [, setTimeNow] = useState(Date.now());
 
+  // Load user 2FA status from localStorage on mount
   useEffect(() => {
-    // In a real app, this logic would run after fetching user data.
+    const userProfile = localStorage.getItem("userProfile") || sessionStorage.getItem("userProfile");
+    if (userProfile) {
+      try {
+        const user = JSON.parse(userProfile);
+        setIs2faEnabled(user.twoFactorEnabled || false);
+      } catch (error) {
+        console.error("Error parsing user profile:", error);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    // This in a real app, this logic would run after fetching user data.
     // This resets the change count if the user visits the page in a new month.
     const now = new Date();
     const currentMonth = now.getMonth();
@@ -142,62 +175,208 @@ export const useSecurityState = () => {
     [newUsername, username, usernameChangeInfo, addNotification]
   );
 
-  const handleEnable2FA = useCallback(() => {
-    // Generate a new TOTP object. In a real app, the secret would be saved to the user's database.
-    const newTotp = new OTPAuth.TOTP({
-      issuer: "NeverlandStudio",
-      label: "Neverland",
-      algorithm: "SHA1",
-      digits: 6,
-      period: 30,
-      // The secret is the key part. It should be unique per user.
-      secret: new OTPAuth.Secret(),
-    });
-    setTotp(newTotp);
-    setIsSettingUp2FA(true);
-  }, []);
+  /**
+   * Enable 2FA - Call API to generate TOTP secret
+   */
+  const handleEnable2FA = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const token = getAuthToken();
+      const response = await fetch(`${getAPIBaseUrl()}/api/auth/2fa/enable`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-  const handleDisable2FA = useCallback(() => {
-    // In a real app, this would make an API call to disable 2FA in the database.
-    setIs2faEnabled(false);
-    setTotp(null);
-    addNotification(
-      "2FA Disabled",
-      "Two-factor authentication has been disabled.",
-      "warning"
-    );
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.msg || "Failed to enable 2FA");
+      }
+
+      // Create TOTP instance from the secret received from backend
+      const newTotp = new OTPAuth.TOTP({
+        issuer: "Neverland Studio",
+        label: "Neverland",
+        algorithm: "SHA1",
+        digits: 6,
+        period: 30,
+        secret: OTPAuth.Secret.fromBase32(data.secret),
+      });
+
+      setTotp(newTotp);
+      setTempSecret(data.secret); // Store secret temporarily for verification
+      setIsSettingUp2FA(true);
+      setShowRecoveryCodes(false);
+      
+      addNotification(
+        "2FA Setup Started",
+        "Scan the QR code with your authenticator app",
+        "success"
+      );
+    } catch (error) {
+      addNotification(
+        "Error",
+        error instanceof Error ? error.message : "Failed to enable 2FA",
+        "error"
+      );
+      console.error("Enable 2FA error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, [addNotification]);
 
+  /**
+   * Disable 2FA - Call API to disable 2FA
+   */
+  const handleDisable2FA = useCallback(async () => {
+    // Prompt for password confirmation
+    const password = window.prompt(
+      "Please enter your password to disable 2FA:"
+    );
+    
+    if (!password) {
+      return; // User cancelled
+    }
+
+    setIsLoading(true);
+    try {
+      const token = getAuthToken();
+      const response = await fetch(`${getAPIBaseUrl()}/api/auth/2fa/disable`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.msg || "Failed to disable 2FA");
+      }
+
+      setIs2faEnabled(false);
+      setTotp(null);
+      setTempSecret(null);
+      setRecoveryCodes(null);
+      setShowRecoveryCodes(false);
+      setIsSettingUp2FA(false);
+
+      // Update user profile in localStorage
+      const userProfile = localStorage.getItem("userProfile") || sessionStorage.getItem("userProfile");
+      if (userProfile) {
+        const user = JSON.parse(userProfile);
+        user.twoFactorEnabled = false;
+        const storage = localStorage.getItem("userProfile") ? localStorage : sessionStorage;
+        storage.setItem("userProfile", JSON.stringify(user));
+      }
+
+      addNotification(
+        "2FA Disabled",
+        "Two-factor authentication has been disabled.",
+        "warning"
+      );
+    } catch (error) {
+      addNotification(
+        "Error",
+        error instanceof Error ? error.message : "Failed to disable 2FA",
+        "error"
+      );
+      console.error("Disable 2FA error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [addNotification]);
+
+  /**
+   * Verify 2FA code and enable 2FA
+   */
   const handleVerify2FA = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
-      if (!totp || !twoFactorCode) return;
-
-      const delta = totp.validate({ token: twoFactorCode, window: 1 });
-
-      if (delta === null) {
+      
+      if (!twoFactorCode || !tempSecret) {
         addNotification(
-          "Verification Failed",
-          "The code is invalid. Please try again.",
+          "Error",
+          "Please enter the verification code",
           "error"
         );
-      } else {
-        // Verification successful
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        const token = getAuthToken();
+        const response = await fetch(`${getAPIBaseUrl()}/api/auth/2fa/verify`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            code: twoFactorCode,
+            secret: tempSecret,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.msg || "Verification failed");
+        }
+
+        // Success! Show recovery codes
+        setRecoveryCodes(data.recoveryCodes);
+        setShowRecoveryCodes(true);
+        setIs2faEnabled(true);
+        setTwoFactorCode("");
+
+        // Update user profile in localStorage
+        const userProfile = localStorage.getItem("userProfile") || sessionStorage.getItem("userProfile");
+        if (userProfile) {
+          const user = JSON.parse(userProfile);
+          user.twoFactorEnabled = true;
+          const storage = localStorage.getItem("userProfile") ? localStorage : sessionStorage;
+          storage.setItem("userProfile", JSON.stringify(user));
+        }
+
         addNotification(
           "2FA Enabled",
           "Two-factor authentication has been successfully enabled.",
           "success"
         );
-        setIs2faEnabled(true);
-        setIsSettingUp2FA(false);
-        setTwoFactorCode("");
+      } catch (error) {
+        addNotification(
+          "Verification Failed",
+          error instanceof Error ? error.message : "The code is invalid. Please try again.",
+          "error"
+        );
+        console.error("Verify 2FA error:", error);
+      } finally {
+        setIsLoading(false);
       }
     },
-    [totp, twoFactorCode, addNotification]
+    [twoFactorCode, tempSecret, addNotification]
   );
 
-  // isLoading state for password change operations
-  const isLoading = false; // Can be set to true when password change is in progress
+  /**
+   * Finish 2FA setup - Clear recovery codes from state
+   */
+  const handleFinish2FASetup = useCallback(() => {
+    setRecoveryCodes(null);
+    setShowRecoveryCodes(false);
+    setIsSettingUp2FA(false);
+    setTempSecret(null);
+    addNotification(
+      "Setup Complete",
+      "2FA has been successfully configured",
+      "success"
+    );
+  }, [addNotification]);
 
   const handleSignOutSession = (id: number) =>
     setSessions((s) => s.filter((i) => i.id !== id));
@@ -224,6 +403,9 @@ export const useSecurityState = () => {
     handleEnable2FA,
     handleDisable2FA,
     handleVerify2FA,
+    handleFinish2FASetup,
+    recoveryCodes,
+    showRecoveryCodes,
     sessions,
     handleSignOutSession,
     handleSignOutAllOtherSessions,

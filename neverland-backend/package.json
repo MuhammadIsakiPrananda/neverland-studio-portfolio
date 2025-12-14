@@ -41,6 +41,7 @@
     "mariadb": "^3.3.2",
     "mysql2": "^3.15.3",
     "nodemailer": "^6.10.1",
+    "otpauth": "^9.4.1",
     "passport": "^0.7.0",
     "passport-github2": "^0.1.12",
     "passport-google-oauth20": "^2.0.0",

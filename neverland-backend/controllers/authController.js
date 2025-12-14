@@ -271,7 +271,33 @@ export const login = async (req, res, next) => {
     //   return res.status(403).json({ success: false, msg: 'Account not verified.' });
     // }
 
-    // 6. Update last login
+    // 6. Check if 2FA is enabled
+    if (user.twoFactorEnabled) {
+      // Generate temporary token for 2FA verification (expires in 5 minutes)
+      const tempToken = jwt.sign(
+        {
+          userId: user.id,
+          purpose: "2fa-verification",
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "5m" }
+      );
+
+      logSecurityEvent("LOGIN_2FA_REQUIRED", {
+        userId: user.id,
+        email: user.email,
+        ip: req.ip,
+      });
+
+      return res.json({
+        success: true,
+        requiresTwoFactor: true,
+        tempToken,
+        msg: "Two-factor authentication required",
+      });
+    }
+
+    // 7. Update last login (only if 2FA not required)
     user.lastLogin = new Date();
     await user.save();
 
@@ -281,10 +307,10 @@ export const login = async (req, res, next) => {
       userAgent: req.get("user-agent"),
     });
 
-    // 7. Generate token
+    // 8. Generate token
     const token = generateToken(user);
 
-    // 8. Remove sensitive data from response
+    // 9. Remove sensitive data from response
     const userResponse = {
       id: user.id,
       name: user.name,
@@ -294,9 +320,10 @@ export const login = async (req, res, next) => {
       role: user.role,
       provider: user.provider,
       isVerified: user.isVerified,
+      twoFactorEnabled: user.twoFactorEnabled,
     };
 
-    // 9. Log response time for monitoring
+    // 10. Log response time for monitoring
     const responseTime = Date.now() - startTime;
     logger.info(`Login successful for user ${user.id}`, {
       userId: user.id,
@@ -644,6 +671,201 @@ export const verifyResetToken = async (req, res, next) => {
   }
 };
 
+/**
+ * @desc    Verify 2FA code during login
+ * @route   POST /api/auth/login/verify-2fa
+ * @access  Public (requires tempToken)
+ */
+export const verifyLoginWith2FA = async (req, res, next) => {
+  try {
+    const { tempToken, code, isRecoveryCode } = req.body;
+
+    // 1. Validate inputs
+    if (!tempToken || !code) {
+      return res.status(400).json({
+        success: false,
+        msg: "Temp token and verification code are required",
+      });
+    }
+
+    // 2. Verify tempToken
+    let decoded;
+    try {
+      decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+      
+      // Verify token purpose
+      if (decoded.purpose !== "2fa-verification") {
+        throw new Error("Invalid token purpose");
+      }
+    } catch (error) {
+      logSecurityEvent("LOGIN_2FA_INVALID_TEMP_TOKEN", {
+        ip: req.ip,
+        error: error.message,
+      });
+
+      return res.status(401).json({
+        success: false,
+        msg: "Invalid or expired verification token. Please log in again.",
+      });
+    }
+
+    // 3. Find user
+    const user = await User.findByPk(decoded.userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        msg: "User not found",
+      });
+    }
+
+    if (!user.twoFactorEnabled) {
+      return res.status(400).json({
+        success: false,
+        msg: "Two-factor authentication is not enabled for this account",
+      });
+    }
+
+    // 4. Verify code based on type
+    let isValid = false;
+
+    if (isRecoveryCode) {
+      // Verify recovery code
+      if (!user.twoFactorRecoveryCodes || user.twoFactorRecoveryCodes.length === 0) {
+        return res.status(400).json({
+          success: false,
+          msg: "No recovery codes available",
+        });
+      }
+
+      // Check each recovery code
+      for (let i = 0; i < user.twoFactorRecoveryCodes.length; i++) {
+        const recoveryCodeData = user.twoFactorRecoveryCodes[i];
+        
+        // Support both old format (string) and new format (object)
+        const hashedCode = typeof recoveryCodeData === 'string' 
+          ? recoveryCodeData 
+          : recoveryCodeData.code;
+        const isUsed = typeof recoveryCodeData === 'object' && recoveryCodeData.used;
+
+        if (!isUsed && await bcrypt.compare(code.toUpperCase(), hashedCode)) {
+          isValid = true;
+          
+          // Mark recovery code as used
+          if (typeof recoveryCodeData === 'string') {
+            // Convert old format to new format
+            user.twoFactorRecoveryCodes[i] = {
+              code: hashedCode,
+              used: true,
+            };
+          } else {
+            user.twoFactorRecoveryCodes[i].used = true;
+          }
+          
+          await user.save();
+          
+          logSecurityEvent("LOGIN_2FA_RECOVERY_CODE_USED", {
+            userId: user.id,
+            email: user.email,
+            ip: req.ip,
+          });
+          
+          break;
+        }
+      }
+
+      if (!isValid) {
+        logSecurityEvent("LOGIN_2FA_INVALID_RECOVERY_CODE", {
+          userId: user.id,
+          email: user.email,
+          ip: req.ip,
+        });
+      }
+    } else {
+      // Verify TOTP code
+      if (!user.twoFactorSecret) {
+        return res.status(400).json({
+          success: false,
+          msg: "2FA secret not configured",
+        });
+      }
+
+      // Import OTPAuth for validation
+      const OTPAuth = await import("otpauth");
+      
+      const totp = new OTPAuth.TOTP({
+        issuer: "Neverland Studio",
+        label: user.email,
+        algorithm: "SHA1",
+        digits: 6,
+        period: 30,
+        secret: OTPAuth.Secret.fromBase32(user.twoFactorSecret),
+      });
+
+      const delta = totp.validate({ token: code, window: 1 });
+      isValid = delta !== null;
+
+      if (!isValid) {
+        logSecurityEvent("LOGIN_2FA_INVALID_CODE", {
+          userId: user.id,
+          email: user.email,
+          ip: req.ip,
+        });
+      }
+    }
+
+    // 5. Handle verification result
+    if (!isValid) {
+      return res.status(401).json({
+        success: false,
+        msg: isRecoveryCode 
+          ? "Invalid or already used recovery code"
+          : "Invalid verification code. Please try again.",
+      });
+    }
+
+    // 6. Update last login
+    user.lastLogin = new Date();
+    await user.save();
+
+    logAuthEvent("USER_LOGIN_2FA_SUCCESS", user.id, {
+      email: user.email,
+      ip: req.ip,
+      method: isRecoveryCode ? "recovery_code" : "totp",
+    });
+
+    // 7. Generate full JWT token
+    const token = generateToken(user);
+
+    // 8. Remove sensitive data from response
+    const userResponse = {
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      image: user.image,
+      role: user.role,
+      provider: user.provider,
+      isVerified: user.isVerified,
+      twoFactorEnabled: user.twoFactorEnabled,
+    };
+
+    res.json({
+      success: true,
+      msg: "Login successful! Welcome back.",
+      token,
+      user: userResponse,
+      expiresIn: process.env.JWT_EXPIRES_IN || "7d",
+    });
+  } catch (err) {
+    logger.error("Verify login with 2FA error:", {
+      error: err.message,
+      stack: err.stack,
+      ip: req.ip,
+    });
+    next(err);
+  }
+};
+
 export default {
   register,
   login,
@@ -652,4 +874,5 @@ export default {
   forgotPassword,
   resetPassword,
   verifyResetToken,
+  verifyLoginWith2FA,
 };

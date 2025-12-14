@@ -8,6 +8,7 @@ export interface User {
   bio?: string;
   role: "user" | "admin";
   provider?: "email" | "google" | "github";
+  twoFactorEnabled?: boolean;
 }
 
 export interface AuthResponse {

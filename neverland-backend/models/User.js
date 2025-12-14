@@ -114,6 +114,19 @@ const User = sequelize.define(
       type: DataTypes.DATE,
       allowNull: true,
     },
+    twoFactorSecret: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    twoFactorEnabled: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false,
+    },
+    twoFactorRecoveryCodes: {
+      type: DataTypes.JSON,
+      allowNull: true,
+    },
   },
   {
     // Mengaktifkan soft deletes. `destroy()` akan set `deletedAt` daripada menghapus permanen.
