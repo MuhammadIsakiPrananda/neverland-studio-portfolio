@@ -52,7 +52,8 @@ const getAPIBaseUrl = () => {
 
 // Get auth token helper
 const getAuthToken = () => {
-  return localStorage.getItem("token") || sessionStorage.getItem("token");
+  // Match the key used by AuthContext
+  return localStorage.getItem("authToken") || sessionStorage.getItem("authToken") || localStorage.getItem("token") || sessionStorage.getItem("token");
 };
 
 export const useSecurityState = () => {
