@@ -95,8 +95,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Clear both storages to ensure a clean logout
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    localStorage.removeItem('userProfile');
     sessionStorage.removeItem('authToken');
     sessionStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('userProfile');
+    
+    // Dispatch logout event to clear 2FA and other user-specific state
+    window.dispatchEvent(new Event('userLogout'));
   };
 
   const updateProfile = async (userData: Partial<UserProfile>) => {
