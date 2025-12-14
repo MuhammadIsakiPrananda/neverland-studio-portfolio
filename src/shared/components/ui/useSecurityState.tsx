@@ -83,17 +83,26 @@ export const useSecurityState = () => {
   const { addNotification } = useNotification();
   const [, setTimeNow] = useState(Date.now());
 
-  // Load user 2FA status from localStorage on mount AND when storage changes
+  // Load user 2FA status from API (not localStorage) to ensure accuracy per user
   useEffect(() => {
-    const loadUser2FAStatus = () => {
-      const userProfile = localStorage.getItem("userProfile") || sessionStorage.getItem("userProfile");
-      if (userProfile) {
-        try {
-          const user = JSON.parse(userProfile);
-          setIs2faEnabled(user.twoFactorEnabled || false);
-        } catch (error) {
-          console.error("Error parsing user profile:", error);
+    const loadUser2FAStatus = async () => {
+      try {
+        const token = getAuthToken();
+        if (!token) {
+          setIs2faEnabled(false);
+          return;
         }
+
+        // Fetch current user profile which includes twoFactorEnabled
+        const userProfile = localStorage.getItem("userProfile") || sessionStorage.getItem("userProfile");
+        if (userProfile) {
+          const user = JSON.parse(userProfile);
+          // Use backend data as source of truth
+          setIs2faEnabled(user.twoFactorEnabled || false);
+        }
+      } catch (error) {
+        console.error("Error loading 2FA status:", error);
+        setIs2faEnabled(false);
       }
     };
 
@@ -115,9 +124,20 @@ export const useSecurityState = () => {
     };
     window.addEventListener("userProfileUpdated", handleCustomRefresh as EventListener);
 
+    // Listen for logout event to clear 2FA state
+    const handleLogout = () => {
+      setIs2faEnabled(false);
+      setTotp(null);
+      setRecoveryCodes(null);
+      setShowRecoveryCodes(false);
+      setIsSettingUp2FA(false);
+    };
+    window.addEventListener("userLogout", handleLogout as EventListener);
+
     return () => {
       window.removeEventListener("storage", handleStorageChange);
       window.removeEventListener("userProfileUpdated", handleCustomRefresh as EventListener);
+      window.removeEventListener("userLogout", handleLogout as EventListener);
     };
   }, []);
 
