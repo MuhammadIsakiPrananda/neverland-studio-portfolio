@@ -84,7 +84,7 @@ export const useSecurityState = () => {
   const { addNotification } = useNotification();
   const [, setTimeNow] = useState(Date.now());
 
-  // Load user 2FA status from API (not localStorage) to ensure accuracy per user
+  // Load user 2FA status from localStorage (matching AuthContext key)
   useEffect(() => {
     const loadUser2FAStatus = async () => {
       try {
@@ -94,10 +94,11 @@ export const useSecurityState = () => {
           return;
         }
 
-        // Fetch current user profile which includes twoFactorEnabled
-        const userProfile = localStorage.getItem("userProfile") || sessionStorage.getItem("userProfile");
-        if (userProfile) {
-          const user = JSON.parse(userProfile);
+        // Fetch current user data which includes twoFactorEnabled
+        // AuthContext saves with key 'user', not 'userProfile'
+        const userData = localStorage.getItem("user") || sessionStorage.getItem("user");
+        if (userData) {
+          const user = JSON.parse(userData);
           // Use backend data as source of truth
           setIs2faEnabled(user.twoFactorEnabled || false);
         }
@@ -112,7 +113,7 @@ export const useSecurityState = () => {
 
     // Listen for storage changes (from other tabs or manual updates)
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "userProfile" || e.key === null) {
+      if (e.key === "user" || e.key === null) {
         loadUser2FAStatus();
       }
     };
@@ -312,13 +313,13 @@ export const useSecurityState = () => {
       setShowRecoveryCodes(false);
       setIsSettingUp2FA(false);
 
-      // Update user profile in localStorage
-      const userProfile = localStorage.getItem("userProfile") || sessionStorage.getItem("userProfile");
-      if (userProfile) {
-        const user = JSON.parse(userProfile);
+      // Update user data in localStorage (matching AuthContext key)
+      const userData = localStorage.getItem("user") || sessionStorage.getItem("user");
+      if (userData) {
+        const user = JSON.parse(userData);
         user.twoFactorEnabled = false;
-        const storage = localStorage.getItem("userProfile") ? localStorage : sessionStorage;
-        storage.setItem("userProfile", JSON.stringify(user));
+        const storage = localStorage.getItem("user") ? localStorage : sessionStorage;
+        storage.setItem("user", JSON.stringify(user));
         
         // Trigger custom event for same-tab state update
         window.dispatchEvent(new Event("userProfileUpdated"));
@@ -384,13 +385,13 @@ export const useSecurityState = () => {
         setIs2faEnabled(true);
         setTwoFactorCode("");
 
-        // Update user profile in localStorage
-        const userProfile = localStorage.getItem("userProfile") || sessionStorage.getItem("userProfile");
-        if (userProfile) {
-          const user = JSON.parse(userProfile);
+        // Update user data in localStorage (matching AuthContext key)
+        const userData = localStorage.getItem("user") || sessionStorage.getItem("user");
+        if (userData) {
+          const user = JSON.parse(userData);
           user.twoFactorEnabled = true;
-          const storage = localStorage.getItem("userProfile") ? localStorage : sessionStorage;
-          storage.setItem("userProfile", JSON.stringify(user));
+          const storage = localStorage.getItem("user") ? localStorage : sessionStorage;
+          storage.setItem("user", JSON.stringify(user));
           
           // Trigger custom event for same-tab state update
           window.dispatchEvent(new Event("userProfileUpdated"));
