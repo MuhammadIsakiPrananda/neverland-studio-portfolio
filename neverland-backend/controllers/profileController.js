@@ -1,12 +1,13 @@
-const { User } = require("../models"); // Asumsi model Sequelize ada di ../models
-const { validationResult } = require("express-validator");
-const { Op } = require("sequelize");
+import User from "../models/User.js";
+import { validationResult } from "express-validator";
+import { Op } from "sequelize";
 
 const USERNAME_CHANGE_LIMIT = 3; // Batas perubahan username per bulan
+
 /**
  * @desc    Memperbarui profil pengguna, membatasi perubahan username maksimal 3x per bulan
  */
-exports.updateProfile = async (req, res) => {
+export const updateProfile = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -73,7 +74,7 @@ exports.updateProfile = async (req, res) => {
 /**
  * @desc    Mengambil profil pengguna saat ini beserta info sisa perubahan username
  */
-exports.getProfile = async (req, res) => {
+export const getProfile = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
       attributes: { exclude: ["password"] },
@@ -103,4 +104,9 @@ exports.getProfile = async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
+};
+
+export default {
+  updateProfile,
+  getProfile,
 };

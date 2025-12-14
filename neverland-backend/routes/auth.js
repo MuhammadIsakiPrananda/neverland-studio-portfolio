@@ -19,7 +19,7 @@ import {
 } from "../controllers/twoFactorController.js";
 import deleteHandler from "./delete.js";
 import generateToken from "../utils/generateToken.js";
-import { authenticate } from "../middleware/authMiddleware.js";
+import authenticate from "../middleware/authMiddleware.js";
 import {
   getSuccessRedirectUrlFromRequest,
   getErrorRedirectUrlFromRequest,

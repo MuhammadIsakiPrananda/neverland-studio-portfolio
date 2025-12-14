@@ -1,6 +1,6 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
-module.exports = function (req, res, next) {
+export const authenticate = (req, res, next) => {
   // Ambil token dari header 'Authorization'
   const token = req.header("Authorization")?.replace("Bearer ", "");
 
@@ -16,3 +16,5 @@ module.exports = function (req, res, next) {
     res.status(401).json({ msg: "Token is not valid" });
   }
 };
+
+export default authenticate;
