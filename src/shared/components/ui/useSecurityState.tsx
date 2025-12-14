@@ -83,17 +83,42 @@ export const useSecurityState = () => {
   const { addNotification } = useNotification();
   const [, setTimeNow] = useState(Date.now());
 
-  // Load user 2FA status from localStorage on mount
+  // Load user 2FA status from localStorage on mount AND when storage changes
   useEffect(() => {
-    const userProfile = localStorage.getItem("userProfile") || sessionStorage.getItem("userProfile");
-    if (userProfile) {
-      try {
-        const user = JSON.parse(userProfile);
-        setIs2faEnabled(user.twoFactorEnabled || false);
-      } catch (error) {
-        console.error("Error parsing user profile:", error);
+    const loadUser2FAStatus = () => {
+      const userProfile = localStorage.getItem("userProfile") || sessionStorage.getItem("userProfile");
+      if (userProfile) {
+        try {
+          const user = JSON.parse(userProfile);
+          setIs2faEnabled(user.twoFactorEnabled || false);
+        } catch (error) {
+          console.error("Error parsing user profile:", error);
+        }
       }
-    }
+    };
+
+    // Load on mount
+    loadUser2FAStatus();
+
+    // Listen for storage changes (from other tabs or manual updates)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "userProfile" || e.key === null) {
+        loadUser2FAStatus();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    // Also listen for custom event for same-tab updates
+    const handleCustomRefresh = () => {
+      loadUser2FAStatus();
+    };
+    window.addEventListener("userProfileUpdated", handleCustomRefresh as EventListener);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("userProfileUpdated", handleCustomRefresh as EventListener);
+    };
   }, []);
 
   useEffect(() => {
@@ -273,6 +298,9 @@ export const useSecurityState = () => {
         user.twoFactorEnabled = false;
         const storage = localStorage.getItem("userProfile") ? localStorage : sessionStorage;
         storage.setItem("userProfile", JSON.stringify(user));
+        
+        // Trigger custom event for same-tab state update
+        window.dispatchEvent(new Event("userProfileUpdated"));
       }
 
       addNotification(
@@ -342,6 +370,9 @@ export const useSecurityState = () => {
           user.twoFactorEnabled = true;
           const storage = localStorage.getItem("userProfile") ? localStorage : sessionStorage;
           storage.setItem("userProfile", JSON.stringify(user));
+          
+          // Trigger custom event for same-tab state update
+          window.dispatchEvent(new Event("userProfileUpdated"));
         }
 
         addNotification(
