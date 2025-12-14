@@ -2,6 +2,9 @@ import express from "express";
 import { verifyToken } from "../config/auth.js";
 import User from "../models/User.js";
 import logger from "../utils/logger.js";
+import { updateProfile, getProfile } from "../controllers/profileController.js";
+import { changePassword } from "../controllers/userController.js";
+import authenticate from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -42,5 +45,21 @@ router.get("/me", verifyToken, async (req, res) => {
       });
   }
 });
+
+// Profile Management Routes
+// @desc    Get user profile with username change info
+// @route   GET /api/user/profile
+// @access  Private
+router.get("/profile", authenticate, getProfile);
+
+// @desc    Update user profile (name, username, bio, image)
+// @route   PUT /api/user/profile
+// @access  Private
+router.put("/profile", authenticate, updateProfile);
+
+// @desc    Change user password
+// @route   PUT /api/user/change-password
+// @access  Private
+router.put("/change-password", authenticate, changePassword);
 
 export default router;

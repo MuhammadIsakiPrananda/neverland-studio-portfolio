@@ -178,25 +178,22 @@ export const useSecurityState = () => {
     setUsernameError(""); // Clear error on new input
   };
 
-  const handleUsernameChangeSubmit = useCallback(
-    (e: React.FormEvent) => {
+  /**
+   * Handle username change with API call
+   */
+  const handleUsernameChange = useCallback(
+    async (e: React.FormEvent) => {
       e.preventDefault();
       setUsernameError("");
 
-      // The check is simpler now because the useEffect above handles resetting the count for a new month.
-      if (usernameChangeInfo.count >= 3) {
-        const errorMessage =
-          "Anda telah mencapai batas perubahan nama pengguna untuk bulan ini (3 kali).";
+      // Simple Validation
+      if (!newUsername.trim()) {
+        const errorMessage = "Nama pengguna tidak boleh kosong.";
         setUsernameError(errorMessage);
-        addNotification("Batas Tercapai", errorMessage, "error");
+        addNotification("Nama Pengguna Tidak Valid", errorMessage, "warning");
         return;
       }
-
-      if (
-        !newUsername ||
-        newUsername.trim() === "" ||
-        newUsername === username
-      ) {
+      if (newUsername === username) {
         const errorMessage =
           "Silakan masukkan nama pengguna baru yang berbeda.";
         setUsernameError(errorMessage);
@@ -204,22 +201,64 @@ export const useSecurityState = () => {
         return;
       }
 
-      // --- In a real app, make an API call here to change the username and persist usernameChangeInfo ---
-      const now = new Date();
-      const currentMonth = now.getMonth();
-      setUsername(newUsername);
-      setUsernameChangeInfo({
-        count: usernameChangeInfo.count + 1,
-        lastChangeMonth: currentMonth,
-      });
-      addNotification(
-        "Berhasil",
-        `Nama pengguna berhasil diubah menjadi ${newUsername}.`,
-        "success"
-      );
-      setNewUsername("");
+      setIsLoading(true);
+      try {
+        const token = getAuthToken();
+        const response = await fetch(`${getAPIBaseUrl()}/api/user/profile`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ username: newUsername }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.msg || "Failed to update username");
+        }
+
+        // Update local state
+        setUsername(newUsername);
+        
+        // Update user data in localStorage
+        const userData = localStorage.getItem("user") || sessionStorage.getItem("user");
+        if (userData) {
+          const user = JSON.parse(userData);
+          user.username = newUsername;
+          user.username_changes_count = data.user.username_changes_count;
+          user.username_changes_month = data.user.username_changes_month;
+          const storage = localStorage.getItem("user") ? localStorage : sessionStorage;
+          storage.setItem("user", JSON.stringify(user));
+          window.dispatchEvent(new Event("userProfileUpdated"));
+        }
+
+        // Update remaining changes count
+        setUsernameChangeInfo({
+          count: data.user.username_changes_count,
+          lastChangeMonth: data.user.username_changes_month,
+        });
+
+        addNotification(
+          "Berhasil",
+          data.msg || `Nama pengguna berhasil diubah menjadi ${newUsername}.`,
+          "success"
+        );
+        setNewUsername("");
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : "Failed to update username";
+        setUsernameError(errorMsg);
+        addNotification(
+          "Error",
+          errorMsg,
+          "error"
+        );
+      } finally {
+        setIsLoading(false);
+      }
     },
-    [newUsername, username, usernameChangeInfo, addNotification]
+    [newUsername, username, addNotification]
   );
 
   /**
@@ -442,7 +481,7 @@ export const useSecurityState = () => {
     usernameError,
     usernameChangeInfo,
     handleUsernameInputChange,
-    handleUsernameChangeSubmit,
+    handleUsernameChange,
     passwordData,
     handlePasswordInputChange,
     handlePasswordChangeSubmit,

@@ -10,7 +10,7 @@ interface NotificationProps {
 }
 
 const icons = {
-  success: <CheckCircle className="w-6 h-6 text-premium-champagne-gold-400" />,
+  success: <CheckCircle className="w-6 h-6 text-emerald-400" />,
   error: <XCircle className="w-6 h-6 text-red-400" />,
   info: <Info className="w-6 h-6 text-sky-400" />,
   warning: <AlertTriangle className="w-6 h-6 text-amber-400" />,

@@ -270,6 +270,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
                     <ProfileTabContent
                       isLoading={isLoading}
                       formData={formData}
+                      remainingUsernameChanges={3 - (securityState.usernameChangeInfo.lastChangeMonth === new Date().getMonth() + 1 ? securityState.usernameChangeInfo.count : 0)}
                       handleInputChange={handleInputChange}
                       handleCancel={handleCancel}
                       handleSaveChanges={handleSaveChanges}
