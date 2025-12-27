@@ -1,0 +1,4 @@
+# SSL certificates directory
+# Place your SSL certificates here:
+# - certificate.crt
+# - private.key
