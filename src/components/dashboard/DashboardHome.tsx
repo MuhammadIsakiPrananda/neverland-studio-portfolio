@@ -33,26 +33,58 @@ interface StatCardProps {
     value: number;
     label: string;
   };
+  isUpdating?: boolean;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ title, value, subtitle, icon: Icon, theme, loading, trend }) => {
+const StatCard: React.FC<StatCardProps> = ({ title, value, subtitle, icon: Icon, theme, loading, trend, isUpdating }) => {
   const isDark = theme === 'dark';
+  const [displayValue, setDisplayValue] = useState<number>(0);
+  const [prevValue, setPrevValue] = useState<number>(0);
+  
+  useEffect(() => {
+    const numValue = typeof value === 'string' ? 0 : value;
+    
+    if (numValue !== prevValue && numValue !== displayValue) {
+      // Animate from current display value to new value
+      const start = displayValue;
+      const end = numValue;
+      const duration = 1000; // 1 second animation
+      const startTime = Date.now();
+      
+      const animate = () => {
+        const now = Date.now();
+        const progress = Math.min((now - startTime) / duration, 1);
+        const easeOutQuad = progress * (2 - progress); // Easing function
+        const current = Math.round(start + (end - start) * easeOutQuad);
+        
+        setDisplayValue(current);
+        
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          setPrevValue(end);
+        }
+      };
+      
+      requestAnimationFrame(animate);
+    }
+  }, [value, displayValue, prevValue]);
   
   return (
     <div className={`
-      p-6 rounded-2xl transition-all duration-300 hover:scale-105
+      relative p-6 rounded-2xl transition-all duration-300 hover:scale-105
       ${isDark 
         ? 'bg-slate-900/50 backdrop-blur-sm border border-slate-800 hover:border-blue-500/30' 
         : 'bg-white border border-slate-200 hover:border-blue-300 shadow-lg'}
     `}>
       <div className="flex items-center justify-between mb-4">
-        <div className={`p-3 rounded-xl ${
+        <div className={`p-3 rounded-xl transition-all duration-300 ${
           isDark ? 'bg-blue-500/20' : 'bg-blue-50'
         }`}>
           <Icon className={`w-6 h-6 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
         </div>
         {trend && (
-          <div className={`text-xs font-semibold px-2 py-1 rounded ${
+          <div className={`text-xs font-semibold px-2 py-1 rounded transition-all duration-300 ${
             trend.value > 0 ? 'bg-green-500/20 text-green-400' : 'bg-slate-500/20 text-slate-400'
           }`}>
             {trend.value > 0 ? '+' : ''}{trend.value}
@@ -66,8 +98,8 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, subtitle, icon: Icon,
         {loading ? (
           <div className="h-9 bg-slate-700 rounded animate-pulse" />
         ) : (
-          <p className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
-            {value.toLocaleString('id-ID')}
+          <p className={`text-3xl font-bold transition-all duration-300 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+            {typeof value === 'string' ? value : displayValue.toLocaleString('id-ID')}
           </p>
         )}
         <p className={`text-xs mt-2 ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
@@ -87,6 +119,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [isRealtime, setIsRealtime] = useState(false);
+  const [updatingCards, setUpdatingCards] = useState<Set<string>>(new Set());
 
   const fetchDashboardData = async (showToast = false) => {
     try {
@@ -96,6 +129,21 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
         dashboardService.getOverviewStats(),
         activityLogService.getRecent(10)
       ]);
+      
+      // Mark which cards are updating
+      if (stats) {
+        const updating = new Set<string>();
+        if (statsData?.users?.total !== stats?.users?.total) updating.add('users');
+        if (statsData?.contacts?.total !== stats?.contacts?.total) updating.add('contacts');
+        if (statsData?.enrollments?.total !== stats?.enrollments?.total) updating.add('enrollments');
+        if (statsData?.consultations?.total !== stats?.consultations?.total) updating.add('consultations');
+        if (statsData?.newsletters?.total !== stats?.newsletters?.total) updating.add('newsletters');
+        
+        setUpdatingCards(updating);
+        
+        // Clear updating state after animation
+        setTimeout(() => setUpdatingCards(new Set()), 2000);
+      }
       
       setStats(statsData);
       setActivities(activitiesResponse.data || []);
@@ -116,7 +164,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
   };
 
   useEffect(() => {
-    // Initial fetch
+    // Initial fetch only - no auto-refresh
     fetchDashboardData();
     
     // Subscribe to real-time stats updates
@@ -124,6 +172,10 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
       setRealtimeStats(data);
       setLastUpdate(new Date());
       setIsRealtime(true);
+      
+      // Mark all cards as updating when realtime data arrives
+      setUpdatingCards(new Set(['users', 'contacts', 'enrollments', 'consultations', 'newsletters', 'activity']));
+      setTimeout(() => setUpdatingCards(new Set()), 2000);
     });
 
     // Subscribe to activity logs updates  
@@ -225,8 +277,15 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
     return 'Good Evening';
   };
 
-  // Use realtime stats if available, fallback to regular stats
-  const displayStats = realtimeStats || stats;
+  // Merge realtime stats with regular stats (realtime takes priority but fallback to stats)
+  const displayStats = realtimeStats ? {
+    users: realtimeStats.users || stats?.users || { total: 0, today: 0, this_week: 0, this_month: 0 },
+    contacts: realtimeStats.contacts || stats?.contacts || { total: 0, new: 0, today: 0 },
+    enrollments: realtimeStats.enrollments || stats?.enrollments || { total: 0, pending: 0, approved: 0, today: 0 },
+    consultations: realtimeStats.consultations || stats?.consultations || { total: 0, pending: 0, scheduled: 0, today: 0 },
+    newsletters: realtimeStats.newsletters || stats?.newsletters || { total: 0, today: 0 },
+    logins: realtimeStats.logins || stats?.logins || { total: 0, today: 0, failed_today: 0 }
+  } : stats;
 
   return (
     <div className="space-y-6">
@@ -245,6 +304,12 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
             <p className={isDark ? 'text-slate-400' : 'text-slate-600'}>
               Real-time Dashboard Overview
             </p>
+            {isRealtime && (
+              <span className="flex items-center gap-1.5 text-xs font-semibold text-green-400 bg-green-500/20 px-2 py-1 rounded-full">
+                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                Live
+              </span>
+            )}
           </div>
           <p className={`text-xs mt-1 ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
             Last updated: {getLastUpdateText()}
@@ -252,14 +317,14 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => realtimeService.refresh()}
+            onClick={() => fetchDashboardData(true)}
             disabled={refreshing}
             className={`
               p-3 rounded-xl transition-all duration-300 hover:scale-110
               ${isDark ? 'bg-blue-500/20 hover:bg-blue-500/30' : 'bg-white hover:bg-blue-50'}
               ${refreshing ? 'opacity-50 cursor-not-allowed' : ''}
             `}
-            title="Force refresh all data"
+            title="Refresh now"
           >
             <RefreshCw className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''} ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
           </button>
@@ -276,6 +341,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
           theme={theme}
           loading={loading}
           trend={{ value: displayStats?.users?.today || 0, label: 'today' }}
+          isUpdating={updatingCards.has('users')}
         />
         <StatCard 
           title="Contact Messages" 
@@ -285,6 +351,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
           theme={theme}
           loading={loading}
           trend={{ value: displayStats?.contacts?.today || 0, label: 'today' }}
+          isUpdating={updatingCards.has('contacts')}
         />
         <StatCard 
           title="Enrollments" 
@@ -294,6 +361,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
           theme={theme}
           loading={loading}
           trend={{ value: displayStats?.enrollments?.today || 0, label: 'today' }}
+          isUpdating={updatingCards.has('enrollments')}
         />
         <StatCard 
           title="Consultations" 
@@ -303,6 +371,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
           theme={theme}
           loading={loading}
           trend={{ value: displayStats?.consultations?.today || 0, label: 'today' }}
+          isUpdating={updatingCards.has('consultations')}
         />
       </div>
 
@@ -316,6 +385,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
           theme={theme}
           loading={loading}
           trend={{ value: displayStats?.newsletters?.today || 0, label: 'today' }}
+          isUpdating={updatingCards.has('newsletters')}
         />
         <StatCard 
           title="Recent Activity" 
@@ -324,6 +394,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
           icon={Activity}
           theme={theme}
           loading={loading}
+          isUpdating={updatingCards.has('activity')}
         />
         <StatCard 
           title="System Status" 
@@ -332,6 +403,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
           icon={TrendingUp}
           theme={theme}
           loading={loading}
+          isUpdating={updatingCards.has('system')}
         />
       </div>
 

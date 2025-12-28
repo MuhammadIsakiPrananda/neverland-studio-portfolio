@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   XCircle,
   Loader2,
+  Radio,
 } from 'lucide-react';
 import {
   LineChart,
@@ -35,7 +36,8 @@ import {
   type Activity as ActivityType,
   type ChartDataPoint,
 } from '../../services/analyticsService';
-import { showError } from '../common/ModernNotification';
+import { showError, showSuccess, showInfo } from '../common/ModernNotification';
+import realtimeService, { type RealtimeStats } from '../../services/realtimeService';
 
 interface AnalyticsProps {
   theme: Theme;
@@ -52,6 +54,46 @@ const Analytics: React.FC<AnalyticsProps> = ({ theme }) => {
   const [timeRange, setTimeRange] = useState(7);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [countdown, setCountdown] = useState(30);
+  const [connectionStatus, setConnectionStatus] = useState<string>('disconnected');
+  const [isRealtimeActive, setIsRealtimeActive] = useState(false);
+
+  // Convert RealtimeStats to OverviewStats
+  const convertRealtimeToOverview = useCallback((realtimeStats: RealtimeStats): OverviewStats => {
+    return {
+      users: {
+        total: realtimeStats.users.total,
+        today: realtimeStats.users.today,
+        this_week: 0, // Not available in realtime stats
+        this_month: 0, // Not available in realtime stats
+      },
+      contacts: {
+        total: realtimeStats.contacts.total,
+        new: realtimeStats.contacts.new,
+        today: realtimeStats.contacts.today || 0,
+      },
+      enrollments: {
+        total: realtimeStats.enrollments.total,
+        pending: realtimeStats.enrollments.pending,
+        approved: realtimeStats.enrollments.approved || 0,
+        today: realtimeStats.enrollments.today || 0,
+      },
+      consultations: {
+        total: realtimeStats.consultations.total,
+        pending: realtimeStats.consultations.pending,
+        scheduled: realtimeStats.consultations.scheduled || 0,
+        today: realtimeStats.consultations.today || 0,
+      },
+      newsletters: {
+        total: realtimeStats.newsletters.total,
+        today: realtimeStats.newsletters.today || 0,
+      },
+      logins: {
+        total: realtimeStats.logins?.total || 0,
+        today: realtimeStats.logins?.today || 0,
+        failed_today: realtimeStats.logins?.failed_today || 0,
+      },
+    };
+  }, []);
 
   // Fetch all data
   const fetchData = useCallback(async (showLoading = true) => {
@@ -83,16 +125,79 @@ const Analytics: React.FC<AnalyticsProps> = ({ theme }) => {
     fetchData();
   }, [fetchData]);
 
-  // Auto-refresh every 30 seconds
+  // Setup real-time subscriptions
   useEffect(() => {
-    if (!autoRefresh) return;
+    if (!autoRefresh) {
+      // Clean up real-time when auto-refresh is disabled
+      realtimeService.disconnect();
+      setIsRealtimeActive(false);
+      return;
+    }
 
-    const interval = setInterval(() => {
-      fetchData(false);
-    }, 30000);
+    setIsRealtimeActive(true);
 
+    // Subscribe to connection status
+    const unsubscribeStatus = realtimeService.subscribeToStatus((status) => {
+      setConnectionStatus(status);
+    });
+
+    // Subscribe to real-time stats updates
+    const unsubscribeStats = realtimeService.subscribe(
+      'stats',
+      (realtimeStats: RealtimeStats) => {
+        const convertedStats = convertRealtimeToOverview(realtimeStats);
+        setStats(convertedStats);
+        setLastUpdated(new Date());
+        setCountdown(30);
+      },
+      5000 // Update every 5 seconds
+    );
+
+    // Subscribe to activity logs
+    const unsubscribeActivities = realtimeService.subscribe(
+      'activity-logs',
+      (data: any) => {
+        if (data && Array.isArray(data)) {
+          // Map activity logs to Activity format
+          const mappedActivities: ActivityType[] = data.slice(0, 10).map((log: any) => ({
+            id: log.id,
+            type: log.type || 'contact',
+            title: log.description || 'Activity',
+            description: log.details || '',
+            timestamp: log.created_at || new Date().toISOString(),
+            status: log.status || 'new',
+          }));
+          setActivities(mappedActivities);
+        }
+      },
+      5000
+    );
+
+    return () => {
+      unsubscribeStatus();
+      unsubscribeStats();
+      unsubscribeActivities();
+      realtimeService.disconnect();
+      setIsRealtimeActive(false);
+    };
+  }, [autoRefresh, convertRealtimeToOverview]);
+
+  // Fetch chart data separately (not real-time)
+  useEffect(() => {
+    const fetchChartData = async () => {
+      try {
+        const chartRes = await analyticsService.getChartData(timeRange);
+        setChartData(chartRes.data);
+      } catch (error) {
+        console.error('Chart data error:', error);
+      }
+    };
+
+    fetchChartData();
+    // Refresh chart data every 30 seconds
+    const interval = setInterval(fetchChartData, 30000);
     return () => clearInterval(interval);
-  }, [autoRefresh, fetchData]);
+  }, [timeRange]);
 
   // Countdown for next refresh
   useEffect(() => {
@@ -106,8 +211,75 @@ const Analytics: React.FC<AnalyticsProps> = ({ theme }) => {
   }, [autoRefresh]);
 
   // Handle manual refresh
-  const handleRefresh = () => {
-    fetchData(true);
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      // Force refresh real-time data
+      await realtimeService.refresh('stats');
+      await realtimeService.refresh('activity-logs');
+      
+      // Also refresh chart data
+      const chartRes = await analyticsService.getChartData(timeRange);
+      setChartData(chartRes.data);
+      
+      setLastUpdated(new Date());
+      setCountdown(30);
+      showSuccess('Success', 'Analytics data refreshed');
+    } catch (error) {
+      showError('Error', 'Failed to refresh data');
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  // Toggle auto-refresh
+  const handleToggleAutoRefresh = () => {
+    const newState = !autoRefresh;
+    setAutoRefresh(newState);
+    
+    if (newState) {
+      showInfo('Real-time Active', 'Analytics data will update automatically');
+    } else {
+      showInfo('Real-time Disabled', 'Switch to manual refresh mode');
+    }
+  };
+
+  // Get connection status indicator
+  const getConnectionIndicator = () => {
+    if (connectionStatus === 'connected') {
+      return (
+        <div className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium ${
+          isDark
+            ? 'bg-green-500/20 text-green-300 border border-green-400/30'
+            : 'bg-green-100 text-green-800 border border-green-200'
+        }`}>
+          <Radio className="w-3 h-3 animate-pulse" />
+          Connected
+        </div>
+      );
+    } else if (connectionStatus === 'connecting') {
+      return (
+        <div className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium ${
+          isDark
+            ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-400/30'
+            : 'bg-yellow-100 text-yellow-800 border border-yellow-200'
+        }`}>
+          <Loader2 className="w-3 h-3 animate-spin" />
+          Connecting
+        </div>
+      );
+    } else {
+      return (
+        <div className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium ${
+          isDark
+            ? 'bg-red-500/20 text-red-300 border border-red-400/30'
+            : 'bg-red-100 text-red-800 border border-red-200'
+        }`}>
+          <XCircle className="w-3 h-3" />
+          Disconnected
+        </div>
+      );
+    }
   };
 
   // Format timestamp
@@ -143,25 +315,54 @@ const Analytics: React.FC<AnalyticsProps> = ({ theme }) => {
 
   // Get status badge
   const getStatusBadge = (status: string) => {
-    const statusConfig: Record<string, { color: string; icon: React.ReactNode }> = {
-      new: { color: 'blue', icon: <AlertCircle className="w-3 h-3" /> },
-      pending: { color: 'yellow', icon: <Clock className="w-3 h-3" /> },
-      approved: { color: 'green', icon: <CheckCircle2 className="w-3 h-3" /> },
-      scheduled: { color: 'cyan', icon: <Calendar className="w-3 h-3" /> },
-      subscribed: { color: 'green', icon: <CheckCircle2 className="w-3 h-3" /> },
-    };
-
-    const config = statusConfig[status] || statusConfig.new;
-    const colorClass = isDark
-      ? `bg-${config.color}-500/20 text-${config.color}-300 border-${config.color}-400/30`
-      : `bg-${config.color}-100 text-${config.color}-800 border-${config.color}-200`;
-
-    return (
-      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border ${colorClass}`}>
-        {config.icon}
-        {status}
-      </span>
-    );
+    switch (status.toLowerCase()) {
+      case 'new':
+        return (
+          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border ${
+            isDark ? 'bg-blue-500/20 text-blue-300 border-blue-400/30' : 'bg-blue-100 text-blue-800 border-blue-200'
+          }`}>
+            <AlertCircle className="w-3 h-3" />
+            {status}
+          </span>
+        );
+      case 'pending':
+        return (
+          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border ${
+            isDark ? 'bg-yellow-500/20 text-yellow-300 border-yellow-400/30' : 'bg-yellow-100 text-yellow-800 border-yellow-200'
+          }`}>
+            <Clock className="w-3 h-3" />
+            {status}
+          </span>
+        );
+      case 'approved':
+      case 'subscribed':
+        return (
+          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border ${
+            isDark ? 'bg-green-500/20 text-green-300 border-green-400/30' : 'bg-green-100 text-green-800 border-green-200'
+          }`}>
+            <CheckCircle2 className="w-3 h-3" />
+            {status}
+          </span>
+        );
+      case 'scheduled':
+        return (
+          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border ${
+            isDark ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400/30' : 'bg-cyan-100 text-cyan-800 border-cyan-200'
+          }`}>
+            <Calendar className="w-3 h-3" />
+            {status}
+          </span>
+        );
+      default:
+        return (
+          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border ${
+            isDark ? 'bg-blue-500/20 text-blue-300 border-blue-400/30' : 'bg-blue-100 text-blue-800 border-blue-200'
+          }`}>
+            <AlertCircle className="w-3 h-3" />
+            {status}
+          </span>
+        );
+    }
   };
 
   // Chart colors
@@ -195,18 +396,21 @@ const Analytics: React.FC<AnalyticsProps> = ({ theme }) => {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-stone-900'}`}>
-            Analytics Dashboard
-          </h2>
+          <div className="flex items-center gap-3">
+            <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-stone-900'}`}>
+              Analytics Dashboard
+            </h2>
+            {isRealtimeActive && getConnectionIndicator()}
+          </div>
           <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-stone-600'}`}>
-            Real-time insights and statistics
+            {isRealtimeActive ? 'Real-time insights and statistics' : 'Manual refresh mode'}
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           {/* Auto-refresh toggle */}
           <button
-            onClick={() => setAutoRefresh(!autoRefresh)}
+            onClick={handleToggleAutoRefresh}
             className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
               autoRefresh
                 ? isDark
@@ -217,14 +421,25 @@ const Analytics: React.FC<AnalyticsProps> = ({ theme }) => {
                 : 'bg-stone-100 text-stone-600 border border-stone-200'
             }`}
           >
-            <RefreshCw className={`w-4 h-4 ${autoRefresh ? 'animate-spin' : ''}`} />
-            {autoRefresh ? `Auto (${countdown}s)` : 'Manual'}
+            {autoRefresh ? (
+              <>
+                <Radio className="w-4 h-4 animate-pulse" />
+                Real-time ({countdown}s)
+              </>
+            ) : (
+              <>
+                <RefreshCw className="w-4 h-4" />
+                Manual
+              </>
+            )}
           </button>
 
           {/* Time range selector */}
           <select
             value={timeRange}
             onChange={(e) => setTimeRange(Number(e.target.value))}
+            title="Select time range for chart data"
+            aria-label="Time range selector"
             className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer ${
               isDark
                 ? 'bg-gray-800 border border-gray-700 text-white'

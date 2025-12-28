@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import type { Theme } from '../../types';
 import api from '../../services/apiService';
 import { realtimeService } from '../../services/realtimeService';
-import { notificationService } from '../../services/notificationService';
+import { showSuccess, showError } from '../common/ModernNotification';
+import ProjectModal from './ProjectModal';
 import { 
   Search, 
   Plus,
@@ -13,8 +14,7 @@ import {
   Eye,
   Calendar,
   Tag,
-  Image as ImageIcon,
-  RefreshCw
+  Image as ImageIcon
 } from 'lucide-react';
 
 interface Project {
@@ -22,7 +22,7 @@ interface Project {
   title: string;
   description: string;
   category: string;
-  status: 'active' | 'completed' | 'archived';
+  status: 'draft' | 'published' | 'archived';
   featured: boolean;
   image?: string;
   technologies: string[];
@@ -39,11 +39,12 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
   const isDark = theme === 'dark';
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState<string>('all');
-  const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'completed' | 'archived'>('all');
+  const [filterStatus, setFilterStatus] = useState<'all' | 'draft' | 'published' | 'archived'>('all');
+  const [showModal, setShowModal] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
 
   // Fetch projects from backend
   const fetchProjects = useCallback(async () => {
@@ -72,31 +73,61 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
     fetchProjects();
   }, [fetchProjects]);
 
-  // Subscribe to real-time project updates
-  useEffect(() => {
-    const unsubscribe = realtimeService.subscribe('projects', () => {
-      fetchProjects();
-    });
 
-    return () => unsubscribe();
-  }, [fetchProjects]);
-
-  const handleRefresh = () => {
-    setRefreshing(true);
-    fetchProjects();
-  };
 
   const handleDeleteProject = async (id: number) => {
     if (!confirm('Are you sure you want to delete this project?')) return;
 
     try {
-      await api.delete(`/admin/projects/${id}`);
-      notificationService.showSuccess('Project deleted successfully');
-      fetchProjects();
+      const response = await api.delete(`/admin/projects/${id}`);
+      if (response.data.success) {
+        showSuccess('Project Deleted', 'Project has been removed successfully');
+        fetchProjects();
+      }
     } catch (error) {
       console.error('Error deleting project:', error);
-      notificationService.showError('Failed to delete project');
+      showError('Delete Failed', 'Failed to delete project. Please try again.');
     }
+  };
+
+  const handleSaveProject = async (projectData: Partial<Project>) => {
+    try {
+      if (editingProject) {
+        // Update existing project
+        const response = await api.put(`/admin/projects/${editingProject.id}`, projectData);
+        if (response.data.success) {
+          showSuccess('Project Updated', 'Changes saved successfully');
+          setShowModal(false);
+          setEditingProject(null);
+          fetchProjects();
+        }
+      } else {
+        // Create new project
+        const response = await api.post('/admin/projects', projectData);
+        if (response.data.success) {
+          showSuccess('Project Created', 'New project added successfully');
+          setShowModal(false);
+          fetchProjects();
+        }
+      }
+    } catch (error: any) {
+      console.error('Error saving project:', error);
+      showError(
+        'Save Failed',
+        error.response?.data?.message || 'Failed to save project. Please try again.'
+      );
+      throw error; // Re-throw to keep modal open
+    }
+  };
+
+  const handleEditProject = (project: Project) => {
+    setEditingProject(project);
+    setShowModal(true);
+  };
+
+  const handleAddProject = () => {
+    setEditingProject(null);
+    setShowModal(true);
   };
 
   const categories = ['all', ...Array.from(new Set(projects.map(p => p.category)))];
@@ -115,8 +146,8 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 'completed': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'draft': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'published': return 'bg-green-500/20 text-green-400 border-green-500/30';
       case 'archived': return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
       default: return 'bg-slate-500/20 text-slate-400 border-slate-500/30';
     }
@@ -197,6 +228,7 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
             View
           </button>
           <button
+            onClick={() => handleEditProject(project)}
             className={`
               p-2 rounded-lg transition-colors
               ${isDark ? 'hover:bg-slate-800 text-slate-400' : 'hover:bg-slate-100 text-slate-600'}
@@ -281,6 +313,7 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
             <Edit className="w-4 h-4" />
           </button>
           <button
+            onClick={() => handleDeleteProject(project.id)}
             className={`p-2 rounded-lg transition-colors ${isDark ? 'hover:bg-red-500/20 text-red-400' : 'hover:bg-red-50 text-red-600'}`}
             title="Delete project"
           >
@@ -334,6 +367,7 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
           </div>
 
           <button
+            onClick={handleAddProject}
             className="
               flex items-center gap-2 px-4 py-2 rounded-lg
               bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700
@@ -350,9 +384,9 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[
           { label: 'Total Projects', value: projects.length, color: 'blue' },
-          { label: 'Active', value: projects.filter(p => p.status === 'active').length, color: 'blue' },
-          { label: 'Completed', value: projects.filter(p => p.status === 'completed').length, color: 'green' },
-          { label: 'Featured', value: projects.filter(p => p.featured).length, color: 'yellow' },
+          { label: 'Published', value: projects.filter(p => p.status === 'published').length, color: 'green' },
+          { label: 'Draft', value: projects.filter(p => p.status === 'draft').length, color: 'yellow' },
+          { label: 'Featured', value: projects.filter(p => p.featured).length, color: 'blue' },
         ].map((stat, idx) => (
           <div
             key={idx}
@@ -420,22 +454,23 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
 
           {/* Status Filter */}
           <div>
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value as any)}
-              className={`
-                w-full px-4 py-2 rounded-lg text-sm
-                ${isDark 
-                  ? 'bg-slate-800 border-slate-700 text-white' 
-                  : 'bg-slate-50 border-slate-200 text-slate-900'}
-                border focus:outline-none focus:ring-2 focus:ring-blue-500/50
-              `}
-            >
-              <option value="all">All Status</option>
-              <option value="active">Active</option>
-              <option value="completed">Completed</option>
-              <option value="archived">Archived</option>
-            </select>
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value as any)}
+                className={`
+                  w-full px-4 py-2 rounded-lg text-sm
+                  ${isDark 
+                    ? 'bg-slate-800 border-slate-700 text-white' 
+                    : 'bg-slate-50 border-slate-200 text-slate-900'}
+                  border focus:outline-none focus:ring-2 focus:ring-blue-500/50
+                `}
+                aria-label="Filter by status"
+              >
+                <option value="all">All Status</option>
+                <option value="draft">Draft</option>
+                <option value="published">Published</option>
+                <option value="archived">Archived</option>
+              </select>
           </div>
         </div>
       </div>
@@ -468,6 +503,19 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
               : <ProjectListItem key={project.id} project={project} />
           ))}
         </div>
+      )}
+
+      {/* Project Modal */}
+      {showModal && (
+        <ProjectModal
+          theme={theme}
+          project={editingProject || undefined}
+          onClose={() => {
+            setShowModal(false);
+            setEditingProject(null);
+          }}
+          onSave={handleSaveProject}
+        />
       )}
     </div>
   );

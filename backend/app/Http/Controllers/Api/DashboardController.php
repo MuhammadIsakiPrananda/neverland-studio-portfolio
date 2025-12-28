@@ -21,6 +21,9 @@ class DashboardController extends Controller
     public function getOverviewStats(Request $request)
     {
         try {
+            // Set max execution time
+            set_time_limit(5);
+            
             $stats = [
                 'users' => $this->getUserStats(),
                 'contacts' => $this->getContactStats(),
@@ -37,10 +40,22 @@ class DashboardController extends Controller
         } catch (\Exception $e) {
             \Log::error('Dashboard stats error: ' . $e->getMessage());
             return response()->json([
-                'success' => true,  // Return success but with zero data
+                'success' => true,  // Return success but with empty data
                 'data' => $this->getEmptyStats()
             ], 200);
         }
+    }
+    
+    private function getEmptyStats()
+    {
+        return [
+            'users' => ['total' => 0, 'today' => 0, 'this_week' => 0, 'this_month' => 0],
+            'contacts' => ['total' => 0, 'new' => 0, 'today' => 0],
+            'enrollments' => ['total' => 0, 'pending' => 0, 'approved' => 0, 'today' => 0],
+            'consultations' => ['total' => 0, 'pending' => 0, 'scheduled' => 0, 'today' => 0],
+            'newsletters' => ['total' => 0, 'today' => 0],
+            'logins' => ['total' => 0, 'today' => 0, 'failed_today' => 0],
+        ];
     }
 
     private function getUserStats()
@@ -128,18 +143,6 @@ class DashboardController extends Controller
             \Log::warning('Login stats error: ' . $e->getMessage());
             return ['total' => 0, 'today' => 0, 'failed_today' => 0];
         }
-    }
-
-    private function getEmptyStats()
-    {
-        return [
-            'users' => ['total' => 0, 'today' => 0, 'this_week' => 0, 'this_month' => 0],
-            'contacts' => ['total' => 0, 'new' => 0, 'today' => 0],
-            'enrollments' => ['total' => 0, 'pending' => 0, 'approved' => 0, 'today' => 0],
-            'consultations' => ['total' => 0, 'pending' => 0, 'scheduled' => 0, 'today' => 0],
-            'newsletters' => ['total' => 0, 'today' => 0],
-            'logins' => ['total' => 0, 'today' => 0, 'failed_today' => 0],
-        ];
     }
 
     /**
@@ -335,12 +338,6 @@ class DashboardController extends Controller
                     'active' => Newsletter::where('is_active', true)->count(),
                     'today' => Newsletter::whereDate('created_at', Carbon::today())->count(),
                     'this_month' => Newsletter::whereMonth('created_at', Carbon::now()->month)->count(),
-                ],
-                'activity' => $this->getActivityStats(),
-                'system' => [
-                    'database_size' => $this->getDatabaseSize(),
-                    'uptime' => 'N/A', // Can be enhanced with cache tracking
-                    'last_backup' => 'N/A', // Can be enhanced with backup tracking
                 ],
             ];
 

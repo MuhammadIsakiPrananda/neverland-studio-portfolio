@@ -70,6 +70,15 @@ Route::prefix('admin')->group(function () {
 
     // Newsletter management
     Route::get('/newsletters', [NewsletterController::class, 'index']);
+    Route::delete('/newsletters/{id}', [NewsletterController::class, 'destroy']);
+    Route::get('/newsletters/export', [NewsletterController::class, 'export']);
+
+    // Analytics
+    Route::get('/analytics/overview', [App\Http\Controllers\Admin\AnalyticsController::class, 'overview']);
+    Route::get('/analytics/visitors', [App\Http\Controllers\Admin\AnalyticsController::class, 'visitors']);
+    Route::get('/analytics/traffic', [App\Http\Controllers\Admin\AnalyticsController::class, 'traffic']);
+    Route::get('/analytics/conversions', [App\Http\Controllers\Admin\AnalyticsController::class, 'conversions']);
+    Route::get('/analytics/pages', [App\Http\Controllers\Admin\AnalyticsController::class, 'pages']);
 
     // Project management
     Route::get('/projects', [ProjectController::class, 'index']);
@@ -78,6 +87,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/projects/{id}', [ProjectController::class, 'show']);
     Route::put('/projects/{id}', [ProjectController::class, 'update']);
     Route::delete('/projects/{id}', [ProjectController::class, 'destroy']);
+    Route::post('/projects/{id}/upload', [App\Http\Controllers\Admin\ProjectController::class, 'uploadImages']);
+    Route::get('/projects/meta/categories', [App\Http\Controllers\Admin\ProjectController::class, 'categories']);
 
     // User management
     Route::get('/users', [UserController::class, 'index']);

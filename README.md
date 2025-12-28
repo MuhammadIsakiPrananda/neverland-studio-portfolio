@@ -12,14 +12,30 @@
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com)
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](docs/CONTRIBUTING.md)
 [![Code Style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://prettier.io/)
+[![Production](https://img.shields.io/badge/Production-Ready-success?style=flat-square)](docs/PRODUCTION_READY.md)
 
 **Enterprise-grade portfolio platform with powerful admin dashboard, real-time analytics, and comprehensive security controls**
 
-[✨ Features](#-key-features) • [🚀 Quick Start](#-quick-start) • [📚 Documentation](#-documentation) • [🐛 Report Bug](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/issues)
+🌐 **Live Demo**: [portfolio.neverlandstudio.my.id](https://portfolio.neverlandstudio.my.id)
+
+[✨ Features](#-key-features) • [🚀 Quick Start](#-quick-start) • [📚 Documentation](#-documentation) • [🐳 Deploy](docs/CLOUDFLARE_TUNNEL_DEPLOYMENT.md) • [🐛 Report Bug](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/issues)
 
 </div>
+
+---
+
+## 🎯 Production Ready!
+
+This project is **production-ready** and deployed at **[portfolio.neverlandstudio.my.id](https://portfolio.neverlandstudio.my.id)** using Cloudflare Tunnel.
+
+- ✅ **Cloudflare Tunnel Setup** - No SSL configuration needed
+- ✅ **Real-time Analytics** - Live dashboard with 5-second updates
+- ✅ **Docker Production Ready** - One-command deployment
+- ✅ **Complete Documentation** - Step-by-step guides
+
+📖 **[Quick Deploy Guide](docs/CLOUDFLARE_TUNNEL_DEPLOYMENT.md)** | 📋 **[Production Checklist](docs/PRODUCTION_READY.md)** | 📚 **[All Documentation](docs/)**
 
 ---
 
@@ -1604,11 +1620,13 @@ See [LICENSE](LICENSE) file for details.
 
 ### 📚 Resources
 
-- 📖 **Documentation:** [README.md](README.md)
-- 🐳 **Docker Guide:** [README.DOCKER.md](README.DOCKER.md)
-- 🔐 **OAuth Setup:** [OAUTH_SETUP.md](OAUTH_SETUP.md)
-- 📡 **API Docs:** [API.md](API.md)
-- 🤝 **Contributing:** [CONTRIBUTING.md](CONTRIBUTING.md)
+- 📖 **Documentation:** [All Docs](docs/)
+- 🚀 **Production Guide:** [Cloudflare Tunnel Deployment](docs/CLOUDFLARE_TUNNEL_DEPLOYMENT.md)
+- 🐳 **Docker Guide:** [Docker Setup](docs/README.DOCKER.md)
+- 🔐 **OAuth Setup:** [OAuth Configuration](docs/OAUTH_SETUP.md)
+- 📡 **API Docs:** [API Reference](docs/API.md)
+- 🤝 **Contributing:** [Contributing Guide](docs/CONTRIBUTING.md)
+- 🔒 **Security:** [Security Policy](docs/SECURITY.md)
 
 ### 🆘 Get Help
 
@@ -1695,10 +1713,10 @@ Special thanks to the amazing open-source community:
 [![GitHub Forks](https://img.shields.io/github/forks/MuhammadIsakiPrananda/neverland-studio-portfolio?style=social)](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/network/members)
 [![GitHub Watchers](https://img.shields.io/github/watchers/MuhammadIsakiPrananda/neverland-studio-portfolio?style=social)](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/watchers)
 
-[🌟 GitHub Repository](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio) • [📖 Documentation](README.md) • [🐳 Docker Guide](README.DOCKER.md) • [🔐 OAuth Setup](OAUTH_SETUP.md)
+[🌟 GitHub Repository](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio) • [� Documentation](docs/) • [🚀 Deploy Guide](docs/CLOUDFLARE_TUNNEL_DEPLOYMENT.md) • [🐳 Docker](docs/README.DOCKER.md)
 
 ---
 
-**Version 1.5.0** • Last Updated: January 2025
+**Version 1.5.0** • Last Updated: December 2025
 
 </div>

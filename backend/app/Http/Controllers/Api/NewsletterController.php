@@ -55,7 +55,7 @@ class NewsletterController extends Controller
                     Log::info('Newsletter re-subscription', [
                         'email' => $existing->email,
                     ]);
-                    
+
                     // Log to Activity Log (without auth user - public newsletter form)
                     ActivityLogService::logCustom(
                         null,
@@ -89,7 +89,7 @@ class NewsletterController extends Controller
             Log::info('New newsletter subscription', [
                 'email' => $newsletter->email,
             ]);
-            
+
             // Log to Activity Log (without auth user - public newsletter form)
             ActivityLogService::logCreate(null, 'newsletter', "New newsletter subscription: {$newsletter->email}");
 
@@ -105,7 +105,7 @@ class NewsletterController extends Controller
             Log::error('Newsletter subscription error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to subscribe. Please try again.',
@@ -152,7 +152,7 @@ class NewsletterController extends Controller
             Log::info('Newsletter unsubscription', [
                 'email' => $newsletter->email,
             ]);
-            
+
             // Log to Activity Log (without auth user - public unsubscribe)
             ActivityLogService::logCustom(
                 null,
@@ -170,7 +170,7 @@ class NewsletterController extends Controller
             Log::error('Newsletter unsubscription error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to unsubscribe. Please try again.',
@@ -207,10 +207,106 @@ class NewsletterController extends Controller
             Log::error('Get newsletter subscribers error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve subscribers.',
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+            ], 500);
+        }
+    }
+
+    /**
+     * Delete a newsletter subscriber (admin only)
+     * 
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($id)
+    {
+        try {
+            $newsletter = Newsletter::findOrFail($id);
+            $email = $newsletter->email;
+
+            $newsletter->delete();
+
+            Log::info('Newsletter subscriber deleted', ['email' => $email]);
+
+            ActivityLogService::logDelete(null, 'newsletter', "Deleted newsletter subscriber: {$email}");
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Subscriber deleted successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Delete subscriber error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete subscriber',
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+            ], 500);
+        }
+    }
+
+    /**
+     * Export subscribers to CSV (admin only)
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function export(Request $request)
+    {
+        try {
+            $isActive = $request->input('is_active');
+
+            $query = Newsletter::query()->orderBy('created_at', 'desc');
+
+            if ($isActive !== null) {
+                $query->where('is_active', $isActive);
+            }
+
+            $subscribers = $query->get();
+
+            // Create CSV
+            $filename = 'newsletter_subscribers_' . date('Y-m-d_His') . '.csv';
+            $headers = [
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            ];
+
+            $callback = function () use ($subscribers) {
+                $file = fopen('php://output', 'w');
+
+                // Add BOM for Excel UTF-8 support
+                fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+                // Add headers
+                fputcsv($file, ['Email', 'Status', 'Subscribed At', 'Unsubscribed At', 'IP Address']);
+
+                // Add data
+                foreach ($subscribers as $subscriber) {
+                    fputcsv($file, [
+                        $subscriber->email,
+                        $subscriber->is_active ? 'Active' : 'Unsubscribed',
+                        $subscriber->subscribed_at ? $subscriber->subscribed_at->format('Y-m-d H:i:s') : '',
+                        $subscriber->unsubscribed_at ? $subscriber->unsubscribed_at->format('Y-m-d H:i:s') : '',
+                        $subscriber->ip_address ?? '',
+                    ]);
+                }
+
+                fclose($file);
+            };
+
+            Log::info('Newsletter subscribers exported', ['count' => $subscribers->count()]);
+
+            return response()->stream($callback, 200, $headers);
+        } catch (\Exception $e) {
+            Log::error('Export subscribers error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to export subscribers',
                 'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
             ], 500);
         }

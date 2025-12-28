@@ -1722,7 +1722,7 @@ const translations = {
         technologies: 'Teknologi',
         frameworks: 'Framework',
         certifications: 'Sertifikasi',
-        experience: 'Pengalaman',
+        experience: 'Tahun Pengalaman',
         years: 'Tahun'
       },
       categories: {

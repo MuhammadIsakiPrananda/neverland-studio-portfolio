@@ -1,4 +1,7 @@
-const API_BASE_URL = 'http://127.0.0.1:8000/api';
+import { getApiUrl } from '../config/api.config';
+
+// Use centralized API configuration
+const API_BASE_URL = getApiUrl();
 
 // TypeScript Interfaces
 export interface OverviewStats {

@@ -54,11 +54,13 @@ export interface ChartDataPoint {
 
 const dashboardService = {
   /**
-   * Get dashboard overview statistics
+   * Get dashboard overview statistics - REAL-TIME from backend
    */
   async getOverviewStats(): Promise<DashboardStats> {
     try {
-      const response = await api.get('/dashboard/overview-stats');
+      const response = await api.get('/dashboard/overview-stats', {
+        timeout: 8000 // 8 second timeout
+      });
       return response.data.data;
     } catch (error: any) {
       console.error('Error fetching overview stats:', error);

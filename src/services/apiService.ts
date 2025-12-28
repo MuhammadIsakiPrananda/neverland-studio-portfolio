@@ -1,6 +1,8 @@
 import axios from 'axios';
+import { getApiUrl } from '../config/api.config';
 
-const API_URL = 'http://127.0.0.1:8000/api';
+// Use centralized API configuration
+const API_URL = getApiUrl();
 
 // Create axios instance with default config
 const api = axios.create({
@@ -8,7 +10,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 30000, // 30 second timeout (increased from 5s)
+  timeout: 15000, // 15 second timeout (balanced)
   withCredentials: true, // Enable CORS credentials
 });
 

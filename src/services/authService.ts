@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { showError, showSuccess } from '../components/common/ModernNotification';
+import { getApiUrl } from '../config/api.config';
 
-const API_BASE_URL = 'http://127.0.0.1:8000/api';
+// Use centralized API configuration
+const API_BASE_URL = getApiUrl();
 
 // Create axios instance
 const api = axios.create({
@@ -172,10 +174,15 @@ export const authService = {
    */
   async getCurrentUser(): Promise<User | null> {
     try {
-      const response = await api.get<{ success: boolean; data: { user: User } }>('/auth/user');
+      const response = await api.get<{ success: boolean; data: { user: User } }>('/auth/user', {
+        timeout: 5000 // Shorter timeout for user check
+      });
       return response.data.data.user;
-    } catch (error) {
-      console.error('Get user error:', error);
+    } catch (error: any) {
+      // Only log non-timeout errors
+      if (error.code !== 'ECONNABORTED') {
+        console.error('Get user error:', error);
+      }
       return null;
     }
   },

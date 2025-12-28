@@ -13,6 +13,8 @@ import {
 import logoImage from "../../assets/Profile Neverland Studio.jpg";
 import type { Theme } from "../../types";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { showSuccess, showError } from '../common/ModernNotification';
+import api from '../../services/apiService';
 import PrivacyPolicyModal from "../modals/PrivacyPolicyModal";
 import TermsModal from "../modals/TermsModal";
 import CookiePolicyModal from "../modals/CookiePolicyModal";
@@ -27,6 +29,35 @@ export default function Footer({ theme, setCurrentPage }: FooterProps) {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [showCookiePolicy, setShowCookiePolicy] = useState(false);
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [isSubscribing, setIsSubscribing] = useState(false);
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!newsletterEmail || !newsletterEmail.includes('@')) {
+      showError('Invalid Email', 'Please enter a valid email address');
+      return;
+    }
+
+    setIsSubscribing(true);
+    try {
+      await api.post('/newsletter/subscribe', { email: newsletterEmail });
+      showSuccess(
+        'Subscribed Successfully! 🎉',
+        'Thank you for subscribing to our newsletter!'
+      );
+      setNewsletterEmail('');
+    } catch (error: any) {
+      console.error('Newsletter subscription failed:', error);
+      showError(
+        'Subscription Failed',
+        error.response?.data?.message || 'Please try again later'
+      );
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
 
   return (
     <>
@@ -193,19 +224,29 @@ export default function Footer({ theme, setCurrentPage }: FooterProps) {
                   <p className="text-slate-400 mb-4 text-xs">
                     {t('footer.newsletterDesc')}
                   </p>
-                  <div className="flex gap-2">
+                  <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
                     <input
                       type="email"
+                      value={newsletterEmail}
+                      onChange={(e) => setNewsletterEmail(e.target.value)}
                       placeholder={t('footer.emailPlaceholder')}
-                      className="flex-1 px-3 py-2 rounded-lg bg-slate-900/50 border border-slate-800 text-slate-200 placeholder-slate-500 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      disabled={isSubscribing}
+                      className="flex-1 px-3 py-2 rounded-lg bg-slate-900/50 border border-slate-800 text-slate-200 placeholder-slate-500 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      required
                     />
                     <button
-                      className="px-3 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-500 hover:to-cyan-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/30 hover:scale-105"
+                      type="submit"
+                      disabled={isSubscribing}
+                      className="px-3 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-500 hover:to-cyan-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/30 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                       aria-label="Subscribe to newsletter"
                     >
-                      <Send className="w-4 h-4" />
+                      {isSubscribing ? (
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      ) : (
+                        <Send className="w-4 h-4" />
+                      )}
                     </button>
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>

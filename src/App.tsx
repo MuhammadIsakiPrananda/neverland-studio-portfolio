@@ -38,12 +38,12 @@ import DashboardLogs from './components/dashboard/DashboardLogs';
 import Settings from './components/dashboard/Settings';
 import DashboardLogin from './components/auth/DashboardLogin';
 import OAuthCallback from './components/auth/OAuthCallback';
+import ResetPassword from './components/auth/ResetPassword';
 import LoginModal from './components/modals/LoginModal';
 import RegisterModal from './components/modals/RegisterModal';
 import ForgotPasswordModal from './components/modals/ForgotPasswordModal';
 import TermsModal from './components/modals/TermsModal';
 import PrivacyPolicyModal from './components/modals/PrivacyPolicyModal';
-import SimpleLoginModal from './components/common/LoginModal';
 import ProfileEditModal from './components/common/ProfileEditModal';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import type { Theme, User, ContactMessage } from './types';
@@ -83,7 +83,6 @@ function AppContent() {
     }
     return null;
   });
-  const [showSimpleLogin, setShowSimpleLogin] = useState(false);
   const [showProfileEdit, setShowProfileEdit] = useState(false);
   const [userProfile, setUserProfile] = useState<any>(() => {
     // Try to get saved profile first (includes custom avatar)
@@ -112,9 +111,7 @@ function AppContent() {
     }
     return {};
   });
-  const [showFloatingMenu, setShowFloatingMenu] = useState(false);
-  const [pricingPlans, setPricingPlans] = useState(initialPricingPlans);
-  const [contactMessages, setContactMessages] = useState<ContactMessage[]>([]);
+  const [pricingPlans] = useState(initialPricingPlans);
 
   // Get current page from location
   const currentPage = location.pathname.substring(1) || 'home';
@@ -256,60 +253,7 @@ function AppContent() {
     }
   };
 
-  // Handler for dashboard login page success
-  const handleLoginSuccess = async (_token: string, user: any) => {
-    try {
-      // Fetch complete profile data from database
-      const profileResponse = await profileService.getProfile();
-      
-      if (profileResponse.success && profileResponse.data) {
-        const userData = profileResponse.data;
-        
-        // Transform to frontend format
-        const realtimeProfile = {
-          username: userData.username || userData.email.split('@')[0],
-          name: userData.name,
-          email: userData.email,
-          phone: userData.phone || '',
-          bio: userData.bio || '',
-          location: userData.location || '',
-          website: userData.website || '',
-          avatar: userData.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(userData.name)}&backgroundColor=b6e3f4,c0aede,d1d4f9`,
-          github: userData.github || '',
-          twitter: userData.twitter || '',
-          linkedin: userData.linkedin || '',
-          instagram: userData.instagram || '',
-          role: 'user'
-        };
-        
-        setUserProfile(realtimeProfile);
-        setCurrentUser({
-          id: userData.id.toString(),
-          name: userData.name,
-          email: userData.email,
-          role: 'user',
-          avatar: realtimeProfile.avatar
-        });
-        
-        // Save to localStorage
-        localStorage.setItem('userProfile', JSON.stringify(realtimeProfile));
-        localStorage.setItem('user', JSON.stringify(userData));
-        
-        console.log('Dashboard login successful! Profile synced:', userData.name);
-      } else {
-        // Fallback to provided user data
-        setCurrentUser(user);
-      }
-    } catch (error) {
-      console.error('Error fetching profile after dashboard login:', error);
-      // Fallback to provided user data
-      setCurrentUser(user);
-    }
-    
-    setIsAuthenticated(true);
-    // Navigate to dashboard after successful login from dashboard login page
-    navigate('/dashboard');
-  };
+
 
   const handleRegister = async () => {
     try {
@@ -386,23 +330,6 @@ function AppContent() {
       localStorage.removeItem('user');
       navigate('/');
     }
-  };
-
-  // Simple Login Handlers
-  const handleSimpleLogin = (username: string) => {
-    const defaultProfile = {
-      username,
-      name: 'Admin User',
-      email: 'admin@neverlandstudio.com',
-      bio: 'Administrator of Neverland Studio',
-      location: 'Jakarta, Indonesia',
-      website: 'https://neverlandstudio.com',
-      avatar: ''
-    };
-    setUserProfile(defaultProfile);
-    setIsAuthenticated(true);
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('userProfile', JSON.stringify(defaultProfile));
   };
 
   const handleSimpleLogout = () => {
@@ -507,14 +434,9 @@ function AppContent() {
     }
   };
 
-  const handleContactSubmit = (data: any) => {
-    const newMessage: ContactMessage = {
-      id: Date.now().toString(),
-      ...data,
-      date: new Date().toISOString(),
-      status: 'new'
-    };
-    setContactMessages(prev => [newMessage, ...prev]);
+  const handleContactSubmit = (_data: any) => {
+    // Contact submission is handled by the backend API
+    // This function is kept for compatibility but doesn't store locally anymore
   };
 
   // Navigation handler
@@ -549,7 +471,6 @@ function AppContent() {
           handleLogout={handleLogout}
           setShowLoginModal={setShowLoginModal}
           userProfile={userProfile}
-          onShowSimpleLogin={() => setShowSimpleLogin(true)}
           onShowProfileEdit={() => setShowProfileEdit(true)}
           onSimpleLogout={handleSimpleLogout}
         />
@@ -601,6 +522,10 @@ function AppContent() {
           <Route 
             path="/auth/callback" 
             element={<OAuthCallback />} 
+          />
+          <Route 
+            path="/reset-password" 
+            element={<ResetPassword />} 
           />
           <Route 
             path="/dashboard/users" 
@@ -866,15 +791,6 @@ function AppContent() {
         <PrivacyPolicyModal
           theme={theme}
           onClose={() => setShowPrivacyModal(false)}
-        />
-      )}
-
-      {showSimpleLogin && (
-        <SimpleLoginModal
-          theme={theme}
-          isOpen={showSimpleLogin}
-          onClose={() => setShowSimpleLogin(false)}
-          onLogin={handleSimpleLogin}
         />
       )}
 

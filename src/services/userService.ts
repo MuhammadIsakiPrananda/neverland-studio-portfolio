@@ -1,4 +1,7 @@
-const API_BASE_URL = 'http://127.0.0.1:8000/api';
+import { getApiUrl } from '../config/api.config';
+
+// Use centralized API configuration
+const API_BASE_URL = getApiUrl();
 
 export interface User {
   id: number;
@@ -111,7 +114,8 @@ class UserService {
     } catch (error: any) {
       // Provide more specific error messages
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        throw new Error('Cannot connect to backend server. Please ensure the backend is running at http://127.0.0.1:8000');
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
+        throw new Error(`Cannot connect to backend server. Please ensure the backend is running at ${apiUrl.replace('/api', '')}`);
       }
       throw error;
     }

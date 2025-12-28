@@ -4,33 +4,49 @@ import { showInfo } from '../components/common/ModernNotification';
 export interface RealtimeStats {
   users: {
     total: number;
-    online: number;
-    new_today: number;
+    today: number;
+    online?: number;
+    new_this_hour?: number;
   };
   contacts: {
     total: number;
     new: number;
     unread: number;
+    today?: number;
+    in_progress?: number;
+    resolved?: number;
   };
   enrollments: {
     total: number;
     pending: number;
-    new_today: number;
+    approved?: number;
+    rejected?: number;
+    today?: number;
+    this_week?: number;
   };
   consultations: {
     total: number;
     pending: number;
-    new_today: number;
+    scheduled?: number;
+    contacted?: number;
+    in_progress?: number;
+    completed?: number;
+    cancelled?: number;
+    today?: number;
   };
   newsletters: {
     total: number;
-    new_today: number;
+    active?: number;
+    today?: number;
+    this_month?: number;
   };
-  activity_logs: {
+  logins?: {
     total: number;
     today: number;
-    last_activity: string;
+    failed_today?: number;
   };
+  activity?: any;
+  system?: any;
 }
 
 export interface RealtimeUpdate {
@@ -91,10 +107,15 @@ class RealtimeService {
    */
   async getRealtimeStats(): Promise<RealtimeStats> {
     try {
-      const response = await api.get<RealtimeStats>('/admin/realtime/stats');
+      const response = await api.get<RealtimeStats>('/admin/realtime/stats', {
+        timeout: 10000 // Shorter timeout for realtime stats
+      });
       return response.data;
-    } catch (error) {
-      console.error('Failed to fetch realtime stats:', error);
+    } catch (error: any) {
+      // Only log non-timeout errors
+      if (error.code !== 'ECONNABORTED') {
+        console.error('Failed to fetch realtime stats:', error);
+      }
       throw error;
     }
   }

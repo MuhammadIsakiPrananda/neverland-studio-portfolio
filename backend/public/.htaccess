@@ -1,3 +1,14 @@
+<IfModule mod_php.c>
+    # Increase PHP execution time to 60 seconds
+    php_value max_execution_time 60
+    
+    # Increase PHP memory limit
+    php_value memory_limit 256M
+    
+    # Increase max input time  
+    php_value max_input_time 60
+</IfModule>
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
