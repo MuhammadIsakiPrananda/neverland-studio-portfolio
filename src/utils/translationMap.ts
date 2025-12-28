@@ -62,7 +62,7 @@ export const COMPONENT_TRANSLATION_MAP = {
     hook: "const { t } = useLanguage();",
     replacements: {
       'Request Consultation': "t('modals.consultation.title')",
-      'Let\\'s discuss your project needs': "t('modals.consultation.subtitle')",
+      "Let's discuss your project needs": "t('modals.consultation.subtitle')",
       'Full Name': "t('modals.consultation.form.name')",
       'Email Address': "t('modals.consultation.form.email')",
       'Phone Number': "t('modals.consultation.form.phone')",
@@ -168,7 +168,7 @@ export const COMPONENT_TRANSLATION_MAP = {
   'ContactPage': {
     replacements: {
       'Get in Touch': "t('contact.hero.title')",
-      'We\\'d Love to Hear From You': "t('contact.hero.subtitle')",
+      "We'd Love to Hear From You": "t('contact.hero.subtitle')",
       'Send us a Message': "t('contact.form.title')",
       'Your Name': "t('contact.form.name')",
       'Your Email': "t('contact.form.email')",

@@ -83,7 +83,7 @@ const DashboardConsultations: React.FC<DashboardConsultationsProps> = ({ theme }
     return () => {
       unsubscribe();
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);  
 
   const filteredConsultations = consultations.filter(consultation => {
     const matchesSearch = 

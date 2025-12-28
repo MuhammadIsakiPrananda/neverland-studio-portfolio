@@ -105,7 +105,7 @@ const DashboardContacts: React.FC<DashboardContactsProps> = ({ theme }) => {
     return () => {
       unsubscribe();
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);  
 
   const filteredContacts = contacts.filter(contact => {
     const matchesSearch = 

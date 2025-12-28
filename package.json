@@ -1,13 +1,49 @@
 {
-  "name": "neverlandstudio-portofolio",
-  "private": true,
-  "version": "0.0.0",
+  "name": "neverlandstudio-portfolio",
+  "private": false,
+  "version": "1.0.0",
   "type": "module",
+  "description": "Modern, full-stack portfolio website for Neverland Studio showcasing IT services, learning programs, and digital solutions",
+  "author": {
+    "name": "Neverland Studio",
+    "email": "hello@neverlandstudio.my.id",
+    "url": "https://portfolio.neverlandstudio.my.id"
+  },
+  "license": "MIT",
+  "homepage": "https://portfolio.neverlandstudio.my.id",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neverlandstudio/portfolio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/neverlandstudio/portfolio/issues",
+    "email": "hello@neverlandstudio.my.id"
+  },
+  "keywords": [
+    "portfolio",
+    "react",
+    "typescript",
+    "vite",
+    "laravel",
+    "fullstack",
+    "it-services",
+    "learning-platform"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "build": "vite build",
+    "build:check": "tsc -b && vite build",
+    "lint": "eslint . --max-warnings 0",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "prepare": "node -e \"try { require('husky') } catch (e) { if (e.code !== 'MODULE_NOT_FOUND') throw e }\" || echo 'Husky not installed'"
   },
   "dependencies": {
     "axios": "^1.13.2",
@@ -32,11 +68,23 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.0",
     "postcss": "^8.5.6",
+    "prettier": "^3.2.4",
     "tailwindcss": "^3",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
     "vite": "npm:rolldown-vite@7.2.5"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,css,md}": [
+      "prettier --write"
+    ]
   },
   "overrides": {
     "vite": "npm:rolldown-vite@7.2.5"

@@ -1,0 +1,41 @@
+# Dependencies
+node_modules
+vendor
+
+# Build outputs
+dist
+build
+*.log
+
+# Cache
+.cache
+.parcel-cache
+.vite
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+
+# Lock files
+package-lock.json
+composer.lock
+
+# Backend
+backend/vendor
+backend/storage
+backend/bootstrap/cache
+
+# Misc
+coverage
+*.min.js
+*.min.css

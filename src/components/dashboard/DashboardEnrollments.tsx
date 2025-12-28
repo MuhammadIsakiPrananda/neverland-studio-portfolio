@@ -85,7 +85,7 @@ const DashboardEnrollments: React.FC<DashboardEnrollmentsProps> = ({ theme }) =>
     return () => {
       unsubscribe();
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);  
 
   const filteredEnrollments = enrollments.filter(enrollment => {
     const matchesSearch = 

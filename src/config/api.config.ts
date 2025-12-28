@@ -10,7 +10,7 @@
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 // Default fallback for local development
-const DEFAULT_LOCAL_API_URL = 'http://127.0.0.1:8000/api';
+const DEFAULT_LOCAL_API_URL = 'http://localhost:8000/api';
 
 /**
  * Get the API base URL

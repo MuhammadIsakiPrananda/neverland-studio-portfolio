@@ -1,34 +1,70 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
 # Dependencies
-node_modules
-dist
-dist-ssr
-*.local
+node_modules/
+vendor/
 
-# Environment files - Keep examples and templates only
+# Production builds
+dist/
+build/
+*.log
+
+# Environment files
 .env
 .env.local
 .env.*.local
-# Allow production/development examples to be committed
-!.env.development
-!.env.production
-!.env.local.example
+backend/.env
+!.env.example
+!backend/.env.example
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+
+# Testing
+coverage/
+*.test.js
+
+# Cache
+.cache/
+.parcel-cache/
+.vite/
+node_modules/.vite/
+*.tsbuildinfo
+
+# Laravel specific
+backend/storage/*.key
+backend/storage/logs/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/bootstrap/cache/*
+!backend/storage/.gitkeep
+!backend/storage/logs/.gitkeep
+
+# Database
+*.sqlite
+*.sqlite-journal
+
+# Temporary files
+*.tmp
+*.temp
+build-errors.txt
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Misc
+*.bak
+*.swp
+.env.backup

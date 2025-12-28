@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\NewsletterController;
 use App\Http\Controllers\Api\SocialAuthController;
 use App\Http\Controllers\Api\ActivityLogController;
 use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/health', function () {
     return response()->json(['status' => 'ok', 'message' => 'Backend is running']);
 });
+
+// Admin registration (no auth required for first registration)
+Route::post('/admin/register', [RegisterController::class, 'register']);
 
 // Public authentication routes
 Route::prefix('auth')->group(function () {

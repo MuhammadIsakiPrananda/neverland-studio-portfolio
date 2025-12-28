@@ -2,106 +2,98 @@ version: '3.8'
 
 services:
   # MySQL Database
-  mysql:
+  db:
     image: mysql:8.0
-    container_name: neverlandstudio-mysql
+    container_name: neverland-db
     restart: unless-stopped
+    env_file:
+      - ./backend/.env
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
-      MYSQL_DATABASE: ${DB_DATABASE:-neverlandstudio}
-      MYSQL_USER: ${DB_USERNAME:-neverlanduser}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-neverlandpass}
+      MYSQL_DATABASE: ${DB_DATABASE:-neverland_portfolio}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_USER: ${DB_USERNAME:-root}
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
-      - "${DB_PORT:-3306}:3306"
+      - "3306:3306"
     networks:
-      - neverlandstudio-network
+      - neverland-network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      timeout: 20s
+      retries: 10
 
   # Laravel Backend
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: neverlandstudio-backend
+    container_name: neverland-backend
     restart: unless-stopped
     working_dir: /var/www
+    env_file:
+      - ./backend/.env
     environment:
-      - APP_ENV=${APP_ENV:-production}
-      - APP_DEBUG=${APP_DEBUG:-false}
-      - APP_KEY=${APP_KEY}
-      - DB_CONNECTION=mysql
-      - DB_HOST=mysql
-      - DB_PORT=3306
-      - DB_DATABASE=${DB_DATABASE:-neverlandstudio}
-      - DB_USERNAME=${DB_USERNAME:-neverlanduser}
-      - DB_PASSWORD=${DB_PASSWORD:-neverlandpass}
+      - DB_HOST=db
     volumes:
       - ./backend:/var/www
-      - ./backend/storage:/var/www/storage
-      - ./backend/bootstrap/cache:/var/www/bootstrap/cache
+      - backend_storage:/var/www/storage
+    ports:
+      - "8000:8000"
     depends_on:
-      mysql:
+      db:
         condition: service_healthy
     networks:
-      - neverlandstudio-network
-    healthcheck:
-      test: ["CMD", "php-fpm", "-t"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      - neverland-network
 
-  # React Frontend (Build stage)
+  # React Frontend
   frontend:
     build:
       context: .
-      dockerfile: Dockerfile.frontend
+      dockerfile: Dockerfile
+      target: development
       args:
-        - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
-    container_name: neverlandstudio-frontend
+        - VITE_API_URL=${VITE_API_URL}
+    container_name: neverland-frontend
     restart: unless-stopped
+    env_file:
+      - ./.env
     volumes:
-      - frontend_build:/app/dist
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
     networks:
-      - neverlandstudio-network
+      - neverland-network
+    stdin_open: true
+    tty: true
 
-  # Nginx Web Server
+  # Nginx (for production)
   nginx:
     image: nginx:alpine
-    container_name: neverlandstudio-nginx
+    container_name: neverland-nginx
     restart: unless-stopped
     ports:
-      - "${HTTP_PORT:-80}:80"
-      - "${HTTPS_PORT:-443}:443"
+      - "80:80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro
-      - frontend_build:/usr/share/nginx/html:ro
-      - ./backend/public:/var/www/public:ro
-      - ./backend/storage/app/public:/var/www/storage/app/public:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - backend
       - frontend
     networks:
-      - neverlandstudio-network
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      - neverland-network
+    profiles:
+      - production
+
+networks:
+  neverland-network:
+    driver: bridge
 
 volumes:
   mysql_data:
     driver: local
-  frontend_build:
+  backend_storage:
     driver: local
-
-networks:
-  neverlandstudio-network:
-    driver: bridge
