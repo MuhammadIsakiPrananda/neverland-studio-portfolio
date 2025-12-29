@@ -36,6 +36,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:prod": "NODE_ENV=production vite build --mode production",
     "build:check": "tsc -b && vite build",
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
@@ -43,6 +44,11 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
+    "clean": "rimraf dist build node_modules/.vite",
+    "docker:build": "docker build --target production -t neverland-portfolio:latest .",
+    "docker:run": "docker-compose up -d",
+    "docker:stop": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
     "prepare": "node -e \"try { require('husky') } catch (e) { if (e.code !== 'MODULE_NOT_FOUND') throw e }\" || echo 'Husky not installed'"
   },
   "dependencies": {
