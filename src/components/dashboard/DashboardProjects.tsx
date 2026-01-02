@@ -45,6 +45,7 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
   const [filterStatus, setFilterStatus] = useState<'all' | 'draft' | 'published' | 'archived'>('all');
   const [showModal, setShowModal] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [deletingIds, setDeletingIds] = useState<Set<number>>(new Set());
 
   // Fetch projects from backend
   const fetchProjects = useCallback(async () => {
@@ -61,10 +62,9 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
       }
     } catch (error: any) {
       console.error('Error fetching projects:', error);
-      notificationService.showError('Failed to load projects');
+      showError('Load Failed', 'Failed to load projects');
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   }, [filterStatus, filterCategory, searchQuery]);
 
@@ -73,20 +73,48 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
     fetchProjects();
   }, [fetchProjects]);
 
+  // Realtime updates - listen for project changes
+  useEffect(() => {
+    const handleProjectUpdate = () => {
+      // Refresh projects list when changes occur
+      fetchProjects();
+    };
+
+    // Subscribe to realtime project updates
+    const unsubscribe = realtimeService.subscribe('projects', handleProjectUpdate);
+
+    return () => {
+      unsubscribe();
+    };
+  }, [fetchProjects]);
+
 
 
   const handleDeleteProject = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this project?')) return;
+    // Confirmation modal would be better, but using simple confirm for now
+    const confirmed = window.confirm('Are you sure you want to delete this project? This action cannot be undone.');
+    if (!confirmed) return;
+
+    // Add to deleting state
+    setDeletingIds(prev => new Set(prev).add(id));
 
     try {
       const response = await api.delete(`/admin/projects/${id}`);
       if (response.data.success) {
         showSuccess('Project Deleted', 'Project has been removed successfully');
+        // Realtime will trigger auto-refresh, but we'll also call fetchProjects for immediate update
         fetchProjects();
       }
     } catch (error) {
       console.error('Error deleting project:', error);
       showError('Delete Failed', 'Failed to delete project. Please try again.');
+    } finally {
+      // Remove from deleting state
+      setDeletingIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(id);
+        return newSet;
+      });
     }
   };
 
@@ -99,6 +127,7 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
           showSuccess('Project Updated', 'Changes saved successfully');
           setShowModal(false);
           setEditingProject(null);
+          // Realtime will trigger auto-refresh, but we'll also call fetchProjects for immediate update
           fetchProjects();
         }
       } else {
@@ -107,6 +136,7 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
         if (response.data.success) {
           showSuccess('Project Created', 'New project added successfully');
           setShowModal(false);
+          // Realtime will trigger auto-refresh, but we'll also call fetchProjects for immediate update
           fetchProjects();
         }
       }
@@ -153,11 +183,15 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
     }
   };
 
-  const ProjectCard = ({ project }: { project: Project }) => (
+  const ProjectCard = ({ project }: { project: Project }) => {
+    const isDeleting = deletingIds.has(project.id);
+    
+    return (
     <div
       className={`
         group rounded-xl border overflow-hidden transition-all duration-300 hover:scale-105
         ${isDark ? 'bg-slate-900/50 border-slate-800 hover:border-blue-500/30' : 'bg-white border-slate-200 hover:border-blue-300'}
+        ${isDeleting ? 'opacity-50 pointer-events-none' : ''}
       `}
     >
       {/* Project Image */}
@@ -190,7 +224,7 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
         </p>
 
         <div className="flex items-center gap-2 mb-3 flex-wrap">
-          {project.technologies.slice(0, 3).map((tech, idx) => (
+          {Array.isArray(project.technologies) && project.technologies.slice(0, 3).map((tech, idx) => (
             <span
               key={idx}
               className={`text-xs px-2 py-1 rounded ${isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-700'}`}
@@ -198,7 +232,7 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
               {tech}
             </span>
           ))}
-          {project.technologies.length > 3 && (
+          {Array.isArray(project.technologies) && project.technologies.length > 3 && (
             <span className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
               +{project.technologies.length - 3}
             </span>
@@ -238,24 +272,36 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
             <Edit className="w-4 h-4" />
           </button>
           <button
+            onClick={() => handleDeleteProject(project.id)}
+            disabled={isDeleting}
             className={`
               p-2 rounded-lg transition-colors
               ${isDark ? 'hover:bg-red-500/20 text-red-400' : 'hover:bg-red-50 text-red-600'}
+              ${isDeleting ? 'opacity-50 cursor-not-allowed' : ''}
             `}
             title="Delete project"
           >
-            <Trash2 className="w-4 h-4" />
+            {isDeleting ? (
+              <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Trash2 className="w-4 h-4" />
+            )}
           </button>
         </div>
       </div>
     </div>
   );
+  };
 
-  const ProjectListItem = ({ project }: { project: Project }) => (
+  const ProjectListItem = ({ project }: { project: Project }) => {
+    const isDeleting = deletingIds.has(project.id);
+    
+    return (
     <div
       className={`
         p-4 rounded-xl border transition-colors
         ${isDark ? 'bg-slate-900/50 border-slate-800 hover:border-blue-500/30' : 'bg-white border-slate-200 hover:border-blue-300'}
+        ${isDeleting ? 'opacity-50 pointer-events-none' : ''}
       `}
     >
       <div className="flex items-center gap-4">
@@ -290,7 +336,7 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
               <Calendar className="w-3 h-3 inline mr-1" />
               {new Date(project.date).toLocaleDateString()}
             </span>
-            {project.technologies.slice(0, 2).map((tech, idx) => (
+            {Array.isArray(project.technologies) && project.technologies.slice(0, 2).map((tech, idx) => (
               <span key={idx} className={`px-2 py-0.5 rounded ${isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-700'}`}>
                 {tech}
               </span>
@@ -307,6 +353,7 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
             <Eye className="w-4 h-4" />
           </button>
           <button
+            onClick={() => handleEditProject(project)}
             className={`p-2 rounded-lg transition-colors ${isDark ? 'hover:bg-slate-800 text-slate-400' : 'hover:bg-slate-100 text-slate-600'}`}
             title="Edit project"
           >
@@ -314,15 +361,21 @@ const DashboardProjects: React.FC<DashboardProjectsProps> = ({ theme }) => {
           </button>
           <button
             onClick={() => handleDeleteProject(project.id)}
-            className={`p-2 rounded-lg transition-colors ${isDark ? 'hover:bg-red-500/20 text-red-400' : 'hover:bg-red-50 text-red-600'}`}
+            disabled={isDeleting}
+            className={`p-2 rounded-lg transition-colors ${isDark ? 'hover:bg-red-500/20 text-red-400' : 'hover:bg-red-50 text-red-600'} ${isDeleting ? 'opacity-50 cursor-not-allowed' : ''}`}
             title="Delete project"
           >
-            <Trash2 className="w-4 h-4" />
+            {isDeleting ? (
+              <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Trash2 className="w-4 h-4" />
+            )}
           </button>
         </div>
       </div>
     </div>
   );
+  };
 
   return (
     <div className="space-y-6">

@@ -19,8 +19,6 @@ class Project extends Model
         'status',
         'featured',
         'image',
-        'technologies',
-        'client',
         'date',
         'url',
     ];

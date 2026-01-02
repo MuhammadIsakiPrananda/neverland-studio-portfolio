@@ -23,26 +23,49 @@ export default function BaseModal({
   showPattern = true,
 }: BaseModalProps) {
 
-  // Disable body scroll when modal is open
+  // Disable body scroll when modal is open - Improved for mobile
   useEffect(() => {
-    // Store original overflow style
     const originalOverflow = document.body.style.overflow;
+    const originalPosition = document.body.style.position;
+    const originalWidth = document.body.style.width;
+    const scrollY = window.scrollY;
     
-    // Disable scroll
-    document.body.style.overflow = 'hidden';
+    // For mobile, use simpler approach to prevent scroll jump
+    const isMobile = window.innerWidth < 768;
     
-    // Re-enable scroll on cleanup
+    if (isMobile) {
+      // On mobile, just prevent scroll without position change
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+    } else {
+      // On desktop, use the full fix
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+    }
+    
     return () => {
       document.body.style.overflow = originalOverflow;
+      document.body.style.position = originalPosition;
+      document.body.style.width = originalWidth;
+      document.body.style.touchAction = '';
+      
+      if (!isMobile) {
+        document.body.style.top = '';
+        window.scrollTo(0, scrollY);
+      }
     };
   }, []);
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md animate-fadeInBackdrop p-2 sm:p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md animate-fadeInBackdrop p-2 sm:p-4 overflow-y-auto"
+      style={{ touchAction: 'none' }}
     >
       <div
-        className="relative w-full max-w-5xl h-auto max-h-[90vh] sm:max-h-[95vh] sm:h-[600px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] animate-modalSlideIn flex flex-col sm:flex-row"
+        className="relative w-full max-w-5xl h-auto max-h-[92vh] sm:max-h-[95vh] sm:h-[600px] rounded-xl sm:rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] animate-modalSlideIn flex flex-col sm:flex-row my-auto"
+        style={{ touchAction: 'pan-y' }}
         key={title}
       >
         {/* Left Side - Pattern/Illustration (40%) */}
@@ -115,41 +138,41 @@ export default function BaseModal({
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 z-0" />
 
           {/* Content Area with Scroll */}
-          <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 sm:px-8 pb-6 sm:pb-8 scrollbar-hide">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 sm:px-8 pb-6 sm:pb-8 scrollbar-hide overscroll-contain">
             {/* Header with Close Button */}
-            <div className="relative pt-6 sm:pt-8 pb-0">
+            <div className="relative pt-4 sm:pt-6 pb-0">
               {/* Close Button - Clean */}
               <button
                 onClick={onClose}
-                className="absolute top-4 right-0 z-20 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 transition-colors"
+                className="absolute top-3 sm:top-4 right-0 z-20 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-700 border border-slate-700 hover:border-slate-600 transition-colors touch-manipulation"
               >
-                <X className="w-5 h-5 text-slate-400 hover:text-white transition-colors" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400 hover:text-white transition-colors" />
               </button>
 
               {/* Back Button - Clean */}
               {onBack && (
                 <button
                   onClick={onBack}
-                  className="absolute top-4 left-0 z-20 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 transition-colors"
+                  className="absolute top-3 sm:top-4 left-0 z-20 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-700 border border-slate-700 hover:border-slate-600 transition-colors touch-manipulation"
                 >
-                  <ArrowLeft className="w-5 h-5 text-slate-400 hover:text-white transition-colors" />
+                  <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400 hover:text-white transition-colors" />
                 </button>
               )}
             </div>
 
-            <div className={`${onBack ? 'mt-4' : 'mt-8'}`}>
+            <div className={`${onBack ? 'mt-4 sm:mt-6' : 'mt-6 sm:mt-8'}`}>
               {/* Title */}
-              <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-400 via-blue-300 to-blue-400 bg-clip-text text-transparent drop-shadow-sm">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-2 bg-gradient-to-r from-blue-400 via-blue-300 to-blue-400 bg-clip-text text-transparent drop-shadow-sm">
                 {title}
               </h2>
               
               {/* Subtitle */}
-              <p className="text-sm mb-8 text-slate-400">
+              <p className="text-xs sm:text-sm mb-6 sm:mb-8 text-slate-400">
                 {subtitle}
               </p>
 
               {/* Form Content */}
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {children}
               </div>
             </div>
@@ -179,12 +202,33 @@ export default function BaseModal({
         .animate-modalSlideIn { animation: modalSlideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
         .animate-float { animation: float 7s ease-in-out infinite; }
         .animate-float-delayed { animation: floatDelayed 9s ease-in-out infinite; animation-delay: 1s; }
+        
+        /* Hide scrollbar */
         .scrollbar-hide {
           -ms-overflow-style: none;
           scrollbar-width: none;
+          -webkit-overflow-scrolling: touch;
         }
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
+        }
+        
+        /* Prevent scroll jump on mobile */
+        .overscroll-contain {
+          overscroll-behavior: contain;
+        }
+        
+        /* Touch manipulation for better mobile interaction */
+        .touch-manipulation {
+          -webkit-tap-highlight-color: transparent;
+          touch-action: manipulation;
+        }
+        
+        /* Prevent zoom on input focus (mobile) */
+        @media (max-width: 768px) {
+          input, textarea, select {
+            font-size: 16px !important;
+          }
         }
       `}</style>
     </div>

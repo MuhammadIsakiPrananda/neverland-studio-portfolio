@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\NewsletterController;
 use App\Http\Controllers\Api\SocialAuthController;
 use App\Http\Controllers\Api\ActivityLogController;
 use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\MaintenanceController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/health', function () {
     return response()->json(['status' => 'ok', 'message' => 'Backend is running']);
 });
+
+// Maintenance mode check (public)
+Route::get('/maintenance/status', [MaintenanceController::class, 'checkStatus']);
 
 // Admin registration (no auth required for first registration)
 Route::post('/admin/register', [RegisterController::class, 'register']);
@@ -50,6 +54,10 @@ Route::post('/consultations', [ConsultationController::class, 'store']);
 Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe']);
 Route::post('/newsletter/unsubscribe', [NewsletterController::class, 'unsubscribe']);
 
+// Public projects endpoint (for main website)
+Route::get('/projects', [ProjectController::class, 'index']);
+Route::get('/projects/{id}', [ProjectController::class, 'show']);
+
 // Dashboard routes - accessible without backend auth (frontend has its own protection)
 Route::prefix('dashboard')->group(function () {
     Route::get('/overview-stats', [App\Http\Controllers\Api\DashboardController::class, 'getOverviewStats']);
@@ -67,6 +75,7 @@ Route::prefix('admin')->group(function () {
     // Enrollment management
     Route::get('/enrollments', [EnrollmentController::class, 'index']);
     Route::patch('/enrollments/{id}/status', [EnrollmentController::class, 'updateStatus']);
+    Route::delete('/enrollments/{id}', [EnrollmentController::class, 'destroy']);
 
     // Consultation management
     Route::get('/consultations', [ConsultationController::class, 'index']);
@@ -111,6 +120,10 @@ Route::prefix('admin')->group(function () {
     Route::post('/activity-logs', [ActivityLogController::class, 'store']);
     Route::delete('/activity-logs/cleanup', [ActivityLogController::class, 'cleanup']);
     Route::get('/activity-logs/user/{userId}', [ActivityLogController::class, 'userLogs']);
+
+    // Maintenance mode management
+    Route::get('/maintenance', [MaintenanceController::class, 'getSettings']);
+    Route::put('/maintenance', [MaintenanceController::class, 'updateSettings']);
 
     // Real-time dashboard stats
     Route::get('/realtime/stats', [App\Http\Controllers\Api\DashboardController::class, 'getRealtimeStats']);

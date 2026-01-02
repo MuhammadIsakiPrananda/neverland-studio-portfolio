@@ -202,46 +202,16 @@ const DashboardActivity: React.FC<DashboardActivityProps> = ({ theme }) => {
             Activity Log
           </h1>
           <p className={`mt-1 text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-            Monitor all system activities and user actions • Last updated: {lastUpdate.toLocaleTimeString()}
+            Monitor all system activities and user actions
           </p>
         </div>
-        <div className="flex gap-3">
-          <button
-            onClick={() => setAutoRefresh(!autoRefresh)}
-            className={`
-              px-4 py-2 rounded-lg flex items-center gap-2 transition-colors
-              ${autoRefresh 
-                ? 'bg-green-500 text-white hover:bg-green-600' 
-                : isDark 
-                  ? 'bg-slate-800 text-slate-300 hover:bg-slate-700' 
-                  : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'}
-            `}
-          >
-            <Activity className={`w-4 h-4 ${autoRefresh ? 'animate-pulse' : ''}`} />
-            {autoRefresh ? 'Live' : 'Paused'}
-          </button>
-          <button
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-            className={`
-              px-4 py-2 rounded-lg flex items-center gap-2 transition-colors
-              ${isDark 
-                ? 'bg-slate-800 text-slate-300 hover:bg-slate-700' 
-                : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'}
-              disabled:opacity-50
-            `}
-          >
-            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-            Refresh
-          </button>
-          <button 
-            onClick={handleExport}
-            className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:shadow-lg hover:shadow-blue-500/30 transition-all flex items-center gap-2"
-          >
-            <Download className="w-4 h-4" />
-            Export
-          </button>
-        </div>
+        <button 
+          onClick={handleExport}
+          className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:shadow-lg hover:shadow-blue-500/30 transition-all flex items-center gap-2"
+        >
+          <Download className="w-4 h-4" />
+          Export
+        </button>
       </div>
 
       {/* Error Message */}

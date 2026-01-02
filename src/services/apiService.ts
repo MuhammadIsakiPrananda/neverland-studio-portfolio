@@ -112,17 +112,23 @@ export const profileService = {
     return response.data;
   },
 
-  // Update Profile
+  // Update Profile (includes avatar as base64)
   async updateProfile(data: any) {
     const response = await api.put('/profile', data);
     return response.data;
   },
 
-  // Upload Avatar
+  // Upload Avatar (dedicated endpoint for avatar only)
   async uploadAvatar(avatar: string) {
     const response = await api.post('/profile/avatar', { avatar });
     return response.data;
   },
+  
+  // Delete Avatar (reset to default)
+  async deleteAvatar() {
+    const response = await api.delete('/profile/avatar');
+    return response.data;
+  }
 };
 
 // User Management API Service

@@ -159,14 +159,21 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
   // Lock body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
-      // Save current overflow value
       const originalOverflow = document.body.style.overflow;
-      // Prevent scrolling
+      const originalPosition = document.body.style.position;
+      const scrollY = window.scrollY;
+      
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
       
       return () => {
-        // Restore original overflow when modal closes
         document.body.style.overflow = originalOverflow;
+        document.body.style.position = originalPosition;
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, scrollY);
       };
     }
   }, [isOpen]);
@@ -592,9 +599,9 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
 
       {/* Modal Container - Modern Glass Morphism Design */}
       <div className="
-        relative w-full h-[95vh] sm:h-[85vh] flex flex-col md:flex-row
-        max-w-sm sm:max-w-2xl md:max-w-3xl lg:max-w-5xl
-        rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden
+        relative w-full h-[96vh] sm:h-[90vh] flex flex-col md:flex-row
+        max-w-[95vw] sm:max-w-2xl md:max-w-3xl lg:max-w-5xl
+        rounded-xl sm:rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden
         bg-slate-950
         border border-slate-700/50
         animate-scale-in z-20
@@ -604,19 +611,20 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
         
         {/* Modern Mobile Header */}
         <div className="
-          relative z-10 md:hidden flex items-center justify-between p-4 border-b
+          relative z-10 md:hidden flex items-center justify-between px-4 py-3 border-b
           bg-slate-800/50 border-slate-700/50 backdrop-blur-sm
         ">
-          <h2 className="text-lg font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+          <h2 className="text-base sm:text-lg font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
             Edit Profile
           </h2>
           <button
             onClick={onClose}
             aria-label="Close modal"
             className="
-              p-2 rounded-xl transition-all duration-300
-              hover:bg-slate-700/50 text-slate-400 hover:text-white
+              p-2 rounded-lg transition-all duration-300 active:scale-95
+              hover:bg-slate-700/50 active:bg-slate-700/70 text-slate-400 hover:text-white
               border border-transparent hover:border-slate-600/50
+              touch-manipulation
             "
           >
             <X className="w-5 h-5" />
@@ -628,7 +636,7 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
           relative z-10 md:hidden overflow-x-auto border-b scrollbar-hide
           bg-slate-800/30 border-slate-700/50
         ">
-          <div className="flex p-2 gap-2 min-w-max">
+          <div className="flex p-2 gap-1.5 min-w-max">
             {sidebarSections.map((section) => {
               const Icon = section.icon;
               const isActive = activeSection === section.id;
@@ -637,15 +645,16 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                   key={section.id}
                   onClick={() => setActiveSection(section.id)}
                   className={`
-                    flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap
-                    transition-all duration-300 text-sm font-medium
+                    flex items-center gap-1.5 px-3 py-2 rounded-lg whitespace-nowrap
+                    transition-all duration-200 text-xs sm:text-sm font-medium
+                    touch-manipulation active:scale-95
                     ${isActive
                       ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white border border-blue-500/50 shadow-lg shadow-blue-500/20'
-                      : 'text-slate-400 hover:bg-slate-700/50 hover:text-white border border-transparent'
+                      : 'text-slate-400 active:bg-slate-700/70 active:text-white border border-slate-700/30'
                     }
                   `}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span>{section.label}</span>
                 </button>
               );
@@ -721,15 +730,15 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Header */}
           <div className={`
-            border-b p-6
+            hidden md:block border-b px-4 py-4 sm:px-6 sm:py-5
             ${isDark ? 'bg-gray-900/50 border-gray-700/50' : 'bg-white/50 border-stone-200'}
           `}>
-            <h2 className={`text-2xl font-bold ${
+            <h2 className={`text-xl sm:text-2xl font-bold ${
               isDark ? 'text-white' : 'text-stone-900'
             }`}>
               {sidebarSections.find(s => s.id === activeSection)?.label}
             </h2>
-            <p className={`text-sm mt-1 ${
+            <p className={`text-xs sm:text-sm mt-1 ${
               isDark ? 'text-gray-400' : 'text-stone-600'
             }`}>
               Update your {sidebarSections.find(s => s.id === activeSection)?.label.toLowerCase()}
@@ -737,65 +746,66 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
           </div>
 
           {/* Form Content - Scrollable */}
-          <form onSubmit={handleSubmit} className="relative z-10 flex-1 overflow-y-auto scrollbar-hide p-6">
-            <div className="space-y-6 max-w-2xl">
+          <form onSubmit={handleSubmit} className="relative z-10 flex-1 overflow-y-auto scrollbar-hide px-3 py-4 sm:p-6">
+            <div className="space-y-4 sm:space-y-6 max-w-2xl">
               {/* Profile Info Section */}
               {activeSection === 'profile' && (
                 <>
                   {/* Profile Photo Section */}
                   <div className={`
-                    p-6 rounded-2xl border
+                    p-4 sm:p-6 rounded-xl sm:rounded-2xl border
                     ${isDark ? 'bg-gray-800/30 border-gray-700/50' : 'bg-white/50 border-stone-200'}
                   `}>
-                    <h3 className={`text-lg font-semibold mb-4 ${
+                    <h3 className={`text-base sm:text-lg font-semibold mb-3 sm:mb-4 ${
                       isDark ? 'text-white' : 'text-stone-900'
                     }`}>
                       Profile Photo
                     </h3>
-                    <div className="flex items-center gap-6">
+                    <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
                       {/* Avatar Preview */}
-                      <div className="relative group cursor-pointer" onClick={handleAvatarClick}>
+                      <div className="relative group cursor-pointer touch-manipulation" onClick={handleAvatarClick}>
                         <div className="
-                          w-24 h-24 rounded-2xl flex items-center justify-center font-bold text-3xl
+                          w-20 h-20 sm:w-24 sm:h-24 rounded-xl sm:rounded-2xl flex items-center justify-center font-bold text-2xl sm:text-3xl
                           bg-gradient-to-br from-blue-500 to-cyan-500 text-white
-                          transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl
+                          transition-all duration-300 active:scale-95 sm:group-hover:scale-105 sm:group-hover:shadow-xl
                           border-4 border-blue-400/20
                         ">
                           {profile.avatar ? (
-                            <img src={profile.avatar} alt="Avatar" className="w-full h-full rounded-2xl object-cover" />
+                            <img src={profile.avatar} alt="Avatar" className="w-full h-full rounded-xl sm:rounded-2xl object-cover" />
                           ) : (
                             (profile.name || 'U').charAt(0).toUpperCase()
                           )}
                         </div>
                         
                         <div className="
-                          absolute inset-0 rounded-2xl flex items-center justify-center
+                          absolute inset-0 rounded-xl sm:rounded-2xl flex items-center justify-center
                           bg-gradient-to-br from-blue-600/90 to-cyan-600/90 backdrop-blur-sm
-                          opacity-0 group-hover:opacity-100
+                          opacity-0 sm:group-hover:opacity-100
                           transition-opacity duration-300
                         ">
-                          <Camera className="w-8 h-8 text-white" />
+                          <Camera className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                         </div>
                       </div>
                       
                       {/* Upload Instructions */}
-                      <div className="flex-1">
+                      <div className="flex-1 text-center sm:text-left w-full">
                         <button
                           type="button"
                           onClick={handleAvatarClick}
                           className={`
-                            px-4 py-2 rounded-lg font-medium transition-all duration-300
+                            w-full sm:w-auto px-4 py-2.5 sm:py-2 rounded-lg font-medium transition-all duration-300
+                            active:scale-95 touch-manipulation text-sm sm:text-base
                             ${isDark 
-                              ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                              : 'bg-blue-600 hover:bg-blue-700 text-white'}
+                              ? 'bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white' 
+                              : 'bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white'}
                           `}
                         >
                           Upload Photo
                         </button>
-                        <p className={`text-sm mt-2 ${
+                        <p className={`text-xs sm:text-sm mt-2 ${
                           isDark ? 'text-gray-400' : 'text-stone-600'
                         }`}>
-                          JPG, PNG or WebP • Max 5MB • Will be auto-resized to 800x800px
+                          JPG, PNG or WebP • Max 5MB
                         </p>
                       </div>
                       
@@ -811,28 +821,28 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
 
                   {/* Basic Information */}
                   <div className={`
-                    p-6 rounded-2xl border
+                    p-4 sm:p-6 rounded-xl sm:rounded-2xl border
                     ${isDark ? 'bg-gray-800/30 border-gray-700/50' : 'bg-white/50 border-stone-200'}
                   `}>
-                    <h3 className={`text-lg font-semibold mb-4 ${
+                    <h3 className={`text-base sm:text-lg font-semibold mb-3 sm:mb-4 ${
                       isDark ? 'text-white' : 'text-stone-900'
                     }`}>
                       Basic Information
                     </h3>
                     
-                    <div className="space-y-5">
+                    <div className="space-y-4 sm:space-y-5">
                       {/* Full Name */}
                       <div>
-                        <label className={`block text-sm font-medium mb-2 ${
+                        <label className={`block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 ${
                           isDark ? 'text-gray-300' : 'text-stone-700'
                         }`}>
                           Full Name <span className="text-red-500">*</span>
                         </label>
                         <div className="relative">
-                          <div className={`absolute left-4 top-1/2 -translate-y-1/2 ${
+                          <div className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 ${
                             isDark ? 'text-gray-500' : 'text-stone-400'
                           }`}>
-                            <User className="w-5 h-5" />
+                            <User className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
                           <input
                             type="text"
@@ -841,7 +851,8 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                             placeholder="John Doe"
                             required
                             className={`
-                              w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300
+                              w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-300
+                              text-sm sm:text-base touch-manipulation
                               ${isDark 
                                 ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-blue-400/50' 
                                 : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-blue-400'}
@@ -849,7 +860,7 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                             `}
                           />
                         </div>
-                        <p className={`text-xs mt-1 ${
+                        <p className={`text-[10px] sm:text-xs mt-1 ${
                           isDark ? 'text-gray-500' : 'text-stone-500'
                         }`}>
                           Your first and last name
@@ -858,16 +869,16 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
 
                       {/* Username */}
                       <div>
-                        <label className={`block text-sm font-medium mb-2 ${
+                        <label className={`block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 ${
                           isDark ? 'text-gray-300' : 'text-stone-700'
                         }`}>
                           Username <span className="text-red-500">*</span>
                         </label>
                         <div className="relative">
-                          <div className={`absolute left-4 top-1/2 -translate-y-1/2 ${
+                          <div className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 ${
                             isDark ? 'text-gray-600' : 'text-stone-500'
                           }`}>
-                            <User className="w-5 h-5" />
+                            <User className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
                           <input
                             type="text"
@@ -876,14 +887,15 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                             disabled
                             placeholder="johndoe"
                             className={`
-                              w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300 cursor-not-allowed
+                              w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-300 cursor-not-allowed
+                              text-sm sm:text-base
                               ${isDark 
                                 ? 'bg-gray-900/50 border border-gray-700/30 text-gray-500 placeholder-gray-600' 
                                 : 'bg-stone-100/50 border border-stone-200 text-stone-600 placeholder-stone-500'}
                             `}
                           />
                         </div>
-                        <p className={`text-xs mt-1 flex items-center gap-1 ${
+                        <p className={`text-[10px] sm:text-xs mt-1 flex items-center gap-1 ${
                           isDark ? 'text-gray-600' : 'text-stone-500'
                         }`}>
                           <Lock className="w-3 h-3" />
@@ -893,16 +905,16 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
 
                       {/* Email */}
                       <div>
-                        <label className={`block text-sm font-medium mb-2 ${
+                        <label className={`block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 ${
                           isDark ? 'text-gray-300' : 'text-stone-700'
                         }`}>
                           Email Address <span className="text-red-500">*</span>
                         </label>
                         <div className="relative">
-                          <div className={`absolute left-4 top-1/2 -translate-y-1/2 ${
+                          <div className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 ${
                             isDark ? 'text-gray-600' : 'text-stone-500'
                           }`}>
-                            <Mail className="w-5 h-5" />
+                            <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
                           <input
                             type="email"
@@ -911,14 +923,15 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                             disabled
                             placeholder="john.doe@example.com"
                             className={`
-                              w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300 cursor-not-allowed
+                              w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-300 cursor-not-allowed
+                              text-sm sm:text-base
                               ${isDark 
                                 ? 'bg-gray-900/50 border border-gray-700/30 text-gray-500 placeholder-gray-600' 
                                 : 'bg-stone-100/50 border border-stone-200 text-stone-600 placeholder-stone-500'}
                             `}
                           />
                         </div>
-                        <p className={`text-xs mt-1 flex items-center gap-1 ${
+                        <p className={`text-[10px] sm:text-xs mt-1 flex items-center gap-1 ${
                           isDark ? 'text-gray-600' : 'text-stone-500'
                         }`}>
                           <Lock className="w-3 h-3" />
@@ -928,16 +941,16 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
 
                       {/* Phone */}
                       <div>
-                        <label className={`block text-sm font-medium mb-2 ${
+                        <label className={`block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 ${
                           isDark ? 'text-gray-300' : 'text-stone-700'
                         }`}>
-                          Phone Number <span className="text-gray-500 text-xs">(Optional)</span>
+                          Phone Number <span className="text-gray-500 text-[10px] sm:text-xs">(Optional)</span>
                         </label>
                         <div className="relative">
-                          <div className={`absolute left-4 top-1/2 -translate-y-1/2 ${
+                          <div className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 ${
                             isDark ? 'text-gray-500' : 'text-stone-400'
                           }`}>
-                            <Phone className="w-5 h-5" />
+                            <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
                           <input
                             type="tel"
@@ -945,7 +958,8 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                             onChange={(e) => handleChange('phone', e.target.value)}
                             placeholder="+62 812-3456-7890"
                             className={`
-                              w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300
+                              w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-300
+                              text-sm sm:text-base touch-manipulation
                               ${isDark 
                                 ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-blue-400/50' 
                                 : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-blue-400'}
@@ -953,7 +967,7 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                             `}
                           />
                         </div>
-                        <p className={`text-xs mt-1 ${
+                        <p className={`text-[10px] sm:text-xs mt-1 ${
                           isDark ? 'text-gray-500' : 'text-stone-500'
                         }`}>
                           Include country code (e.g., +62 for Indonesia)
@@ -964,25 +978,25 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
 
                   {/* About & Bio */}
                   <div className={`
-                    p-6 rounded-2xl border
+                    p-4 sm:p-6 rounded-xl sm:rounded-2xl border
                     ${isDark ? 'bg-gray-800/30 border-gray-700/50' : 'bg-white/50 border-stone-200'}
                   `}>
-                    <h3 className={`text-lg font-semibold mb-4 ${
+                    <h3 className={`text-base sm:text-lg font-semibold mb-3 sm:mb-4 ${
                       isDark ? 'text-white' : 'text-stone-900'
                     }`}>
                       About & Bio
                     </h3>
                     
-                    <div className="space-y-5">
+                    <div className="space-y-4 sm:space-y-5">
                       {/* Bio */}
                       <div>
-                        <div className="flex justify-between items-center mb-2">
-                          <label className={`block text-sm font-medium ${
+                        <div className="flex justify-between items-center mb-1.5 sm:mb-2">
+                          <label className={`block text-xs sm:text-sm font-medium ${
                             isDark ? 'text-gray-300' : 'text-stone-700'
                           }`}>
                             Bio / About Yourself
                           </label>
-                          <span className={`text-xs ${
+                          <span className={`text-[10px] sm:text-xs font-medium ${
                             (profile.bio?.length || 0) > 500 
                               ? 'text-red-500' 
                               : isDark ? 'text-gray-500' : 'text-stone-500'
@@ -991,10 +1005,10 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                           </span>
                         </div>
                         <div className="relative">
-                          <div className={`absolute left-4 top-4 ${
+                          <div className={`absolute left-3 sm:left-4 top-3 sm:top-4 ${
                             isDark ? 'text-gray-500' : 'text-stone-400'
                           }`}>
-                            <FileText className="w-5 h-5" />
+                            <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
                           <textarea
                             value={profile.bio || ''}
@@ -1003,11 +1017,12 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                                 handleChange('bio', e.target.value);
                               }
                             }}
-                            placeholder="Tell us about yourself... What do you do? What are your interests? What makes you unique?"
-                            rows={5}
+                            placeholder="Tell us about yourself..."
+                            rows={4}
                             maxLength={500}
                             className={`
-                              w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300 resize-none
+                              w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-300 resize-none
+                              text-sm sm:text-base touch-manipulation
                               ${isDark 
                                 ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-blue-400/50' 
                                 : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-blue-400'}
@@ -1015,7 +1030,7 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                             `}
                           />
                         </div>
-                        <p className={`text-xs mt-1 ${
+                        <p className={`text-[10px] sm:text-xs mt-1 ${
                           isDark ? 'text-gray-500' : 'text-stone-500'
                         }`}>
                           Write a brief description about yourself (max 500 characters)
@@ -1026,28 +1041,28 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
 
                   {/* Location & Contact */}
                   <div className={`
-                    p-6 rounded-2xl border
+                    p-4 sm:p-6 rounded-xl sm:rounded-2xl border
                     ${isDark ? 'bg-gray-800/30 border-gray-700/50' : 'bg-white/50 border-stone-200'}
                   `}>
-                    <h3 className={`text-lg font-semibold mb-4 ${
+                    <h3 className={`text-base sm:text-lg font-semibold mb-3 sm:mb-4 ${
                       isDark ? 'text-white' : 'text-stone-900'
                     }`}>
                       Location & Website
                     </h3>
                     
-                    <div className="space-y-5">
+                    <div className="space-y-4 sm:space-y-5">
                       {/* Location */}
                       <div>
-                        <label className={`block text-sm font-medium mb-2 ${
+                        <label className={`block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 ${
                           isDark ? 'text-gray-300' : 'text-stone-700'
                         }`}>
-                          Location <span className="text-gray-500 text-xs">(Optional)</span>
+                          Location <span className="text-gray-500 text-[10px] sm:text-xs">(Optional)</span>
                         </label>
                         <div className="relative">
-                          <div className={`absolute left-4 top-1/2 -translate-y-1/2 ${
+                          <div className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 ${
                             isDark ? 'text-gray-500' : 'text-stone-400'
                           }`}>
-                            <MapPin className="w-5 h-5" />
+                            <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
                           <input
                             type="text"
@@ -1055,7 +1070,8 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                             onChange={(e) => handleChange('location', e.target.value)}
                             placeholder="Jakarta, Indonesia"
                             className={`
-                              w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300
+                              w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-300
+                              text-sm sm:text-base touch-manipulation
                               ${isDark 
                                 ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-blue-400/50' 
                                 : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-blue-400'}
@@ -1063,7 +1079,7 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                             `}
                           />
                         </div>
-                        <p className={`text-xs mt-1 ${
+                        <p className={`text-[10px] sm:text-xs mt-1 ${
                           isDark ? 'text-gray-500' : 'text-stone-500'
                         }`}>
                           City, Country or your current location
@@ -1072,16 +1088,16 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
 
                       {/* Website */}
                       <div>
-                        <label className={`block text-sm font-medium mb-2 ${
+                        <label className={`block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 ${
                           isDark ? 'text-gray-300' : 'text-stone-700'
                         }`}>
-                          Website <span className="text-gray-500 text-xs">(Optional)</span>
+                          Website <span className="text-gray-500 text-[10px] sm:text-xs">(Optional)</span>
                         </label>
                         <div className="relative">
-                          <div className={`absolute left-4 top-1/2 -translate-y-1/2 ${
+                          <div className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 ${
                             isDark ? 'text-gray-500' : 'text-stone-400'
                           }`}>
-                            <Globe className="w-5 h-5" />
+                            <Globe className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
                           <input
                             type="url"
@@ -1089,7 +1105,8 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                             onChange={(e) => handleChange('website', e.target.value)}
                             placeholder="https://yourwebsite.com"
                             className={`
-                              w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300
+                              w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-300
+                              text-sm sm:text-base touch-manipulation
                               ${isDark 
                                 ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-blue-400/50' 
                                 : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-blue-400'}
@@ -1097,7 +1114,7 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                             `}
                           />
                         </div>
-                        <p className={`text-xs mt-1 ${
+                        <p className={`text-[10px] sm:text-xs mt-1 ${
                           isDark ? 'text-gray-500' : 'text-stone-500'
                         }`}>
                           Your personal or professional website URL
@@ -1112,19 +1129,19 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
 
               {/* Personal Section */}
               {activeSection === 'personal' && (
-                <>
+                <div className="space-y-4 sm:space-y-5">
                   {/* Job Title */}
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${
+                    <label className={`block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 ${
                       isDark ? 'text-gray-300' : 'text-stone-700'
                     }`}>
-                      Job Title / Position <span className="text-gray-500 text-xs">(Optional)</span>
+                      Job Title / Position <span className="text-gray-500 text-[10px] sm:text-xs">(Optional)</span>
                     </label>
                     <div className="relative">
-                      <div className={`absolute left-4 top-1/2 -translate-y-1/2 ${
+                      <div className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 ${
                         isDark ? 'text-gray-500' : 'text-stone-400'
                       }`}>
-                        <Briefcase className="w-5 h-5" />
+                        <Briefcase className="w-4 h-4 sm:w-5 sm:h-5" />
                       </div>
                       <input
                         type="text"
@@ -1132,7 +1149,8 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                         onChange={(e) => handleChange('jobTitle', e.target.value)}
                         placeholder="e.g. Senior Developer, Designer"
                         className={`
-                          w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300
+                          w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-300
+                          text-sm sm:text-base touch-manipulation
                           ${isDark 
                             ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-blue-400/50' 
                             : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-blue-400'}
@@ -1144,16 +1162,16 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
 
                   {/* Company */}
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${
+                    <label className={`block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 ${
                       isDark ? 'text-gray-300' : 'text-stone-700'
                     }`}>
-                      Company / Organization <span className="text-gray-500 text-xs">(Optional)</span>
+                      Company / Organization <span className="text-gray-500 text-[10px] sm:text-xs">(Optional)</span>
                     </label>
                     <div className="relative">
-                      <div className={`absolute left-4 top-1/2 -translate-y-1/2 ${
+                      <div className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 ${
                         isDark ? 'text-gray-500' : 'text-stone-400'
                       }`}>
-                        <Building2 className="w-5 h-5" />
+                        <Building2 className="w-4 h-4 sm:w-5 sm:h-5" />
                       </div>
                       <input
                         type="text"
@@ -1161,7 +1179,8 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                         onChange={(e) => handleChange('company', e.target.value)}
                         placeholder="Your company name"
                         className={`
-                          w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300
+                          w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-300
+                          text-sm sm:text-base touch-manipulation
                           ${isDark 
                             ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-blue-400/50' 
                             : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-blue-400'}
@@ -1173,27 +1192,28 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
 
                   {/* Birth Date */}
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${
+                    <label className={`block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 ${
                       isDark ? 'text-gray-300' : 'text-stone-700'
                     }`}>
                       Birth Date
                     </label>
                     <div className="relative">
-                      <div className={`absolute left-4 top-1/2 -translate-y-1/2 ${
+                      <div className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 ${
                         isDark ? 'text-gray-500' : 'text-stone-400'
                       }`}>
-                        <Calendar className="w-5 h-5" />
+                        <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
                       </div>
                       <input
                         type="date"
                         value={profile.birthDate || ''}
                         onChange={(e) => handleChange('birthDate', e.target.value)}
                         className={`
-                          w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300
+                          w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-300
+                          text-sm sm:text-base touch-manipulation
                           ${isDark 
-                            ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-amber-400/50' 
-                            : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-stone-400'}
-                          focus:outline-none focus:ring-2 ${isDark ? 'focus:ring-amber-400/20' : 'focus:ring-stone-400/20'}
+                            ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-blue-400/50' 
+                            : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-blue-400'}
+                          focus:outline-none focus:ring-2 ${isDark ? 'focus:ring-blue-400/20' : 'focus:ring-blue-400/20'}
                         `}
                       />
                     </div>
@@ -1201,26 +1221,27 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
 
                   {/* Gender */}
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${
+                    <label className={`block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 ${
                       isDark ? 'text-gray-300' : 'text-stone-700'
                     }`}>
                       Gender
                     </label>
                     <div className="relative">
-                      <div className={`absolute left-4 top-1/2 -translate-y-1/2 ${
+                      <div className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 ${
                         isDark ? 'text-gray-500' : 'text-stone-400'
                       }`}>
-                        <Users className="w-5 h-5" />
+                        <Users className="w-4 h-4 sm:w-5 sm:h-5" />
                       </div>
                       <select
                         value={profile.gender || ''}
                         onChange={(e) => handleChange('gender', e.target.value)}
                         className={`
-                          w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300
+                          w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-300
+                          text-sm sm:text-base touch-manipulation
                           ${isDark 
-                            ? 'bg-gray-800/50 border border-gray-700/50 text-white focus:border-amber-400/50' 
-                            : 'bg-white border border-stone-200 text-stone-900 focus:border-stone-400'}
-                          focus:outline-none focus:ring-2 ${isDark ? 'focus:ring-amber-400/20' : 'focus:ring-stone-400/20'}
+                            ? 'bg-gray-800/50 border border-gray-700/50 text-white focus:border-blue-400/50' 
+                            : 'bg-white border border-stone-200 text-stone-900 focus:border-blue-400'}
+                          focus:outline-none focus:ring-2 ${isDark ? 'focus:ring-blue-400/20' : 'focus:ring-blue-400/20'}
                         `}
                       >
                         <option value="">Select gender</option>
@@ -1231,24 +1252,24 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                       </select>
                     </div>
                   </div>
-                </>
+                </div>
               )}
 
               {/* Social Media Section */}
               {activeSection === 'social' && (
-                <>
+                <div className="space-y-4 sm:space-y-5">
                   {/* LinkedIn */}
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${
+                    <label className={`block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 ${
                       isDark ? 'text-gray-300' : 'text-stone-700'
                     }`}>
                       LinkedIn
                     </label>
                     <div className="relative">
-                      <div className={`absolute left-4 top-1/2 -translate-y-1/2 ${
+                      <div className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 ${
                         isDark ? 'text-gray-500' : 'text-stone-400'
                       }`}>
-                        <Linkedin className="w-5 h-5" />
+                        <Linkedin className="w-4 h-4 sm:w-5 sm:h-5" />
                       </div>
                       <input
                         type="url"
@@ -1256,11 +1277,12 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                         onChange={(e) => handleChange('linkedin', e.target.value)}
                         placeholder="https://linkedin.com/in/yourprofile"
                         className={`
-                          w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300
+                          w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-300
+                          text-sm sm:text-base touch-manipulation
                           ${isDark 
-                            ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-amber-400/50' 
-                            : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-stone-400'}
-                          focus:outline-none focus:ring-2 ${isDark ? 'focus:ring-amber-400/20' : 'focus:ring-stone-400/20'}
+                            ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-blue-400/50' 
+                            : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-blue-400'}
+                          focus:outline-none focus:ring-2 ${isDark ? 'focus:ring-blue-400/20' : 'focus:ring-blue-400/20'}
                         `}
                       />
                     </div>
@@ -1268,16 +1290,16 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
 
                   {/* Twitter */}
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${
+                    <label className={`block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 ${
                       isDark ? 'text-gray-300' : 'text-stone-700'
                     }`}>
                       Twitter / X
                     </label>
                     <div className="relative">
-                      <div className={`absolute left-4 top-1/2 -translate-y-1/2 ${
+                      <div className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 ${
                         isDark ? 'text-gray-500' : 'text-stone-400'
                       }`}>
-                        <Twitter className="w-5 h-5" />
+                        <Twitter className="w-4 h-4 sm:w-5 sm:h-5" />
                       </div>
                       <input
                         type="url"
@@ -1285,11 +1307,12 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                         onChange={(e) => handleChange('twitter', e.target.value)}
                         placeholder="https://twitter.com/yourhandle"
                         className={`
-                          w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300
+                          w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-300
+                          text-sm sm:text-base touch-manipulation
                           ${isDark 
-                            ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-amber-400/50' 
-                            : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-stone-400'}
-                          focus:outline-none focus:ring-2 ${isDark ? 'focus:ring-amber-400/20' : 'focus:ring-stone-400/20'}
+                            ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-blue-400/50' 
+                            : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-blue-400'}
+                          focus:outline-none focus:ring-2 ${isDark ? 'focus:ring-blue-400/20' : 'focus:ring-blue-400/20'}
                         `}
                       />
                     </div>
@@ -1297,16 +1320,16 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
 
                   {/* GitHub */}
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${
+                    <label className={`block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 ${
                       isDark ? 'text-gray-300' : 'text-stone-700'
                     }`}>
                       GitHub
                     </label>
                     <div className="relative">
-                      <div className={`absolute left-4 top-1/2 -translate-y-1/2 ${
+                      <div className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 ${
                         isDark ? 'text-gray-500' : 'text-stone-400'
                       }`}>
-                        <Github className="w-5 h-5" />
+                        <Github className="w-4 h-4 sm:w-5 sm:h-5" />
                       </div>
                       <input
                         type="url"
@@ -1314,11 +1337,12 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                         onChange={(e) => handleChange('github', e.target.value)}
                         placeholder="https://github.com/yourusername"
                         className={`
-                          w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300
+                          w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-300
+                          text-sm sm:text-base touch-manipulation
                           ${isDark 
-                            ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-amber-400/50' 
-                            : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-stone-400'}
-                          focus:outline-none focus:ring-2 ${isDark ? 'focus:ring-amber-400/20' : 'focus:ring-stone-400/20'}
+                            ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-blue-400/50' 
+                            : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-blue-400'}
+                          focus:outline-none focus:ring-2 ${isDark ? 'focus:ring-blue-400/20' : 'focus:ring-blue-400/20'}
                         `}
                       />
                     </div>
@@ -1326,16 +1350,16 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
 
                   {/* Instagram */}
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${
+                    <label className={`block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 ${
                       isDark ? 'text-gray-300' : 'text-stone-700'
                     }`}>
                       Instagram
                     </label>
                     <div className="relative">
-                      <div className={`absolute left-4 top-1/2 -translate-y-1/2 ${
+                      <div className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 ${
                         isDark ? 'text-gray-500' : 'text-stone-400'
                       }`}>
-                        <Instagram className="w-5 h-5" />
+                        <Instagram className="w-4 h-4 sm:w-5 sm:h-5" />
                       </div>
                       <input
                         type="url"
@@ -1343,16 +1367,17 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                         onChange={(e) => handleChange('instagram', e.target.value)}
                         placeholder="https://instagram.com/yourhandle"
                         className={`
-                          w-full pl-12 pr-4 py-3 rounded-xl transition-all duration-300
+                          w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-300
+                          text-sm sm:text-base touch-manipulation
                           ${isDark 
-                            ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-amber-400/50' 
-                            : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-stone-400'}
-                          focus:outline-none focus:ring-2 ${isDark ? 'focus:ring-amber-400/20' : 'focus:ring-stone-400/20'}
+                            ? 'bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:border-blue-400/50' 
+                            : 'bg-white border border-stone-200 text-stone-900 placeholder-stone-400 focus:border-blue-400'}
+                          focus:outline-none focus:ring-2 ${isDark ? 'focus:ring-blue-400/20' : 'focus:ring-blue-400/20'}
                         `}
                       />
                     </div>
                   </div>
-                </>
+                </div>
               )}
 
               {/* Security Section */}
@@ -2081,23 +2106,39 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
               
               {/* Submit Button - Only show for non-security sections */}
               {activeSection !== 'security' && (
-                <div className="flex gap-3 pt-4 border-t border-gray-700/50">
+                <div className="flex flex-col-reverse sm:flex-row gap-3 pt-6 border-t border-gray-700/50 sticky bottom-0 bg-slate-950/95 backdrop-blur-sm pb-2 sm:pb-0 -mx-3 sm:mx-0 px-3 sm:px-0">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    disabled={loading}
+                    className={`
+                      w-full sm:flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300
+                      text-base touch-manipulation active:scale-95
+                      ${loading ? 'opacity-50 cursor-not-allowed' : ''}
+                      ${isDark 
+                        ? 'bg-slate-800 hover:bg-slate-700 active:bg-slate-700 text-slate-300 border border-slate-700' 
+                        : 'bg-gray-200 hover:bg-gray-300 active:bg-gray-300 text-gray-700 border border-gray-300'}
+                    `}
+                  >
+                    Cancel
+                  </button>
                   <button
                     type="submit"
                     disabled={loading}
                     className={`
-                      flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300
+                      w-full sm:flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300
+                      text-base touch-manipulation active:scale-95
                       ${loading
                         ? 'bg-gray-600 cursor-not-allowed opacity-50'
-                        : 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700'
+                        : 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 active:from-blue-800 active:to-cyan-800 shadow-lg shadow-blue-500/20'
                       }
-                      text-white shadow-lg hover:shadow-xl
+                      text-white hover:shadow-xl hover:shadow-blue-500/30
                       flex items-center justify-center gap-2
                     `}
                   >
                     {loading ? (
                       <>
-                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <svg className="animate-spin h-4 w-4 sm:h-5 sm:w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
@@ -2105,26 +2146,12 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
                       </>
                     ) : (
                       <>
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                         Save Changes
                       </>
                     )}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    disabled={loading}
-                    className={`
-                      px-6 py-3 rounded-xl font-semibold transition-all duration-300
-                      ${loading ? 'opacity-50 cursor-not-allowed' : ''}
-                      ${isDark 
-                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-300' 
-                        : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}
-                    `}
-                  >
-                    Cancel
                   </button>
                 </div>
               )}
@@ -2472,7 +2499,7 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
         </div>
       )}
 
-      {/* Custom Animations */}
+      {/* Custom Animations & Mobile Optimizations */}
       <style>{`
         @keyframes fade-in {
           from { opacity: 0; }
@@ -2498,14 +2525,39 @@ export default function ProfileEditModal({ theme, isOpen, onClose, currentProfil
           animation: scale-in 0.3s ease-out forwards;
         }
 
-        /* Hide scrollbar for mobile tabs */}
+        /* Hide scrollbar for mobile tabs */
         .scrollbar-hide {
           -ms-overflow-style: none;
           scrollbar-width: none;
+          -webkit-overflow-scrolling: touch;
+          scroll-behavior: smooth;
         }
 
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
+        }
+
+        /* Touch manipulation for better mobile interaction */
+        .touch-manipulation {
+          -webkit-tap-highlight-color: transparent;
+          touch-action: manipulation;
+        }
+
+        /* Prevent text selection on buttons */
+        button {
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
+
+        /* Improve input focus on mobile - prevent zoom */
+        @media (max-width: 640px) {
+          input:focus,
+          textarea:focus,
+          select:focus {
+            font-size: 16px;
+          }
         }
       `}</style>
     </div>

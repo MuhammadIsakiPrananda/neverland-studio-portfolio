@@ -319,8 +319,9 @@ class DashboardController extends Controller
                 'enrollments' => [
                     'total' => Enrollment::count(),
                     'pending' => Enrollment::where('status', 'pending')->count(),
-                    'approved' => Enrollment::where('status', 'approved')->count(),
-                    'rejected' => Enrollment::where('status', 'rejected')->count(),
+                    'confirmed' => Enrollment::where('status', 'confirmed')->count(),
+                    'completed' => Enrollment::where('status', 'completed')->count(),
+                    'cancelled' => Enrollment::where('status', 'cancelled')->count(),
                     'today' => Enrollment::whereDate('created_at', Carbon::today())->count(),
                     'this_week' => Enrollment::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count(),
                 ],

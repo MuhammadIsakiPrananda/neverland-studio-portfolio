@@ -4,7 +4,7 @@
 # ================================
 # Base Stage
 # ================================
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 
 WORKDIR /app
 
@@ -34,7 +34,8 @@ CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 FROM base AS dependencies
 
 # Install ALL dependencies needed for build (including devDependencies)
-RUN npm ci
+# Use --legacy-peer-deps for react-helmet-async compatibility with React 19
+RUN npm ci --legacy-peer-deps
 
 # ================================
 # Build Stage
@@ -44,30 +45,39 @@ FROM dependencies AS build
 # Copy source code
 COPY . .
 
-# Build production bundle with optimizations
+# Build production bundle with optimizations (includes SEO, compression, code splitting)
 ENV NODE_ENV=production
 RUN npm run build
 
+# Verify build output
+RUN ls -lah /app/dist
+
 # ================================
-# Production Stage
+# Production Stage - Optimized for SEO & Performance
 # ================================
 FROM nginx:alpine AS production
 
 # Add labels for better container management
 LABEL maintainer="Neverland Studio <hello@neverlandstudio.my.id>"
-LABEL description="Neverland Studio Portfolio - Production Frontend"
+LABEL description="Neverland Studio Portfolio - Production with SEO & Performance Optimizations"
+LABEL version="2.0"
 
-# Install curl for healthchecks
-RUN apk add --no-cache curl
+# Install curl and brotli for healthchecks and compression support
+RUN apk add --no-cache curl brotli
 
 # Remove default nginx static assets and config
 RUN rm -rf /usr/share/nginx/html/* /etc/nginx/conf.d/default.conf
 
-# Copy built files from build stage
+# Copy built files from build stage (includes compressed .gz and .br files)
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy SEO files directly from source (they're in public/)
+COPY public/robots.txt /usr/share/nginx/html/robots.txt
+COPY public/sitemap.xml /usr/share/nginx/html/sitemap.xml
+COPY public/manifest.json /usr/share/nginx/html/manifest.json
+
+# Copy frontend-specific nginx configuration with optimizations
+COPY frontend-nginx.conf /etc/nginx/conf.d/default.conf
 
 # Create nginx cache directories
 RUN mkdir -p /var/cache/nginx/client_temp \

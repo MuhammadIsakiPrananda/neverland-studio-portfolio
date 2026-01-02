@@ -12,14 +12,23 @@ export default function ProjectDetailModal({ project, isOpen, onClose }: Project
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      const originalPosition = document.body.style.position;
+      const scrollY = window.scrollY;
+      
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.position = originalPosition;
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, scrollY);
+      };
     }
-    
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [isOpen]);
 
   if (!isOpen || !project) return null;
@@ -157,7 +166,7 @@ export default function ProjectDetailModal({ project, isOpen, onClose }: Project
                   Technologies Used
                 </h3>
                 <div className="flex flex-wrap gap-2 sm:gap-3">
-                  {project.techStack.map((tech, idx) => (
+                  {Array.isArray(project.technologies) && project.technologies.map((tech, idx) => (
                     <span 
                       key={idx} 
                       className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-lg sm:rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 transition-colors"

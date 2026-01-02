@@ -44,6 +44,7 @@ WORKDIR /var/www
 
 # Install system dependencies (production only)
 RUN apk add --no-cache \
+    curl \
     libpng-dev \
     libzip-dev \
     mysql-client \
@@ -70,7 +71,7 @@ RUN composer dump-autoload --optimize
 EXPOSE 8000
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
-    CMD php artisan || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8000/api/health || exit 1
 
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]

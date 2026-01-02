@@ -52,7 +52,7 @@ export default function ProfileDropdown({ user, onEditProfile, onLogout }: Profi
         </div>
 
         {/* Name (hidden on mobile) */}
-        <span className="hidden sm:block text-sm font-medium">
+        <span className="hidden sm:block text-sm font-medium truncate max-w-[120px]">
           {displayName}
         </span>
 

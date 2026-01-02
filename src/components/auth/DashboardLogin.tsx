@@ -4,15 +4,19 @@ import { Eye, EyeOff, Lock, LogIn, User, Chrome, Github, UserPlus, Shield } from
 import { dashboardAuth } from '../../services/dashboardAuth';
 import { showSuccess, showError, showInfo } from '../common/ModernNotification';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config/api.config';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// For admin registration endpoint, we need base URL without /api suffix
+// If API_BASE_URL is relative path like '/api', use empty string
+// If it's full URL like 'http://localhost:8000/api', remove /api
+const API_URL = API_BASE_URL.startsWith('/') ? '' : API_BASE_URL.replace('/api', '');
 
 export default function DashboardLogin() {
   const navigate = useNavigate();
-  
+
   // Tab state
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
-  
+
   // Login state
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -57,14 +61,14 @@ export default function DashboardLogin() {
 
     try {
       console.log('🔐 Attempting backend authentication...');
-      
+
       // PRIMARY: Login to backend database
       const { authService } = await import('../../services/authService');
       const backendResult = await authService.login(username, password);
 
       if (backendResult.success && backendResult.data) {
         console.log('✅ Backend authentication successful');
-        
+
         // Remember me functionality
         if (rememberMe) {
           localStorage.setItem('dashboard_remember_username', username);
@@ -74,7 +78,7 @@ export default function DashboardLogin() {
 
         // Also set dashboard session for compatibility
         dashboardAuth.setSession(backendResult.data.user.name, username, backendResult.data.user.email);
-        
+
         // Redirect to dashboard
         setTimeout(() => {
           navigate('/dashboard');
@@ -85,20 +89,20 @@ export default function DashboardLogin() {
       }
     } catch (error: any) {
       console.error('❌ Login error:', error);
-      
+
       // FALLBACK: Try hardcoded credentials if backend fails
       console.log('⚠️ Attempting fallback hardcoded authentication...');
       const fallbackResult = dashboardAuth.login(username, password);
-      
+
       if (fallbackResult.success) {
         console.log('✅ Fallback authentication successful');
-        
+
         if (rememberMe) {
           localStorage.setItem('dashboard_remember_username', username);
         } else {
           localStorage.removeItem('dashboard_remember_username');
         }
-        
+
         showSuccess('Login Successful', `Welcome back, ${fallbackResult.user?.name}!`);
         setTimeout(() => {
           navigate('/dashboard');
@@ -134,7 +138,7 @@ export default function DashboardLogin() {
 
     try {
       console.log('📝 Registering new admin...');
-      
+
       const response = await axios.post(`${API_URL}/api/admin/register`, {
         username: regUsername,
         password: regPassword,
@@ -144,11 +148,11 @@ export default function DashboardLogin() {
       if (response.data.success) {
         console.log('✅ Registration successful');
         showSuccess('Registration Successful!', 'You can now login with your credentials.');
-        
+
         // Auto-switch to login tab and fill username
         setActiveTab('login');
         setUsername(regUsername);
-        
+
         // Clear register form
         setRegUsername('');
         setRegPassword('');
@@ -160,7 +164,7 @@ export default function DashboardLogin() {
     } catch (error: any) {
       console.error('❌ Registration error:', error);
       showError(
-        'Registration Failed', 
+        'Registration Failed',
         error.response?.data?.message || error.message || 'An error occurred during registration'
       );
     } finally {
@@ -198,11 +202,10 @@ export default function DashboardLogin() {
             <button
               type="button"
               onClick={() => setActiveTab('login')}
-              className={`py-2 px-4 rounded-xl font-medium transition-all duration-300 ${
-                activeTab === 'login'
-                  ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-500/30'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-              }`}
+              className={`py-2 px-4 rounded-xl font-medium transition-all duration-300 ${activeTab === 'login'
+                ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-500/30'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                }`}
             >
               <LogIn className="w-4 h-4 inline mr-2" />
               Login
@@ -210,11 +213,10 @@ export default function DashboardLogin() {
             <button
               type="button"
               onClick={() => setActiveTab('register')}
-              className={`py-2 px-4 rounded-xl font-medium transition-all duration-300 ${
-                activeTab === 'register'
-                  ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-500/30'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-              }`}
+              className={`py-2 px-4 rounded-xl font-medium transition-all duration-300 ${activeTab === 'register'
+                ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-500/30'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                }`}
             >
               <UserPlus className="w-4 h-4 inline mr-2" />
               Register
@@ -268,7 +270,7 @@ export default function DashboardLogin() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors z-10"
                   >
                     {showPassword ? (
                       <EyeOff className="w-5 h-5" />
@@ -416,7 +418,7 @@ export default function DashboardLogin() {
                   <button
                     type="button"
                     onClick={() => setShowRegPassword(!showRegPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors z-10"
                   >
                     {showRegPassword ? (
                       <EyeOff className="w-5 h-5" />
@@ -447,7 +449,7 @@ export default function DashboardLogin() {
                   <button
                     type="button"
                     onClick={() => setShowRegConfirmPassword(!showRegConfirmPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors z-10"
                   >
                     {showRegConfirmPassword ? (
                       <EyeOff className="w-5 h-5" />

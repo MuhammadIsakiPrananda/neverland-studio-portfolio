@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
+/* Font sudah di-preload di HTML untuk performa optimal */
 
 @tailwind base;
 @tailwind components;
@@ -7,6 +7,18 @@
 @layer base {
   * {
     font-family: "Poppins", sans-serif;
+  }
+  
+  /* Optimasi font rendering */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
+  /* Prevent layout shift dari scrollbar */
+  html {
+    overflow-y: scroll;
   }
 }
 
@@ -184,6 +196,26 @@
     }
   }
 
+  @keyframes bounceSlow {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-15px);
+    }
+  }
+
+  @keyframes scaleIn {
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
   /* Utility Classes for Cool Effects */
   .animate-gradient {
     background-size: 200% auto;
@@ -207,6 +239,14 @@
     );
     background-size: 1000px 100%;
     animation: shimmer 2s infinite;
+  }
+
+  .animate-bounce-slow {
+    animation: bounceSlow 2s ease-in-out infinite;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
   }
 
   /* Hover Lift Effect */
@@ -306,3 +346,5 @@
 .animate-icon-bounce {
   animation: icon-bounce 0.6s ease-in-out;
 }
+
+

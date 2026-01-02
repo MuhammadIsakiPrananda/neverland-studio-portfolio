@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { X, Send, User, Mail, Phone, Building, MessageSquare, Briefcase } from 'lucide-react';
+import { X, Send, User, Mail, Phone, Building, MessageSquare, Briefcase, CheckCircle, Sparkles } from 'lucide-react';
 import type { Theme } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { showSuccess } from '../common/ModernNotification';
 
 interface Solution {
   title: string;
@@ -34,9 +35,21 @@ export default function ConsultationModal({ theme, solution, onClose }: Consulta
 
   // Prevent body scroll when modal is open
   useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    const originalPosition = document.body.style.position;
+    const scrollY = window.scrollY;
+    
     document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
+    
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = originalOverflow;
+      document.body.style.position = originalPosition;
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollY);
     };
   }, []);
 
@@ -78,10 +91,16 @@ export default function ConsultationModal({ theme, solution, onClose }: Consulta
     console.log({ fullName, email, phone, company, projectType, message, solution: solution.title });
     setSubmitted(true);
 
-    // Auto close after 2 seconds
+    // Show modern notification with effects
+    showSuccess(
+      'Consultation Request Received! 🎉',
+      'Our team will contact you within 24 hours. Check your email for confirmation.'
+    );
+
+    // Auto close after 3 seconds
     setTimeout(() => {
       onClose();
-    }, 2000);
+    }, 3000);
   };
 
   return (
@@ -274,16 +293,39 @@ export default function ConsultationModal({ theme, solution, onClose }: Consulta
               </form>
             </>
           ) : (
-            // Success State
-            <div className="p-12 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center">
-                <svg className="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+            // Success State with Enhanced Animation
+            <div className="p-12 text-center animate-scale-in">
+              {/* Animated Success Icon */}
+              <div className="relative inline-block mb-6">
+                <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/50 animate-bounce-slow">
+                  <CheckCircle className="w-10 h-10 text-white animate-scale-in" />
+                </div>
+                {/* Sparkle Effects */}
+                <Sparkles className="absolute -top-2 -right-2 w-6 h-6 text-yellow-400 animate-pulse" />
+                <Sparkles className="absolute -bottom-2 -left-2 w-5 h-5 text-blue-400 animate-pulse delay-100" />
+                
+                {/* Ripple Effect */}
+                <div className="absolute inset-0 rounded-full bg-green-500/20 animate-ping" />
               </div>
-              <h3 className="text-lg font-semibold text-white mb-1">Consultation Request Received!</h3>
-              <p className="text-sm text-slate-400 mb-2">Our team will contact you within 24 hours</p>
-              <p className="text-xs text-slate-500">Check your email for confirmation</p>
+
+              {/* Success Messages */}
+              <h3 className="text-2xl font-bold text-white mb-3 animate-fade-in-up">
+                Consultation Request Received! 🎉
+              </h3>
+              <div className="space-y-2 animate-fade-in-up delay-100">
+                <p className="text-base text-slate-300 font-medium">
+                  Our team will contact you within 24 hours
+                </p>
+                <p className="text-sm text-slate-400">
+                  Check your email for confirmation
+                </p>
+              </div>
+
+              {/* Decorative Elements */}
+              <div className="mt-8 flex items-center justify-center gap-2 text-xs text-slate-500 animate-fade-in delay-200">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <span>Processing your request...</span>
+              </div>
             </div>
           )}
         </div>

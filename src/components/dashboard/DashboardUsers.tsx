@@ -48,6 +48,28 @@ const DashboardUsers: React.FC<DashboardUsersProps> = ({ theme }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false); // Prevent concurrent fetches
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (showEditModal || showAddModal) {
+      const originalOverflow = document.body.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+      
+      // Get scrollbar width
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      
+      // Prevent scroll and compensate for scrollbar
+      document.body.style.overflow = 'hidden';
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
+      
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
+      };
+    }
+  }, [showEditModal, showAddModal]);
   const [pagination, setPagination] = useState({
     total: 0,
     current_page: 1,
@@ -445,8 +467,18 @@ const DashboardUsers: React.FC<DashboardUsersProps> = ({ theme }) => {
 
       {/* Edit Modal */}
       {showEditModal && editingUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
-          <div className={`w-full max-w-lg my-4 sm:my-8 rounded-2xl p-4 sm:p-6 ${isDark ? 'bg-slate-900 border border-slate-800' : 'bg-white border border-slate-200'}`}>
+        <>
+          {/* Full Screen Backdrop */}
+          <div className="fixed inset-0 z-[9998] bg-black/60 backdrop-blur-sm" onClick={() => setShowEditModal(false)} />
+          
+          {/* Modal Container */}
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 pointer-events-none overflow-y-auto">
+            <div 
+              className={`w-full max-w-lg my-4 sm:my-8 rounded-2xl p-4 sm:p-6 pointer-events-auto ${
+                isDark ? 'bg-slate-900 border border-slate-800' : 'bg-white border border-slate-200'
+              }`}
+              onClick={(e) => e.stopPropagation()}
+            >
             <div className="flex items-center justify-between mb-4 sm:mb-6">
               <h2 className={`text-lg sm:text-xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
                 Edit User
@@ -558,6 +590,7 @@ const DashboardUsers: React.FC<DashboardUsersProps> = ({ theme }) => {
             </div>
           </div>
         </div>
+        </>
       )}
 
       {/* Add User Modal */}

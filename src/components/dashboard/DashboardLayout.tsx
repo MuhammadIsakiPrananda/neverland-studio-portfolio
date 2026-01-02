@@ -247,7 +247,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       items: [
         { id: 'users', label: 'All Users', icon: Users, path: '/dashboard/users' },
         { id: 'roles', label: 'Roles & Permissions', icon: Shield, path: '/dashboard/roles' },
-        { id: 'sessions', label: 'Active Sessions', icon: Clock, path: '/dashboard/sessions' },
       ]
     },
     {
@@ -257,15 +256,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         { id: 'projects', label: 'All Projects', icon: FolderKanban, path: '/dashboard/projects' },
         { id: 'media', label: 'Media Library', icon: Image, path: '/dashboard/media' },
         { id: 'videos', label: 'Video Content', icon: Video, path: '/dashboard/videos' },
-      ]
-    },
-    {
-      title: 'Development',
-      icon: Code,
-      items: [
-        { id: 'api', label: 'API Management', icon: Server, path: '/dashboard/api', status: 'online' },
-        { id: 'database', label: 'Database', icon: Database, path: '/dashboard/database' },
-        { id: 'logs', label: 'System Logs', icon: FileCode, path: '/dashboard/logs' },
       ]
     },
     {
@@ -402,6 +392,21 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 <div className="flex items-center gap-2">
                   <SectionIcon className={`w-4 h-4 ${isDark ? 'text-slate-600 group-hover:text-slate-500' : 'text-slate-300 group-hover:text-slate-500'}`} />
                   <span>{section.title}</span>
+                  {/* Show total badge count for Content Management section */}
+                  {section.title === 'Content Management' && (
+                    (() => {
+                      const totalBadge = (badgeCounts.contacts || 0) + (badgeCounts.enrollments || 0) + (badgeCounts.consultations || 0);
+                      return totalBadge > 0 ? (
+                        <span className={`
+                          px-2 py-0.5 rounded-full text-xs font-bold
+                          bg-gradient-to-r from-red-500/30 to-orange-500/30 text-red-400 border border-red-500/40
+                          animate-pulse
+                        `}>
+                          {totalBadge}
+                        </span>
+                      ) : null;
+                    })()
+                  )}
                 </div>
                 {expandedSections.includes(section.title) ? (
                   <ChevronDown className="w-3 h-3" />
@@ -445,14 +450,24 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                         <span className="font-medium text-sm flex-1 text-left">{item.label}</span>
                         {item.badge && item.badge > 0 && (
                           <span className={`
-                            px-1.5 py-0.5 rounded-full text-xs font-semibold
+                            relative px-2 py-0.5 rounded-full text-xs font-bold
                             ${active
-                              ? 'bg-blue-500 text-white'
+                              ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/50'
                               : isDark
-                                ? 'bg-slate-700 text-slate-300'
-                                : 'bg-slate-200 text-slate-700'
+                                ? 'bg-gradient-to-r from-red-500/20 to-orange-500/20 text-red-400 border border-red-500/30'
+                                : 'bg-gradient-to-r from-red-50 to-orange-50 text-red-600 border border-red-200'
                             }
+                            animate-pulse
                           `}>
+                            {/* Ping animation for new items */}
+                            <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${
+                                active ? 'bg-blue-400' : 'bg-red-400'
+                              } opacity-75`}></span>
+                              <span className={`relative inline-flex rounded-full h-3 w-3 ${
+                                active ? 'bg-blue-500' : 'bg-red-500'
+                              }`}></span>
+                            </span>
                             {item.badge > 99 ? '99+' : item.badge}
                           </span>
                         )}

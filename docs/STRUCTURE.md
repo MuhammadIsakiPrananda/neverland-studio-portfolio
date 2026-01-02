@@ -27,22 +27,25 @@ neverlandstudio-portofolio/
 
 ```
 docs/
-├── 📖 README.md                            # Documentation index
-├── 🚀 CLOUDFLARE_TUNNEL_DEPLOYMENT.md     # Production deployment guide
-├── 🚀 PRODUCTION_DEPLOYMENT.md            # Alternative deployment
-├── ✅ PRODUCTION_READY.md                 # Production checklist
-├── ✅ VERIFICATION_COMPLETE.md            # Final verification
-├── 🐳 README.DOCKER.md                    # Docker guide
-├── ⚡ REALTIME_ANALYTICS.md               # Real-time features (EN)
-├── ⚡ REALTIME_ANALYTICS_ID.md            # Real-time features (ID)
-├── 🔐 SECURITY.md                         # Security policy
-├── 🔐 OAUTH_SETUP.md                      # OAuth configuration
-├── 🔐 OAUTH_QUICKSTART.md                 # OAuth quick start
-├── 🔌 API.md                              # API documentation
-├── 🤝 CONTRIBUTING.md                     # Contribution guide
-├── 📝 CODE_OF_CONDUCT.md                  # Community guidelines
-├── 📝 CHANGELOG.md                        # Version history
-└── 📁 STRUCTURE.md                        # This file
+├── 📖 README.md                            # Documentation hub with navigation
+├── 📖 INDEX.md                             # Searchable documentation index
+├── 🚀 DEPLOYMENT.md                        # Complete production deployment guide
+├── ⚡ FEATURES_DOCUMENTATION.md            # All platform features documentation
+├── 🔌 API.md                              # Complete REST API reference
+├── 📁 STRUCTURE.md                        # This file - project architecture
+├── ⚡ REALTIME_ANALYTICS.md               # Real-time analytics system
+├── 🔐 SECURITY.md                         # Security policies & vulnerability reporting
+├── 🔐 OAUTH_SETUP.md                      # OAuth integration guide (Google & GitHub)
+├── 👤 PHOTO_PROFILE_SYSTEM.md             # User avatar system documentation
+├── 💾 PHPMYADMIN_SETUP.md                 # Database management UI setup
+└── 📝 CHANGELOG.md                        # Version history & release notes
+```
+
+**Root Level Documentation**:
+```
+├── 📖 DOCUMENTATION_GUIDE.md               # Complete documentation index & guide
+├── 🤝 CONTRIBUTING.md                      # Contribution guidelines & code standards
+└── 📄 LICENSE                             # MIT License terms
 ```
 
 ---

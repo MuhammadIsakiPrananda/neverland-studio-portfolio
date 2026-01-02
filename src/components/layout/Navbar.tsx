@@ -60,7 +60,7 @@ export default function Navbar({
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-4 py-2.5">
+      <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-4 py-2.5" role="navigation" aria-label="Main navigation">
         <div className="container mx-auto">
           <div className="relative backdrop-blur-xl rounded-full px-4 py-2 shadow-2xl shadow-blue-500/10 transition-all duration-300 hover:shadow-blue-500/20">
             {/* Gradient Border */}
@@ -72,15 +72,21 @@ export default function Navbar({
             <div className="absolute inset-0 rounded-full blur-xl -z-20 opacity-30 bg-gradient-to-r from-blue-500/20 via-cyan-500/10 to-blue-500/20 transition-opacity duration-300" />
             
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2 group cursor-pointer">
+              <button 
+                onClick={() => setCurrentPage('home')}
+                className="flex items-center space-x-2 group cursor-pointer"
+                aria-label="Go to homepage"
+              >
                 {/* Logo */}
                 <div className="relative w-10 h-10 flex-shrink-0">
                   <div className="absolute inset-0 rounded-full blur-lg transition-opacity duration-500 opacity-0 group-hover:opacity-60 bg-blue-400" />
                   <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 transition-all duration-300 border-blue-400/50 shadow-lg shadow-blue-500/30 group-hover:border-blue-400 group-hover:shadow-xl group-hover:shadow-blue-500/50 group-hover:scale-110">
                     <img 
                       src={logoImage} 
-                      alt="Neverland Studio Logo" 
+                      alt="Neverland Studio - IT Services & Digital Solutions Logo" 
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      width="40"
+                      height="40"
                     />
                   </div>
                 </div>
@@ -91,7 +97,7 @@ export default function Navbar({
                     Neverland Studio
                   </span>
                 </div>
-              </div>
+              </button>
 
               {/* Desktop Menu */}
               <div className="hidden lg:flex items-center space-x-1">
@@ -153,6 +159,21 @@ export default function Navbar({
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                               </svg>
                               <span className="font-medium">IT Solutions</span>
+                            </button>
+                            
+                            {/* IT Consulting */}
+                            <button
+                              onClick={() => setCurrentPage('it-consulting')}
+                              className={`w-full px-4 py-2.5 text-left text-sm transition-colors flex items-center gap-2 border-t border-slate-800/50 ${
+                                currentPage === 'it-consulting'
+                                  ? 'bg-blue-600/20 text-blue-400'
+                                  : 'text-slate-300 hover:bg-slate-800/50 hover:text-white'
+                              }`}
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                              </svg>
+                              <span className="font-medium">IT Consulting</span>
                             </button>
                           </div>
                         </div>
@@ -379,7 +400,7 @@ export default function Navbar({
                       
                       {/* Submenu Items */}
                       <div className={`overflow-hidden transition-all duration-200 ${
-                        expandServices ? 'max-h-48 mt-2' : 'max-h-0'
+                        expandServices ? 'max-h-64 mt-2' : 'max-h-0'
                       }`}>
                         <div className="space-y-2 pl-4">
                           {/* Services Overview */}
@@ -428,6 +449,20 @@ export default function Navbar({
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                             </svg>
                             <span className="text-sm font-medium">{t('nav.itSolutions')}</span>
+                          </button>
+                          
+                          {/* IT Consulting */}
+                          <button
+                            onClick={() => {
+                              setCurrentPage('it-consulting');
+                              setIsMenuOpen(false);
+                            }}
+                            className="w-full flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 bg-slate-800/50 text-slate-300 hover:bg-slate-700 hover:text-white"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            <span className="text-sm font-medium">{t('nav.itConsulting')}</span>
                           </button>
                         </div>
                       </div>

@@ -1,5 +1,6 @@
 import { Github, Linkedin, Twitter, Mail, MapPin, Code2, Award, Users } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import profileImage from '../../assets/Profile Neverland Studio.jpg';
 
 export default function TeamPage() {
   const { t } = useLanguage();
@@ -9,16 +10,16 @@ export default function TeamPage() {
       position: 'Founder & CEO',
       department: 'Leadership',
       location: 'Malang, Indonesia',
-      image: '/src/assets/Profile Neverland Studio.jpg',
+      image: profileImage,
       bio: 'Visionary leader with 10+ years of experience in software development and business strategy.',
       skills: ['Leadership', 'Strategy', 'Full-Stack'],
       projects: '50+',
       experience: '10 years',
       social: {
-        github: 'https://github.com',
-        linkedin: 'https://linkedin.com',
-        twitter: 'https://twitter.com',
-        email: 'isaki@neverlandstudio.com'
+        github: 'https://github.com/MuhammadIsakiPrananda',
+        linkedin: 'https://linkedin.com/in/muhammad-isaki-prananda',
+        twitter: 'https://twitter.com/neverlandstudio',
+        email: 'muhammadisakiprananda88@gmail.com'
       }
     },
     {

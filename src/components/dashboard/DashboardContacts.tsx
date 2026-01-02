@@ -199,7 +199,7 @@ const DashboardContacts: React.FC<DashboardContactsProps> = ({ theme }) => {
             Contact Messages
           </h1>
           <p className={`text-sm mt-1 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-            Real-time inbox • Last updated: {lastUpdate.toLocaleTimeString('id-ID')}
+            Real-time inbox
           </p>
         </div>
         <button

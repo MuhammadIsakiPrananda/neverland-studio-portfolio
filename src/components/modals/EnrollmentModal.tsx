@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { X, Send, User, Mail, Phone, Calendar, Clock, BookOpen, CreditCard } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import type { Theme } from '../../types';
+import api from '../../services/apiService';
+import { showSuccess, showError } from '../common/ModernNotification';
 
 interface Course {
   id: string;
@@ -29,6 +31,7 @@ export default function EnrollmentModal({ theme, course, onClose }: EnrollmentMo
   const [preferredTime, setPreferredTime] = useState('');
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   // Error states
   const [nameError, setNameError] = useState<string | undefined>();
@@ -37,13 +40,25 @@ export default function EnrollmentModal({ theme, course, onClose }: EnrollmentMo
 
   // Prevent body scroll when modal is open
   useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    const originalPosition = document.body.style.position;
+    const scrollY = window.scrollY;
+    
     document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
+    
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = originalOverflow;
+      document.body.style.position = originalPosition;
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollY);
     };
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Reset errors
@@ -77,14 +92,35 @@ export default function EnrollmentModal({ theme, course, onClose }: EnrollmentMo
 
     if (hasError) return;
 
-    // Simulate submission
-    console.log({ fullName, email, phone, preferredDay, preferredTime, message, course: course.id });
-    setSubmitted(true);
+    // Submit to backend API
+    setSubmitting(true);
+    
+    try {
+      const enrollmentData = {
+        full_name: fullName,
+        email: email,
+        phone: phone,
+        course_id: course.id,
+        course_title: course.title,
+        preferred_day: preferredDay || null,
+        preferred_time: preferredTime || null,
+        message: message || null,
+      };
 
-    // Auto close after 2 seconds
-    setTimeout(() => {
-      onClose();
-    }, 2000);
+      await api.post('/enrollments', enrollmentData);
+      
+      setSubmitted(true);
+      showSuccess('Enrollment submitted successfully! We will contact you soon.');
+
+      // Auto close after 2 seconds
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+    } catch (error: any) {
+      console.error('Enrollment submission error:', error);
+      showError(error.response?.data?.message || 'Failed to submit enrollment. Please try again.');
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -275,10 +311,23 @@ export default function EnrollmentModal({ theme, course, onClose }: EnrollmentMo
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm text-white font-medium transition-colors flex items-center justify-center gap-2"
+                    disabled={submitting}
+                    className={`
+                      flex-1 px-4 py-2.5 rounded-lg text-sm text-white font-medium transition-colors flex items-center justify-center gap-2
+                      ${submitting ? 'bg-blue-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500'}
+                    `}
                   >
-                    <Send className="w-4 h-4" />
-                    Submit Enrollment
+                    {submitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        Submit Enrollment
+                      </>
+                    )}
                   </button>
                 </div>
               </form>

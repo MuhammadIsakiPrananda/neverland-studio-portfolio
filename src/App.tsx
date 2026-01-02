@@ -1,50 +1,60 @@
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { lazy, Suspense, useState, useEffect } from 'react';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import LiveChat from './components/common/LiveChat';
+
+// Eager load - Critical pages untuk initial load
 import HomePage from './components/pages/HomePage';
-import AboutPage from './components/pages/AboutPage';
-import TeamPage from './components/pages/TeamPage';
-import SkillsPage from './components/pages/SkillsPage';
-import AwardsPage from './components/pages/AwardsPage';
-import ServicesPage from './components/pages/ServicesPage';
-import ITLearningPage from './components/pages/ITLearningPage';
-import ITSolutionsPage from './components/pages/ITSolutionsPage';
-import ProjectsPage from './components/pages/ProjectsPage';
-import PricingPage from './components/pages/PricingPage';
-import TestimonialsPage from './components/pages/TestimonialsPage';
-import ContactPage from './components/pages/ContactPage';
-import DashboardLayout from './components/dashboard/DashboardLayout';
-import DashboardHome from './components/dashboard/DashboardHome';
-import DashboardUsers from './components/dashboard/DashboardUsers';
-import DashboardProjects from './components/dashboard/DashboardProjects';
-import DashboardAnalytics from './components/dashboard/DashboardAnalytics';
-import DashboardContacts from './components/dashboard/DashboardContacts';
-import DashboardEnrollments from './components/dashboard/DashboardEnrollments';
-import DashboardConsultations from './components/dashboard/DashboardConsultations';
-import DashboardActivity from './components/dashboard/DashboardActivity';
-import DashboardNewsletter from './components/dashboard/DashboardNewsletter';
-import DashboardRoles from './components/dashboard/DashboardRoles';
-import DashboardSessions from './components/dashboard/DashboardSessions';
-import DashboardMedia from './components/dashboard/DashboardMedia';
-import DashboardVideos from './components/dashboard/DashboardVideos';
-import DashboardBilling from './components/dashboard/DashboardBilling';
-import DashboardReports from './components/dashboard/DashboardReports';
-import DashboardRevenue from './components/dashboard/DashboardRevenue';
-import DashboardAPI from './components/dashboard/DashboardAPI';
-import DashboardDatabase from './components/dashboard/DashboardDatabase';
-import DashboardSecurity from './components/dashboard/DashboardSecurity';
-import DashboardLogs from './components/dashboard/DashboardLogs';
-import Settings from './components/dashboard/Settings';
 import DashboardLogin from './components/auth/DashboardLogin';
-import OAuthCallback from './components/auth/OAuthCallback';
-import ResetPassword from './components/auth/ResetPassword';
-import LoginModal from './components/modals/LoginModal';
-import RegisterModal from './components/modals/RegisterModal';
-import ForgotPasswordModal from './components/modals/ForgotPasswordModal';
-import TermsModal from './components/modals/TermsModal';
-import PrivacyPolicyModal from './components/modals/PrivacyPolicyModal';
-import ProfileEditModal from './components/common/ProfileEditModal';
+
+// Lazy load - Secondary pages untuk code splitting
+const AboutPage = lazy(() => import('./components/pages/AboutPage'));
+const TeamPage = lazy(() => import('./components/pages/TeamPage'));
+const SkillsPage = lazy(() => import('./components/pages/SkillsPage'));
+const AwardsPage = lazy(() => import('./components/pages/AwardsPage'));
+const ServicesPage = lazy(() => import('./components/pages/ServicesPage'));
+const ITLearningPage = lazy(() => import('./components/pages/ITLearningPage'));
+const ITSolutionsPage = lazy(() => import('./components/pages/ITSolutionsPage'));
+const ITConsultingPage = lazy(() => import('./components/pages/ITConsultingPage'));
+const ProjectsPage = lazy(() => import('./components/pages/ProjectsPage'));
+const PricingPage = lazy(() => import('./components/pages/PricingPage'));
+const TestimonialsPage = lazy(() => import('./components/pages/TestimonialsPage'));
+const ContactPage = lazy(() => import('./components/pages/ContactPage'));
+const MaintenancePage = lazy(() => import('./components/pages/MaintenancePage'));
+
+// Dashboard - Lazy load karena jarang digunakan
+const DashboardLayout = lazy(() => import('./components/dashboard/DashboardLayout'));
+const DashboardHome = lazy(() => import('./components/dashboard/DashboardHome'));
+const DashboardUsers = lazy(() => import('./components/dashboard/DashboardUsers'));
+const DashboardProjects = lazy(() => import('./components/dashboard/DashboardProjects'));
+const DashboardAnalytics = lazy(() => import('./components/dashboard/DashboardAnalytics'));
+const DashboardContacts = lazy(() => import('./components/dashboard/DashboardContacts'));
+const DashboardEnrollments = lazy(() => import('./components/dashboard/DashboardEnrollments'));
+const DashboardConsultations = lazy(() => import('./components/dashboard/DashboardConsultations'));
+const DashboardActivity = lazy(() => import('./components/dashboard/DashboardActivity'));
+const DashboardNewsletter = lazy(() => import('./components/dashboard/DashboardNewsletter'));
+const DashboardRoles = lazy(() => import('./components/dashboard/DashboardRoles'));
+const DashboardMedia = lazy(() => import('./components/dashboard/DashboardMedia'));
+const DashboardVideos = lazy(() => import('./components/dashboard/DashboardVideos'));
+const DashboardBilling = lazy(() => import('./components/dashboard/DashboardBilling'));
+const DashboardReports = lazy(() => import('./components/dashboard/DashboardReports'));
+const DashboardRevenue = lazy(() => import('./components/dashboard/DashboardRevenue'));
+const DashboardSecurity = lazy(() => import('./components/dashboard/DashboardSecurity'));
+const Settings = lazy(() => import('./components/dashboard/Settings'));
+
+// Auth pages
+const OAuthCallback = lazy(() => import('./components/auth/OAuthCallback'));
+const ResetPassword = lazy(() => import('./components/auth/ResetPassword'));
+
+// Modals - Lazy load
+const LoginModal = lazy(() => import('./components/modals/LoginModal'));
+const RegisterModal = lazy(() => import('./components/modals/RegisterModal'));
+const ForgotPasswordModal = lazy(() => import('./components/modals/ForgotPasswordModal'));
+const TermsModal = lazy(() => import('./components/modals/TermsModal'));
+const PrivacyPolicyModal = lazy(() => import('./components/modals/PrivacyPolicyModal'));
+const ProfileEditModal = lazy(() => import('./components/common/ProfileEditModal'));
+
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import type { Theme, User, ContactMessage } from './types';
 import { projects, initialPricingPlans } from './data/mockData';
@@ -53,8 +63,15 @@ import { dashboardAuth } from './services/dashboardAuth';
 import { useAuthMonitor } from './hooks/useAuthMonitor';
 import { profileService } from './services/apiService';
 import { showError } from './components/common/ModernNotification';
-import { useState, useEffect } from 'react';
 import { ModernToaster, showSuccess } from './components/common/ModernNotification';
+import apiService from './services/apiService';
+
+// Loading fallback component
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-slate-950">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+  </div>
+);
 
 function AppContent() {
   const navigate = useNavigate();
@@ -112,6 +129,10 @@ function AppContent() {
     return {};
   });
   const [pricingPlans] = useState(initialPricingPlans);
+
+  // Maintenance mode state
+  const [isMaintenance, setIsMaintenance] = useState(false);
+  const [maintenanceData, setMaintenanceData] = useState<any>(null);
 
   // Get current page from location
   const currentPage = location.pathname.substring(1) || 'home';
@@ -179,6 +200,32 @@ function AppContent() {
         setShowLoginModal(true);
       }, 100);
     }
+  }, [location.pathname]);
+
+  // Check maintenance mode on mount and periodically
+  useEffect(() => {
+    const checkMaintenanceMode = async () => {
+      // Skip maintenance check for dashboard pages
+      if (location.pathname.startsWith('/dashboard')) {
+        return;
+      }
+
+      try {
+        const response = await apiService.get('/maintenance/status');
+        if (response.data.success) {
+          setIsMaintenance(response.data.is_maintenance);
+          setMaintenanceData(response.data.data);
+        }
+      } catch (error) {
+        console.error('Failed to check maintenance mode:', error);
+      }
+    };
+
+    checkMaintenanceMode();
+
+    // Check every 30 seconds
+    const interval = setInterval(checkMaintenanceMode, 30000);
+    return () => clearInterval(interval);
   }, [location.pathname]);
 
   // Scroll to top on route change or refresh
@@ -453,6 +500,19 @@ function AppContent() {
   // Check if current route is dashboard
   const isDashboardRoute = location.pathname.startsWith('/dashboard');
 
+  // Show maintenance page if maintenance is active (but not for dashboard)
+  if (isMaintenance && !isDashboardRoute) {
+    return (
+      <Suspense fallback={<PageLoader />}>
+        <MaintenancePage 
+          title={maintenanceData?.title}
+          message={maintenanceData?.message}
+          estimatedTime={maintenanceData?.estimated_time}
+        />
+      </Suspense>
+    );
+  }
+
   return (
     <div className={`min-h-screen ${bgClass} ${textClass} transition-colors duration-300`}>
       {/* Only show Navbar on non-dashboard routes */}
@@ -478,21 +538,23 @@ function AppContent() {
 
       {/* Main content - no padding on dashboard routes */}
       <main className={!isDashboardRoute ? "pt-20" : ""}>
-        <Routes>
-          <Route path="/" element={<Navigate to="/home" replace />} />
-          <Route path="/home" element={<HomePage theme={theme} onNavigate={handleNavigate} />} />
-          <Route path="/about" element={<AboutPage theme={theme} />} />
-          <Route path="/team" element={<TeamPage theme={theme} />} />
-          <Route path="/skills" element={<SkillsPage theme={theme} />} />
-          <Route path="/awards" element={<AwardsPage theme={theme} />} />
-          <Route path="/services" element={<ServicesPage theme={theme} />} />
-          <Route path="/it-learning" element={<ITLearningPage />} />
-          <Route path="/it-solutions" element={<ITSolutionsPage />} />
-          <Route path="/projects" element={<ProjectsPage theme={theme} projects={projects} />} />
-          <Route path="/pricing" element={<PricingPage theme={theme} plans={pricingPlans} />} />
-          <Route path="/testimonials" element={<TestimonialsPage theme={theme} />} />
-          
-          <Route path="/contact" element={<ContactPage theme={theme} onSubmit={handleContactSubmit} />} />
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<Navigate to="/home" replace />} />
+            <Route path="/home" element={<HomePage theme={theme} onNavigate={handleNavigate} />} />
+            <Route path="/about" element={<AboutPage theme={theme} />} />
+            <Route path="/team" element={<TeamPage theme={theme} />} />
+            <Route path="/skills" element={<SkillsPage theme={theme} />} />
+            <Route path="/awards" element={<AwardsPage theme={theme} />} />
+            <Route path="/services" element={<ServicesPage theme={theme} />} />
+            <Route path="/it-learning" element={<ITLearningPage />} />
+            <Route path="/it-solutions" element={<ITSolutionsPage />} />
+            <Route path="/it-consulting" element={<ITConsultingPage />} />
+            <Route path="/projects" element={<ProjectsPage theme={theme} />} />
+            <Route path="/pricing" element={<PricingPage theme={theme} plans={pricingPlans} />} />
+            <Route path="/testimonials" element={<TestimonialsPage theme={theme} />} />
+            
+            <Route path="/contact" element={<ContactPage theme={theme} onSubmit={handleContactSubmit} />} />
           
           {/* Dashboard - Shows login if not authenticated, dashboard if authenticated */}
           <Route 
@@ -632,16 +694,6 @@ function AppContent() {
                 </DashboardLayout>} 
           />
           <Route 
-            path="/dashboard/sessions" 
-            element={<DashboardLayout 
-                  theme={theme}
-                  onThemeToggle={toggleTheme}
-                  onLogout={handleLogout}
-                >
-                  <DashboardSessions theme={theme} />
-                </DashboardLayout>} 
-          />
-          <Route 
             path="/dashboard/media" 
             element={<DashboardLayout 
                   theme={theme}
@@ -692,36 +744,6 @@ function AppContent() {
                 </DashboardLayout>} 
           />
           <Route 
-            path="/dashboard/api" 
-            element={<DashboardLayout 
-                  theme={theme}
-                  onThemeToggle={toggleTheme}
-                  onLogout={handleLogout}
-                >
-                  <DashboardAPI theme={theme} />
-                </DashboardLayout>} 
-          />
-          <Route 
-            path="/dashboard/database" 
-            element={<DashboardLayout 
-                  theme={theme}
-                  onThemeToggle={toggleTheme}
-                  onLogout={handleLogout}
-                >
-                  <DashboardDatabase theme={theme} />
-                </DashboardLayout>} 
-          />
-          <Route 
-            path="/dashboard/logs" 
-            element={<DashboardLayout 
-                  theme={theme}
-                  onThemeToggle={toggleTheme}
-                  onLogout={handleLogout}
-                >
-                  <DashboardLogs theme={theme} />
-                </DashboardLayout>} 
-          />
-          <Route 
             path="/dashboard/security" 
             element={<DashboardLayout 
                   theme={theme}
@@ -732,76 +754,90 @@ function AppContent() {
                 </DashboardLayout>} 
           />
         </Routes>
+        </Suspense>
       </main>
 
       {/* Only show Footer and LiveChat on non-dashboard routes */}
-      {!isDashboardRoute && <Footer theme={theme} setCurrentPage={handleNavigate} />}
-      {!isDashboardRoute && <LiveChat />}
+      {!isDashboardRoute && <Footer theme={theme} onNavigate={handleNavigate} />}
+      {!isDashboardRoute && <LiveChat theme={theme} />}
       
+      {/* Modals */}
       {showLoginModal && (
-        <LoginModal
-          theme={theme}
-          onClose={() => setShowLoginModal(false)}
-          onLogin={handleLogin}
-          onSignUp={() => {
-            setShowLoginModal(false);
-            setShowRegisterModal(true);
-          }}
-          onForgotPassword={() => {
-            setShowLoginModal(false);
-            setShowForgotPasswordModal(true);
-          }}
-        />
+        <Suspense fallback={null}>
+          <LoginModal
+            theme={theme}
+            onClose={() => setShowLoginModal(false)}
+            onLogin={handleLogin}
+            onSignUp={() => {
+              setShowLoginModal(false);
+              setShowRegisterModal(true);
+            }}
+            onForgotPassword={() => {
+              setShowLoginModal(false);
+              setShowForgotPasswordModal(true);
+            }}
+          />
+        </Suspense>
       )}
 
       {showRegisterModal && (
-        <RegisterModal
-          theme={theme}
-          onClose={() => setShowRegisterModal(false)}
-          onRegister={handleRegister}
-          onSignIn={() => {
-            setShowRegisterModal(false);
-            setShowLoginModal(true);
-          }}
-          onShowTerms={() => setShowTermsModal(true)}
-          onShowPrivacy={() => setShowPrivacyModal(true)}
-        />
+        <Suspense fallback={null}>
+          <RegisterModal
+            theme={theme}
+            onClose={() => setShowRegisterModal(false)}
+            onRegister={handleRegister}
+            onSignIn={() => {
+              setShowRegisterModal(false);
+              setShowLoginModal(true);
+            }}
+            onShowTerms={() => setShowTermsModal(true)}
+            onShowPrivacy={() => setShowPrivacyModal(true)}
+          />
+        </Suspense>
       )}
 
       {showForgotPasswordModal && (
-        <ForgotPasswordModal
-          theme={theme}
-          onClose={() => setShowForgotPasswordModal(false)}
-          onResetPassword={handleResetPassword}
-          onBackToLogin={() => {
-            setShowForgotPasswordModal(false);
-            setShowLoginModal(true);
-          }}
-        />
+        <Suspense fallback={null}>
+          <ForgotPasswordModal
+            theme={theme}
+            onClose={() => setShowForgotPasswordModal(false)}
+            onResetPassword={handleResetPassword}
+            onBackToLogin={() => {
+              setShowForgotPasswordModal(false);
+              setShowLoginModal(true);
+            }}
+          />
+        </Suspense>
       )}
 
       {showTermsModal && (
-        <TermsModal
-          theme={theme}
-          onClose={() => setShowTermsModal(false)}
-        />
+        <Suspense fallback={null}>
+          <TermsModal
+            theme={theme}
+            onClose={() => setShowTermsModal(false)}
+          />
+        </Suspense>
       )}
 
       {showPrivacyModal && (
-        <PrivacyPolicyModal
-          theme={theme}
-          onClose={() => setShowPrivacyModal(false)}
-        />
+        <Suspense fallback={null}>
+          <PrivacyPolicyModal
+            theme={theme}
+            onClose={() => setShowPrivacyModal(false)}
+          />
+        </Suspense>
       )}
 
       {showProfileEdit && (
-        <ProfileEditModal
-          theme={theme}
-          isOpen={showProfileEdit}
-          onClose={() => setShowProfileEdit(false)}
-          currentProfile={userProfile}
-          onSave={handleProfileSave}
-        />
+        <Suspense fallback={null}>
+          <ProfileEditModal
+            theme={theme}
+            isOpen={showProfileEdit}
+            onClose={() => setShowProfileEdit(false)}
+            currentProfile={userProfile}
+            onSave={handleProfileSave}
+          />
+        </Suspense>
       )}
     </div>
   );

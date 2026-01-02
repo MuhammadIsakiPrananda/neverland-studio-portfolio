@@ -77,13 +77,35 @@ export const authService = {
       });
 
       if (response.data.success && response.data.data) {
-        localStorage.setItem('auth_token', response.data.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.data.user));
+        const { token, user } = response.data.data;
+        
+        // Store auth data
+        localStorage.setItem('auth_token', token);
+        localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('auth_mode', 'backend');
+        
+        // Create user profile dengan default avatar berdasarkan nama
+        const userProfile = {
+          username: user.username || user.email.split('@')[0],
+          name: user.name,
+          email: user.email,
+          phone: user.phone || '',
+          bio: user.bio || '',
+          location: user.location || '',
+          website: user.website || '',
+          avatar: user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.name)}&backgroundColor=b6e3f4,c0aede,d1d4f9`,
+          github: user.github || '',
+          twitter: user.twitter || '',
+          linkedin: user.linkedin || '',
+          instagram: user.instagram || '',
+          role: 'user'
+        };
+        
+        localStorage.setItem('userProfile', JSON.stringify(userProfile));
         
         showSuccess(
           'Account Created! 🎉',
-          `Welcome ${response.data.data.user.name}! You can now access your account.`
+          `Welcome ${user.name}! You can now access your account.`
         );
       }
 
@@ -119,13 +141,35 @@ export const authService = {
       console.log('Login response:', response.data);
       
       if (response.data.success && response.data.data) {
-        localStorage.setItem('auth_token', response.data.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.data.user));
+        const { token, user } = response.data.data;
+        
+        // Store auth data
+        localStorage.setItem('auth_token', token);
+        localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('auth_mode', 'backend');
+        
+        // Create/update user profile dengan avatar dari database atau default
+        const userProfile = {
+          username: user.username || user.email.split('@')[0],
+          name: user.name,
+          email: user.email,
+          phone: user.phone || '',
+          bio: user.bio || '',
+          location: user.location || '',
+          website: user.website || '',
+          avatar: user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.name)}&backgroundColor=b6e3f4,c0aede,d1d4f9`,
+          github: user.github || '',
+          twitter: user.twitter || '',
+          linkedin: user.linkedin || '',
+          instagram: user.instagram || '',
+          role: 'user'
+        };
+        
+        localStorage.setItem('userProfile', JSON.stringify(userProfile));
         
         showSuccess(
           'Welcome Back! 👋',
-          `Successfully logged in as ${response.data.data.user.name}`
+          `Successfully logged in as ${user.name}`
         );
       } else {
         showError('Login Failed', response.data.message);
@@ -291,13 +335,35 @@ export const authService = {
       });
 
       if (response.data.success && response.data.data) {
-        localStorage.setItem('auth_token', response.data.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.data.user));
+        const { token, user } = response.data.data;
+        
+        // Store auth data
+        localStorage.setItem('auth_token', token);
+        localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('auth_mode', 'backend');
+        
+        // Store user profile dengan avatar dari OAuth provider
+        const userProfile = {
+          username: user.username || user.email.split('@')[0],
+          name: user.name,
+          email: user.email,
+          phone: user.phone || '',
+          bio: user.bio || '',
+          location: user.location || '',
+          website: user.website || '',
+          avatar: user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.name)}&backgroundColor=b6e3f4,c0aede,d1d4f9`,
+          github: user.github || '',
+          twitter: user.twitter || '',
+          linkedin: user.linkedin || '',
+          instagram: user.instagram || '',
+          role: 'user'
+        };
+        
+        localStorage.setItem('userProfile', JSON.stringify(userProfile));
         
         showSuccess(
           'Login Successful! 🎉',
-          `Welcome back ${response.data.data.user.name}!`
+          `Welcome back ${user.name}!`
         );
       }
 

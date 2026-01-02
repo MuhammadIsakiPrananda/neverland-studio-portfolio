@@ -281,7 +281,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
   const displayStats = realtimeStats ? {
     users: realtimeStats.users || stats?.users || { total: 0, today: 0, this_week: 0, this_month: 0 },
     contacts: realtimeStats.contacts || stats?.contacts || { total: 0, new: 0, today: 0 },
-    enrollments: realtimeStats.enrollments || stats?.enrollments || { total: 0, pending: 0, approved: 0, today: 0 },
+    enrollments: realtimeStats.enrollments || stats?.enrollments || { total: 0, pending: 0, confirmed: 0, completed: 0, today: 0 },
     consultations: realtimeStats.consultations || stats?.consultations || { total: 0, pending: 0, scheduled: 0, today: 0 },
     newsletters: realtimeStats.newsletters || stats?.newsletters || { total: 0, today: 0 },
     logins: realtimeStats.logins || stats?.logins || { total: 0, today: 0, failed_today: 0 }
@@ -300,19 +300,8 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
           <h1 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
             {getGreeting()}, Admin! 👋
           </h1>
-          <div className="flex items-center gap-3">
-            <p className={isDark ? 'text-slate-400' : 'text-slate-600'}>
-              Real-time Dashboard Overview
-            </p>
-            {isRealtime && (
-              <span className="flex items-center gap-1.5 text-xs font-semibold text-green-400 bg-green-500/20 px-2 py-1 rounded-full">
-                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                Live
-              </span>
-            )}
-          </div>
-          <p className={`text-xs mt-1 ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
-            Last updated: {getLastUpdateText()}
+          <p className={isDark ? 'text-slate-400' : 'text-slate-600'}>
+            Real-time Dashboard Overview
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -356,7 +345,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
         <StatCard 
           title="Enrollments" 
           value={displayStats?.enrollments?.total || 0}
-          subtitle={`${displayStats?.enrollments?.pending || 0} pending • ${displayStats?.enrollments?.approved || 0} approved`}
+          subtitle={`${displayStats?.enrollments?.pending || 0} pending • ${displayStats?.enrollments?.confirmed || 0} confirmed • ${displayStats?.enrollments?.completed || 0} completed`}
           icon={BookOpen}
           theme={theme}
           loading={loading}

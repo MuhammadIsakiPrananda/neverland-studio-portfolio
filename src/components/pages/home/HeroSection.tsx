@@ -68,12 +68,17 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
                 {/* Glow Effect */}
                 <div className="absolute inset-0 rounded-xl blur-2xl opacity-20 transition-opacity duration-500 bg-blue-500/30 group-hover:opacity-30" />
                 
-                {/* Image Container */}
+                {/* Image Container with reserved space untuk prevent CLS */}
                 <div className="relative rounded-xl overflow-hidden border border-slate-700 shadow-2xl shadow-blue-500/10 transition-all duration-300 hover:scale-[1.01] hover:border-blue-500/50">
+                  {/* Placeholder dengan aspect ratio 1:1 untuk mencegah layout shift */}
+                  <div className="aspect-square" />
                   <img 
                     src={profileImage} 
                     alt="Neverland Studio"
-                    className="w-full h-auto object-cover"
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="eager"
+                    decoding="async"
+                    fetchpriority="high"
                   />
                 </div>
               </div>

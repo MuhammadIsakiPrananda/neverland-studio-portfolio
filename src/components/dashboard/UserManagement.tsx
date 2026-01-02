@@ -40,6 +40,28 @@ const UserManagement: React.FC<UserManagementProps> = ({ theme }) => {
     to: null as number | null,
   });
 
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (showUserModal || showAddModal || showEditModal) {
+      const originalOverflow = document.body.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+      
+      // Get scrollbar width
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      
+      // Prevent scroll and compensate for scrollbar
+      document.body.style.overflow = 'hidden';
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
+      
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
+      };
+    }
+  }, [showUserModal, showAddModal, showEditModal]);
+
   // Fetch users from API
   const fetchUsers = useCallback(async () => {
     setLoading(true);
@@ -372,10 +394,18 @@ const UserManagement: React.FC<UserManagementProps> = ({ theme }) => {
 
       {/* User Detail Modal */}
       {showUserModal && selectedUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className={`relative w-full max-w-2xl rounded-2xl shadow-2xl ${
-            isDark ? 'bg-gray-900 border border-gray-800' : 'bg-white border border-stone-200'
-          }`}>
+        <>
+          {/* Full Screen Backdrop */}
+          <div className="fixed inset-0 z-[9998] bg-black/60 backdrop-blur-sm" onClick={() => setShowUserModal(false)} />
+          
+          {/* Modal Container */}
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pointer-events-none">
+            <div 
+              className={`relative w-full max-w-2xl rounded-2xl shadow-2xl pointer-events-auto ${
+                isDark ? 'bg-gray-900 border border-gray-800' : 'bg-white border border-stone-200'
+              }`}
+              onClick={(e) => e.stopPropagation()}
+            >
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-stone-900'}`}>
@@ -436,6 +466,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ theme }) => {
             </div>
           </div>
         </div>
+        </>
       )}
 
       {/* Add User Modal */}

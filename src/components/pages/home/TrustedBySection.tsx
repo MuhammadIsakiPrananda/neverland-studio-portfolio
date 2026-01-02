@@ -19,7 +19,7 @@ import {
 // Calculate animation delay based on current time to maintain position across refreshes
 const getAnimationDelay = () => {
   const now = Date.now();
-  const animationDuration = 25000; // 25 seconds in milliseconds (for mobile)
+  const animationDuration = 18000; // 18 seconds in milliseconds (for mobile - faster)
   const offset = -(now % animationDuration) / 1000; // Convert to seconds with negative value
   return `${offset}s`;
 };
@@ -101,25 +101,25 @@ export default function TrustedBySection() {
           }
         }
 
-        /* Mobile - faster scroll */
+        /* Mobile - fast and dynamic scroll */
         .animate-scroll-mobile {
           display: flex;
-          animation: scroll 25s linear infinite;
+          animation: scroll 18s linear infinite;
           animation-play-state: running;
         }
 
-        /* Tablet - medium speed */
+        /* Tablet - medium speed, balanced */
         @media (min-width: 640px) {
           .animate-scroll-tablet {
-            animation: scroll 35s linear infinite;
+            animation: scroll 25s linear infinite;
             animation-play-state: running;
           }
         }
 
-        /* Desktop - slower, more relaxed */
+        /* Desktop - moderate speed, comfortable viewing */
         @media (min-width: 768px) {
           .animate-scroll-desktop {
-            animation: scroll 45s linear infinite;
+            animation: scroll 30s linear infinite;
             animation-play-state: running;
           }
         }

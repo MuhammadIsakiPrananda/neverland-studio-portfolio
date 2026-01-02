@@ -63,6 +63,7 @@ const translations = {
       allServices: 'All Services',
       itLearning: 'IT Learning',
       itSolutions: 'IT Solutions',
+      itConsulting: 'IT Consulting',
       portfolio: 'Portfolio',
       pricing: 'Pricing',
       testimonials: 'Testimonials',
@@ -473,6 +474,104 @@ const translations = {
           title: 'Ongoing Support',
           description: 'Dedicated support and maintenance after deployment'
         }
+      }
+    },
+    itConsulting: {
+      badge: 'IT Consulting & Support',
+      hero: {
+        title: 'Expert IT Consulting Services',
+        subtitle: 'Transform your business with strategic IT consulting and comprehensive support services. We help you optimize technology, reduce costs, and drive innovation.'
+      },
+      benefits: {
+        saveTime: {
+          title: 'Save Time',
+          description: 'Focus on your core business while we handle IT complexities'
+        },
+        reduceRisks: {
+          title: 'Reduce Risks',
+          description: 'Minimize downtime and security threats with expert guidance'
+        },
+        scaleBetter: {
+          title: 'Scale Better',
+          description: 'Build IT infrastructure that grows with your business'
+        },
+        strategicInsights: {
+          title: 'Strategic Insights',
+          description: 'Make informed decisions with expert IT consulting'
+        }
+      },
+      services: {
+        strategy: {
+          title: 'IT Strategy & Planning',
+          description: 'Comprehensive IT strategy development aligned with your business goals',
+          features: [
+            'Technology roadmap planning',
+            'Digital transformation strategy',
+            'IT budget optimization',
+            'Risk assessment & mitigation',
+            'Vendor selection & management'
+          ]
+        },
+        infrastructure: {
+          title: 'Infrastructure Consulting',
+          description: 'Design and optimize your IT infrastructure for maximum efficiency',
+          features: [
+            'Network architecture design',
+            'Server infrastructure planning',
+            'Cloud migration strategy',
+            'Disaster recovery planning',
+            'Performance optimization'
+          ]
+        },
+        support: {
+          title: '24/7 IT Support',
+          description: 'Round-the-clock technical support for your business operations',
+          features: [
+            'Help desk support',
+            'Remote troubleshooting',
+            'System monitoring',
+            'Incident management',
+            'Priority response times'
+          ]
+        },
+        training: {
+          title: 'IT Training & Workshops',
+          description: 'Empower your team with comprehensive IT training programs',
+          features: [
+            'Custom training programs',
+            'Software & tools training',
+            'Cybersecurity awareness',
+            'Best practices workshops',
+            'Certification preparation'
+          ]
+        },
+        optimization: {
+          title: 'Process Optimization',
+          description: 'Streamline your IT processes for better productivity',
+          features: [
+            'Workflow automation',
+            'System integration',
+            'Process documentation',
+            'Performance metrics',
+            'Continuous improvement'
+          ]
+        },
+        management: {
+          title: 'Project Management',
+          description: 'Expert IT project management from planning to execution',
+          features: [
+            'Project planning & scheduling',
+            'Resource allocation',
+            'Risk management',
+            'Quality assurance',
+            'Stakeholder communication'
+          ]
+        }
+      },
+      cta: {
+        title: 'Ready to Transform Your IT Infrastructure?',
+        subtitle: "Let's discuss how our IT consulting services can help your business grow and succeed.",
+        button: 'Get Started'
       }
     },
     portfolio: {
@@ -968,6 +1067,7 @@ const translations = {
       allServices: 'Semua Layanan',
       itLearning: 'Pembelajaran IT',
       itSolutions: 'Solusi IT',
+      itConsulting: 'Konsultan IT',
       portfolio: 'Portofolio',
       pricing: 'Harga',
       testimonials: 'Testimoni',
@@ -1312,6 +1412,104 @@ const translations = {
       cta: {
         title: 'Siap Transformasi Bisnis Anda?',
         subtitle: 'Mari diskusikan bagaimana layanan kami dapat membantu Anda mencapai tujuan',
+        button: 'Mulai Sekarang'
+      }
+    },
+    itConsulting: {
+      badge: 'Konsultasi & Dukungan IT',
+      hero: {
+        title: 'Layanan Konsultasi IT Profesional',
+        subtitle: 'Transformasikan bisnis Anda dengan konsultasi IT strategis dan layanan dukungan komprehensif. Kami membantu Anda mengoptimalkan teknologi, mengurangi biaya, dan mendorong inovasi.'
+      },
+      benefits: {
+        saveTime: {
+          title: 'Hemat Waktu',
+          description: 'Fokus pada bisnis inti Anda sementara kami menangani kompleksitas IT'
+        },
+        reduceRisks: {
+          title: 'Kurangi Risiko',
+          description: 'Minimalkan downtime dan ancaman keamanan dengan panduan ahli'
+        },
+        scaleBetter: {
+          title: 'Skalabilitas Lebih Baik',
+          description: 'Bangun infrastruktur IT yang berkembang bersama bisnis Anda'
+        },
+        strategicInsights: {
+          title: 'Wawasan Strategis',
+          description: 'Buat keputusan yang tepat dengan konsultasi IT profesional'
+        }
+      },
+      services: {
+        strategy: {
+          title: 'Strategi & Perencanaan IT',
+          description: 'Pengembangan strategi IT komprehensif yang selaras dengan tujuan bisnis Anda',
+          features: [
+            'Perencanaan roadmap teknologi',
+            'Strategi transformasi digital',
+            'Optimasi anggaran IT',
+            'Penilaian & mitigasi risiko',
+            'Seleksi & manajemen vendor'
+          ]
+        },
+        infrastructure: {
+          title: 'Konsultasi Infrastruktur',
+          description: 'Desain dan optimalkan infrastruktur IT Anda untuk efisiensi maksimal',
+          features: [
+            'Desain arsitektur jaringan',
+            'Perencanaan infrastruktur server',
+            'Strategi migrasi cloud',
+            'Perencanaan disaster recovery',
+            'Optimasi performa'
+          ]
+        },
+        support: {
+          title: 'Dukungan IT 24/7',
+          description: 'Dukungan teknis sepanjang waktu untuk operasional bisnis Anda',
+          features: [
+            'Dukungan help desk',
+            'Troubleshooting jarak jauh',
+            'Monitoring sistem',
+            'Manajemen insiden',
+            'Waktu respons prioritas'
+          ]
+        },
+        training: {
+          title: 'Pelatihan & Workshop IT',
+          description: 'Berdayakan tim Anda dengan program pelatihan IT yang komprehensif',
+          features: [
+            'Program pelatihan custom',
+            'Pelatihan software & tools',
+            'Kesadaran keamanan siber',
+            'Workshop best practices',
+            'Persiapan sertifikasi'
+          ]
+        },
+        optimization: {
+          title: 'Optimasi Proses',
+          description: 'Sederhanakan proses IT Anda untuk produktivitas yang lebih baik',
+          features: [
+            'Otomasi workflow',
+            'Integrasi sistem',
+            'Dokumentasi proses',
+            'Metrik performa',
+            'Perbaikan berkelanjutan'
+          ]
+        },
+        management: {
+          title: 'Manajemen Proyek',
+          description: 'Manajemen proyek IT profesional dari perencanaan hingga eksekusi',
+          features: [
+            'Perencanaan & penjadwalan proyek',
+            'Alokasi sumber daya',
+            'Manajemen risiko',
+            'Quality assurance',
+            'Komunikasi stakeholder'
+          ]
+        }
+      },
+      cta: {
+        title: 'Siap Transformasi Infrastruktur IT Anda?',
+        subtitle: 'Mari diskusikan bagaimana layanan konsultasi IT kami dapat membantu bisnis Anda tumbuh dan sukses.',
         button: 'Mulai Sekarang'
       }
     },
