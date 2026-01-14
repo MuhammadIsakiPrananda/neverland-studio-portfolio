@@ -38,9 +38,27 @@ export default function ProjectInquiryModal({ theme, package: pkg, onClose }: Pr
 
   // Prevent body scroll when modal is open
   useEffect(() => {
+    // Get current scroll position
+    const scrollY = window.scrollY;
+
+    // Lock scroll and hide scrollbar
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
+
+    // Cleanup function
     return () => {
-      document.body.style.overflow = 'unset';
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
     };
   }, []);
 
@@ -48,7 +66,7 @@ export default function ProjectInquiryModal({ theme, package: pkg, onClose }: Pr
   const formatBudget = (value: string) => {
     // Remove all non-digit characters
     const numbers = value.replace(/\D/g, '');
-    
+
     // Add thousand separators (dots)
     return numbers.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   };
@@ -122,14 +140,14 @@ export default function ProjectInquiryModal({ theme, package: pkg, onClose }: Pr
     if (hasError) return;
 
     // Simulate submission
-    console.log({ 
-      fullName, 
-      email, 
-      phone, 
-      company, 
+    console.log({
+      fullName,
+      email,
+      phone,
+      company,
       budget: budget.replace(/\./g, ''), // Remove dots for numeric value
-      message, 
-      package: pkg.id 
+      message,
+      package: pkg.id
     });
     setSubmitted(true);
 
@@ -202,9 +220,8 @@ export default function ProjectInquiryModal({ theme, package: pkg, onClose }: Pr
                       type="text"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${
-                        nameError ? 'border-red-500/50' : 'border-slate-700/50'
-                      } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
+                      className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${nameError ? 'border-red-500/50' : 'border-slate-700/50'
+                        } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
                       placeholder="Enter your full name"
                     />
                   </div>
@@ -224,9 +241,8 @@ export default function ProjectInquiryModal({ theme, package: pkg, onClose }: Pr
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${
-                          emailError ? 'border-red-500/50' : 'border-slate-700/50'
-                        } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
+                        className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${emailError ? 'border-red-500/50' : 'border-slate-700/50'
+                          } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
                         placeholder="Enter Email Address"
                       />
                     </div>
@@ -244,9 +260,8 @@ export default function ProjectInquiryModal({ theme, package: pkg, onClose }: Pr
                         type="tel"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${
-                          phoneError ? 'border-red-500/50' : 'border-slate-700/50'
-                        } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
+                        className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${phoneError ? 'border-red-500/50' : 'border-slate-700/50'
+                          } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
                         placeholder="Enter Phone Number"
                       />
                     </div>
@@ -285,9 +300,8 @@ export default function ProjectInquiryModal({ theme, package: pkg, onClose }: Pr
                           type="text"
                           value={budget}
                           onChange={handleBudgetChange}
-                          className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${
-                            budgetError ? 'border-red-500/50' : 'border-slate-700/50'
-                          } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
+                          className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${budgetError ? 'border-red-500/50' : 'border-slate-700/50'
+                            } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
                           placeholder="Enter your Budget"
                         />
                       </div>
@@ -312,9 +326,8 @@ export default function ProjectInquiryModal({ theme, package: pkg, onClose }: Pr
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       rows={4}
-                      className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${
-                        messageError ? 'border-red-500/50' : 'border-slate-700/50'
-                      } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors resize-none`}
+                      className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${messageError ? 'border-red-500/50' : 'border-slate-700/50'
+                        } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors resize-none`}
                       placeholder="Tell us about your project requirements, timeline, or any specific features..."
                     />
                   </div>

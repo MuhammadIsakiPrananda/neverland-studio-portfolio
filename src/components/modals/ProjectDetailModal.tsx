@@ -12,14 +12,29 @@ export default function ProjectDetailModal({ project, isOpen, onClose }: Project
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
+      // Get current scroll position
+      const scrollY = window.scrollY;
+
+      // Lock scroll and hide scrollbar
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+
+      // Cleanup function
+      return () => {
+        const scrollY = document.body.style.top;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      };
     }
-    
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [isOpen]);
 
   if (!isOpen || !project) return null;
@@ -47,10 +62,10 @@ export default function ProjectDetailModal({ project, isOpen, onClose }: Project
     <>
       {/* Backdrop - No onClick to prevent closing */}
       <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 animate-fade-in" />
-      
+
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 pointer-events-none overflow-y-auto">
-        <div 
+        <div
           className="relative w-full max-w-4xl my-auto bg-slate-950 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden pointer-events-auto animate-scale-in border border-slate-700/50"
           onClick={(e) => e.stopPropagation()}
         >
@@ -67,13 +82,13 @@ export default function ProjectDetailModal({ project, isOpen, onClose }: Project
           <div className="overflow-y-auto max-h-[85vh] sm:max-h-[90vh] hide-scrollbar">
             {/* Header Image */}
             <div className="relative h-48 sm:h-64 md:h-80 overflow-hidden">
-              <img 
-                src={project.image} 
+              <img
+                src={project.image}
                 alt={project.title}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
-              
+
               {/* Category Badge */}
               <div className="absolute top-4 sm:top-6 left-4 sm:left-6 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-blue-600/90 backdrop-blur-sm text-white text-xs sm:text-sm font-semibold shadow-lg">
                 {project.category}
@@ -86,7 +101,7 @@ export default function ProjectDetailModal({ project, isOpen, onClose }: Project
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
                 {project.title}
               </h2>
-              
+
               <p className="text-base sm:text-lg text-slate-300 leading-relaxed mb-6 sm:mb-8">
                 {project.description}
               </p>
@@ -117,7 +132,7 @@ export default function ProjectDetailModal({ project, isOpen, onClose }: Project
                 </h3>
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   {highlights.map((highlight, idx) => (
-                    <div 
+                    <div
                       key={idx}
                       className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-slate-800/50 border border-slate-700/50 text-center hover:border-blue-500/50 transition-colors"
                     >
@@ -137,7 +152,7 @@ export default function ProjectDetailModal({ project, isOpen, onClose }: Project
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                   {features.map((feature, idx) => (
-                    <div 
+                    <div
                       key={idx}
                       className="flex items-start gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg sm:rounded-xl bg-slate-800/30 border border-slate-700/30 hover:bg-slate-800/50 transition-colors"
                     >
@@ -157,9 +172,9 @@ export default function ProjectDetailModal({ project, isOpen, onClose }: Project
                   Technologies Used
                 </h3>
                 <div className="flex flex-wrap gap-2 sm:gap-3">
-                  {project.techStack.map((tech, idx) => (
-                    <span 
-                      key={idx} 
+                  {Array.isArray(project.technologies) && project.technologies.map((tech, idx) => (
+                    <span
+                      key={idx}
                       className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-lg sm:rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 transition-colors"
                     >
                       {tech}

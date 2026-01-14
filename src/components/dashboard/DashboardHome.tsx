@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import type { Theme } from '../../types';
-import { 
-  Users, 
-  TrendingUp, 
-  Mail, 
+import {
+  Users,
+  TrendingUp,
+  Mail,
   BookOpen,
   MessageSquare,
   Activity,
@@ -11,12 +11,18 @@ import {
   LogIn,
   Calendar,
   RefreshCw,
-  Zap
+  Zap,
+  Wifi,
+  WifiOff,
+  Loader2
 } from 'lucide-react';
 import dashboardService, { type DashboardStats, type Activity as ActivityType } from '../../services/dashboardService';
 import activityLogService, { type ActivityLog } from '../../services/activityLogService';
 import realtimeService from '../../services/realtimeService';
 import { showSuccess, showError } from '../common/ModernNotification';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
 
 interface DashboardHomeProps {
   theme: Theme;
@@ -28,85 +34,98 @@ interface StatCardProps {
   subtitle: string;
   icon: React.ElementType;
   theme: Theme;
-  loading?: boolean;
   trend?: {
     value: number;
     label: string;
   };
-  isUpdating?: boolean;
+  gradient?: string;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ title, value, subtitle, icon: Icon, theme, loading, trend, isUpdating }) => {
-  const isDark = theme === 'dark';
+const StatCard: React.FC<StatCardProps> = ({ title, value, subtitle, icon: Icon, theme, trend, gradient = 'from-primary/5 to-cyan-500/5' }) => {
   const [displayValue, setDisplayValue] = useState<number>(0);
-  const [prevValue, setPrevValue] = useState<number>(0);
-  
+
   useEffect(() => {
     const numValue = typeof value === 'string' ? 0 : value;
-    
-    if (numValue !== prevValue && numValue !== displayValue) {
-      // Animate from current display value to new value
-      const start = displayValue;
-      const end = numValue;
-      const duration = 1000; // 1 second animation
+    if (numValue !== displayValue) {
+      const duration = 800;
       const startTime = Date.now();
-      
+      const start = displayValue;
+
       const animate = () => {
-        const now = Date.now();
-        const progress = Math.min((now - startTime) / duration, 1);
-        const easeOutQuad = progress * (2 - progress); // Easing function
-        const current = Math.round(start + (end - start) * easeOutQuad);
-        
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(start + (numValue - start) * easeOut);
+
         setDisplayValue(current);
-        
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          setPrevValue(end);
-        }
+        if (progress < 1) requestAnimationFrame(animate);
       };
-      
+
       requestAnimationFrame(animate);
     }
-  }, [value, displayValue, prevValue]);
-  
+  }, [value]);
+
+  const isDark = theme === 'dark';
+
   return (
-    <div className={`
-      relative p-6 rounded-2xl transition-all duration-300 hover:scale-105
-      ${isDark 
-        ? 'bg-slate-900/50 backdrop-blur-sm border border-slate-800 hover:border-blue-500/30' 
-        : 'bg-white border border-slate-200 hover:border-blue-300 shadow-lg'}
-    `}>
-      <div className="flex items-center justify-between mb-4">
-        <div className={`p-3 rounded-xl transition-all duration-300 ${
-          isDark ? 'bg-blue-500/20' : 'bg-blue-50'
-        }`}>
-          <Icon className={`w-6 h-6 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
-        </div>
-        {trend && (
-          <div className={`text-xs font-semibold px-2 py-1 rounded transition-all duration-300 ${
-            trend.value > 0 ? 'bg-green-500/20 text-green-400' : 'bg-slate-500/20 text-slate-400'
-          }`}>
-            {trend.value > 0 ? '+' : ''}{trend.value}
-          </div>
-        )}
+    <Card className={`group relative overflow-hidden border transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5 ${isDark
+        ? 'border-slate-800/50 bg-gradient-to-br from-slate-900/60 to-slate-800/40 hover:border-slate-700/60'
+        : 'border-slate-200 bg-gradient-to-br from-white to-slate-50/80 hover:border-slate-300'
+      } backdrop-blur-sm`}>
+      {/* Subtle Gradient Background on Hover */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-50 transition-opacity duration-500`}></div>
+
+      {/* Subtle Border Shimmer */}
+      <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-30 transition-opacity duration-700">
+        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-primary/10 to-transparent blur-[1px]"></div>
       </div>
-      <div>
-        <p className={`text-sm mb-1 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-          {title}
-        </p>
-        {loading ? (
-          <div className="h-9 bg-slate-700 rounded animate-pulse" />
-        ) : (
-          <p className={`text-3xl font-bold transition-all duration-300 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+
+      <CardContent className="p-6 relative">
+        <div className="flex items-start justify-between mb-5">
+          {/* Cleaner Icon Container */}
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-cyan-500/20 rounded-xl blur-md opacity-0 group-hover:opacity-40 transition-opacity duration-300"></div>
+            <div className={`relative p-3 rounded-xl border transition-all duration-300 ${isDark
+                ? 'bg-slate-800/60 border-slate-700/50 group-hover:border-primary/40 group-hover:bg-slate-800/80'
+                : 'bg-slate-100/80 border-slate-200 group-hover:border-primary/40 group-hover:bg-slate-100'
+              }`}>
+              <Icon className={`w-6 h-6 transition-colors duration-300 ${isDark ? 'text-slate-300 group-hover:text-primary' : 'text-slate-600 group-hover:text-primary'
+                }`} />
+            </div>
+          </div>
+
+          {/* Subtle Trend Indicator */}
+          {trend && trend.value !== 0 && (
+            <Badge
+              variant="outline"
+              className={`font-semibold px-2.5 py-0.5 text-xs backdrop-blur-sm ${isDark
+                  ? 'border-slate-700/50 bg-slate-800/40 text-slate-400'
+                  : 'border-slate-300 bg-slate-100/80 text-slate-600'
+                }`}
+            >
+              <TrendingUp className={`w-3 h-3 mr-1 ${trend.value < 0 ? 'rotate-180 text-red-400' : 'text-green-400'}`} />
+              {trend.value > 0 ? '+' : ''}{trend.value}
+            </Badge>
+          )}
+        </div>
+
+        <div className="space-y-2.5">
+          <p className={`text-[10px] font-bold uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-slate-400'
+            }`}>
+            {title}
+          </p>
+          <p className={`text-4xl font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'
+            }`}>
             {typeof value === 'string' ? value : displayValue.toLocaleString('id-ID')}
           </p>
-        )}
-        <p className={`text-xs mt-2 ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
-          {subtitle}
-        </p>
-      </div>
-    </div>
+          <p className={`text-xs font-medium flex items-center gap-1.5 ${isDark ? 'text-slate-400' : 'text-slate-600'
+            }`}>
+            <div className="w-1 h-1 rounded-full bg-emerald-500 opacity-60"></div>
+            {subtitle}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
@@ -120,16 +139,17 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [isRealtime, setIsRealtime] = useState(false);
   const [updatingCards, setUpdatingCards] = useState<Set<string>>(new Set());
+  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'disconnected' | 'connecting'>('connecting');
 
   const fetchDashboardData = async (showToast = false) => {
     try {
       if (showToast) setRefreshing(true);
-      
+
       const [statsData, activitiesResponse] = await Promise.all([
         dashboardService.getOverviewStats(),
         activityLogService.getRecent(10)
       ]);
-      
+
       // Mark which cards are updating
       if (stats) {
         const updating = new Set<string>();
@@ -138,17 +158,17 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
         if (statsData?.enrollments?.total !== stats?.enrollments?.total) updating.add('enrollments');
         if (statsData?.consultations?.total !== stats?.consultations?.total) updating.add('consultations');
         if (statsData?.newsletters?.total !== stats?.newsletters?.total) updating.add('newsletters');
-        
+
         setUpdatingCards(updating);
-        
+
         // Clear updating state after animation
         setTimeout(() => setUpdatingCards(new Set()), 2000);
       }
-      
+
       setStats(statsData);
       setActivities(activitiesResponse.data || []);
       setLastUpdate(new Date());
-      
+
       if (showToast) {
         showSuccess('Dashboard Refreshed', 'Data updated successfully');
       }
@@ -166,47 +186,53 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
   useEffect(() => {
     // Initial fetch only - no auto-refresh
     fetchDashboardData();
-    
-    // Subscribe to real-time stats updates
+
+    // Subscribe to connection status
+    const unsubscribeStatus = realtimeService.subscribeToStatus((status) => {
+      setConnectionStatus(status as 'connected' | 'disconnected' | 'connecting');
+    });
+
+    // Subscribe to real-time stats updates (5 second polling)
     const unsubscribeStats = realtimeService.subscribe('stats', (data) => {
       setRealtimeStats(data);
       setLastUpdate(new Date());
       setIsRealtime(true);
-      
+
       // Mark all cards as updating when realtime data arrives
       setUpdatingCards(new Set(['users', 'contacts', 'enrollments', 'consultations', 'newsletters', 'activity']));
       setTimeout(() => setUpdatingCards(new Set()), 2000);
-    });
+    }, 5000); // 5 second interval for stats
 
-    // Subscribe to activity logs updates  
+    // Subscribe to activity logs updates (10 second polling)
     const unsubscribeActivities = realtimeService.subscribe('activity-logs', (data) => {
       if (data && Array.isArray(data)) {
         setActivities(data.slice(0, 10));
       }
-    });
+    }, 10000); // 10 second interval for activities
 
     // Subscribe to contacts updates
     const unsubscribeContacts = realtimeService.subscribe('contacts', () => {
       // Refresh overview stats when contacts change
       fetchDashboardData();
-    });
+    }, 15000);
 
     // Subscribe to users updates
     const unsubscribeUsers = realtimeService.subscribe('users', () => {
       fetchDashboardData();
-    });
+    }, 15000);
 
     // Subscribe to enrollments updates
     const unsubscribeEnrollments = realtimeService.subscribe('enrollments', () => {
       fetchDashboardData();
-    });
+    }, 15000);
 
     // Subscribe to consultations updates
     const unsubscribeConsultations = realtimeService.subscribe('consultations', () => {
       fetchDashboardData();
-    });
-    
+    }, 15000);
+
     return () => {
+      unsubscribeStatus();
       unsubscribeStats();
       unsubscribeActivities();
       unsubscribeContacts();
@@ -233,7 +259,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
     const date = new Date(timestamp);
     const now = new Date();
     const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    
+
     if (seconds < 60) return 'just now';
     if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
     if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
@@ -243,7 +269,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
   const getLastUpdateText = () => {
     const now = new Date();
     const diff = Math.floor((now.getTime() - lastUpdate.getTime()) / 1000);
-    
+
     let relativeTime = '';
     if (diff < 10) {
       relativeTime = 'just now';
@@ -254,18 +280,18 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
     } else {
       relativeTime = `${Math.floor(diff / 3600)} hours ago`;
     }
-    
-    const timeStr = lastUpdate.toLocaleTimeString('id-ID', { 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      second: '2-digit' 
+
+    const timeStr = lastUpdate.toLocaleTimeString('id-ID', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
     });
     const dateStr = lastUpdate.toLocaleDateString('id-ID', {
       day: 'numeric',
       month: 'short',
       year: 'numeric'
     });
-    
+
     return `${dateStr} at ${timeStr} • ${relativeTime}`;
   };
 
@@ -277,11 +303,30 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
     return 'Good Evening';
   };
 
+  // Format last update time
+  const getFormattedLastUpdate = () => {
+    if (!lastUpdate) return 'Just now';
+
+    const now = new Date();
+    const diffMs = now.getTime() - lastUpdate.getTime();
+    const diffSecs = Math.floor(diffMs / 1000);
+    const diffMins = Math.floor(diffSecs / 60);
+
+    if (diffSecs < 10) return 'Just now';
+    if (diffSecs < 60) return `${diffSecs}s ago`;
+    if (diffMins < 60) return `${diffMins}m ago`;
+
+    return lastUpdate.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
   // Merge realtime stats with regular stats (realtime takes priority but fallback to stats)
   const displayStats = realtimeStats ? {
     users: realtimeStats.users || stats?.users || { total: 0, today: 0, this_week: 0, this_month: 0 },
     contacts: realtimeStats.contacts || stats?.contacts || { total: 0, new: 0, today: 0 },
-    enrollments: realtimeStats.enrollments || stats?.enrollments || { total: 0, pending: 0, approved: 0, today: 0 },
+    enrollments: realtimeStats.enrollments || stats?.enrollments || { total: 0, pending: 0, confirmed: 0, completed: 0, today: 0 },
     consultations: realtimeStats.consultations || stats?.consultations || { total: 0, pending: 0, scheduled: 0, today: 0 },
     newsletters: realtimeStats.newsletters || stats?.newsletters || { total: 0, today: 0 },
     logins: realtimeStats.logins || stats?.logins || { total: 0, today: 0, failed_today: 0 }
@@ -289,203 +334,244 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ theme }) => {
 
   return (
     <div className="space-y-6">
-      {/* Welcome Section with Real-Time Info */}
-      <div className={`
-        p-6 rounded-2xl flex items-center justify-between
-        ${isDark 
-          ? 'bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-400/20' 
-          : 'bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200'}
-      `}>
-        <div>
-          <h1 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-            {getGreeting()}, Admin! 👋
-          </h1>
-          <div className="flex items-center gap-3">
-            <p className={isDark ? 'text-slate-400' : 'text-slate-600'}>
-              Real-time Dashboard Overview
-            </p>
-            {isRealtime && (
-              <span className="flex items-center gap-1.5 text-xs font-semibold text-green-400 bg-green-500/20 px-2 py-1 rounded-full">
-                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                Live
-              </span>
-            )}
-          </div>
-          <p className={`text-xs mt-1 ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
-            Last updated: {getLastUpdateText()}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => fetchDashboardData(true)}
-            disabled={refreshing}
-            className={`
-              p-3 rounded-xl transition-all duration-300 hover:scale-110
-              ${isDark ? 'bg-blue-500/20 hover:bg-blue-500/30' : 'bg-white hover:bg-blue-50'}
-              ${refreshing ? 'opacity-50 cursor-not-allowed' : ''}
-            `}
-            title="Refresh now"
-          >
-            <RefreshCw className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''} ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
-          </button>
-        </div>
+      {/* Clean Welcome Section */}
+      <div className="relative overflow-hidden rounded-2xl">
+        {/* Subtle Background Gradient */}
+        <div className={`absolute inset-0 bg-gradient-to-br ${isDark
+            ? 'from-slate-900/80 via-slate-800/60 to-slate-900/80'
+            : 'from-slate-100/80 via-slate-50/60 to-slate-100/80'
+          }`}></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent opacity-60"></div>
+
+        {/* Minimal Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(100,116,139,.03)_1px,transparent_1px),linear-gradient(90deg,rgba(100,116,139,.03)_1px,transparent_1px)] bg-[size:48px_48px] opacity-50"></div>
+
+        <Card className={`border backdrop-blur-sm ${isDark
+            ? 'border-slate-800/50 bg-slate-900/40'
+            : 'border-slate-200 bg-white/40'
+          }`}>
+          <CardContent className="p-8 relative">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+              <div className="space-y-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="relative flex items-center justify-center">
+                    {connectionStatus === 'connected' ? (
+                      <>
+                        <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                        <div className="absolute w-2 h-2 rounded-full bg-emerald-500 animate-ping opacity-50"></div>
+                      </>
+                    ) : connectionStatus === 'connecting' ? (
+                      <Loader2 className="w-3 h-3 animate-spin text-yellow-500" />
+                    ) : (
+                      <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                    )}
+                  </div>
+                  <Badge variant="outline" className={`font-semibold text-[10px] px-2.5 py-0.5 ${connectionStatus === 'connected'
+                      ? isDark ? 'border-emerald-700/50 bg-emerald-900/40 text-emerald-300' : 'border-emerald-300 bg-emerald-100/80 text-emerald-700'
+                      : connectionStatus === 'connecting'
+                        ? isDark ? 'border-yellow-700/50 bg-yellow-900/40 text-yellow-300' : 'border-yellow-300 bg-yellow-100/80 text-yellow-700'
+                        : isDark ? 'border-red-700/50 bg-red-900/40 text-red-300' : 'border-red-300 bg-red-100/80 text-red-700'
+                    }`}>
+                    {connectionStatus === 'connected' ? (
+                      <><Wifi className="w-3 h-3 mr-1.5" />Live Dashboard</>
+                    ) : connectionStatus === 'connecting' ? (
+                      <><Loader2 className="w-3 h-3 mr-1.5 animate-spin" />Connecting...</>
+                    ) : (
+                      <><WifiOff className="w-3 h-3 mr-1.5" />Disconnected</>
+                    )}
+                  </Badge>
+                </div>
+                <h1 className={`text-3xl sm:text-4xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'
+                  }`}>
+                  {getGreeting()}, Admin 👋
+                </h1>
+                <p className={`font-normal text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'
+                  }`}>
+                  Monitor your platform's performance in real-time
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                {lastUpdate && (
+                  <div className={`hidden sm:block text-right px-4 py-2.5 rounded-xl border ${isDark
+                      ? 'bg-slate-800/50 border-slate-700/50'
+                      : 'bg-slate-100/80 border-slate-200'
+                    }`}>
+                    <p className={`text-[10px] font-semibold uppercase tracking-wider mb-0.5 ${isDark ? 'text-slate-500' : 'text-slate-400'
+                      }`}>Last Updated</p>
+                    <p className={`text-xs font-semibold ${isDark ? 'text-white' : 'text-slate-900'
+                      }`}>{getFormattedLastUpdate()}</p>
+                  </div>
+                )}
+                <Button
+                  variant="default"
+                  size="icon"
+                  onClick={() => fetchDashboardData(true)}
+                  disabled={refreshing}
+                  title="Refresh Dashboard"
+                  className={`rounded-xl h-12 w-12 border shadow-lg hover:shadow-xl transition-all duration-200 ${isDark
+                      ? 'bg-slate-800 hover:bg-slate-700 border-slate-700/50 hover:border-slate-600'
+                      : 'bg-slate-100 hover:bg-slate-200 border-slate-200 hover:border-slate-300'
+                    }`}
+                >
+                  <RefreshCw className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''} ${isDark ? 'text-slate-300' : 'text-slate-600'
+                    }`} />
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Statistics Grid - Main Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard 
-          title="Total Users" 
+      {/* Statistics Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <StatCard
+          title="Total Users"
           value={displayStats?.users?.total || 0}
-          subtitle={`+${displayStats?.users?.today || 0} today ${displayStats?.users?.new_this_hour ? `• ${displayStats.users.new_this_hour} this hour` : ''}`}
+          subtitle={`+${displayStats?.users?.today || 0} registered today`}
           icon={Users}
           theme={theme}
-          loading={loading}
           trend={{ value: displayStats?.users?.today || 0, label: 'today' }}
-          isUpdating={updatingCards.has('users')}
+          gradient="from-blue-500/5 to-cyan-500/5"
         />
-        <StatCard 
-          title="Contact Messages" 
+        <StatCard
+          title="Contact Messages"
           value={displayStats?.contacts?.total || 0}
           subtitle={`${displayStats?.contacts?.unread || displayStats?.contacts?.new || 0} unread • ${displayStats?.contacts?.today || 0} today`}
           icon={Mail}
           theme={theme}
-          loading={loading}
           trend={{ value: displayStats?.contacts?.today || 0, label: 'today' }}
-          isUpdating={updatingCards.has('contacts')}
+          gradient="from-purple-500/5 to-pink-500/5"
         />
-        <StatCard 
-          title="Enrollments" 
+        <StatCard
+          title="Enrollments"
           value={displayStats?.enrollments?.total || 0}
-          subtitle={`${displayStats?.enrollments?.pending || 0} pending • ${displayStats?.enrollments?.approved || 0} approved`}
+          subtitle={`${displayStats?.enrollments?.pending || 0} pending • ${displayStats?.enrollments?.confirmed || 0} confirmed • ${displayStats?.enrollments?.completed || 0} completed`}
           icon={BookOpen}
           theme={theme}
-          loading={loading}
           trend={{ value: displayStats?.enrollments?.today || 0, label: 'today' }}
-          isUpdating={updatingCards.has('enrollments')}
+          gradient="from-green-500/5 to-emerald-500/5"
         />
-        <StatCard 
-          title="Consultations" 
+        <StatCard
+          title="Consultations"
           value={displayStats?.consultations?.total || 0}
           subtitle={`${displayStats?.consultations?.pending || 0} pending • ${displayStats?.consultations?.scheduled || displayStats?.consultations?.upcoming || 0} scheduled`}
           icon={Calendar}
           theme={theme}
-          loading={loading}
           trend={{ value: displayStats?.consultations?.today || 0, label: 'today' }}
-          isUpdating={updatingCards.has('consultations')}
+          gradient="from-orange-500/5 to-amber-500/5"
         />
       </div>
 
-      {/* Additional Stats with Real-Time Activity */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard 
-          title="Newsletter Subscribers" 
+      {/* Additional Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <StatCard
+          title="Newsletter Subscribers"
           value={displayStats?.newsletters?.total || 0}
           subtitle={`+${displayStats?.newsletters?.today || 0} new today • ${displayStats?.newsletters?.this_month || 0} this month`}
           icon={MessageSquare}
           theme={theme}
-          loading={loading}
           trend={{ value: displayStats?.newsletters?.today || 0, label: 'today' }}
-          isUpdating={updatingCards.has('newsletters')}
+          gradient="from-indigo-500/5 to-violet-500/5"
         />
-        <StatCard 
-          title="Recent Activity" 
+        <StatCard
+          title="Recent Activity"
           value={displayStats?.activity?.total_today || displayStats?.logins?.total || 0}
           subtitle={`${displayStats?.activity?.last_hour || 0} last hour • ${displayStats?.activity?.last_15_minutes || 0} last 15 min`}
           icon={Activity}
           theme={theme}
-          loading={loading}
-          isUpdating={updatingCards.has('activity')}
+          gradient="from-rose-500/5 to-red-500/5"
         />
-        <StatCard 
-          title="System Status" 
+        <StatCard
+          title="System Status"
           value="Operational"
           subtitle={`DB: ${displayStats?.system?.database_size || 'N/A'}`}
           icon={TrendingUp}
           theme={theme}
-          loading={loading}
-          isUpdating={updatingCards.has('system')}
+          gradient="from-emerald-500/5 to-teal-500/5"
         />
       </div>
 
       {/* Recent Activity */}
-      <div className={`
-        p-6 rounded-2xl
-        ${isDark 
-          ? 'bg-slate-900/50 backdrop-blur-sm border border-slate-800' 
-          : 'bg-white border border-slate-200 shadow-lg'}
-      `}>
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
-              Recent Activity
-            </h3>
-            <p className={`text-xs mt-1 ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
-              Real-time activity feed • Auto-updates every 30s
-            </p>
-          </div>
-          <Clock className={`w-5 h-5 ${isDark ? 'text-slate-400' : 'text-slate-600'}`} />
-        </div>
-        
-        <div className="space-y-4">
-          {loading ? (
-            // Loading skeleton
-            [...Array(5)].map((_, i) => (
-              <div key={i} className="flex items-start gap-3">
-                <div className={`w-8 h-8 rounded-lg animate-pulse ${
-                  isDark ? 'bg-slate-800' : 'bg-slate-100'
+      <Card className={`border backdrop-blur-sm ${isDark
+          ? 'border-slate-800/50 bg-slate-900/40'
+          : 'border-slate-200 bg-white'
+        }`}>
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className={`text-xl font-bold ${isDark ? 'text-white' : 'text-slate-900'
+                }`}>Recent Activity</CardTitle>
+              <CardDescription className={`text-xs mt-1 ${isDark ? 'text-slate-500' : 'text-slate-400'
+                }`}>Live activity feed</CardDescription>
+            </div>
+            <div className={`p-2 rounded-lg border ${isDark
+                ? 'bg-slate-800/50 border-slate-700/50'
+                : 'bg-slate-100/80 border-slate-200'
+              }`}>
+              <Clock className={`w-4 h-4 ${isDark ? 'text-slate-400' : 'text-slate-600'
                 }`} />
-                <div className="flex-1 space-y-2">
-                  <div className={`h-4 rounded animate-pulse ${
-                    isDark ? 'bg-slate-800' : 'bg-slate-100'
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {activities.length === 0 ? (
+              <div className="text-center py-12">
+                <Activity className={`w-10 h-10 mx-auto mb-3 ${isDark ? 'text-slate-600' : 'text-slate-300'
                   }`} />
-                  <div className={`h-3 w-24 rounded animate-pulse ${
-                    isDark ? 'bg-slate-800' : 'bg-slate-100'
-                  }`} />
-                </div>
-              </div>
-            ))
-          ) : activities.length === 0 ? (
-            <p className={`text-center py-8 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-              No recent activities
-            </p>
-          ) : (
-            activities.map((activity) => {
-              const Icon = getActivityIcon(activity.type);
-              return (
-                <div key={activity.id} className={`flex items-start gap-3 p-3 rounded-lg transition-colors ${
-                  isDark ? 'hover:bg-slate-800/50' : 'hover:bg-slate-50'
-                }`}>
-                  <div className={`p-2 rounded-lg ${
-                    isDark ? 'bg-slate-800' : 'bg-slate-100'
+                <p className={`text-sm font-medium ${isDark ? 'text-slate-500' : 'text-slate-400'
                   }`}>
-                    <Icon className={`w-4 h-4 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
+                  No recent activities
+                </p>
+              </div>
+            ) : (
+              activities.map((activity) => {
+                const Icon = getActivityIcon(activity.type);
+                return (
+                  <div key={activity.id} className={`flex items-start gap-3 p-3 rounded-xl border transition-all duration-200 ${isDark
+                      ? 'bg-slate-800/30 border-slate-800/50 hover:bg-slate-800/50 hover:border-slate-700/60'
+                      : 'bg-slate-50/50 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                    }`}>
+                    <div className={`p-2 rounded-lg border ${isDark
+                        ? 'bg-slate-800/80 border-slate-700/50'
+                        : 'bg-slate-100/80 border-slate-200'
+                      }`}>
+                      <Icon className={`w-4 h-4 ${isDark ? 'text-slate-400' : 'text-slate-600'
+                        }`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-sm font-semibold truncate ${isDark ? 'text-slate-200' : 'text-slate-800'
+                        }`}>
+                        {activity.action}
+                      </p>
+                      <p className={`text-xs mt-0.5 line-clamp-1 ${isDark ? 'text-slate-400' : 'text-slate-600'
+                        }`}>
+                        {activity.description}
+                      </p>
+                      <p className={`text-[10px] mt-1 font-medium ${isDark ? 'text-slate-500' : 'text-slate-400'
+                        }`}>
+                        {activity.user || 'System'} • {getTimeAgo(activity.created_at)}
+                      </p>
+                    </div>
+                    <Badge
+                      variant={
+                        activity.status === 'success' ? 'default' :
+                          activity.status === 'pending' ? 'secondary' :
+                            activity.status === 'failed' || activity.status === 'error' || activity.status === 'delete' || activity.status === 'deleted' ? 'destructive' :
+                              'outline'
+                      }
+                      className="text-[10px] px-2 py-0.5 shrink-0"
+                    >
+                      {activity.status}
+                    </Badge>
                   </div>
-                  <div className="flex-1">
-                    <p className={`text-sm font-semibold ${isDark ? 'text-slate-300' : 'text-slate-900'}`}>
-                      {activity.action}
-                    </p>
-                    <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
-                      {activity.description}
-                    </p>
-                    <p className={`text-xs mt-1 ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>
-                      {activity.user || 'System'} • {getTimeAgo(activity.created_at)}
-                    </p>
-                  </div>
-                  <span className={`
-                    text-xs px-2 py-1 rounded font-medium
-                    ${activity.status === 'success' ? 'bg-green-500/20 text-green-400' : ''}
-                    ${activity.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' : ''}
-                    ${activity.status === 'failed' || activity.status === 'error' ? 'bg-red-500/20 text-red-400' : ''}
-                    ${activity.status === 'info' ? 'bg-blue-500/20 text-blue-400' : ''}
-                  `}>
-                    {activity.status}
-                  </span>
-                </div>
-              );
-            })
-          )}
-        </div>
-      </div>
+                );
+              })
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

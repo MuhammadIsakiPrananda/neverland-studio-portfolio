@@ -1,34 +1,21 @@
-// Types
+/**
+ * Centralized Type Exports
+ * 
+ * This file serves as the main entry point for all TypeScript types
+ * used throughout the application.
+ */
+
+// Export all API types
+export * from './api';
+
+// Export all model types
+export * from './models';
+
+// Legacy/UI-specific types (kept for backward compatibility)
 export type Theme = 'light' | 'dark';
 export type Language = 'en' | 'id';
-export type UserRole = 'admin' | 'editor' | 'user';
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: UserRole;
-  avatar?: string;
-}
-
-export interface Service {
-  id: string;
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  features: string[];
-}
-
-export interface Project {
-  id: string;
-  title: string;
-  category: string;
-  image: string;
-  description: string;
-  techStack: string[];
-  client: string;
-}
-
+// Pricing Plan (UI-specific)
 export interface PricingPlan {
   id: string;
   name: string;
@@ -40,22 +27,45 @@ export interface PricingPlan {
   enabled: boolean;
 }
 
-export interface Testimonial {
-  id: string;
-  name: string;
-  company: string;
-  position: string;
-  rating: number;
-  content: string;
-  avatar: string;
-}
+// Re-export commonly used types for convenience
+export type {
+  User,
+  Project,
+  Contact,
+  Enrollment,
+  Consultation,
+  Newsletter,
+  ActivityLog,
+  LoginHistory,
+  UserSession,
+  MaintenanceSettings,
+  Service,
+  Testimonial,
+  TeamMember,
+  Notification,
+} from './models';
 
-export interface ContactMessage {
-  id: string;
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-  date: string;
-  status: 'new' | 'read' | 'replied';
-}
+export type {
+  ApiResponse,
+  ApiError,
+  PaginatedResponse,
+  AuthResponse,
+  DashboardStats,
+  ChartData,
+  ActivityData,
+  ProfileResponse,
+  ProfileUpdateRequest,
+  LoginRequest,
+  RegisterRequest,
+  ResetPasswordRequest,
+  ContactSubmitRequest,
+  EnrollmentSubmitRequest,
+  ConsultationSubmitRequest,
+  NewsletterSubscribeRequest,
+  MaintenanceStatus,
+  RealtimeData,
+  FileUploadResponse,
+  QueryParams,
+  BatchOperationRequest,
+  BatchOperationResponse,
+} from './api';

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { authService } from '../services/authService';
+import { authApi } from '../services/api';
 
 /**
  * Hook to monitor user auth status and auto-logout if user is deleted
@@ -26,20 +26,20 @@ export function useAuthMonitor(onLogout: () => void) {
 
       try {
         // Try to get current user from backend
-        const user = await authService.getCurrentUser();
-        
+        const user = await authApi.getCurrentUser();
+
         // If user is null but we have a token, might be a network issue
         // Don't auto-logout on network errors
         if (user === null) {
           // Token might be invalid, check one more time
-          const retryUser = await authService.getCurrentUser();
+          const retryUser = await authApi.getCurrentUser();
           if (retryUser === null) {
             console.log('🚨 User session invalid - auto logout');
-            
+
             // Clear auth data
             localStorage.removeItem('auth_token');
             localStorage.removeItem('currentUser');
-            
+
             // Call logout callback
             onLogout();
           }
@@ -49,11 +49,11 @@ export function useAuthMonitor(onLogout: () => void) {
         // Only logout on 401 Unauthorized, not on timeout or network errors
         if (error.response?.status === 401) {
           console.log('🚨 User deleted or token invalid - auto logout');
-          
+
           // Clear auth data
           localStorage.removeItem('auth_token');
           localStorage.removeItem('currentUser');
-          
+
           // Call logout callback
           onLogout();
         }

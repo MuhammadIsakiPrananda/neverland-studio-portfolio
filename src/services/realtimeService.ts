@@ -19,8 +19,9 @@ export interface RealtimeStats {
   enrollments: {
     total: number;
     pending: number;
-    approved?: number;
-    rejected?: number;
+    confirmed?: number;
+    completed?: number;
+    cancelled?: number;
     today?: number;
     this_week?: number;
   };
@@ -139,8 +140,23 @@ class RealtimeService {
             data = contactsRes.data;
             break;
           case 'enrollments':
-            const enrollmentsRes = await api.get('/admin/enrollments');
-            data = enrollmentsRes.data;
+            console.log('📡 [RealtimeService] Fetching enrollments...');
+            const enrollmentsRes = await api.get('/admin/enrollments?per_page=1000');
+            console.log('📥 [RealtimeService] Raw enrollments response:', enrollmentsRes.data);
+            
+            // Handle Laravel paginated response
+            if (enrollmentsRes.data?.success && enrollmentsRes.data.data) {
+              const enrollData = enrollmentsRes.data.data;
+              // Check if paginated (has 'data' property)
+              data = (enrollData && typeof enrollData === 'object' && 'data' in enrollData) 
+                ? (Array.isArray(enrollData.data) ? enrollData.data : []) 
+                : (Array.isArray(enrollData) ? enrollData : []);
+              
+              console.log('✅ [RealtimeService] Extracted', data.length, 'enrollments');
+            } else {
+              data = [];
+              console.log('⚠️ [RealtimeService] No enrollments data found');
+            }
             break;
           case 'consultations':
             const consultationsRes = await api.get('/admin/consultations');

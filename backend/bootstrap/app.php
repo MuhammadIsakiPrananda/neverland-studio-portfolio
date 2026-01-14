@@ -17,6 +17,11 @@ return Application::configure(basePath: dirname(__DIR__))
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         ]);
 
+        // Track session activity on all API requests
+        $middleware->api(append: [
+            \App\Http\Middleware\UpdateUserSessionActivity::class,
+        ]);
+
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);

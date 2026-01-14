@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-import { authService } from '../services/authService';
-import { dashboardAuth } from '../services/dashboardAuth';
+// NOTE: This hook is DEPRECATED - Use useAuth hook instead
 
 /**
  * Hook to ensure dashboard has valid API token
@@ -11,7 +10,7 @@ export function useDashboardAuth() {
   useEffect(() => {
     // Auto-login disabled - rely on manual dashboard login instead
     // This prevents issues with credentials mismatch
-    
+
     // User should:
     // 1. Logout from dashboard 
     // 2. Login again with admin / admin123

@@ -77,13 +77,41 @@ export const authService = {
       });
 
       if (response.data.success && response.data.data) {
-        localStorage.setItem('auth_token', response.data.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.data.user));
+        const { token, user } = response.data.data;
+        
+        // Store auth data
+        localStorage.setItem('auth_token', token);
+        localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('auth_mode', 'backend');
+        
+        // Create user profile - GUNAKAN AVATAR DARI DATABASE
+        const userProfile = {
+          username: user.username || user.email.split('@')[0],
+          name: user.name,
+          email: user.email,
+          phone: user.phone || '',
+          jobTitle: user.job_title || '',
+          company: user.company || '',
+          bio: user.bio || '',
+          location: user.location || '',
+          website: user.website || '',
+          avatar: user.avatar, // Langsung dari database
+          github: user.github || '',
+          twitter: user.twitter || '',
+          linkedin: user.linkedin || '',
+          instagram: user.instagram || '',
+          birthDate: user.birth_date || '',
+          gender: user.gender || '',
+          role: user.role || 'user'
+        };
+        
+        localStorage.setItem('userProfile', JSON.stringify(userProfile));
+        
+        console.log('Registration successful - Default avatar created:', user.avatar);
         
         showSuccess(
           'Account Created! 🎉',
-          `Welcome ${response.data.data.user.name}! You can now access your account.`
+          `Welcome ${user.name}! You can now access your account.`
         );
       }
 
@@ -119,13 +147,41 @@ export const authService = {
       console.log('Login response:', response.data);
       
       if (response.data.success && response.data.data) {
-        localStorage.setItem('auth_token', response.data.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.data.user));
+        const { token, user } = response.data.data;
+        
+        // Store auth data
+        localStorage.setItem('auth_token', token);
+        localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('auth_mode', 'backend');
+        
+        // Create/update user profile - GUNAKAN AVATAR DARI DATABASE
+        const userProfile = {
+          username: user.username || user.email.split('@')[0],
+          name: user.name,
+          email: user.email,
+          phone: user.phone || '',
+          jobTitle: user.job_title || '',
+          company: user.company || '',
+          bio: user.bio || '',
+          location: user.location || '',
+          website: user.website || '',
+          avatar: user.avatar, // Langsung dari database - TIDAK ADA FALLBACK
+          github: user.github || '',
+          twitter: user.twitter || '',
+          linkedin: user.linkedin || '',
+          instagram: user.instagram || '',
+          birthDate: user.birth_date || '',
+          gender: user.gender || '',
+          role: user.role || 'user'
+        };
+        
+        localStorage.setItem('userProfile', JSON.stringify(userProfile));
+        
+        console.log('Login successful - Avatar loaded from database:', user.avatar ? 'Yes ✅' : 'No ❌');
         
         showSuccess(
           'Welcome Back! 👋',
-          `Successfully logged in as ${response.data.data.user.name}`
+          `Successfully logged in as ${user.name}`
         );
       } else {
         showError('Login Failed', response.data.message);
@@ -291,13 +347,41 @@ export const authService = {
       });
 
       if (response.data.success && response.data.data) {
-        localStorage.setItem('auth_token', response.data.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.data.user));
+        const { token, user } = response.data.data;
+        
+        // Store auth data
+        localStorage.setItem('auth_token', token);
+        localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('auth_mode', 'backend');
+        
+        // Store user profile - GUNAKAN AVATAR DARI DATABASE (OAuth provider avatar sudah disimpan di database)
+        const userProfile = {
+          username: user.username || user.email.split('@')[0],
+          name: user.name,
+          email: user.email,
+          phone: user.phone || '',
+          jobTitle: user.job_title || '',
+          company: user.company || '',
+          bio: user.bio || '',
+          location: user.location || '',
+          website: user.website || '',
+          avatar: user.avatar, // Avatar dari OAuth provider (sudah disimpan di database)
+          github: user.github || '',
+          twitter: user.twitter || '',
+          linkedin: user.linkedin || '',
+          instagram: user.instagram || '',
+          birthDate: user.birth_date || '',
+          gender: user.gender || '',
+          role: user.role || 'user'
+        };
+        
+        localStorage.setItem('userProfile', JSON.stringify(userProfile));
+        
+        console.log('OAuth login successful - Avatar from provider:', user.avatar ? 'Yes ✅' : 'No ❌');
         
         showSuccess(
           'Login Successful! 🎉',
-          `Welcome back ${response.data.data.user.name}!`
+          `Welcome back ${user.name}!`
         );
       }
 

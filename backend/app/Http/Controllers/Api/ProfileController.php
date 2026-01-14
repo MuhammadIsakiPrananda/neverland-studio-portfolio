@@ -85,10 +85,10 @@ class ProfileController extends Controller
                 'bio' => 'nullable|string|max:1000',
                 'location' => 'nullable|string|max:255',
                 'website' => 'nullable|url|max:255',
-                'linkedin' => 'nullable|url|max:255',
-                'twitter' => 'nullable|url|max:255',
-                'github' => 'nullable|url|max:255',
-                'instagram' => 'nullable|url|max:255',
+                'linkedin' => 'nullable|string|max:255',
+                'twitter' => 'nullable|string|max:255',
+                'github' => 'nullable|string|max:255',
+                'instagram' => 'nullable|string|max:255',
                 'birth_date' => 'nullable|date|before:today',
                 'gender' => 'nullable|in:male,female,other,prefer-not-to-say',
                 'avatar' => 'nullable|string',
@@ -104,7 +104,50 @@ class ProfileController extends Controller
             }
 
             $user = $request->user();
-            $user->update($validator->validated());
+            
+            // Get validated data
+            $data = $validator->validated();
+            
+            // Log incoming avatar data for debugging
+            if (isset($data['avatar'])) {
+                Log::info('Avatar update attempt', [
+                    'user_id' => $user->id,
+                    'avatar_length' => strlen($data['avatar']),
+                    'avatar_prefix' => substr($data['avatar'], 0, 50)
+                ]);
+            }
+            
+            // Validate avatar format if present
+            if (isset($data['avatar']) && !empty($data['avatar'])) {
+                if (!preg_match('/^data:image\/(jpeg|jpg|png|webp|gif);base64,/', $data['avatar'])) {
+                    Log::warning('Invalid avatar format', [
+                        'user_id' => $user->id,
+                        'avatar_prefix' => substr($data['avatar'], 0, 100)
+                    ]);
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Invalid avatar format. Please upload a valid image.'
+                    ], 422);
+                }
+            }
+            
+            // Update user with validated data
+            $user->update($data);
+            
+            // Verify avatar was saved
+            if (isset($data['avatar'])) {
+                $user->refresh();
+                Log::info('Avatar saved verification', [
+                    'user_id' => $user->id,
+                    'avatar_saved' => !empty($user->avatar),
+                    'saved_avatar_length' => $user->avatar ? strlen($user->avatar) : 0
+                ]);
+            }
+            
+            Log::info('Profile updated successfully', [
+                'user_id' => $user->id,
+                'updated_fields' => array_keys($data)
+            ]);
 
             return response()->json([
                 'success' => true,
@@ -134,6 +177,7 @@ class ProfileController extends Controller
         } catch (\Exception $e) {
             Log::error('Update profile error: ' . $e->getMessage(), [
                 'user_id' => $request->user()->id ?? null,
+                'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
             
@@ -154,6 +198,7 @@ class ProfileController extends Controller
     public function uploadAvatar(Request $request)
     {
         try {
+            // Validate avatar input
             $validator = Validator::make($request->all(), [
                 'avatar' => 'required|string', // base64 string
             ]);
@@ -166,9 +211,36 @@ class ProfileController extends Controller
                 ], 422);
             }
 
+            $avatarData = $request->avatar;
+            
+            // Validate base64 format (should start with data:image/)
+            if (!preg_match('/^data:image\/(jpeg|jpg|png|webp);base64,/', $avatarData)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid image format. Please upload JPG, PNG, or WebP image.'
+                ], 422);
+            }
+
+            // Check base64 size (approximate max 10MB encoded)
+            $base64Size = strlen($avatarData);
+            $maxSize = 10 * 1024 * 1024; // 10MB
+            
+            if ($base64Size > $maxSize) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Image size too large. Please reduce image size.'
+                ], 422);
+            }
+
+            // Update user avatar
             $user = $request->user();
-            $user->avatar = $request->avatar;
+            $user->avatar = $avatarData;
             $user->save();
+
+            Log::info('Avatar updated successfully', [
+                'user_id' => $user->id,
+                'avatar_size' => $base64Size
+            ]);
 
             return response()->json([
                 'success' => true,
@@ -180,6 +252,7 @@ class ProfileController extends Controller
         } catch (\Exception $e) {
             Log::error('Upload avatar error: ' . $e->getMessage(), [
                 'user_id' => $request->user()->id ?? null,
+                'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
             

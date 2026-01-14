@@ -74,7 +74,8 @@ const Analytics: React.FC<AnalyticsProps> = ({ theme }) => {
       enrollments: {
         total: realtimeStats.enrollments.total,
         pending: realtimeStats.enrollments.pending,
-        approved: realtimeStats.enrollments.approved || 0,
+        confirmed: realtimeStats.enrollments.confirmed || 0,
+        completed: realtimeStats.enrollments.completed || 0,
         today: realtimeStats.enrollments.today || 0,
       },
       consultations: {
@@ -334,7 +335,8 @@ const Analytics: React.FC<AnalyticsProps> = ({ theme }) => {
             {status}
           </span>
         );
-      case 'approved':
+      case 'confirmed':
+      case 'completed':
       case 'subscribed':
         return (
           <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border ${
@@ -467,11 +469,6 @@ const Analytics: React.FC<AnalyticsProps> = ({ theme }) => {
         </div>
       </div>
 
-      {/* Last updated */}
-      <div className={`text-xs ${isDark ? 'text-gray-500' : 'text-stone-500'}`}>
-        Last updated: {lastUpdated.toLocaleTimeString()}
-      </div>
-
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Users Card */}
@@ -531,7 +528,8 @@ const Analytics: React.FC<AnalyticsProps> = ({ theme }) => {
           <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-stone-600'}`}>Course Enrollments</p>
           <div className={`mt-3 pt-3 border-t ${isDark ? 'border-gray-800' : 'border-stone-200'}`}>
             <div className="flex justify-between text-xs">
-              <span className={isDark ? 'text-gray-500' : 'text-stone-500'}>Approved: {stats?.enrollments.approved || 0}</span>
+              <span className={isDark ? 'text-gray-500' : 'text-stone-500'}>Confirmed: {stats?.enrollments.confirmed || 0}</span>
+              <span className={isDark ? 'text-gray-500' : 'text-stone-500'}>Completed: {stats?.enrollments.completed || 0}</span>
               <span className={isDark ? 'text-gray-500' : 'text-stone-500'}>Today: {stats?.enrollments.today || 0}</span>
             </div>
           </div>

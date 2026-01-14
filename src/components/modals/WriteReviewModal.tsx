@@ -27,9 +27,27 @@ export default function WriteReviewModal({ theme, onClose }: WriteReviewModalPro
 
   // Prevent body scroll when modal is open
   useEffect(() => {
+    // Get current scroll position
+    const scrollY = window.scrollY;
+
+    // Lock scroll and hide scrollbar
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
+
+    // Cleanup function
     return () => {
-      document.body.style.overflow = 'unset';
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
     };
   }, []);
 
@@ -117,9 +135,8 @@ export default function WriteReviewModal({ theme, onClose }: WriteReviewModalPro
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className={`w-full px-3 py-2.5 bg-slate-800/50 border ${
-                        nameError ? 'border-red-500/50' : 'border-slate-700/50'
-                      } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
+                      className={`w-full px-3 py-2.5 bg-slate-800/50 border ${nameError ? 'border-red-500/50' : 'border-slate-700/50'
+                        } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
                       placeholder="Your name"
                     />
                     {nameError && <p className="mt-1.5 text-xs text-red-400">{nameError}</p>}
@@ -134,9 +151,8 @@ export default function WriteReviewModal({ theme, onClose }: WriteReviewModalPro
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className={`w-full px-3 py-2.5 bg-slate-800/50 border ${
-                        emailError ? 'border-red-500/50' : 'border-slate-700/50'
-                      } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
+                      className={`w-full px-3 py-2.5 bg-slate-800/50 border ${emailError ? 'border-red-500/50' : 'border-slate-700/50'
+                        } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
                       placeholder="Your Email Address"
                     />
                     {emailError && <p className="mt-1.5 text-xs text-red-400">{emailError}</p>}
@@ -190,11 +206,10 @@ export default function WriteReviewModal({ theme, onClose }: WriteReviewModalPro
                         className="transition-transform hover:scale-110"
                       >
                         <Star
-                          className={`w-7 h-7 transition-colors ${
-                            star <= (hoveredRating || rating)
+                          className={`w-7 h-7 transition-colors ${star <= (hoveredRating || rating)
                               ? 'text-amber-400 fill-amber-400'
                               : 'text-slate-700'
-                          }`}
+                            }`}
                         />
                       </button>
                     ))}
@@ -216,9 +231,8 @@ export default function WriteReviewModal({ theme, onClose }: WriteReviewModalPro
                     value={review}
                     onChange={(e) => setReview(e.target.value)}
                     rows={5}
-                    className={`w-full px-3 py-2.5 bg-slate-800/50 border ${
-                      reviewError ? 'border-red-500/50' : 'border-slate-700/50'
-                    } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors resize-none`}
+                    className={`w-full px-3 py-2.5 bg-slate-800/50 border ${reviewError ? 'border-red-500/50' : 'border-slate-700/50'
+                      } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors resize-none`}
                     placeholder="Share your experience with us..."
                   />
                   <div className="flex justify-between items-center mt-1.5">

@@ -1,21 +1,128 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
+/* Font sudah di-preload di HTML untuk performa optimal */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Light theme - Clean and modern with blue/cyan accents */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* Modern blue/cyan primary matching frontend */
+    --primary: 199 89% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 199 89% 48%;
+    --radius: 0.75rem;
+
+    /* Chart colors for light mode */
+    --chart-1: 199 89% 48%;
+    --chart-2: 188 100% 42%;
+    --chart-3: 173 80% 40%;
+    --chart-4: 197 71% 73%;
+    --chart-5: 189 85% 65%;
+  }
+
+  .dark {
+    /* Dark theme - Deep space aesthetic with vibrant accents */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    /* Card with subtle depth */
+    --card: 217.2 32.6% 8%;
+    --card-foreground: 210 40% 98%;
+    --popover: 217.2 32.6% 8%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Vibrant blue/cyan primary for dark mode */
+    --primary: 199 89% 55%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    /* Vibrant destructive for better visibility */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 199 89% 55%;
+
+    /* Chart colors for dark mode - vibrant and modern */
+    --chart-1: 199 89% 55%;
+    --chart-2: 188 100% 50%;
+    --chart-3: 173 80% 50%;
+    --chart-4: 43 96% 56%;
+    --chart-5: 27 87% 67%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Smooth transitions for theme changes */
+  * {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
+}
+
+@layer base {
   * {
     font-family: "Poppins", sans-serif;
+  }
+
+  /* Optimasi font rendering */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Prevent layout shift dari scrollbar */
+  html {
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
   }
 }
 
 @layer utilities {
+
   /* Fade In Animations */
   @keyframes fadeIn {
     from {
       opacity: 0;
     }
+
     to {
       opacity: 1;
     }
@@ -26,6 +133,7 @@
       opacity: 0;
       transform: translateY(30px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -37,6 +145,7 @@
       opacity: 0;
       transform: translateY(-30px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -48,6 +157,7 @@
       opacity: 0;
       transform: translateX(-30px);
     }
+
     to {
       opacity: 1;
       transform: translateX(0);
@@ -59,6 +169,7 @@
       opacity: 0;
       transform: translateX(30px);
     }
+
     to {
       opacity: 1;
       transform: translateX(0);
@@ -70,6 +181,7 @@
       opacity: 0;
       transform: scale(0.9);
     }
+
     to {
       opacity: 1;
       transform: scale(1);
@@ -136,29 +248,35 @@
     0% {
       background-position: 0% 50%;
     }
+
     50% {
       background-position: 100% 50%;
     }
+
     100% {
       background-position: 0% 50%;
     }
   }
 
   @keyframes float {
+
     0%,
     100% {
       transform: translateY(0px);
     }
+
     50% {
       transform: translateY(-10px);
     }
   }
 
   @keyframes glowPulse {
+
     0%,
     100% {
       box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
     }
+
     50% {
       box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
     }
@@ -168,6 +286,7 @@
     0% {
       background-position: -1000px 0;
     }
+
     100% {
       background-position: 1000px 0;
     }
@@ -178,8 +297,33 @@
       transform: translateY(20px);
       opacity: 0;
     }
+
     to {
       transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes bounceSlow {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-15px);
+    }
+  }
+
+  @keyframes scaleIn {
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+
+    100% {
+      transform: scale(1);
       opacity: 1;
     }
   }
@@ -199,14 +343,20 @@
   }
 
   .animate-shimmer {
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.1),
-      transparent
-    );
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent);
     background-size: 1000px 100%;
     animation: shimmer 2s infinite;
+  }
+
+  .animate-bounce-slow {
+    animation: bounceSlow 2s ease-in-out infinite;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
   }
 
   /* Hover Lift Effect */
@@ -267,6 +417,7 @@
     transform: translateX(calc(100% + 24px)) scale(0.95);
     opacity: 0;
   }
+
   100% {
     transform: translateX(0) scale(1);
     opacity: 1;
@@ -278,6 +429,7 @@
     transform: translateX(0) scale(1);
     opacity: 1;
   }
+
   100% {
     transform: translateX(calc(100% + 24px)) scale(0.95);
     opacity: 0;
@@ -294,10 +446,12 @@
 
 /* Subtle icon animation */
 @keyframes icon-bounce {
+
   0%,
   100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.1);
   }

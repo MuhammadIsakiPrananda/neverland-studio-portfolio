@@ -100,9 +100,9 @@ class EnrollmentController extends Controller
     public function index(Request $request)
     {
         try {
-            $perPage = $request->input('per_page', 15);
             $status = $request->input('status');
             $courseId = $request->input('course_id');
+            $getAll = $request->has('all') || $request->input('all') === 'true';
 
             $query = Enrollment::query()->orderBy('created_at', 'desc');
 
@@ -114,6 +114,18 @@ class EnrollmentController extends Controller
                 $query->where('course_id', $courseId);
             }
 
+            // For realtime updates, return all items without pagination
+            if ($getAll) {
+                $enrollments = $query->get();
+                
+                return response()->json([
+                    'success' => true,
+                    'data' => $enrollments
+                ], 200);
+            }
+
+            // Return paginated for normal requests
+            $perPage = $request->input('per_page', 15);
             $enrollments = $query->paginate($perPage);
 
             return response()->json([
@@ -144,7 +156,7 @@ class EnrollmentController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'status' => 'required|in:pending,confirmed,completed,cancelled',
+                'status' => 'required|in:pending,approved,rejected,confirmed,completed,cancelled',
                 'admin_notes' => 'nullable|string|max:1000',
             ]);
 
@@ -186,6 +198,56 @@ class EnrollmentController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update enrollment status.',
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+            ], 500);
+        }
+    }
+
+    /**
+     * Delete enrollment (admin only)
+     * 
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($id)
+    {
+        try {
+            $enrollment = Enrollment::findOrFail($id);
+            
+            // Store enrollment data before deletion for activity log
+            $enrollmentData = [
+                'full_name' => $enrollment->full_name,
+                'email' => $enrollment->email,
+                'course_title' => $enrollment->course_title,
+                'status' => $enrollment->status,
+            ];
+            
+            $enrollment->delete();
+            
+            // Log to Activity Log
+            ActivityLogService::logDelete(
+                auth()->user(),
+                'enrollment',
+                "Enrollment deleted: {$enrollmentData['full_name']} - {$enrollmentData['course_title']}",
+                [
+                    'enrollment_id' => $id,
+                    'deleted_data' => $enrollmentData,
+                ]
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Enrollment deleted successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Delete enrollment error: ' . $e->getMessage(), [
+                'enrollment_id' => $id,
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete enrollment.',
                 'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
             ], 500);
         }

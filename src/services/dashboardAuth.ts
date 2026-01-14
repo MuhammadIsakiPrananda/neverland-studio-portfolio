@@ -1,5 +1,22 @@
 // Simple Dashboard Authentication (No Database)
 // Hardcoded admin credentials for dashboard access only
+// 
+// ⚠️ IMPORTANT: ISOLATED FROM WEB UTAMA AUTHENTICATION
+// This service uses SEPARATE localStorage keys:
+// - dashboard_session: Dashboard admin session
+// - dashboard_token: Dashboard admin token
+// 
+// Web utama authentication uses DIFFERENT keys:
+// - auth_token: User token from backend API
+// - user: User data from backend
+// - userProfile: Extended user profile
+// - isLoggedIn: Login status flag
+//
+// These two authentication systems are COMPLETELY INDEPENDENT:
+// - Users on web utama CANNOT access dashboard
+// - Dashboard admins authenticate ONLY through /dashboard route
+// - Logout on web utama does NOT affect dashboard session
+// - Logout on dashboard does NOT affect web utama session
 
 interface DashboardUser {
   username: string;

@@ -10,11 +10,11 @@ interface ForgotPasswordModalProps {
   onBackToLogin?: () => void;
 }
 
-export default function ForgotPasswordModal({ 
-  theme, 
-  onClose, 
+export default function ForgotPasswordModal({
+  theme,
+  onClose,
   onResetPassword,
-  onBackToLogin 
+  onBackToLogin
 }: ForgotPasswordModalProps) {
   const [email, setEmail] = useState('');
 
@@ -30,7 +30,7 @@ export default function ForgotPasswordModal({
       title="Reset Password"
       subtitle="Enter your email address and we'll send you a link to reset your password"
     >
-      <ForgotPasswordForm 
+      <ForgotPasswordForm
         theme={theme}
         email={email}
         onEmailChange={setEmail}

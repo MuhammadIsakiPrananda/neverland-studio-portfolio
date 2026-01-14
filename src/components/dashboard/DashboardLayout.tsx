@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import type { Theme } from '../../types';
 import { dashboardAuth } from '../../services/dashboardAuth';
-import { 
+import {
   LayoutDashboard,
   Users,
   FolderKanban,
@@ -46,6 +46,11 @@ import {
 import notificationService, { type Notification } from '../../services/notificationService';
 import realtimeService from '../../services/realtimeService';
 import logoImage from '../../assets/Profile Neverland Studio.jpg';
+import { Button } from '../ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Separator } from '../ui/separator';
+import { Input } from '../ui/input';
+import { Badge } from '../ui/badge';
 
 interface DashboardLayoutProps {
   theme: Theme;
@@ -68,10 +73,10 @@ interface NavSection {
   items: NavItem[];
 }
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({ 
-  theme, 
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({
+  theme,
   onThemeToggle,
-  children 
+  children
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -92,7 +97,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   // Toggle favorite status
   const toggleFavorite = (itemId: string) => {
-    setFavorites(prev => 
+    setFavorites(prev =>
       prev.includes(itemId)
         ? prev.filter(id => id !== itemId)
         : [...prev, itemId]
@@ -107,22 +112,24 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       // Sidebar always open on desktop, toggle on mobile
       setSidebarOpen(!mobile);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
-  
+
   // Get current dashboard user
   const currentUser = dashboardAuth.getCurrentUser();
-  
+
   // Dashboard-specific logout handler
+  // NOTE: This ONLY clears dashboard authentication (dashboard_token, dashboard_user)
+  // It does NOT affect web utama authentication (auth_token, user, userProfile)
   const handleLogout = () => {
     dashboardAuth.logout();
     navigate('/dashboard');
     window.location.reload(); // Force reload to show login page
   };
-  
+
   // Notification state
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -208,83 +215,64 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       title: 'Overview',
       icon: Gauge,
       items: [
-        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard', status: 'online' },
+        { id: 'dashboard', label: 'Overview', icon: LayoutDashboard, path: '/dashboard', status: 'online' },
         { id: 'analytics', label: 'Analytics', icon: BarChart3, path: '/dashboard/analytics' },
-        { id: 'activity', label: 'Activity Log', icon: Activity, path: '/dashboard/activity' },
+        { id: 'reports', label: 'Reports', icon: FileText, path: '/dashboard/reports' },
       ]
     },
     {
-      title: 'Content Management',
+      title: 'Management',
       icon: FolderOpen,
       items: [
-        { 
-          id: 'contacts', 
-          label: 'Contacts', 
-          icon: Mail, 
-          path: '/dashboard/contacts', 
-          badge: badgeCounts.contacts > 0 ? badgeCounts.contacts : undefined 
+        { id: 'users', label: 'Users', icon: Users, path: '/dashboard/users' },
+        { id: 'projects', label: 'Projects', icon: FolderKanban, path: '/dashboard/projects' },
+        { id: 'roles', label: 'Roles & Permissions', icon: ShieldCheck, path: '/dashboard/roles' },
+      ]
+    },
+    {
+      title: 'Communication',
+      icon: Mail,
+      items: [
+        {
+          id: 'contacts',
+          label: 'Contact Messages',
+          icon: Mail,
+          path: '/dashboard/contacts',
+          badge: badgeCounts.contacts > 0 ? badgeCounts.contacts : undefined
         },
-        { 
-          id: 'enrollments', 
-          label: 'Enrollments', 
-          icon: BookOpen, 
-          path: '/dashboard/enrollments', 
-          badge: badgeCounts.enrollments > 0 ? badgeCounts.enrollments : undefined 
+        {
+          id: 'enrollments',
+          label: 'Course Enrollments',
+          icon: BookOpen,
+          path: '/dashboard/enrollments',
+          badge: badgeCounts.enrollments > 0 ? badgeCounts.enrollments : undefined
         },
-        { 
-          id: 'consultations', 
-          label: 'Consultations', 
-          icon: Calendar, 
-          path: '/dashboard/consultations', 
-          badge: badgeCounts.consultations > 0 ? badgeCounts.consultations : undefined 
+        {
+          id: 'consultations',
+          label: 'Consultations',
+          icon: Calendar,
+          path: '/dashboard/consultations',
+          badge: badgeCounts.consultations > 0 ? badgeCounts.consultations : undefined
         },
         { id: 'newsletter', label: 'Newsletter', icon: MessageSquare, path: '/dashboard/newsletter' },
       ]
     },
     {
-      title: 'User Management',
-      icon: UserCog,
-      items: [
-        { id: 'users', label: 'All Users', icon: Users, path: '/dashboard/users' },
-        { id: 'roles', label: 'Roles & Permissions', icon: Shield, path: '/dashboard/roles' },
-        { id: 'sessions', label: 'Active Sessions', icon: Clock, path: '/dashboard/sessions' },
-      ]
-    },
-    {
-      title: 'Projects & Portfolio',
+      title: 'Business',
       icon: Briefcase,
       items: [
-        { id: 'projects', label: 'All Projects', icon: FolderKanban, path: '/dashboard/projects' },
-        { id: 'media', label: 'Media Library', icon: Image, path: '/dashboard/media' },
-        { id: 'videos', label: 'Video Content', icon: Video, path: '/dashboard/videos' },
-      ]
-    },
-    {
-      title: 'Development',
-      icon: Code,
-      items: [
-        { id: 'api', label: 'API Management', icon: Server, path: '/dashboard/api', status: 'online' },
-        { id: 'database', label: 'Database', icon: Database, path: '/dashboard/database' },
-        { id: 'logs', label: 'System Logs', icon: FileCode, path: '/dashboard/logs' },
-      ]
-    },
-    {
-      title: 'Business',
-      icon: Wallet,
-      items: [
         { id: 'billing', label: 'Billing', icon: CreditCard, path: '/dashboard/billing' },
-        { id: 'reports', label: 'Reports', icon: FileText, path: '/dashboard/reports' },
-        { id: 'revenue', label: 'Revenue', icon: BarChart3, path: '/dashboard/revenue' },
+        { id: 'revenue', label: 'Revenue', icon: Wallet, path: '/dashboard/revenue' },
       ]
     },
     {
       title: 'System',
-      icon: ShieldCheck,
+      icon: Server,
       items: [
-        { id: 'security', label: 'Security', icon: Shield, path: '/dashboard/security', status: 'warning' },
+        { id: 'activity', label: 'Activity Logs', icon: Activity, path: '/dashboard/activity' },
         { id: 'settings', label: 'Settings', icon: Settings, path: '/dashboard/settings' },
       ]
-    }
+    },
   ];
 
   const toggleSection = (title: string) => {
@@ -310,11 +298,17 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   };
 
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-slate-950' : 'bg-slate-50'}`}>
+    <div className={`min-h-screen ${isDark ? 'bg-slate-950' : 'bg-slate-50'} relative overflow-hidden`}>
+      {/* Decorative Background - Match main website */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className={`absolute inset-0 ${isDark ? 'bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-slate-950 to-slate-950' : 'bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100/30 via-slate-50 to-slate-50'}`}></div>
+        <div className={`absolute inset-0 ${isDark ? 'bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)]' : 'bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)]'} bg-[size:24px_24px]`}></div>
+      </div>
+
       {/* Mobile Overlay */}
       {isMobile && sidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -323,188 +317,204 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       <aside
         className={`
           fixed top-0 left-0 h-full z-40 transition-all duration-300 w-72
-          ${isMobile 
-            ? `${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}` 
+          ${isMobile
+            ? `${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`
             : ''
           }
-          ${isDark ? 'bg-slate-900 border-r border-slate-800' : 'bg-white border-r border-slate-200'}
+          ${isDark ? 'bg-slate-900/95' : 'bg-white'} backdrop-blur-xl border-r ${isDark ? 'border-slate-800/50' : 'border-slate-200'} shadow-2xl
           flex flex-col
         `}
       >
-        {/* Sidebar Header */}
-        <div className={`h-16 flex items-center justify-between px-4 border-b ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
-          <div className="flex items-center gap-2">
-            <img 
-              src={logoImage} 
-              alt="Neverland Studio Logo" 
-              className="w-10 h-10 rounded-lg object-cover shadow-lg"
-            />
-            <div>
-              <h1 className="font-bold text-sm bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
+        {/* Ultra Modern Sidebar Header */}
+        <div className="p-4 border-b border-border/50">
+          <div className="flex items-center gap-3">
+            {/* Logo with Glow Effect */}
+            <div className="relative">
+              <div className="absolute inset-0 rounded-xl bg-primary/20 blur-lg"></div>
+              <img
+                src={logoImage}
+                alt="Neverland Studio"
+                className="relative w-12 h-12 rounded-xl object-cover shadow-lg border-2 border-primary/30"
+              />
+            </div>
+            
+            {/* Brand Text */}
+            <div className="flex-1 min-w-0">
+              <h1 className="font-bold text-base tracking-tight bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                 Neverland Studio
               </h1>
-              <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Admin Dashboard</p>
+              <p className="text-xs text-muted-foreground font-medium">Admin Dashboard</p>
             </div>
+
+            {/* Close Button (Mobile) */}
+            {isMobile && (
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="p-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
+                aria-label="Close sidebar"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
           </div>
-          {isMobile && (
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className={`p-2 rounded-lg transition-colors ${
-                isDark ? 'hover:bg-slate-800 text-slate-400' : 'hover:bg-slate-100 text-slate-600'
-              }`}
-              aria-label="Close sidebar"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          )}
         </div>
 
-        {/* Search Bar */}
+        {/* Modern Search Bar */}
         <div className="p-4">
-          <div className={`relative ${isDark ? 'bg-slate-800' : 'bg-slate-100'} rounded-lg`}>
-            <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${isDark ? 'text-slate-400' : 'text-slate-500'}`} />
-            <input
+          <div className="relative group">
+            <Search className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 ${isDark ? 'text-muted-foreground' : 'text-slate-400'} group-focus-within:text-primary transition-colors`} />
+            <Input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search menu..."
-              className={`
-                w-full pl-10 pr-3 py-2 text-sm rounded-lg
-                bg-transparent outline-none
-                ${isDark ? 'text-white placeholder:text-slate-500' : 'text-slate-900 placeholder:text-slate-400'}
-              `}
+              className={`pl-10 h-10 ${isDark ? 'bg-accent/50 border-accent' : 'bg-slate-100 border-slate-200'} focus:bg-background transition-colors`}
             />
           </div>
         </div>
 
-        {/* Navigation Sections */}
+        {/* Clean Navigation Sections */}
         <nav className="flex-1 overflow-y-auto px-3 py-2 custom-scrollbar">
           {navSections.map((section) => {
             const SectionIcon = section.icon;
-            const filteredItems = section.items.filter(item => 
-              searchQuery === '' || 
+            const filteredItems = section.items.filter(item =>
+              searchQuery === '' ||
               item.label.toLowerCase().includes(searchQuery.toLowerCase())
             );
-            
+
             if (filteredItems.length === 0) return null;
-            
+
             return (
-            <div key={section.title} className="mb-4">
-              <button
-                onClick={() => toggleSection(section.title)}
-                className={`
-                  w-full flex items-center justify-between px-3 py-2 mb-1
-                  text-xs font-semibold uppercase tracking-wider
-                  ${isDark ? 'text-slate-500 hover:text-slate-400' : 'text-slate-400 hover:text-slate-600'}
-                  transition-colors group
-                `}
-              >
-                <div className="flex items-center gap-2">
-                  <SectionIcon className={`w-4 h-4 ${isDark ? 'text-slate-600 group-hover:text-slate-500' : 'text-slate-300 group-hover:text-slate-500'}`} />
-                  <span>{section.title}</span>
-                </div>
-                {expandedSections.includes(section.title) ? (
-                  <ChevronDown className="w-3 h-3" />
-                ) : (
-                  <ChevronRight className="w-3 h-3" />
-                )}
-              </button>
-              
-              {expandedSections.includes(section.title) && (
-                <div className="space-y-1">
-                  {filteredItems.map((item) => {
-                    const Icon = item.icon;
-                    const active = isActive(item.path);
-                    
-                    return (
-                      <div
-                        key={item.id}
-                        className={`
-                          w-full flex items-center gap-2 px-3 py-2.5 rounded-lg transition-all duration-200 group
-                          ${active
-                            ? isDark
-                              ? 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-blue-400 border border-blue-500/30 shadow-lg shadow-blue-500/10'
-                              : 'bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-600 border border-blue-200 shadow-sm'
-                            : isDark
-                              ? 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-300'
-                              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                          }
-                        `}
-                      >
-                        <button
-                          onClick={() => navigate(item.path)}
-                          className="flex items-center gap-3 flex-1 min-w-0"
-                          title={item.label}
-                        >
-                          <div className="relative">
-                            <Icon className="w-5 h-5 flex-shrink-0" />
-                          {item.status && (
-                            <span className={`absolute -bottom-1 -right-1 w-2 h-2 ${getStatusColor(item.status)} rounded-full border-2 ${isDark ? 'border-slate-900' : 'border-white'}`}></span>
-                          )}
+              <div key={section.title} className="mb-6">
+                <button
+                  onClick={() => toggleSection(section.title)}
+                  className="w-full flex items-center justify-between px-3 py-2 mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground/70 hover:text-foreground transition-colors group"
+                >
+                  <div className="flex items-center gap-2">
+                    <SectionIcon className="w-3.5 h-3.5" />
+                    <span>{section.title}</span>
+                    {/* Badge indicator for Communication section */}
+                    {section.title === 'Communication' && (() => {
+                      const totalBadge = (badgeCounts.contacts || 0) + (badgeCounts.enrollments || 0) + (badgeCounts.consultations || 0);
+                      return totalBadge > 0 ? (
+                        <div className="relative">
+                          <Badge variant="destructive" className="px-1.5 py-0 text-xs font-bold animate-pulse">
+                            {totalBadge}
+                          </Badge>
+                          <span className="absolute inset-0 rounded-full bg-red-400 animate-ping opacity-75"></span>
                         </div>
-                        <span className="font-medium text-sm flex-1 text-left">{item.label}</span>
-                        {item.badge && item.badge > 0 && (
-                          <span className={`
-                            px-1.5 py-0.5 rounded-full text-xs font-semibold
-                            ${active
-                              ? 'bg-blue-500 text-white'
-                              : isDark
-                                ? 'bg-slate-700 text-slate-300'
-                                : 'bg-slate-200 text-slate-700'
-                            }
-                          `}>
-                            {item.badge > 99 ? '99+' : item.badge}
-                          </span>
-                        )}
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleFavorite(item.id);
-                        }}
-                        className={`
-                          p-1 rounded-md transition-all duration-200 flex-shrink-0
-                          ${favorites.includes(item.id)
-                            ? 'text-yellow-500 hover:text-yellow-600'
-                            : isDark
-                              ? 'text-slate-600 hover:text-yellow-500 opacity-0 group-hover:opacity-100'
-                              : 'text-slate-300 hover:text-yellow-500 opacity-0 group-hover:opacity-100'
-                          }
-                        `}
-                        title={favorites.includes(item.id) ? 'Remove from favorites' : 'Add to favorites'}
-                      >
-                        <Star className={`w-4 h-4 ${favorites.includes(item.id) ? 'fill-current' : ''}`} />
-                      </button>
-                    </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          );})}
+                      ) : null;
+                    })()}
+                  </div>
+                  {expandedSections.includes(section.title) ? (
+                    <ChevronDown className="w-3.5 h-3.5 transition-transform" />
+                  ) : (
+                    <ChevronRight className="w-3.5 h-3.5 transition-transform" />
+                  )}
+                </button>
+
+                {expandedSections.includes(section.title) && (
+                  <div className="space-y-1">
+                    {filteredItems.map((item) => {
+                      const Icon = item.icon;
+                      const active = isActive(item.path);
+
+                      return (
+                        <div
+                          key={item.id}
+                          className={`relative group flex items-center gap-2 rounded-lg transition-all duration-200 ${
+                            active
+                              ? 'bg-primary/10 text-primary'
+                              : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'
+                          }`}
+                        >
+                          <button
+                            onClick={() => navigate(item.path)}
+                            className="flex items-center gap-3 flex-1 px-3 py-2.5"
+                            title={item.label}
+                          >
+                            <div className="relative flex-shrink-0">
+                              <Icon className="w-4.5 h-4.5" />
+                              {item.status && (
+                                <span className={`absolute -bottom-0.5 -right-0.5 w-2 h-2 ${getStatusColor(item.status)} rounded-full border-2 border-card`}></span>
+                              )}
+                            </div>
+                            <span className="font-medium text-sm">{item.label}</span>
+                          </button>
+
+                          {/* Badge for notifications */}
+                          {item.badge && item.badge > 0 && (
+                            <div className="absolute right-10 top-1/2 -translate-y-1/2">
+                              <Badge variant="destructive" className="px-2 py-0.5 text-xs font-bold animate-pulse shadow-lg shadow-red-500/50">
+                                {item.badge > 99 ? '99+' : item.badge}
+                              </Badge>
+                            </div>
+                          )}
+
+                          {/* Favorite Star */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleFavorite(item.id);
+                            }}
+                            className={`absolute right-2 p-1.5 rounded-md transition-all duration-200 ${
+                              favorites.includes(item.id)
+                                ? 'text-yellow-500 hover:text-yellow-600'
+                                : 'text-muted-foreground/30 hover:text-yellow-500 opacity-0 group-hover:opacity-100'
+                            }`}
+                            title={favorites.includes(item.id) ? 'Remove from favorites' : 'Add to favorites'}
+                          >
+                            <Star className={`w-3.5 h-3.5 ${favorites.includes(item.id) ? 'fill-current' : ''}`} />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </nav>
 
-        {/* Sidebar Footer - Logout Only */}
-        <div className={`p-4 border-t ${isDark ? 'border-slate-800' : 'border-slate-200'} space-y-2`}>
-          {/* Logout Button */}
-          <button
+        {/* Ultra Modern Sidebar Footer */}
+        <div className="p-4 border-t border-border/50 space-y-3">
+          {/* Clean User Profile Card */}
+          <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-accent/30 hover:bg-accent/50 transition-all group cursor-pointer">
+            <div className="relative">
+              <Avatar className="h-11 w-11 border-2 border-primary/30 shadow-lg">
+                <AvatarImage src={logoImage} alt={currentUser?.name || 'Admin'} />
+                <AvatarFallback className="bg-gradient-to-br from-primary to-cyan-500 text-white font-bold text-base">
+                  {currentUser?.name?.charAt(0).toUpperCase() || 'A'}
+                </AvatarFallback>
+              </Avatar>
+              {/* Online Status Indicator */}
+              <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 border-2 border-card rounded-full">
+                <span className="absolute inset-0 animate-ping bg-green-500 rounded-full opacity-75"></span>
+              </span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-bold text-sm leading-tight text-foreground group-hover:text-primary transition-colors">
+                {currentUser?.name || 'Admin User'}
+              </p>
+              <p className="text-xs leading-tight truncate text-muted-foreground font-medium" title={currentUser?.email || 'admin@neverland.com'}>
+                {currentUser?.email || 'admin@neverland.com'}
+              </p>
+            </div>
+          </div>
+
+          {/* Clean Logout Button */}
+          <Button
+            variant="destructive"
             onClick={handleLogout}
-            className={`
-              w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors
-              ${isDark 
-                ? 'hover:bg-red-500/20 text-red-400 border border-red-400/30' 
-                : 'hover:bg-red-50 text-red-600 border border-red-200'}
-            `}
-            title="Logout"
+            className="w-full justify-start gap-2 h-10 font-semibold hover:scale-[1.02] transition-transform"
           >
-            <LogOut className="w-5 h-5" />
-            <span className="text-sm font-medium">Logout</span>
-          </button>
-          
-          {/* Version info */}
-          <div className={`text-center pt-1 ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>
-            <p className="text-xs">Version 1.0.0</p>
-            <p className="text-[10px] mt-0.5">© 2025 Neverland Studio</p>
+            <LogOut className="w-4 h-4" />
+            <span className="text-sm">Sign Out</span>
+          </Button>
+
+          {/* Clean Version Info */}
+          <div className="text-center pt-2">
+            <p className="text-xs text-muted-foreground/70 font-medium">v1.0.0 • © 2025</p>
           </div>
         </div>
       </aside>
@@ -515,85 +525,84 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           transition-all duration-300
           ${isMobile ? 'ml-0' : 'ml-72'}
           min-h-screen
+          ${isDark ? 'bg-slate-950' : 'bg-slate-50'}
+          relative
         `}
       >
-        {/* Top Bar */}
-        <header className={`
-          h-16 sticky top-0 z-20 flex items-center justify-between px-4 sm:px-6
-          ${isDark 
-            ? 'bg-slate-900/80 backdrop-blur-lg border-b border-slate-800' 
-            : 'bg-white/80 backdrop-blur-lg border-b border-slate-200'}
-        `}>
-          {isMobile && (
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className={`p-2 rounded-lg transition-colors lg:hidden ${
-                isDark ? 'hover:bg-slate-800 text-slate-400' : 'hover:bg-slate-100 text-slate-600'
-              }`}
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-          )}
-          <div className="flex-1">
-            <h2 className={`text-lg sm:text-xl font-bold truncate ${isDark ? 'text-white' : 'text-slate-900'}`}>
-              {location.pathname.split('/').pop()?.charAt(0).toUpperCase() + location.pathname.split('/').pop()?.slice(1) || 'Dashboard'}
-            </h2>
+        {/* Decorative Background - Similar to main site */}
+        <div className="fixed inset-0 pointer-events-none z-0">
+          <div className={`absolute inset-0 ${isDark ? 'bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-slate-950 to-slate-950' : 'bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100/30 via-slate-50 to-slate-50'}`}></div>
+          <div className={`absolute inset-0 ${isDark ? 'bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)]' : 'bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)]'} bg-[size:24px_24px]`}></div>
+        </div>
+
+        {/* Ultra Modern Top Bar */}
+        <header className={`h-16 sticky top-0 z-20 flex items-center justify-between px-6 ${isDark ? 'bg-slate-900/80' : 'bg-white/80'} backdrop-blur-xl border-b ${isDark ? 'border-slate-800/50' : 'border-slate-200'} shadow-2xl`}>
+          {/* Left Section */}
+          <div className="flex items-center gap-4 flex-1">
+            {isMobile && (
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="p-2 rounded-xl transition-all lg:hidden hover:bg-accent text-muted-foreground hover:text-foreground hover:scale-110"
+                aria-label="Toggle sidebar"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+            )}
+            
+            {/* Page Title with Breadcrumb Style */}
+            <div>
+              <h2 className="text-xl font-bold text-foreground tracking-tight">
+                {location.pathname.split('/').pop()?.charAt(0).toUpperCase() + location.pathname.split('/').pop()?.slice(1).replace('-', ' ') || 'Dashboard'}
+              </h2>
+              <p className="text-xs text-muted-foreground font-medium mt-0.5">
+                Welcome back, {currentUser?.name || 'Admin'}
+              </p>
+            </div>
           </div>
-          
-          <div className="flex items-center gap-3">
-            {/* Notification Button */}
-            <button 
+
+          {/* Right Section - Actions */}
+          <div className="flex items-center gap-2">
+            {/* Notifications with Badge */}
+            <button
               onClick={() => setNotificationOpen(!notificationOpen)}
-              className={`p-2 rounded-lg transition-colors relative ${isDark ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}
+              className="relative p-2.5 rounded-xl transition-all hover:bg-accent hover:scale-105 group"
+              aria-label="Notifications"
             >
-              <Bell className={`w-5 h-5 ${isDark ? 'text-slate-400' : 'text-slate-600'}`} />
+              <Bell className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
               {unreadCount > 0 && (
-                <span className="absolute top-0 right-0 min-w-[18px] h-[18px] px-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-lg shadow-red-500/30 animate-pulse">
-                  {unreadCount > 9 ? '9+' : unreadCount}
-                </span>
+                <div className="absolute -top-1 -right-1">
+                  <span className="relative flex h-5 w-5 items-center justify-center">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                    <span className="relative inline-flex items-center justify-center rounded-full h-5 w-5 bg-gradient-to-r from-red-500 to-red-600 text-white text-[10px] font-bold shadow-lg">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  </span>
+                </div>
               )}
             </button>
 
             {/* Theme Toggle */}
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={onThemeToggle}
-              className={`p-2 rounded-lg transition-colors ${isDark ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}
               title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+              className="rounded-xl hover:scale-105 transition-transform"
             >
               {isDark ? (
-                <Sun className="w-5 h-5 text-yellow-400" />
+                <Sun className="w-5 h-5 text-amber-400" />
               ) : (
-                <Moon className="w-5 h-5 text-slate-600" />
+                <Moon className="w-5 h-5 text-slate-700" />
               )}
-            </button>
-
-            {/* User Profile */}
-            <div className={`flex items-center gap-3 px-3 py-2 rounded-xl ${isDark ? 'bg-slate-800/50' : 'bg-slate-100'}`}>
-              <div className="relative">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 via-cyan-500 to-purple-500 p-0.5">
-                  <div className={`w-full h-full rounded-full flex items-center justify-center ${isDark ? 'bg-slate-900' : 'bg-white'}`}>
-                    <span className="text-transparent bg-clip-text bg-gradient-to-br from-blue-500 to-cyan-500 font-bold text-sm">
-                      {currentUser?.name?.charAt(0) || 'A'}
-                    </span>
-                  </div>
-                </div>
-                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-slate-900 rounded-full"></span>
-              </div>
-              <div className="hidden sm:block">
-                <p className={`font-semibold text-sm ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                  {currentUser?.name || 'Admin User'}
-                </p>
-                <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                  {currentUser?.email || 'admin@neverland.com'}
-                </p>
-              </div>
-            </div>
+            </Button>
           </div>
         </header>
 
-        {/* Page Content */}
-        <div className="p-4 sm:p-6">
-          {children}
+        {/* Clean Page Content with proper layering */}
+        <div className="relative z-10 p-6 max-w-[1600px] mx-auto">
+          <div className="min-h-[calc(100vh-7rem)]">
+            {children}
+          </div>
         </div>
       </main>
 
@@ -607,19 +616,19 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           margin: 8px 0;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: ${isDark ? 'rgba(100, 116, 139, 0.4)' : 'rgba(148, 163, 184, 0.4)'};
+          background: hsl(var(--muted-foreground) / 0.3);
           border-radius: 10px;
           border: 2px solid transparent;
           background-clip: padding-box;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: ${isDark ? 'rgba(100, 116, 139, 0.6)' : 'rgba(148, 163, 184, 0.6)'};
+          background: hsl(var(--muted-foreground) / 0.5);
           border-radius: 10px;
           border: 2px solid transparent;
           background-clip: padding-box;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:active {
-          background: ${isDark ? 'rgba(59, 130, 246, 0.5)' : 'rgba(59, 130, 246, 0.5)'};
+          background: hsl(var(--primary) / 0.5);
         }
         
         /* Smooth scrolling */

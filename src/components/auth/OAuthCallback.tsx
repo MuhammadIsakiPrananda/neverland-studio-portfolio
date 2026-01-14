@@ -95,7 +95,7 @@ export default function OAuthCallback() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+    <div className="fixed inset-0 w-screen h-screen bg-slate-950 flex items-center justify-center p-4 z-[9999]">
       <div className="max-w-md w-full">
         <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 shadow-2xl text-center">
           {status === 'loading' && (

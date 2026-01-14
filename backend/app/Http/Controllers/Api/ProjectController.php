@@ -89,7 +89,7 @@ class ProjectController extends Controller
                 'title' => 'required|string|max:255',
                 'description' => 'required|string',
                 'category' => 'required|string',
-                'status' => 'required|in:active,completed,archived',
+                'status' => 'required|in:draft,published,archived',
                 'featured' => 'boolean',
                 'image' => 'nullable|string',
                 'technologies' => 'required|array',
@@ -136,7 +136,7 @@ class ProjectController extends Controller
                 'title' => 'sometimes|string|max:255',
                 'description' => 'sometimes|string',
                 'category' => 'sometimes|string',
-                'status' => 'sometimes|in:active,completed,archived',
+                'status' => 'sometimes|in:draft,published,archived',
                 'featured' => 'sometimes|boolean',
                 'image' => 'nullable|string',
                 'technologies' => 'sometimes|array',
@@ -205,8 +205,8 @@ class ProjectController extends Controller
         try {
             $stats = [
                 'total' => Project::count(),
-                'active' => Project::where('status', 'active')->count(),
-                'completed' => Project::where('status', 'completed')->count(),
+                'draft' => Project::where('status', 'draft')->count(),
+                'published' => Project::where('status', 'published')->count(),
                 'archived' => Project::where('status', 'archived')->count(),
                 'featured' => Project::where('featured', true)->count(),
                 'categories' => Project::select('category')

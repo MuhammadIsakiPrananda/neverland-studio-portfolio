@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->string('category');
-            $table->enum('status', ['active', 'completed', 'archived'])->default('active');
+            $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->boolean('featured')->default(false);
             $table->string('image')->nullable();
             $table->json('technologies');

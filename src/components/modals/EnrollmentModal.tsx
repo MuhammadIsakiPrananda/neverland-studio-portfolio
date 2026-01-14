@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { X, Send, User, Mail, Phone, Calendar, Clock, BookOpen, CreditCard } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import type { Theme } from '../../types';
+import api from '../../services/apiService';
+import { showSuccess, showError } from '../common/ModernNotification';
 
 interface Course {
   id: string;
@@ -29,6 +31,7 @@ export default function EnrollmentModal({ theme, course, onClose }: EnrollmentMo
   const [preferredTime, setPreferredTime] = useState('');
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   // Error states
   const [nameError, setNameError] = useState<string | undefined>();
@@ -37,13 +40,31 @@ export default function EnrollmentModal({ theme, course, onClose }: EnrollmentMo
 
   // Prevent body scroll when modal is open
   useEffect(() => {
+    // Get current scroll position
+    const scrollY = window.scrollY;
+
+    // Lock scroll and hide scrollbar
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
+
+    // Cleanup function
     return () => {
-      document.body.style.overflow = 'unset';
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
     };
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Reset errors
@@ -77,14 +98,73 @@ export default function EnrollmentModal({ theme, course, onClose }: EnrollmentMo
 
     if (hasError) return;
 
-    // Simulate submission
-    console.log({ fullName, email, phone, preferredDay, preferredTime, message, course: course.id });
-    setSubmitted(true);
+    // Submit to backend API
+    setSubmitting(true);
 
-    // Auto close after 2 seconds
-    setTimeout(() => {
-      onClose();
-    }, 2000);
+    try {
+      const enrollmentData = {
+        full_name: fullName,
+        email: email,
+        phone: phone,
+        course_id: course.id,
+        course_title: course.title,
+        preferred_day: preferredDay || null,
+        preferred_time: preferredTime || null,
+        message: message || null,
+      };
+
+      // Submit enrollment
+      await api.post('/enrollments', enrollmentData);
+
+      // Extract price from discountPrice string (e.g., "Rp 700.000" -> 700000)
+      const priceString = course.discountPrice.replace(/[^0-9]/g, '');
+      const amount = parseInt(priceString) * 1000; // Convert to actual amount (700.000 -> 700000)
+
+      // Create transaction in billing
+      try {
+        const transactionResponse = await api.post('/dashboard/transactions', {
+          client_name: fullName,
+          client_email: email,
+          client_phone: phone,
+          product_name: `${course.title} - Enrollment`,
+          description: `Course enrollment for ${course.title}`,
+          amount: amount,
+          status: 'pending',
+          payment_method: null,
+          due_date: null,
+          metadata: {
+            course_id: course.id,
+            enrollment_source: 'website',
+            preferred_day: preferredDay,
+            preferred_time: preferredTime
+          }
+        });
+
+        // Dispatch real-time event to update billing dashboard
+        if (transactionResponse.data?.data) {
+          window.dispatchEvent(new CustomEvent('transactionCreated', {
+            detail: transactionResponse.data.data
+          }));
+        }
+
+        console.log('Transaction created successfully');
+      } catch (txError) {
+        console.error('Failed to create transaction:', txError);
+        // Don't fail the whole enrollment if transaction creation fails
+      }
+
+      setSubmitted(true);
+      showSuccess('Enrollment submitted successfully! We will contact you soon.');
+
+      // Auto close after 2 seconds
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+    } catch (error: any) {
+      console.error('Enrollment submission error:', error);
+      showError(error.response?.data?.message || 'Failed to submit enrollment. Please try again.');
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -147,9 +227,8 @@ export default function EnrollmentModal({ theme, course, onClose }: EnrollmentMo
                       type="text"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${
-                        nameError ? 'border-red-500/50' : 'border-slate-700/50'
-                      } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
+                      className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${nameError ? 'border-red-500/50' : 'border-slate-700/50'
+                        } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
                       placeholder="Enter your full name"
                     />
                   </div>
@@ -169,9 +248,8 @@ export default function EnrollmentModal({ theme, course, onClose }: EnrollmentMo
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${
-                          emailError ? 'border-red-500/50' : 'border-slate-700/50'
-                        } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
+                        className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${emailError ? 'border-red-500/50' : 'border-slate-700/50'
+                          } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
                         placeholder="your@email.com"
                       />
                     </div>
@@ -189,9 +267,8 @@ export default function EnrollmentModal({ theme, course, onClose }: EnrollmentMo
                         type="tel"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${
-                          phoneError ? 'border-red-500/50' : 'border-slate-700/50'
-                        } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
+                        className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${phoneError ? 'border-red-500/50' : 'border-slate-700/50'
+                          } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
                         placeholder="+62 xxx-xxxx-xxxx"
                       />
                     </div>
@@ -275,10 +352,23 @@ export default function EnrollmentModal({ theme, course, onClose }: EnrollmentMo
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm text-white font-medium transition-colors flex items-center justify-center gap-2"
+                    disabled={submitting}
+                    className={`
+                      flex-1 px-4 py-2.5 rounded-lg text-sm text-white font-medium transition-colors flex items-center justify-center gap-2
+                      ${submitting ? 'bg-blue-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500'}
+                    `}
                   >
-                    <Send className="w-4 h-4" />
-                    Submit Enrollment
+                    {submitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        Submit Enrollment
+                      </>
+                    )}
                   </button>
                 </div>
               </form>

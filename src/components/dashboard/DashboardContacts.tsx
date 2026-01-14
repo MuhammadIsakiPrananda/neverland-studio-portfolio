@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { Theme } from '../../types';
-import { 
+import {
   Search,
   Filter,
   Mail,
@@ -18,6 +18,11 @@ import {
 import api from '../../services/apiService';
 import realtimeService from '../../services/realtimeService';
 import { showSuccess, showError } from '../common/ModernNotification';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
 interface Contact {
   id: number;
@@ -47,11 +52,11 @@ const DashboardContacts: React.FC<DashboardContactsProps> = ({ theme }) => {
   const fetchContacts = async (showToast = false) => {
     try {
       if (showToast) setRefreshing(true);
-      
+
       console.log('Fetching contacts from /admin/contacts...');
       const response = await api.get('/admin/contacts');
       console.log('Contacts response:', response.data);
-      
+
       // Handle paginated response: response.data.data contains { current_page, data: [...] }
       let contactsData = [];
       if (response.data.data && Array.isArray(response.data.data.data)) {
@@ -64,18 +69,18 @@ const DashboardContacts: React.FC<DashboardContactsProps> = ({ theme }) => {
         // Direct array
         contactsData = response.data;
       }
-      
+
       console.log('Extracted contacts:', contactsData);
       setContacts(contactsData);
       setLastUpdate(new Date());
-      
+
       if (showToast) {
         showSuccess('Success', `Loaded ${contactsData.length} contacts`);
       }
     } catch (error: any) {
       console.error('Failed to fetch contacts:', error);
       console.error('Error response:', error.response?.data);
-      
+
       if (showToast) {
         const errorMsg = error.response?.data?.message || error.message || 'Failed to load contacts';
         showError('Error', errorMsg);
@@ -90,7 +95,7 @@ const DashboardContacts: React.FC<DashboardContactsProps> = ({ theme }) => {
   useEffect(() => {
     // Initial fetch
     fetchContacts();
-    
+
     // Subscribe to real-time contact updates
     const unsubscribe = realtimeService.subscribe('contacts', (data) => {
       if (data && Array.isArray(data)) {
@@ -101,20 +106,20 @@ const DashboardContacts: React.FC<DashboardContactsProps> = ({ theme }) => {
         fetchContacts();
       }
     });
-    
+
     return () => {
       unsubscribe();
     };
-  }, []);  
+  }, []);
 
   const filteredContacts = contacts.filter(contact => {
-    const matchesSearch = 
+    const matchesSearch =
       contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       contact.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
       contact.subject.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     const matchesStatus = filterStatus === 'all' || contact.status === filterStatus;
-    
+
     return matchesSearch && matchesStatus;
   });
 
@@ -139,15 +144,15 @@ const DashboardContacts: React.FC<DashboardContactsProps> = ({ theme }) => {
   const updateStatus = async (id: number, newStatus: 'new' | 'read' | 'replied') => {
     try {
       await api.patch(`/admin/contacts/${id}/status`, { status: newStatus });
-      
-      setContacts(prev => prev.map(c => 
+
+      setContacts(prev => prev.map(c =>
         c.id === id ? { ...c, status: newStatus } : c
       ));
-      
+
       if (selectedContact?.id === id) {
         setSelectedContact({ ...selectedContact, status: newStatus });
       }
-      
+
       showSuccess('Status updated!');
     } catch (error) {
       showError('Failed to update status');
@@ -156,7 +161,7 @@ const DashboardContacts: React.FC<DashboardContactsProps> = ({ theme }) => {
 
   const markAsRead = async (contact: Contact) => {
     setSelectedContact(contact);
-    
+
     if (contact.status === 'new') {
       await updateStatus(contact.id, 'read');
     }
@@ -164,7 +169,7 @@ const DashboardContacts: React.FC<DashboardContactsProps> = ({ theme }) => {
 
   const deleteContact = async (id: number) => {
     if (!confirm('Are you sure you want to delete this contact?')) return;
-    
+
     try {
       const response = await api.delete(`/admin/contacts/${id}`);
       setContacts(prev => prev.filter(c => c.id !== id));
@@ -183,7 +188,7 @@ const DashboardContacts: React.FC<DashboardContactsProps> = ({ theme }) => {
     const date = new Date(timestamp);
     const now = new Date();
     const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    
+
     if (seconds < 60) return 'just now';
     if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
     if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
@@ -192,34 +197,39 @@ const DashboardContacts: React.FC<DashboardContactsProps> = ({ theme }) => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Clean Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
+          <h1 className={`text-3xl font-bold ${
+            isDark ? 'text-white' : 'text-slate-900'
+          }`}>
             Contact Messages
           </h1>
-          <p className={`text-sm mt-1 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-            Real-time inbox • Last updated: {lastUpdate.toLocaleTimeString('id-ID')}
+          <p className={`text-sm font-normal mt-1 ${
+            isDark ? 'text-slate-400' : 'text-slate-600'
+          }`}>
+            Manage customer inquiries and messages
           </p>
         </div>
-        <button
+        <Button
           onClick={() => fetchContacts(true)}
           disabled={refreshing}
-          className={`
-            px-4 py-2 rounded-xl transition-all duration-300 flex items-center gap-2
-            ${isDark ? 'bg-blue-500/20 hover:bg-blue-500/30' : 'bg-blue-50 hover:bg-blue-100'}
-            ${refreshing ? 'opacity-50 cursor-not-allowed' : ''}
-          `}
+          variant="default"
+          size="icon"
+          className={`rounded-xl h-12 w-12 border shadow-lg hover:shadow-xl transition-all duration-200 ${
+            isDark
+              ? 'bg-slate-800 hover:bg-slate-700 border-slate-700/50 hover:border-slate-600'
+              : 'bg-slate-100 hover:bg-slate-200 border-slate-200 hover:border-slate-300'
+          }`}
         >
-          <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''} ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
-          <span className={`text-sm font-medium ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
-            Refresh
-          </span>
-        </button>
+          <RefreshCw className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''} ${
+            isDark ? 'text-slate-300' : 'text-slate-600'
+          }`} />
+        </Button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
         {[
           { label: 'Total Messages', value: contacts.length, icon: Mail, color: 'blue' },
           { label: 'New Messages', value: contacts.filter(c => c.status === 'new').length, icon: Mail, color: 'blue' },
@@ -228,95 +238,120 @@ const DashboardContacts: React.FC<DashboardContactsProps> = ({ theme }) => {
         ].map((stat, idx) => {
           const Icon = stat.icon;
           return (
-            <div
+            <Card
               key={idx}
-              className={`
-                p-4 rounded-xl border
-                ${isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-white border-slate-200'}
-              `}
+              className={`group relative overflow-hidden border backdrop-blur-sm transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5 ${
+                isDark
+                  ? 'border-slate-800/50 bg-slate-900/40 hover:border-slate-700/60'
+                  : 'border-slate-200 bg-white hover:border-slate-300'
+              }`}
             >
-              <div className="flex items-center gap-3 mb-2">
-                <div className={`p-2 rounded-lg ${isDark ? 'bg-blue-500/20' : 'bg-blue-50'}`}>
-                  <Icon className={`w-5 h-5 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
+              <CardContent className="p-5 relative">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="relative">
+                    <div className={`p-2.5 rounded-lg border group-hover:border-primary/30 transition-all duration-300 ${
+                      isDark
+                        ? 'bg-slate-800/60 border-slate-700/50'
+                        : 'bg-slate-100/80 border-slate-200'
+                    }`}>
+                      <Icon className={`w-5 h-5 group-hover:text-primary transition-colors duration-300 ${
+                        isDark ? 'text-slate-300' : 'text-slate-600'
+                      }`} />
+                    </div>
+                  </div>
                 </div>
-                <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-                  {stat.label}
-                </p>
-              </div>
-              <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                {stat.value}
-              </p>
-            </div>
+                <div className="space-y-1.5">
+                  <p className={`text-[10px] font-bold uppercase tracking-widest ${
+                    isDark ? 'text-slate-500' : 'text-slate-400'
+                  }`}>
+                    {stat.label}
+                  </p>
+                  <p className={`text-3xl font-black ${
+                    isDark ? 'text-white' : 'text-slate-900'
+                  }`}>
+                    {stat.value}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           );
         })}
       </div>
 
       {/* Filters */}
-      <div className={`
-        p-4 rounded-xl border
-        ${isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-white border-slate-200'}
-      `}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Search */}
-          <div className="md:col-span-2">
-            <div className="relative">
-              <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${isDark ? 'text-slate-400' : 'text-slate-500'}`} />
-              <input
-                type="text"
-                placeholder="Search contacts..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={`
-                  w-full pl-10 pr-4 py-2 rounded-lg text-sm
-                  ${isDark 
-                    ? 'bg-slate-800 border-slate-700 text-white placeholder:text-slate-500' 
-                    : 'bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400'}
-                  border focus:outline-none focus:ring-2 focus:ring-blue-500/50
-                `}
-              />
+      <Card className={`border backdrop-blur-sm ${
+        isDark
+          ? 'border-slate-800/50 bg-slate-900/40'
+          : 'border-slate-200 bg-white'
+      }`}>
+        <CardContent className="p-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Search */}
+            <div className="md:col-span-2">
+              <div className="relative">
+                <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${
+                  isDark ? 'text-slate-400' : 'text-slate-500'
+                }`} />
+                <Input
+                  type="text"
+                  placeholder="Search contacts..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className={`pl-10 h-10 focus:border-primary/50 ${
+                    isDark
+                      ? 'bg-slate-800/50 border-slate-700/50 text-white placeholder:text-slate-500'
+                      : 'bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400'
+                  }`}
+                />
+              </div>
+            </div>
+
+            {/* Status Filter */}
+            <div>
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value as any)}
+                className={`w-full px-4 py-2 h-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent ${
+                  isDark
+                    ? 'bg-slate-800/50 border-slate-700/50 text-white'
+                    : 'bg-slate-50 border-slate-200 text-slate-900'
+                }`}
+              >
+                <option value="all">All Status</option>
+                <option value="new">New</option>
+                <option value="read">Read</option>
+                <option value="replied">Replied</option>
+              </select>
             </div>
           </div>
-
-          {/* Status Filter */}
-          <div>
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value as any)}
-              className={`
-                w-full px-4 py-2 rounded-lg text-sm
-                ${isDark 
-                  ? 'bg-slate-800 border-slate-700 text-white' 
-                  : 'bg-slate-50 border-slate-200 text-slate-900'}
-                border focus:outline-none focus:ring-2 focus:ring-blue-500/50
-              `}
-            >
-              <option value="all">All Status</option>
-              <option value="new">New</option>
-              <option value="read">Read</option>
-              <option value="replied">Replied</option>
-            </select>
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Messages List & Detail View */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Messages List */}
-        <div className={`
-          lg:col-span-1 rounded-xl border overflow-hidden
-          ${isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-white border-slate-200'}
-        `}>
+        <Card className={`lg:col-span-1 border backdrop-blur-sm overflow-hidden ${
+          isDark
+            ? 'border-slate-800/50 bg-slate-900/40'
+            : 'border-slate-200 bg-white'
+        }`}>
           <div className="max-h-[600px] overflow-y-auto">
             {loading ? (
               <div className="p-4 space-y-3">
                 {[...Array(5)].map((_, i) => (
-                  <div key={i} className={`h-20 rounded animate-pulse ${isDark ? 'bg-slate-800' : 'bg-slate-100'}`} />
+                  <div key={i} className={`h-20 rounded-lg animate-pulse ${
+                    isDark ? 'bg-slate-800/60' : 'bg-slate-100'
+                  }`} />
                 ))}
               </div>
             ) : filteredContacts.length === 0 ? (
               <div className="p-8 text-center">
-                <Mail className={`w-12 h-12 mx-auto mb-3 ${isDark ? 'text-slate-600' : 'text-slate-300'}`} />
-                <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                <Mail className={`w-12 h-12 mx-auto mb-3 ${
+                  isDark ? 'text-slate-600' : 'text-slate-300'
+                }`} />
+                <p className={`text-sm font-medium ${
+                  isDark ? 'text-slate-500' : 'text-slate-400'
+                }`}>
                   No messages found
                 </p>
               </div>
@@ -328,32 +363,45 @@ const DashboardContacts: React.FC<DashboardContactsProps> = ({ theme }) => {
                     key={contact.id}
                     onClick={() => markAsRead(contact)}
                     className={`
-                      p-4 border-b cursor-pointer transition-colors
-                      ${isDark ? 'border-slate-800 hover:bg-slate-800/50' : 'border-slate-200 hover:bg-slate-50'}
+                      p-4 border-b cursor-pointer transition-all duration-200
+                      ${isDark
+                        ? 'border-slate-800/50 hover:bg-slate-800/50'
+                        : 'border-slate-200 hover:bg-slate-50'
+                      }
                       ${selectedContact?.id === contact.id ? (isDark ? 'bg-slate-800/50' : 'bg-slate-50') : ''}
                       ${contact.status === 'new' ? 'font-semibold' : ''}
                     `}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2 flex-1 min-w-0">
-                        <StatusIcon className={`w-4 h-4 flex-shrink-0 ${contact.status === 'new' ? 'text-blue-400' : 'text-slate-500'}`} />
-                        <span className={`text-sm truncate ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                        <StatusIcon className={`w-4 h-4 flex-shrink-0 ${contact.status === 'new' ? 'text-primary' : 'text-slate-500'}`} />
+                        <span className={`text-sm truncate ${
+                          isDark ? 'text-white' : 'text-slate-900'
+                        }`}>
                           {contact.name}
                         </span>
                       </div>
                       {contact.status === 'new' && (
-                        <span className="flex-shrink-0 w-2 h-2 rounded-full bg-blue-500"></span>
+                        <span className="flex-shrink-0 w-2 h-2 rounded-full bg-primary"></span>
                       )}
                     </div>
-                    <p className={`text-sm mb-1 truncate ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+                    <p className={`text-sm mb-1 truncate ${
+                      isDark ? 'text-slate-300' : 'text-slate-700'
+                    }`}>
                       {contact.subject}
                     </p>
-                    <p className={`text-xs truncate ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
+                    <p className={`text-xs truncate ${
+                      isDark ? 'text-slate-500' : 'text-slate-400'
+                    }`}>
                       {contact.message}
                     </p>
                     <div className="flex items-center gap-2 mt-2">
-                      <Clock className="w-3 h-3 text-slate-500" />
-                      <span className="text-xs text-slate-500">
+                      <Clock className={`w-3 h-3 ${
+                        isDark ? 'text-slate-500' : 'text-slate-400'
+                      }`} />
+                      <span className={`text-xs ${
+                        isDark ? 'text-slate-500' : 'text-slate-400'
+                      }`}>
                         {getTimeAgo(contact.created_at)}
                       </span>
                     </div>
@@ -362,30 +410,31 @@ const DashboardContacts: React.FC<DashboardContactsProps> = ({ theme }) => {
               })
             )}
           </div>
-        </div>
+        </Card>
 
         {/* Message Detail */}
-        <div className={`
-          lg:col-span-2 rounded-xl border
-          ${isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-white border-slate-200'}
-        `}>
+        <Card className={`lg:col-span-2 border backdrop-blur-sm ${
+          isDark
+            ? 'border-slate-800/50 bg-slate-900/40'
+            : 'border-slate-200 bg-white'
+        }`}>
           {selectedContact ? (
             <div className="p-6">
               {/* Header */}
-              <div className={`flex items-start justify-between mb-6 pb-4 border-b ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
+              <div className="flex items-start justify-between mb-6 pb-4 border-b border-slate-800/50">
                 <div className="flex items-start gap-4">
-                  <div className={`w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-semibold`}>
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center text-white font-semibold">
                     {selectedContact.name.charAt(0)}
                   </div>
                   <div>
-                    <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                    <h3 className="text-lg font-bold text-white">
                       {selectedContact.name}
                     </h3>
-                    <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                    <p className="text-sm text-slate-400">
                       {selectedContact.email}
                     </p>
                     {selectedContact.phone && (
-                      <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                      <p className="text-sm text-slate-400">
                         {selectedContact.phone}
                       </p>
                     )}
@@ -398,27 +447,27 @@ const DashboardContacts: React.FC<DashboardContactsProps> = ({ theme }) => {
 
               {/* Subject */}
               <div className="mb-4">
-                <h4 className={`text-sm font-semibold mb-1 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                <h4 className="text-sm font-semibold mb-1 text-slate-400">
                   Subject
                 </h4>
-                <p className={`text-base font-medium ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                <p className="text-base font-medium text-white">
                   {selectedContact.subject}
                 </p>
               </div>
 
               {/* Message */}
               <div className="mb-6">
-                <h4 className={`text-sm font-semibold mb-2 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                <h4 className="text-sm font-semibold mb-2 text-slate-400">
                   Message
                 </h4>
-                <p className={`text-sm leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+                <p className="text-sm leading-relaxed text-slate-300">
                   {selectedContact.message}
                 </p>
               </div>
 
               {/* Date */}
               <div className="mb-6">
-                <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
+                <p className="text-xs text-slate-500">
                   Received: {new Date(selectedContact.created_at).toLocaleString()}
                 </p>
               </div>
@@ -463,13 +512,13 @@ const DashboardContacts: React.FC<DashboardContactsProps> = ({ theme }) => {
             </div>
           ) : (
             <div className="p-12 text-center">
-              <Mail className={`w-16 h-16 mx-auto mb-4 ${isDark ? 'text-slate-700' : 'text-slate-300'}`} />
-              <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+              <Mail className="w-16 h-16 mx-auto mb-4 text-slate-700" />
+              <p className="text-sm text-slate-400">
                 Select a message to view details
               </p>
             </div>
           )}
-        </div>
+        </Card>
       </div>
     </div>
   );

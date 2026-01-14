@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('google_id')->nullable()->unique()->after('email');
-            $table->string('github_id')->nullable()->unique()->after('google_id');
-            $table->string('avatar')->nullable()->after('github_id');
+            // Change avatar from text to longText to support large base64 images
+            $table->longText('avatar')->nullable()->change();
         });
     }
 
@@ -24,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['google_id', 'github_id', 'avatar']);
+            // Revert back to text
+            $table->text('avatar')->nullable()->change();
         });
     }
 };

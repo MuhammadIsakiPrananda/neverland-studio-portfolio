@@ -3,46 +3,42 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\ApiResponse;
+use App\Services\DashboardService;
 use App\Models\User;
-use App\Models\LoginHistory;
 use App\Models\Contact;
 use App\Models\Enrollment;
 use App\Models\Consultation;
 use App\Models\Newsletter;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Exception;
 
 class DashboardController extends Controller
 {
+    use ApiResponse;
+
+    protected DashboardService $dashboardService;
+
+    public function __construct(DashboardService $dashboardService)
+    {
+        $this->dashboardService = $dashboardService;
+    }
+
     /**
-     * Get dashboard overview statistics with safe fallbacks
+     * Get dashboard overview statistics
      */
-    public function getOverviewStats(Request $request)
+    public function getOverviewStats(Request $request): JsonResponse
     {
         try {
-            // Set max execution time
-            set_time_limit(5);
-            
-            $stats = [
-                'users' => $this->getUserStats(),
-                'contacts' => $this->getContactStats(),
-                'enrollments' => $this->getEnrollmentStats(),
-                'consultations' => $this->getConsultationStats(),
-                'newsletters' => $this->getNewsletterStats(),
-                'logins' => $this->getLoginStats(),
-            ];
+            $stats = $this->dashboardService->getOverviewStats();
 
-            return response()->json([
-                'success' => true,
-                'data' => $stats
-            ], 200);
-        } catch (\Exception $e) {
+            return $this->successResponse(['data' => $stats]);
+        } catch (Exception $e) {
             \Log::error('Dashboard stats error: ' . $e->getMessage());
-            return response()->json([
-                'success' => true,  // Return success but with empty data
-                'data' => $this->getEmptyStats()
-            ], 200);
+            return $this->errorResponse('Failed to fetch dashboard statistics', $e->getMessage());
         }
     }
     
@@ -319,8 +315,9 @@ class DashboardController extends Controller
                 'enrollments' => [
                     'total' => Enrollment::count(),
                     'pending' => Enrollment::where('status', 'pending')->count(),
-                    'approved' => Enrollment::where('status', 'approved')->count(),
-                    'rejected' => Enrollment::where('status', 'rejected')->count(),
+                    'confirmed' => Enrollment::where('status', 'confirmed')->count(),
+                    'completed' => Enrollment::where('status', 'completed')->count(),
+                    'cancelled' => Enrollment::where('status', 'cancelled')->count(),
                     'today' => Enrollment::whereDate('created_at', Carbon::today())->count(),
                     'this_week' => Enrollment::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count(),
                 ],

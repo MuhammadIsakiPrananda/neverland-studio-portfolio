@@ -38,6 +38,13 @@ class DatabaseSeeder extends Seeder
 
         echo "✓ Test users created successfully!\n";
         echo "Test User: test@example.com / password123\n";
-        echo "Admin User: admin@neverlandstudio.com / Admin@123\n";
+        echo "Admin User: admin@neverlandstudio.com / Admin@123\n\n";
+
+        // Seed projects
+        $this->call([
+            ProjectSeeder::class,
+        ]);
+
+        echo "✓ Projects seeded successfully!\n";
     }
 }

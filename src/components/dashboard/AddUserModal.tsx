@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, User, Mail, Lock, Phone, MapPin, FileText } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, User, Mail, Lock, Phone, MapPin, FileText, Eye, EyeOff } from 'lucide-react';
 import { userService, CreateUserData } from '../../services/userService';
 import { showSuccess, showError } from '../common/ModernNotification';
 
@@ -13,6 +13,7 @@ interface AddUserModalProps {
 export default function AddUserModal({ isOpen, onClose, onSuccess, theme }: AddUserModalProps) {
   const isDark = theme === 'dark';
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<CreateUserData>({
     name: '',
     username: '',
@@ -23,6 +24,28 @@ export default function AddUserModal({ isOpen, onClose, onSuccess, theme }: AddU
     location: '',
     status: 'active',
   });
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+      
+      // Get scrollbar width
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      
+      // Prevent scroll and compensate for scrollbar
+      document.body.style.overflow = 'hidden';
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
+      
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
+      };
+    }
+  }, [isOpen]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -59,10 +82,18 @@ export default function AddUserModal({ isOpen, onClose, onSuccess, theme }: AddU
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-      <div className={`relative w-full max-w-3xl my-8 rounded-2xl shadow-2xl border ${
-        isDark ? 'bg-slate-900 border-slate-700/50' : 'bg-white border-slate-200'
-      }`}>
+    <>
+      {/* Full Screen Backdrop */}
+      <div className="fixed inset-0 z-[9998] bg-black/80 backdrop-blur-md" onClick={onClose} />
+      
+      {/* Modal Container */}
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 overflow-y-auto pointer-events-none">
+        <div 
+          className={`relative w-full max-w-3xl my-8 rounded-2xl shadow-2xl border pointer-events-auto ${
+            isDark ? 'bg-slate-900 border-slate-700/50' : 'bg-white border-slate-200'
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
         {/* Header with gradient */}
         <div className={`relative overflow-hidden border-b ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10"></div>
@@ -172,19 +203,34 @@ export default function AddUserModal({ isOpen, onClose, onSuccess, theme }: AddU
               <div className="relative">
                 <Lock className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 ${isDark ? 'text-slate-500' : 'text-slate-400'}`} />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
                   required
                   minLength={8}
-                  className={`w-full pl-10 pr-4 py-3 rounded-xl border transition-all ${
+                  className={`w-full pl-10 pr-12 py-3 rounded-xl border transition-all ${
                     isDark
                       ? 'bg-slate-800/50 border-slate-700 text-white placeholder-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                       : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                   } focus:outline-none`}
                   placeholder="Minimum 8 characters"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={`absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg transition-colors ${
+                    isDark 
+                      ? 'text-slate-500 hover:text-slate-300 hover:bg-slate-700/50' 
+                      : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
               </div>
             </div>
           </div>
@@ -250,28 +296,6 @@ export default function AddUserModal({ isOpen, onClose, onSuccess, theme }: AddU
             Additional Information
           </h4>
           <div className="space-y-4">
-            {/* Status */}
-            <div>
-              <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                Account Status
-              </label>
-              <select
-                name="status"
-                value={formData.status}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 rounded-xl border transition-all cursor-pointer ${
-                  isDark
-                    ? 'bg-slate-800/50 border-slate-700 text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                    : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                } focus:outline-none`}
-              >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="suspended">Suspended</option>
-                <option value="pending">Pending</option>
-              </select>
-            </div>
-
             {/* Bio */}
             <div>
               <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
@@ -332,5 +356,6 @@ export default function AddUserModal({ isOpen, onClose, onSuccess, theme }: AddU
         </form>
       </div>
     </div>
+    </>
   );
 }

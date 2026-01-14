@@ -26,19 +26,32 @@ interface CompanyModalProps {
 export default function CompanyModal({ theme, isOpen, onClose, companies, industryTitle }: CompanyModalProps) {
   const isDark = theme === 'dark';
 
-  // Close modal on ESC key
+  // Close modal on ESC key and prevent body scroll
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
+    
     if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      const originalPosition = document.body.style.position;
+      const scrollY = window.scrollY;
+      
       document.addEventListener('keydown', handleEsc);
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      
+      return () => {
+        document.removeEventListener('keydown', handleEsc);
+        document.body.style.overflow = originalOverflow;
+        document.body.style.position = originalPosition;
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, scrollY);
+      };
     }
-    return () => {
-      document.removeEventListener('keydown', handleEsc);
-      document.body.style.overflow = 'unset';
-    };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;

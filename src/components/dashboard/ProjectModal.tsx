@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import type { Theme } from '../../types';
 
@@ -43,6 +43,26 @@ export default function ProjectModal({ theme, project, onClose, onSave }: Projec
   });
   const [techInput, setTechInput] = useState('');
 
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    const originalPaddingRight = document.body.style.paddingRight;
+    
+    // Get scrollbar width
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    
+    // Prevent scroll and compensate for scrollbar
+    document.body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+    
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.paddingRight = originalPaddingRight;
+    };
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -71,11 +91,18 @@ export default function ProjectModal({ theme, project, onClose, onSave }: Projec
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className={`
-        w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl border
-        ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}
-      `}>
+    <>
+      {/* Full Screen Backdrop */}
+      <div className="fixed inset-0 z-[9998] bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      
+      {/* Modal Container */}
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pointer-events-none">
+        <div 
+          className={`w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl border pointer-events-auto ${
+            isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
         {/* Header */}
         <div className={`sticky top-0 flex items-center justify-between p-6 border-b ${isDark ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-white'}`}>
           <h2 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
@@ -310,5 +337,6 @@ export default function ProjectModal({ theme, project, onClose, onSave }: Projec
         </form>
       </div>
     </div>
+    </>
   );
 }

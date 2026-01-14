@@ -1,7 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Theme } from '../../types';
-import { Save, Globe, Mail, Shield, Database, Bell } from 'lucide-react';
-import { showSuccess } from '../common/ModernNotification';
+import {
+  Save,
+  Wrench,
+  Globe,
+  X,
+  Plus,
+  AlertTriangle,
+  CheckCircle,
+} from 'lucide-react';
+import { showSuccess, showError } from '../common/ModernNotification';
+import apiService from '../../services/apiService';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Textarea } from '../ui/textarea';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Switch } from '../ui/switch';
+import { Separator } from '../ui/separator';
 
 interface SettingsProps {
   theme: Theme;
@@ -9,163 +27,297 @@ interface SettingsProps {
 
 const Settings: React.FC<SettingsProps> = ({ theme }) => {
   const isDark = theme === 'dark';
-  const [activeTab, setActiveTab] = useState('general');
+  const [loading, setLoading] = useState(false);
 
-  const tabs = [
-    { id: 'general', label: 'General', icon: Globe },
-    { id: 'email', label: 'Email', icon: Mail },
-    { id: 'security', label: 'Security', icon: Shield },
-    { id: 'database', label: 'Database', icon: Database },
-    { id: 'notifications', label: 'Notifications', icon: Bell }
-  ];
+  // General Settings
+  const [generalSettings, setGeneralSettings] = useState({
+    siteName: 'Neverland Studio',
+    tagline: 'Creative Digital Solutions',
+    contactEmail: 'info@neverlandstudio.com',
+    siteUrl: 'https://neverlandstudio.com',
+  });
 
-  const handleSave = () => {
-    showSuccess('Settings Saved', 'Your settings have been updated');
+  // Maintenance mode state
+  const [maintenanceSettings, setMaintenanceSettings] = useState({
+    is_active: false,
+    title: 'Website Under Maintenance',
+    message: 'We are currently performing scheduled maintenance. We will be back soon!',
+    estimated_time: '',
+    allowed_ips: [] as string[],
+  });
+  const [newIp, setNewIp] = useState('');
+
+  // Load maintenance settings
+  const loadMaintenanceSettings = async () => {
+    try {
+      const response = await apiService.get('/admin/maintenance');
+      if (response.data.success) {
+        setMaintenanceSettings(response.data.data);
+      }
+    } catch (error) {
+      console.error('Failed to load maintenance settings:', error);
+    }
+  };
+
+  const handleMaintenanceToggle = () => {
+    setMaintenanceSettings({
+      ...maintenanceSettings,
+      is_active: !maintenanceSettings.is_active,
+    });
+  };
+
+  const handleMaintenanceSave = async () => {
+    setLoading(true);
+    try {
+      const response = await apiService.put('/admin/maintenance', maintenanceSettings);
+      if (response.data.success) {
+        setMaintenanceSettings(response.data.data);
+        showSuccess('Success', 'Maintenance settings updated successfully');
+      }
+    } catch (error) {
+      showError('Error', 'Failed to update maintenance settings');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addAllowedIp = () => {
+    if (newIp && !maintenanceSettings.allowed_ips.includes(newIp)) {
+      setMaintenanceSettings({
+        ...maintenanceSettings,
+        allowed_ips: [...maintenanceSettings.allowed_ips, newIp],
+      });
+      setNewIp('');
+    }
+  };
+
+  const removeAllowedIp = (ip: string) => {
+    setMaintenanceSettings({
+      ...maintenanceSettings,
+      allowed_ips: maintenanceSettings.allowed_ips.filter(i => i !== ip),
+    });
+  };
+
+  const handleGeneralSave = () => {
+    setLoading(true);
+    setTimeout(() => {
+      showSuccess('Settings Saved', 'Your general settings have been updated successfully');
+      setLoading(false);
+    }, 1000);
   };
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div>
-        <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
-          Settings
-        </h1>
-        <p className={`mt-1 text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+        <h1 className="text-3xl font-bold">Settings</h1>
+        <p className="text-muted-foreground mt-1">
           Configure your application settings
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Sidebar */}
-        <div className={`lg:col-span-1 p-4 rounded-xl border ${isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-white border-slate-200'}`}>
-          <nav className="space-y-1">
-            {tabs.map(tab => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                    activeTab === tab.id
-                      ? 'bg-blue-500 text-white'
-                      : isDark ? 'hover:bg-slate-700 text-slate-300' : 'hover:bg-slate-100 text-slate-700'
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span className="font-medium">{tab.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-        </div>
+      <Tabs defaultValue="general" className="w-full">
+        <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsTrigger value="general" className="flex items-center gap-2">
+            <Globe className="w-4 h-4" />
+            General
+          </TabsTrigger>
+          <TabsTrigger
+            value="maintenance"
+            className="flex items-center gap-2"
+            onClick={loadMaintenanceSettings}
+          >
+            <Wrench className="w-4 h-4" />
+            Maintenance
+          </TabsTrigger>
+        </TabsList>
 
-        {/* Content */}
-        <div className={`lg:col-span-3 p-6 rounded-xl border ${isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-white border-slate-200'}`}>
-          {activeTab === 'general' && (
-            <div className="space-y-6">
-              <div>
-                <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                  General Settings
-                </h3>
-                
-                <div className="space-y-4">
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                      Site Name
-                    </label>
-                    <input
-                      type="text"
-                      defaultValue="Neverland Studio"
-                      className={`w-full px-4 py-2 rounded-lg border ${isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'} focus:ring-2 focus:ring-blue-500 outline-none`}
-                    />
-                  </div>
-
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                      Tagline
-                    </label>
-                    <input
-                      type="text"
-                      defaultValue="Creative Digital Solutions"
-                      className={`w-full px-4 py-2 rounded-lg border ${isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'} focus:ring-2 focus:ring-blue-500 outline-none`}
-                    />
-                  </div>
-
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                      Contact Email
-                    </label>
-                    <input
-                      type="email"
-                      defaultValue="info@neverlandstudio.com"
-                      className={`w-full px-4 py-2 rounded-lg border ${isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'} focus:ring-2 focus:ring-blue-500 outline-none`}
-                    />
-                  </div>
-                </div>
+        <TabsContent value="general" className="space-y-4 mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>General Settings</CardTitle>
+              <CardDescription>Update your site's basic information</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="siteName">Site Name</Label>
+                <Input
+                  id="siteName"
+                  value={generalSettings.siteName}
+                  onChange={(e) => setGeneralSettings({ ...generalSettings, siteName: e.target.value })}
+                />
               </div>
-            </div>
-          )}
 
-          {activeTab === 'email' && (
-            <div>
-              <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                Email Configuration
-              </h3>
-              <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-                Configure SMTP settings for outgoing emails
-              </p>
-              <div className="mt-6 space-y-4">
-                <div>
-                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                    SMTP Host
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="smtp.example.com"
-                    className={`w-full px-4 py-2 rounded-lg border ${isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'} focus:ring-2 focus:ring-blue-500 outline-none`}
+              <div className="space-y-2">
+                <Label htmlFor="tagline">Tagline</Label>
+                <Input
+                  id="tagline"
+                  value={generalSettings.tagline}
+                  onChange={(e) => setGeneralSettings({ ...generalSettings, tagline: e.target.value })}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="contactEmail">Contact Email</Label>
+                  <Input
+                    id="contactEmail"
+                    type="email"
+                    value={generalSettings.contactEmail}
+                    onChange={(e) => setGeneralSettings({ ...generalSettings, contactEmail: e.target.value })}
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                      SMTP Port
-                    </label>
-                    <input
-                      type="number"
-                      defaultValue="587"
-                      className={`w-full px-4 py-2 rounded-lg border ${isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'} focus:ring-2 focus:ring-blue-500 outline-none`}
-                    />
-                  </div>
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                      Encryption
-                    </label>
-                    <select className={`w-full px-4 py-2 rounded-lg border ${isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'} focus:ring-2 focus:ring-blue-500 outline-none`}>
-                      <option>TLS</option>
-                      <option>SSL</option>
-                    </select>
-                  </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="siteUrl">Site URL</Label>
+                  <Input
+                    id="siteUrl"
+                    type="url"
+                    value={generalSettings.siteUrl}
+                    onChange={(e) => setGeneralSettings({ ...generalSettings, siteUrl: e.target.value })}
+                  />
                 </div>
               </div>
-            </div>
-          )}
 
-          {activeTab !== 'general' && activeTab !== 'email' && (
-            <div className="text-center py-12">
-              <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-                {tabs.find(t => t.id === activeTab)?.label} settings will be implemented here
-              </p>
-            </div>
-          )}
+              <Separator className="my-4" />
 
-          {/* Save Button */}
-          <div className="mt-8 pt-6 border-t ${isDark ? 'border-slate-700' : 'border-slate-200'}">
-            <button onClick={handleSave} className="px-6 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
-              <Save className="w-4 h-4" />
-              Save Settings
-            </button>
-          </div>
-        </div>
-      </div>
+              <div className="flex justify-end">
+                <Button onClick={handleGeneralSave} disabled={loading}>
+                  <Save className="w-4 h-4 mr-2" />
+                  {loading ? 'Saving...' : 'Save Settings'}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="maintenance" className="space-y-4 mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Maintenance Mode</CardTitle>
+              <CardDescription>Control when your site is accessible to visitors</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Maintenance Toggle */}
+              <div className={`p-4 rounded-lg border ${maintenanceSettings.is_active ? 'bg-destructive/10 border-destructive/30' : 'bg-muted'}`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${maintenanceSettings.is_active ? 'bg-destructive/20' : 'bg-green-500/20'}`}>
+                      {maintenanceSettings.is_active ? (
+                        <AlertTriangle className="w-5 h-5 text-destructive" />
+                      ) : (
+                        <CheckCircle className="w-5 h-5 text-green-600" />
+                      )}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold flex items-center gap-2">
+                        {maintenanceSettings.is_active ? 'Maintenance Active' : 'Website Online'}
+                        {maintenanceSettings.is_active && (
+                          <Badge variant="destructive">Active</Badge>
+                        )}
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        {maintenanceSettings.is_active
+                          ? 'Visitors see maintenance page'
+                          : 'Website is accessible to everyone'}
+                      </p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={maintenanceSettings.is_active}
+                    onCheckedChange={handleMaintenanceToggle}
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="maintenanceTitle">Maintenance Title</Label>
+                  <Input
+                    id="maintenanceTitle"
+                    value={maintenanceSettings.title}
+                    onChange={(e) => setMaintenanceSettings({ ...maintenanceSettings, title: e.target.value })}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="maintenanceMessage">Maintenance Message</Label>
+                  <Textarea
+                    id="maintenanceMessage"
+                    value={maintenanceSettings.message}
+                    onChange={(e) => setMaintenanceSettings({ ...maintenanceSettings, message: e.target.value })}
+                    rows={4}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="estimatedTime">Estimated Time (Optional)</Label>
+                  <Input
+                    id="estimatedTime"
+                    value={maintenanceSettings.estimated_time || ''}
+                    onChange={(e) => setMaintenanceSettings({ ...maintenanceSettings, estimated_time: e.target.value })}
+                    placeholder="e.g., 2 hours, until 10:00 AM"
+                  />
+                </div>
+
+                <Separator />
+
+                {/* Allowed IPs */}
+                <div className="space-y-2">
+                  <Label>Allowed IPs (Bypass Maintenance)</Label>
+                  <p className="text-xs text-muted-foreground">
+                    These IPs can access the website even during maintenance mode
+                  </p>
+                  <div className="flex gap-2">
+                    <Input
+                      value={newIp}
+                      onChange={(e) => setNewIp(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && addAllowedIp()}
+                      placeholder="Enter IP address (e.g., 192.168.1.1)"
+                      className="flex-1"
+                    />
+                    <Button onClick={addAllowedIp} variant="secondary">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add
+                    </Button>
+                  </div>
+                  {maintenanceSettings.allowed_ips.length > 0 && (
+                    <div className="space-y-2 mt-3">
+                      {maintenanceSettings.allowed_ips.map((ip) => (
+                        <div
+                          key={ip}
+                          className="flex items-center justify-between px-3 py-2 rounded-lg bg-muted"
+                        >
+                          <span className="text-sm font-mono">{ip}</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeAllowedIp(ip)}
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <X className="w-4 h-4 mr-1" />
+                            Remove
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="flex justify-end">
+                <Button onClick={handleMaintenanceSave} disabled={loading}>
+                  <Save className="w-4 h-4 mr-2" />
+                  {loading ? 'Saving...' : 'Save Maintenance Settings'}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

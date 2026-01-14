@@ -116,7 +116,7 @@ export default function PricingPage({ plans }: PricingPageProps) {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setSelectedPlan(null);
+    setSelectedPackage(null);
   };
 
   return (
@@ -142,34 +142,34 @@ export default function PricingPage({ plans }: PricingPageProps) {
       <div className="relative z-10 container mx-auto px-4 md:px-6 pb-12 md:pb-16 lg:pb-20">
         {/* Header */}
         <div className="text-center mb-12 md:mb-16 max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600/10 border border-blue-500/20 text-blue-400 mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600/10 border border-blue-500/20 text-blue-400 backdrop-blur-sm mb-6 animate-fade-in-down">
             <Zap className="w-4 h-4" />
             <span className="text-sm font-semibold">{t('pricing.badge')}</span>
           </div>
           
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-in-up">
             <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
               {t('pricing.hero.title')}
             </span>
           </h1>
           
-          <p className="text-base md:text-lg text-slate-300 leading-relaxed">
+          <p className="text-base md:text-lg text-slate-300 leading-relaxed animate-fade-in-up delay-200">
             {t('pricing.hero.subtitle')}
           </p>
         </div>
 
-        {/* Pricing Cards - Clean & Simple with Equal Heights */}
+        {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto mb-16">
-          {websitePackages.map((pkg) => {
+          {websitePackages.map((pkg, index) => {
             const Icon = pkg.icon;
             
             return (
               <div
                 key={pkg.id}
-                className={`h-full flex flex-col relative rounded-2xl bg-slate-900/50 border p-6 sm:p-8 transition-all duration-300 hover:bg-slate-900/70 ${
+                className={`h-full flex flex-col relative rounded-2xl bg-slate-900/40 backdrop-blur-sm border p-6 sm:p-8 transition-all duration-300 hover-lift hover:bg-slate-800/50 hover:shadow-xl animate-fade-in-scale delay-${Math.min((index + 1) * 100, 300)} ${
                   pkg.popular 
-                    ? 'border-blue-500/50 shadow-xl shadow-blue-500/10' 
-                    : 'border-slate-700/50'
+                    ? 'border-blue-500/50 shadow-xl shadow-blue-500/10 hover:shadow-blue-500/20' 
+                    : 'border-slate-700/30 hover:border-slate-600/50'
                 }`}
               >
                 {/* Badges */}
@@ -186,19 +186,21 @@ export default function PricingPage({ plans }: PricingPageProps) {
                   )}
                 </div>
 
-                {/* Icon - Simple */}
+                {/* Icon */}
                 <div className="mb-6">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-800 border border-slate-700">
-                    <Icon className="w-6 h-6 text-blue-400" />
+                  <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${pkg.popular ? 'from-blue-500 to-cyan-500' : 'from-slate-700 to-slate-800'} p-0.5 group-hover:scale-110 transition-transform duration-300`}>
+                    <div className="w-full h-full bg-slate-900 rounded-xl flex items-center justify-center">
+                      <Icon className="w-7 h-7 text-blue-400 group-hover:text-blue-300 transition-colors duration-300" />
+                    </div>
                   </div>
                 </div>
 
                 {/* Package Info */}
-                <h3 className="text-2xl font-bold text-white mb-2">
+                <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors duration-300">
                   {t(`pricing.packages.${pkg.id}.name`)}
                 </h3>
                 
-                <p className="text-sm text-slate-400 mb-6">
+                <p className="text-sm text-slate-400 mb-6 group-hover:text-slate-300 transition-colors duration-300">
                   {t(`pricing.packages.${pkg.id}.description`)}
                 </p>
 
@@ -232,7 +234,7 @@ export default function PricingPage({ plans }: PricingPageProps) {
 
                 {/* Features - Clean List */}
                 <div className="space-y-3 mb-6 flex-grow">
-                  {t(`pricing.packages.${pkg.id}.features`, { returnObjects: true }).map((feature: string, idx: number) => (
+                  {(pkg.features || []).map((feature: string, idx: number) => (
                     <div key={idx} className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
                       <span className="text-sm text-slate-300">
@@ -241,7 +243,7 @@ export default function PricingPage({ plans }: PricingPageProps) {
                     </div>
                   ))}
                   
-                  {t(`pricing.packages.${pkg.id}.notIncluded`, { returnObjects: true }).map((feature: string, idx: number) => (
+                  {(pkg.notIncluded || []).map((feature: string, idx: number) => (
                     <div key={`not-${idx}`} className="flex items-start gap-3 opacity-40">
                       <X className="w-5 h-5 text-slate-500 flex-shrink-0 mt-0.5" />
                       <span className="text-sm text-slate-500 line-through">
@@ -251,36 +253,36 @@ export default function PricingPage({ plans }: PricingPageProps) {
                   ))}
                 </div>
 
-                {/* Simple Button - Always at Bottom */}
+                {/* Button */}
                 <button
                   onClick={() => handleGetStarted(pkg)}
-                  className={`w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-colors mt-auto ${
+                  className={`w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 mt-auto group/btn ${
                     pkg.popular
-                      ? 'bg-blue-600 text-white hover:bg-blue-700'
-                      : 'bg-slate-800 text-white hover:bg-slate-700'
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-700 hover:to-blue-600 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-105'
+                      : 'bg-slate-800 text-white hover:bg-slate-700 border border-slate-700 hover:border-blue-500/50 hover:scale-105'
                   }`}
                 >
                   <span>{t('pricing.getStarted')}</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
                 </button>
               </div>
             );
           })}
         </div>
 
-        {/* Simple CTA Section */}
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="p-6 sm:p-8 rounded-2xl bg-slate-900/50 border border-slate-700/50">
+        {/* CTA Section */}
+        <div className="max-w-3xl mx-auto text-center animate-fade-in-up delay-400">
+          <div className="p-6 sm:p-8 rounded-2xl bg-slate-900/40 backdrop-blur-sm border border-slate-700/30 hover:border-slate-600/50 transition-all duration-300 hover-lift">
             <h3 className="text-xl font-bold text-white mb-3">{t('pricing.cta.title')}</h3>
             <p className="text-slate-400 mb-6">
               {t('pricing.cta.description')}
             </p>
             <button
               onClick={() => navigate('/contact')}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-105 group"
             >
               <span>{t('pricing.cta.button')}</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
             </button>
           </div>
         </div>

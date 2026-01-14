@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Theme } from '../../types';
 import BaseModal from './shared/BaseModal';
 import LoginForm from './login/LoginForm';
@@ -20,33 +20,53 @@ export default function LoginModal({ theme, onClose, onLogin, onForgotPassword, 
   const [passwordError, setPasswordError] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState(false);
 
+  // Reset state when modal opens to prevent stuck states from OAuth redirects
+  useEffect(() => {
+    setIsLoading(false);
+    setEmailError(undefined);
+    setPasswordError(undefined);
+
+    // Also reset when user returns to window (e.g., after canceling OAuth)
+    const handleFocus = () => {
+      setIsLoading(false);
+      setEmailError(undefined);
+      setPasswordError(undefined);
+    };
+
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Reset errors
     setEmailError(undefined);
     setPasswordError(undefined);
-    
+
     // Validate
     let hasError = false;
-    
+
     if (!email.trim()) {
       setEmailError('Email is required');
       hasError = true;
     }
-    
+
     if (!password) {
       setPasswordError('Password is required');
       hasError = true;
     }
-    
+
     if (hasError) return;
-    
+
     // Real backend authentication
     setIsLoading(true);
     try {
       const response = await authService.login(email, password);
-      
+
       if (response.success) {
         onLogin(email);
       } else {
@@ -65,7 +85,7 @@ export default function LoginModal({ theme, onClose, onLogin, onForgotPassword, 
 
   const handleSocialLogin = async (provider: 'google' | 'github') => {
     setIsLoading(true);
-    
+
     try {
       const redirectUrl = await authService.socialLogin(provider);
       // Redirect to OAuth provider
@@ -85,7 +105,7 @@ export default function LoginModal({ theme, onClose, onLogin, onForgotPassword, 
       title="Welcome Back"
       subtitle="Sign in to access your account"
     >
-      <LoginForm 
+      <LoginForm
         theme={theme}
         email={email}
         password={password}

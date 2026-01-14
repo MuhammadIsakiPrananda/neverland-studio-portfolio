@@ -23,7 +23,7 @@ export default function RegisterModal({ theme, onClose, onRegister, onSignIn, on
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // Error states
   const [nameError, setNameError] = useState<string | undefined>();
   const [usernameError, setUsernameError] = useState<string | undefined>();
@@ -41,27 +41,27 @@ export default function RegisterModal({ theme, onClose, onRegister, onSignIn, on
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Reset errors
     setNameError(undefined);
     setUsernameError(undefined);
     setEmailError(undefined);
     setPasswordErrorState(undefined);
     setConfirmPasswordError(undefined);
-    
+
     // Validate
     let hasError = false;
-    
+
     if (!name.trim()) {
       setNameError('Full name is required');
       hasError = true;
     }
-    
+
     if (!username.trim()) {
       setUsernameError('Username is required');
       hasError = true;
     }
-    
+
     if (!email.trim()) {
       setEmailError('Email is required');
       hasError = true;
@@ -69,7 +69,7 @@ export default function RegisterModal({ theme, onClose, onRegister, onSignIn, on
       setEmailError('Please enter a valid email address');
       hasError = true;
     }
-    
+
     if (!password) {
       setPasswordErrorState('Password is required');
       hasError = true;
@@ -77,7 +77,7 @@ export default function RegisterModal({ theme, onClose, onRegister, onSignIn, on
       setPasswordErrorState('Password must be at least 8 characters');
       hasError = true;
     }
-    
+
     if (!confirmPassword) {
       setConfirmPasswordError('Please confirm your password');
       hasError = true;
@@ -85,21 +85,21 @@ export default function RegisterModal({ theme, onClose, onRegister, onSignIn, on
       setConfirmPasswordError('Passwords do not match');
       hasError = true;
     }
-    
+
     if (hasError) return;
-    
+
     // Register with backend
     setIsLoading(true);
     try {
       const response = await authService.register(name, username, email, password, confirmPassword);
-      
+
       if (response.success) {
         // Show success toast with user details
         showSuccess(
           `Welcome, ${name}! 🎉`,
           'Your account has been created successfully.'
         );
-        
+
         // Call onRegister to update app state
         onRegister();
         onClose();
@@ -150,7 +150,7 @@ export default function RegisterModal({ theme, onClose, onRegister, onSignIn, on
       console.error('Registration error:', error);
       const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
       setEmailError(errorMessage);
-      
+
       // Show detailed error toast
       showError(
         'Registration Failed!',
@@ -163,7 +163,7 @@ export default function RegisterModal({ theme, onClose, onRegister, onSignIn, on
 
   const handleSocialLogin = async (provider: 'google' | 'github') => {
     setIsLoading(true);
-    
+
     try {
       const redirectUrl = await authService.socialLogin(provider);
       // Redirect to OAuth provider
@@ -183,7 +183,7 @@ export default function RegisterModal({ theme, onClose, onRegister, onSignIn, on
       title="Create Account"
       subtitle="Join us today and get started"
     >
-      <RegisterForm 
+      <RegisterForm
         theme={theme}
         name={name}
         username={username}

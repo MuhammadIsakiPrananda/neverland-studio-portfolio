@@ -1,25 +1,25 @@
-import { 
-  Monitor, 
-  Search, 
-  ShoppingCart, 
-  Apple, 
-  Users, 
-  Film, 
-  Zap, 
-  Music, 
-  Palette, 
-  Server, 
-  Database, 
-  Cloud, 
-  DollarSign, 
-  Cpu, 
-  Rocket 
+import {
+  Monitor,
+  Search,
+  ShoppingCart,
+  Apple,
+  Users,
+  Film,
+  Zap,
+  Music,
+  Palette,
+  Server,
+  Database,
+  Cloud,
+  DollarSign,
+  Cpu,
+  Rocket
 } from 'lucide-react';
 
 // Calculate animation delay based on current time to maintain position across refreshes
 const getAnimationDelay = () => {
   const now = Date.now();
-  const animationDuration = 25000; // 25 seconds in milliseconds (for mobile)
+  const animationDuration = 18000; // 18 seconds in milliseconds (for mobile - faster)
   const offset = -(now % animationDuration) / 1000; // Convert to seconds with negative value
   return `${offset}s`;
 };
@@ -48,7 +48,7 @@ export default function TrustedBySection() {
   const duplicatedCompanies = [...companies, ...companies, ...companies];
 
   return (
-    <section className="py-12 sm:py-16 md:py-20 bg-slate-900 border-b border-slate-800 overflow-hidden">
+    <section className="py-12 sm:py-16 md:py-20 border-b border-slate-800 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12 md:mb-16">
@@ -68,7 +68,7 @@ export default function TrustedBySection() {
         {/* Infinite Scroll Container */}
         <div className="relative">
           {/* Scrolling wrapper */}
-          <div 
+          <div
             className="flex gap-3 sm:gap-4 md:gap-6 animate-scroll-mobile sm:animate-scroll-tablet md:animate-scroll-desktop"
             style={{ animationDelay: getAnimationDelay() }}
           >
@@ -101,25 +101,25 @@ export default function TrustedBySection() {
           }
         }
 
-        /* Mobile - faster scroll */
+        /* Mobile - fast and dynamic scroll */
         .animate-scroll-mobile {
           display: flex;
-          animation: scroll 25s linear infinite;
+          animation: scroll 18s linear infinite;
           animation-play-state: running;
         }
 
-        /* Tablet - medium speed */
+        /* Tablet - medium speed, balanced */
         @media (min-width: 640px) {
           .animate-scroll-tablet {
-            animation: scroll 35s linear infinite;
+            animation: scroll 25s linear infinite;
             animation-play-state: running;
           }
         }
 
-        /* Desktop - slower, more relaxed */
+        /* Desktop - moderate speed, comfortable viewing */
         @media (min-width: 768px) {
           .animate-scroll-desktop {
-            animation: scroll 45s linear infinite;
+            animation: scroll 30s linear infinite;
             animation-play-state: running;
           }
         }

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { X, Check, Mail, Phone, Building2, MessageSquare, Send, CheckCircle } from 'lucide-react';
 import type { Theme, PricingPlan } from '../../types';
+import api from '../../services/apiService';
+import { showSuccess, showError } from '../common/ModernNotification';
 
 interface PricingInquiryModalProps {
   theme: Theme;
@@ -10,50 +12,69 @@ interface PricingInquiryModalProps {
 
 export default function PricingInquiryModal({ onClose, selectedPlan }: PricingInquiryModalProps) {
   const [submitted, setSubmitted] = useState(false);
-  
+  const [submitting, setSubmitting] = useState(false);
+
   // Prevent body scroll when modal is open
   useEffect(() => {
+    // Get current scroll position
+    const scrollY = window.scrollY;
+
+    // Lock scroll and hide scrollbar
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
+
+    // Cleanup function
     return () => {
-      document.body.style.overflow = 'unset';
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
     };
   }, []);
-  
+
   // Format number to Indonesian Rupiah in millions
   const formatRupiah = (amount: number): string => {
     if (amount === 0) return 'Custom';
     const millions = amount / 1000000;
     return `Rp ${millions} Juta`;
   };
-  
+
   // Form state
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [company, setCompany] = useState('');
   const [message, setMessage] = useState('');
-  
+
   // Error states
   const [nameError, setNameError] = useState<string | undefined>();
   const [emailError, setEmailError] = useState<string | undefined>();
   const [phoneError, setPhoneError] = useState<string | undefined>();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Reset errors
     setNameError(undefined);
     setEmailError(undefined);
     setPhoneError(undefined);
-    
+
     // Validate
     let hasError = false;
-    
+
     if (!name.trim()) {
       setNameError('Name is required');
       hasError = true;
     }
-    
+
     if (!email.trim()) {
       setEmailError('Email is required');
       hasError = true;
@@ -61,21 +82,72 @@ export default function PricingInquiryModal({ onClose, selectedPlan }: PricingIn
       setEmailError('Please enter a valid email address');
       hasError = true;
     }
-    
+
     if (!phone.trim()) {
       setPhoneError('Phone number is required');
       hasError = true;
     }
-    
+
     if (hasError) return;
-    
-    // Show success message
-    setSubmitted(true);
-    
-    // Close modal after 3 seconds
-    setTimeout(() => {
-      onClose();
-    }, 3000);
+
+    // Submit pricing inquiry
+    setSubmitting(true);
+
+    try {
+      // First, create consultation entry for tracking in Consultations dashboard
+      const consultationData = {
+        full_name: name,
+        email: email,
+        phone: phone,
+        company: company || null,
+        solution_title: `${selectedPlan.name} - Pricing Inquiry`,
+        project_type: 'pricing-inquiry',
+        message: message || `Interested in ${selectedPlan.name} plan`,
+      };
+
+      // Submit consultation
+      await api.post('/consultations', consultationData);
+
+      // Then create transaction in billing (pricing inquiry is treated as pending sale)
+      const amount = selectedPlan.price; // Already in proper format (number in rupiah)
+
+      const transactionResponse = await api.post('/dashboard/transactions', {
+        client_name: name,
+        client_email: email,
+        client_phone: phone,
+        product_name: `${selectedPlan.name} - Pricing Plan`,
+        description: `Pricing inquiry for ${selectedPlan.name} plan`,
+        amount: amount,
+        status: 'pending',
+        payment_method: null,
+        due_date: null,
+        metadata: {
+          plan_name: selectedPlan.name,
+          company: company,
+          message: message,
+          inquiry_source: 'website_pricing'
+        }
+      });
+
+      // Dispatch real-time event to update billing dashboard
+      if (transactionResponse.data?.data) {
+        window.dispatchEvent(new CustomEvent('transactionCreated', {
+          detail: transactionResponse.data.data
+        }));
+      }
+
+      setSubmitted(true);
+      showSuccess('Inquiry submitted successfully!', 'Our team will contact you soon.');
+
+      // Close modal after 2 seconds
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+    } catch (error: any) {
+      console.error('Pricing inquiry submission error:', error);
+      showError('Failed to submit inquiry. Please try again.');
+      setSubmitting(false);
+    }
   };
 
   // Success State
@@ -83,7 +155,7 @@ export default function PricingInquiryModal({ onClose, selectedPlan }: PricingIn
     return (
       <>
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 animate-fade-in" />
-        
+
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none overflow-y-auto">
           <div className="relative w-full max-w-md bg-slate-900 rounded-2xl shadow-2xl overflow-hidden pointer-events-auto animate-scale-in border border-slate-700/50">
             <div className="p-8 text-center">
@@ -91,15 +163,15 @@ export default function PricingInquiryModal({ onClose, selectedPlan }: PricingIn
               <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-600/20 border-2 border-green-500/50 mb-6">
                 <CheckCircle className="w-10 h-10 text-green-400" />
               </div>
-              
+
               <h3 className="text-2xl font-bold text-white mb-3">
                 Request Submitted!
               </h3>
-              
+
               <p className="text-slate-300 leading-relaxed mb-2">
                 Thank you for choosing <span className="font-semibold text-blue-400">{selectedPlan.name}</span>!
               </p>
-              
+
               <p className="text-sm text-slate-400">
                 Our team will contact you within 24 hours.
               </p>
@@ -114,7 +186,7 @@ export default function PricingInquiryModal({ onClose, selectedPlan }: PricingIn
   return (
     <>
       <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 animate-fade-in" />
-      
+
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none overflow-y-auto">
         <div className="relative w-full max-w-2xl my-auto bg-slate-900 rounded-2xl shadow-2xl overflow-hidden pointer-events-auto animate-scale-in border border-slate-700/50">
           {/* Close Button */}
@@ -174,11 +246,10 @@ export default function PricingInquiryModal({ onClose, selectedPlan }: PricingIn
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className={`w-full px-4 py-3 rounded-xl bg-slate-800/50 border ${
-                    nameError
-                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
-                      : 'border-slate-700/50 focus:border-blue-500 focus:ring-blue-500/20'
-                  } text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all`}
+                  className={`w-full px-4 py-3 rounded-xl bg-slate-800/50 border ${nameError
+                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                    : 'border-slate-700/50 focus:border-blue-500 focus:ring-blue-500/20'
+                    } text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all`}
                   placeholder="John Doe"
                 />
                 {nameError && <p className="mt-2 text-sm text-red-400 flex items-center gap-1"><X className="w-3 h-3" />{nameError}</p>}
@@ -196,11 +267,10 @@ export default function PricingInquiryModal({ onClose, selectedPlan }: PricingIn
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className={`w-full px-4 py-3 rounded-xl bg-slate-800/50 border ${
-                    emailError
-                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
-                      : 'border-slate-700/50 focus:border-blue-500 focus:ring-blue-500/20'
-                  } text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all`}
+                  className={`w-full px-4 py-3 rounded-xl bg-slate-800/50 border ${emailError
+                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                    : 'border-slate-700/50 focus:border-blue-500 focus:ring-blue-500/20'
+                    } text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all`}
                   placeholder="john@example.com"
                 />
                 {emailError && <p className="mt-2 text-sm text-red-400 flex items-center gap-1"><X className="w-3 h-3" />{emailError}</p>}
@@ -218,11 +288,10 @@ export default function PricingInquiryModal({ onClose, selectedPlan }: PricingIn
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className={`w-full px-4 py-3 rounded-xl bg-slate-800/50 border ${
-                    phoneError
-                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
-                      : 'border-slate-700/50 focus:border-blue-500 focus:ring-blue-500/20'
-                  } text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all`}
+                  className={`w-full px-4 py-3 rounded-xl bg-slate-800/50 border ${phoneError
+                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                    : 'border-slate-700/50 focus:border-blue-500 focus:ring-blue-500/20'
+                    } text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all`}
                   placeholder="+62 812-3456-7890"
                 />
                 {phoneError && <p className="mt-2 text-sm text-red-400 flex items-center gap-1"><X className="w-3 h-3" />{phoneError}</p>}
@@ -265,10 +334,23 @@ export default function PricingInquiryModal({ onClose, selectedPlan }: PricingIn
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-300 shadow-lg shadow-blue-600/30 hover:shadow-xl hover:shadow-blue-600/40 hover:-translate-y-0.5"
+                disabled={submitting}
+                className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-white font-semibold transition-all duration-300 shadow-lg ${submitting
+                  ? 'bg-blue-500 cursor-not-allowed'
+                  : 'bg-blue-600 hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-600/40 hover:-translate-y-0.5'
+                  } shadow-blue-600/30`}
               >
-                <Send className="w-4 h-4" />
-                <span>Submit Inquiry</span>
+                {submitting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <span>Submitting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    <span>Submit Inquiry</span>
+                  </>
+                )}
               </button>
             </form>
           </div>
@@ -277,39 +359,39 @@ export default function PricingInquiryModal({ onClose, selectedPlan }: PricingIn
 
       {/* Styles */}
       <style>{`
-        @keyframes fade-in {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        
-        @keyframes scale-in {
-          from { 
-            opacity: 0;
-            transform: scale(0.95);
+          @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
           }
-          to { 
-            opacity: 1;
-            transform: scale(1);
+          
+          @keyframes scale-in {
+            from { 
+              opacity: 0;
+              transform: scale(0.95);
+            }
+            to { 
+              opacity: 1;
+              transform: scale(1);
+            }
           }
-        }
-        
-        .animate-fade-in {
-          animation: fade-in 0.2s ease-out;
-        }
-        
-        .animate-scale-in {
-          animation: scale-in 0.3s ease-out;
-        }
+          
+          .animate-fade-in {
+            animation: fade-in 0.2s ease-out;
+          }
+          
+          .animate-scale-in {
+            animation: scale-in 0.3s ease-out;
+          }
 
-        .hide-scrollbar {
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-        }
-        
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
+          .hide-scrollbar {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+          }
+          
+          .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
     </>
   );
 }

@@ -1,18 +1,63 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Lock, LogIn, User, Chrome, Github, UserPlus, Shield } from 'lucide-react';
+import { Eye, EyeOff, Lock, LogIn, User, Chrome, Github, UserPlus, Shield, Sparkles, ArrowRight, Mail } from 'lucide-react';
 import { dashboardAuth } from '../../services/dashboardAuth';
 import { showSuccess, showError, showInfo } from '../common/ModernNotification';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config/api.config';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Checkbox } from '../ui/checkbox';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// For admin registration endpoint, we need base URL without /api suffix
+const API_URL = API_BASE_URL.startsWith('/') ? '' : API_BASE_URL.replace('/api', '');
 
 export default function DashboardLogin() {
   const navigate = useNavigate();
-  
+
+  // Typewriter animation state
+  const [typedText, setTypedText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const fullText = 'Neverland Studio';
+
+  // Infinite typewriter effect with delete
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+
+    if (!isDeleting && typedText.length < fullText.length) {
+      // Typing phase - variable delay untuk natural effect
+      const typingDelay = Math.random() * 70 + 80; // 80-150ms
+      timeout = setTimeout(() => {
+        setTypedText(fullText.slice(0, typedText.length + 1));
+      }, typingDelay);
+    } else if (!isDeleting && typedText.length === fullText.length) {
+      // Pause setelah selesai mengetik
+      timeout = setTimeout(() => {
+        setIsDeleting(true);
+      }, 2000); // Pause 2 detik
+    } else if (isDeleting && typedText.length > 0) {
+      // Deleting phase - lebih cepat dari typing
+      const deletingDelay = Math.random() * 30 + 50; // 50-80ms
+      timeout = setTimeout(() => {
+        setTypedText(fullText.slice(0, typedText.length - 1));
+      }, deletingDelay);
+    } else if (isDeleting && typedText.length === 0) {
+      // Mulai mengetik lagi
+      setIsDeleting(false);
+      timeout = setTimeout(() => {
+        setTypedText('');
+      }, 500); // Pause singkat sebelum mulai lagi
+    }
+
+    return () => clearTimeout(timeout);
+  }, [typedText, isDeleting, fullText]);
+
   // Tab state
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
-  
+
   // Login state
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -38,11 +83,18 @@ export default function DashboardLogin() {
     }
   }, []);
 
-  const handleSocialLogin = (provider: 'google' | 'github') => {
-    showInfo(
-      'Coming Soon',
-      `${provider.charAt(0).toUpperCase() + provider.slice(1)} login is not yet implemented. Please use username and password.`
-    );
+  const handleSocialLogin = async (provider: 'google' | 'github') => {
+    setIsLoading(true);
+
+    try {
+      const { authService } = await import('../../services/authService');
+      const redirectUrl = await authService.socialLogin(provider);
+      // Redirect to OAuth provider
+      window.location.href = redirectUrl;
+    } catch (error: any) {
+      showError('Social Login Failed', error.message || `Failed to initialize ${provider} login`);
+      setIsLoading(false);
+    }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -56,49 +108,37 @@ export default function DashboardLogin() {
     setIsLoading(true);
 
     try {
-      console.log('🔐 Attempting backend authentication...');
-      
-      // PRIMARY: Login to backend database
-      const { authService } = await import('../../services/authService');
-      const backendResult = await authService.login(username, password);
+      const { authApi } = await import('../../services/api');
+      const response = await authApi.login({ email: username, password, remember: false });
 
-      if (backendResult.success && backendResult.data) {
-        console.log('✅ Backend authentication successful');
-        
-        // Remember me functionality
-        if (rememberMe) {
-          localStorage.setItem('dashboard_remember_username', username);
-        } else {
-          localStorage.removeItem('dashboard_remember_username');
-        }
+      console.log('✅ Backend authentication successful');
 
-        // Also set dashboard session for compatibility
-        dashboardAuth.setSession(backendResult.data.user.name, username, backendResult.data.user.email);
-        
-        // Redirect to dashboard
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 1000);
+      if (rememberMe) {
+        localStorage.setItem('dashboard_remember_username', username);
       } else {
-        console.log('❌ Backend authentication failed:', backendResult.message);
-        showError('Login Failed', backendResult.message || 'Invalid credentials');
+        localStorage.removeItem('dashboard_remember_username');
       }
+
+      dashboardAuth.setSession(response.user.name, username, response.user.email);
+
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1000);
     } catch (error: any) {
       console.error('❌ Login error:', error);
-      
-      // FALLBACK: Try hardcoded credentials if backend fails
+
       console.log('⚠️ Attempting fallback hardcoded authentication...');
       const fallbackResult = dashboardAuth.login(username, password);
-      
+
       if (fallbackResult.success) {
         console.log('✅ Fallback authentication successful');
-        
+
         if (rememberMe) {
           localStorage.setItem('dashboard_remember_username', username);
         } else {
           localStorage.removeItem('dashboard_remember_username');
         }
-        
+
         showSuccess('Login Successful', `Welcome back, ${fallbackResult.user?.name}!`);
         setTimeout(() => {
           navigate('/dashboard');
@@ -114,7 +154,6 @@ export default function DashboardLogin() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation
     if (!regUsername || !regPassword || !regConfirmPassword) {
       showError('Validation Error', 'Please fill all fields');
       return;
@@ -134,7 +173,7 @@ export default function DashboardLogin() {
 
     try {
       console.log('📝 Registering new admin...');
-      
+
       const response = await axios.post(`${API_URL}/api/admin/register`, {
         username: regUsername,
         password: regPassword,
@@ -144,12 +183,10 @@ export default function DashboardLogin() {
       if (response.data.success) {
         console.log('✅ Registration successful');
         showSuccess('Registration Successful!', 'You can now login with your credentials.');
-        
-        // Auto-switch to login tab and fill username
+
         setActiveTab('login');
         setUsername(regUsername);
-        
-        // Clear register form
+
         setRegUsername('');
         setRegPassword('');
         setRegConfirmPassword('');
@@ -160,7 +197,7 @@ export default function DashboardLogin() {
     } catch (error: any) {
       console.error('❌ Registration error:', error);
       showError(
-        'Registration Failed', 
+        'Registration Failed',
         error.response?.data?.message || error.message || 'An error occurred during registration'
       );
     } finally {
@@ -169,325 +206,529 @@ export default function DashboardLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 -left-48 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 -right-48 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-pulse animation-delay-1000" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse animation-delay-500" />
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      {/* Subtle Animated Background */}
+      <div className="absolute inset-0">
+        {/* Refined Gradient Orbs */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/30 rounded-full mix-blend-multiply filter blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
+          <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-cyan-500/30 rounded-full mix-blend-multiply filter blur-[120px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }} />
+        </div>
+
+        {/* Subtle Grid - More Refined */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,.02)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,.02)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_40%,transparent_100%)]" />
       </div>
 
-      {/* Form Card */}
-      <div className="relative z-10 w-full max-w-md">
-        {/* Logo & Title */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-600 mb-4 shadow-lg shadow-blue-500/50">
-            <LogIn className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-2">
-            Neverland Studio
-          </h1>
-          <p className="text-slate-400 text-sm">
-            Dashboard Admin {activeTab === 'login' ? 'Login' : 'Registration'}
-          </p>
-        </div>
+      {/* Main Content */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-6 overflow-y-auto">
+        <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-16 items-start my-8">
 
-        {/* Tab Navigation */}
-        <div className="bg-slate-900/30 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-2 mb-4">
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => setActiveTab('login')}
-              className={`py-2 px-4 rounded-xl font-medium transition-all duration-300 ${
-                activeTab === 'login'
-                  ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-500/30'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-              }`}
-            >
-              <LogIn className="w-4 h-4 inline mr-2" />
-              Login
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('register')}
-              className={`py-2 px-4 rounded-xl font-medium transition-all duration-300 ${
-                activeTab === 'register'
-                  ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-500/30'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-              }`}
-            >
-              <UserPlus className="w-4 h-4 inline mr-2" />
-              Register
-            </button>
-          </div>
-        </div>
-
-        {/* Form Card */}
-        <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 shadow-2xl">
-          {activeTab === 'login' ? (
-            // LOGIN FORM
-            <form onSubmit={handleLogin} className="space-y-6">
-              {/* Username Field */}
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Username or Email
-                </label>
+          {/* Left Side - Static Branding (Never Changes) - Sticky Position */}
+          <div className="hidden lg:flex flex-col justify-center space-y-12 animate-fade-in-left sticky top-8 self-start" key="static-branding">
+            <div className="space-y-8">
+              {/* Badge - Always Visible */}
+              <div className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-primary/5 border border-primary/10 backdrop-blur-xl">
                 <div className="relative">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
-                    <User className="w-5 h-5" />
-                  </div>
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Enter username or email"
-                    className="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all"
-                    required
-                    autoFocus
-                  />
+                  <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                  <div className="absolute inset-0 w-2 h-2 rounded-full bg-primary animate-ping opacity-75" />
                 </div>
+                <span className="text-xs font-bold text-primary tracking-wider uppercase">Admin Portal</span>
               </div>
 
-              {/* Password Field */}
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Password
-                </label>
-                <div className="relative">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
-                    <Lock className="w-5 h-5" />
-                  </div>
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    className="w-full pl-12 pr-12 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Remember Me */}
-              <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-blue-600 focus:ring-2 focus:ring-blue-500/20 cursor-pointer"
-                  />
-                  <span className="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">
-                    Remember me
+              {/* Hero Title - With Typewriter Animation */}
+              <div className="space-y-6">
+                <h1 className="text-6xl font-bold leading-[1.1] tracking-tight">
+                  <span className="block text-white/90">
+                    Welcome to
                   </span>
-                </label>
+                  <span className="block bg-gradient-to-r from-primary via-cyan-400 to-blue-500 bg-clip-text text-transparent inline-flex items-center gap-3">
+                    {typedText}
+                    <span className="inline-block w-1 h-14 bg-gradient-to-b from-primary to-cyan-400 animate-pulse"></span>
+                  </span>
+                </h1>
+
+                <p className="text-lg text-slate-400 leading-relaxed max-w-lg font-light">
+                  Your powerful command center for managing projects, analytics, and content with elegance and precision.
+                </p>
               </div>
+            </div>
 
-              {/* Login Button */}
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-3 px-4 rounded-xl font-medium text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30"
-              >
-                {isLoading ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Logging in...
-                  </>
-                ) : (
-                  <>
-                    <LogIn className="w-5 h-5" />
-                    Login to Dashboard
-                  </>
-                )}
-              </button>
-
-              {/* Divider */}
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-700/50"></div>
-                </div>
-                <div className="relative flex justify-center text-xs">
-                  <span className="px-4 bg-slate-900/50 text-slate-500">Or continue with</span>
-                </div>
-              </div>
-
-              {/* Social Login Buttons */}
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => handleSocialLogin('google')}
-                  disabled={isLoading}
-                  className="py-3 px-4 rounded-xl font-medium text-white bg-slate-800/50 border border-slate-700/50 hover:bg-slate-800 hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2"
+            {/* Clean Feature List - Always Visible */}
+            <div className="space-y-4 pt-4">
+              {[
+                { icon: Shield, label: 'Enterprise Security', color: 'text-primary' },
+                { icon: Sparkles, label: 'AI-Powered Insights', color: 'text-cyan-400' },
+                { icon: Lock, label: 'End-to-End Encryption', color: 'text-blue-400' },
+              ].map((feature, i) => (
+                <div
+                  key={`feature-${i}`}
+                  className="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.02] backdrop-blur-sm border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-300 group"
                 >
-                  <Chrome className="w-5 h-5" />
-                  Google
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleSocialLogin('github')}
-                  disabled={isLoading}
-                  className="py-3 px-4 rounded-xl font-medium text-white bg-slate-800/50 border border-slate-700/50 hover:bg-slate-800 hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2"
-                >
-                  <Github className="w-5 h-5" />
-                  GitHub
-                </button>
-              </div>
-            </form>
-          ) : (
-            // REGISTER FORM
-            <form onSubmit={handleRegister} className="space-y-6">
-              {/* Username Field */}
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Username
-                </label>
-                <div className="relative">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
-                    <User className="w-5 h-5" />
+                  <div className="w-10 h-10 rounded-xl bg-white/5 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <feature.icon className={`w-5 h-5 ${feature.color}`} />
                   </div>
-                  <input
-                    type="text"
-                    value={regUsername}
-                    onChange={(e) => setRegUsername(e.target.value)}
-                    placeholder="Choose a username"
-                    className="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all"
-                    required
-                  />
+                  <span className="text-sm font-semibold text-slate-300">{feature.label}</span>
                 </div>
-              </div>
+              ))}
+            </div>
+          </div>
 
-              {/* Role Dropdown */}
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Role
-                </label>
+          {/* Right Side - Clean Auth Form */}
+          <div className="w-full max-w-md mx-auto lg:mx-0 animate-fade-in-up">
+            {/* Mobile Logo - Minimalist */}
+            <div className="lg:hidden text-center mb-10 space-y-4">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-cyan-500/20 border border-primary/30 backdrop-blur-xl mb-3">
+                <Sparkles className="w-7 h-7 text-primary" />
+              </div>
+              <h2 className="text-2xl font-bold text-white tracking-tight">
+                Neverland Studio
+              </h2>
+              <p className="text-sm text-slate-500 font-medium">Admin Portal</p>
+            </div>
+
+            {/* Ultra Clean Auth Card */}
+            <Card className="border-0 shadow-2xl backdrop-blur-2xl bg-slate-900/40 overflow-hidden relative">
+              {/* Subtle Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-cyan-500/[0.03]" />
+
+              <CardContent className="p-0 relative">
+                <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'login' | 'register')} className="w-full">
+                  {/* Minimal Tabs */}
+                  <div className="border-b border-white/5 px-8 pt-8 pb-4">
+                    <TabsList className="grid w-full grid-cols-2 bg-slate-800/30 backdrop-blur-sm p-1 rounded-xl border border-white/5">
+                      <TabsTrigger
+                        value="login"
+                        className="rounded-lg 
+                                 data-[state=active]:bg-white/10
+                                 data-[state=active]:text-white 
+                                 data-[state=active]:shadow-lg
+                                 text-slate-400
+                                 transition-all duration-200 
+                                 font-semibold text-sm
+                                 py-2.5"
+                      >
+                        Sign In
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="register"
+                        className="rounded-lg 
+                                 data-[state=active]:bg-white/10
+                                 data-[state=active]:text-white 
+                                 data-[state=active]:shadow-lg
+                                 text-slate-400
+                                 transition-all duration-200 
+                                 font-semibold text-sm
+                                 py-2.5"
+                      >
+                        Sign Up
+                      </TabsTrigger>
+                    </TabsList>
+                  </div>
+
+                  {/* Clean Login Tab */}
+                  <TabsContent value="login" className="p-8 m-0 space-y-8">
+                    {/* Minimalist Header */}
+                    <div className="space-y-2">
+                      <h3 className="text-2xl font-bold text-white tracking-tight">
+                        Welcome back
+                      </h3>
+                      <p className="text-sm text-slate-400 font-normal">
+                        Sign in to continue to your dashboard
+                      </p>
+                    </div>
+
+                    <form onSubmit={handleLogin} className="space-y-6">
+                      {/* Clean Username Field */}
+                      <div className="space-y-2.5">
+                        <Label htmlFor="username" className="text-sm font-medium text-slate-300">
+                          Email or Username
+                        </Label>
+                        <div className="relative group">
+                          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-primary transition-colors duration-200 z-10" />
+                          <Input
+                            id="username"
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="admin@example.com"
+                            className="h-12 pl-12 pr-4
+                                     bg-slate-800/50 backdrop-blur-sm
+                                     border border-slate-700/50 
+                                     rounded-xl 
+                                     text-white text-sm
+                                     placeholder:text-slate-500 
+                                     focus:border-primary/50 
+                                     focus:ring-2 focus:ring-primary/20 
+                                     focus:bg-slate-800/70
+                                     hover:border-slate-600
+                                     transition-all duration-200"
+                            required
+                            autoFocus
+                          />
+                        </div>
+                      </div>
+
+                      {/* Clean Password Field */}
+                      <div className="space-y-2.5">
+                        <Label htmlFor="password" className="text-sm font-medium text-slate-300">
+                          Password
+                        </Label>
+                        <div className="relative group">
+                          <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-primary transition-colors duration-200 z-10" />
+                          <Input
+                            id="password"
+                            type={showPassword ? 'text' : 'password'}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Enter your password"
+                            className="h-12 pl-12 pr-12
+                                     bg-slate-800/50 backdrop-blur-sm
+                                     border border-slate-700/50 
+                                     rounded-xl 
+                                     text-white text-sm
+                                     placeholder:text-slate-500 
+                                     focus:border-primary/50 
+                                     focus:ring-2 focus:ring-primary/20 
+                                     focus:bg-slate-800/70
+                                     hover:border-slate-600
+                                     transition-all duration-200"
+                            required
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 z-10
+                                     text-slate-500 hover:text-primary 
+                                     transition-colors duration-200 
+                                     p-1 rounded-lg"
+                          >
+                            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Clean Options Row */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2.5">
+                          <Checkbox
+                            id="remember"
+                            checked={rememberMe}
+                            onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                            className="w-4 h-4 border-slate-600 
+                                     data-[state=checked]:bg-primary 
+                                     data-[state=checked]:border-primary 
+                                     rounded"
+                          />
+                          <Label
+                            htmlFor="remember"
+                            className="text-sm text-slate-400 font-normal cursor-pointer 
+                                     hover:text-slate-300 transition-colors"
+                          >
+                            Remember me
+                          </Label>
+                        </div>
+
+                        <button
+                          type="button"
+                          className="text-sm text-primary hover:text-cyan-400 font-medium transition-colors"
+                        >
+                          Forgot password?
+                        </button>
+                      </div>
+
+                      {/* Clean Primary Button */}
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full h-12 text-sm font-semibold
+                                 bg-primary hover:bg-primary/90
+                                 shadow-lg shadow-primary/25 
+                                 hover:shadow-xl hover:shadow-primary/30
+                                 transition-all duration-200 
+                                 rounded-xl
+                                 disabled:opacity-50 disabled:cursor-not-allowed
+                                 group/btn"
+                      >
+                        {isLoading ? (
+                          <div className="flex items-center justify-center">
+                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2.5" />
+                            <span>Signing in...</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center">
+                            <span>Sign In</span>
+                            <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-0.5 transition-transform" />
+                          </div>
+                        )}
+                      </Button>
+
+                      {/* Clean Divider */}
+                      <div className="relative py-4">
+                        <div className="absolute inset-0 flex items-center">
+                          <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
+                        </div>
+                        <div className="relative flex justify-center">
+                          <span className="px-3 text-xs font-medium text-slate-500 bg-slate-900/40">
+                            or
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Clean Social Buttons */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => handleSocialLogin('google')}
+                          disabled={isLoading}
+                          className="h-11 
+                                   bg-slate-800/30 backdrop-blur-sm
+                                   border border-slate-700/50 
+                                   hover:bg-slate-800/50 
+                                   hover:border-slate-600
+                                   text-slate-300 
+                                   transition-all duration-200
+                                   rounded-xl
+                                   text-sm font-medium"
+                        >
+                          <Chrome className="w-4 h-4 mr-2" />
+                          Google
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => handleSocialLogin('github')}
+                          disabled={isLoading}
+                          className="h-11 
+                                   bg-slate-800/30 backdrop-blur-sm
+                                   border border-slate-700/50 
+                                   hover:bg-slate-800/50 
+                                   hover:border-slate-600
+                                   text-slate-300 
+                                   transition-all duration-200
+                                   rounded-xl
+                                   text-sm font-medium"
+                        >
+                          <Github className="w-4 h-4 mr-2" />
+                          GitHub
+                        </Button>
+                      </div>
+                    </form>
+                  </TabsContent>
+
+                  {/* Clean Register Tab */}
+                  <TabsContent value="register" className="p-8 m-0 space-y-8">
+                    {/* Minimalist Header */}
+                    <div className="space-y-2">
+                      <h3 className="text-2xl font-bold text-white tracking-tight">
+                        Create Account
+                      </h3>
+                      <p className="text-sm text-slate-400 font-normal">
+                        Register as an administrator
+                      </p>
+                    </div>
+
+                    <form onSubmit={handleRegister} className="space-y-5">
+                      {/* Clean Username */}
+                      <div className="space-y-2.5">
+                        <Label htmlFor="reg-username" className="text-sm font-medium text-slate-300">
+                          Username
+                        </Label>
+                        <div className="relative group">
+                          <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-primary transition-colors duration-200 z-10" />
+                          <Input
+                            id="reg-username"
+                            type="text"
+                            value={regUsername}
+                            onChange={(e) => setRegUsername(e.target.value)}
+                            placeholder="johndoe"
+                            className="h-12 pl-12 pr-4
+                                     bg-slate-800/50 backdrop-blur-sm
+                                     border border-slate-700/50 
+                                     rounded-xl 
+                                     text-white text-sm
+                                     placeholder:text-slate-500 
+                                     focus:border-primary/50 
+                                     focus:ring-2 focus:ring-primary/20 
+                                     focus:bg-slate-800/70
+                                     hover:border-slate-600
+                                     transition-all duration-200"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      {/* Clean Role Selector */}
+                      <div className="space-y-2.5">
+                        <Label className="text-sm font-medium text-slate-300">
+                          Account Role
+                        </Label>
+                        <div className="relative group">
+                          <Shield className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-primary transition-colors duration-200 z-10 pointer-events-none" />
+                          <select
+                            value={regRole}
+                            onChange={(e) => setRegRole(e.target.value as 'superadmin' | 'admin')}
+                            className="w-full h-12 pl-12 pr-10
+                                     bg-slate-800/50 backdrop-blur-sm
+                                     border border-slate-700/50 
+                                     rounded-xl 
+                                     text-white text-sm
+                                     appearance-none cursor-pointer
+                                     focus:border-primary/50 
+                                     focus:ring-2 focus:ring-primary/20 
+                                     focus:bg-slate-800/70 
+                                     focus:outline-none 
+                                     hover:border-slate-600
+                                     transition-all duration-200"
+                          >
+                            <option value="admin" className="bg-slate-800">Administrator</option>
+                            <option value="superadmin" className="bg-slate-800">Super Admin</option>
+                          </select>
+                          <svg
+                            className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none group-focus-within:text-primary transition-colors"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+
+                      {/* Clean Password */}
+                      <div className="space-y-2.5">
+                        <Label htmlFor="reg-password" className="text-sm font-medium text-slate-300">
+                          Password
+                        </Label>
+                        <div className="relative group">
+                          <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-primary transition-colors duration-200 z-10" />
+                          <Input
+                            id="reg-password"
+                            type={showRegPassword ? 'text' : 'password'}
+                            value={regPassword}
+                            onChange={(e) => setRegPassword(e.target.value)}
+                            placeholder="Min. 6 characters"
+                            className="h-12 pl-12 pr-12
+                                     bg-slate-800/50 backdrop-blur-sm
+                                     border border-slate-700/50 
+                                     rounded-xl 
+                                     text-white text-sm
+                                     placeholder:text-slate-500 
+                                     focus:border-primary/50 
+                                     focus:ring-2 focus:ring-primary/20 
+                                     focus:bg-slate-800/70
+                                     hover:border-slate-600
+                                     transition-all duration-200"
+                            required
+                            minLength={6}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowRegPassword(!showRegPassword)}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 z-10
+                                     text-slate-500 hover:text-primary 
+                                     transition-colors duration-200 
+                                     p-1 rounded-lg"
+                          >
+                            {showRegPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Clean Confirm Password */}
+                      <div className="space-y-2.5">
+                        <Label htmlFor="reg-confirm" className="text-sm font-medium text-slate-300">
+                          Confirm Password
+                        </Label>
+                        <div className="relative group">
+                          <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-primary transition-colors duration-200 z-10" />
+                          <Input
+                            id="reg-confirm"
+                            type={showRegConfirmPassword ? 'text' : 'password'}
+                            value={regConfirmPassword}
+                            onChange={(e) => setRegConfirmPassword(e.target.value)}
+                            placeholder="Re-enter password"
+                            className="h-12 pl-12 pr-12
+                                     bg-slate-800/50 backdrop-blur-sm
+                                     border border-slate-700/50 
+                                     rounded-xl 
+                                     text-white text-sm
+                                     placeholder:text-slate-500 
+                                     focus:border-primary/50 
+                                     focus:ring-2 focus:ring-primary/20 
+                                     focus:bg-slate-800/70
+                                     hover:border-slate-600
+                                     transition-all duration-200"
+                            required
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowRegConfirmPassword(!showRegConfirmPassword)}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 z-10
+                                     text-slate-500 hover:text-primary 
+                                     transition-colors duration-200 
+                                     p-1 rounded-lg"
+                          >
+                            {showRegConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Clean Submit Button */}
+                      <Button
+                        type="submit"
+                        disabled={isRegistering}
+                        className="w-full h-12 text-sm font-semibold
+                                 bg-primary hover:bg-primary/90
+                                 shadow-lg shadow-primary/25 
+                                 hover:shadow-xl hover:shadow-primary/30
+                                 transition-all duration-200 
+                                 rounded-xl mt-2
+                                 disabled:opacity-50 disabled:cursor-not-allowed
+                                 group/btn"
+                      >
+                        {isRegistering ? (
+                          <div className="flex items-center justify-center">
+                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2.5" />
+                            <span>Creating account...</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center">
+                            <span>Create Account</span>
+                            <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-0.5 transition-transform" />
+                          </div>
+                        )}
+                      </Button>
+
+                      {/* Security Notice */}
+                      <div className="flex items-start gap-3 p-3 rounded-xl bg-primary/5 border border-primary/10">
+                        <Shield className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                        <p className="text-xs text-slate-400 leading-relaxed">
+                          Admin accounts are automatically verified and secured with encryption
+                        </p>
+                      </div>
+                    </form>
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+
+            {/* Clean Footer */}
+            <div className="mt-10 text-center space-y-4">
+              <div className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-slate-800/30 backdrop-blur-sm border border-slate-700/50">
                 <div className="relative">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
-                    <Shield className="w-5 h-5" />
-                  </div>
-                  <select
-                    value={regRole}
-                    onChange={(e) => setRegRole(e.target.value as 'superadmin' | 'admin')}
-                    className="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer appearance-none"
-                    required
-                  >
-                    <option value="admin">Admin</option>
-                    <option value="superadmin">Super Admin</option>
-                  </select>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
+                  <span className="w-2 h-2 rounded-full bg-green-500 block"></span>
+                  <span className="absolute inset-0 w-2 h-2 rounded-full bg-green-500 animate-ping opacity-75"></span>
                 </div>
+                <span className="text-xs font-medium text-slate-400">All Systems Operational</span>
               </div>
 
-              {/* Password Field */}
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Password
-                </label>
-                <div className="relative">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
-                    <Lock className="w-5 h-5" />
-                  </div>
-                  <input
-                    type={showRegPassword ? 'text' : 'password'}
-                    value={regPassword}
-                    onChange={(e) => setRegPassword(e.target.value)}
-                    placeholder="Create a password (min. 6 characters)"
-                    className="w-full pl-12 pr-12 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all"
-                    required
-                    minLength={6}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowRegPassword(!showRegPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
-                  >
-                    {showRegPassword ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Confirm Password Field */}
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
-                    <Lock className="w-5 h-5" />
-                  </div>
-                  <input
-                    type={showRegConfirmPassword ? 'text' : 'password'}
-                    value={regConfirmPassword}
-                    onChange={(e) => setRegConfirmPassword(e.target.value)}
-                    placeholder="Re-enter your password"
-                    className="w-full pl-12 pr-12 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowRegConfirmPassword(!showRegConfirmPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
-                  >
-                    {showRegConfirmPassword ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Register Button */}
-              <button
-                type="submit"
-                disabled={isRegistering}
-                className="w-full py-3 px-4 rounded-xl font-medium text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30"
-              >
-                {isRegistering ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Registering...
-                  </>
-                ) : (
-                  <>
-                    <UserPlus className="w-5 h-5" />
-                    Create Admin Account
-                  </>
-                )}
-              </button>
-
-              <p className="text-xs text-center text-slate-500">
-                Email will be auto-verified for admin users
+              <p className="text-xs text-slate-500">
+                © {new Date().getFullYear()} Neverland Studio. All rights reserved.
               </p>
-            </form>
-          )}
+            </div>
+          </div>
         </div>
-
-        {/* Footer */}
-        <p className="text-center text-xs text-slate-500 mt-6">
-          &copy; {new Date().getFullYear()} Neverland Studio. All rights reserved.
-        </p>
       </div>
     </div>
   );

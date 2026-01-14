@@ -31,6 +31,7 @@ class SocialAuthController extends Controller
             $user = User::where('email', $googleUser->email)->first();
 
             if (!$user) {
+                // New user - use OAuth avatar
                 $user = User::create([
                     'name' => $googleUser->name,
                     'email' => $googleUser->email,
@@ -40,11 +41,11 @@ class SocialAuthController extends Controller
                     'password' => Hash::make(Str::random(16)),
                 ]);
             } else {
-                // Update Google ID if not set
+                // Existing user - only update Google ID, DON'T override avatar
+                // Let user keep their custom avatar if they've set one
                 if (!$user->google_id) {
                     $user->update([
                         'google_id' => $googleUser->id,
-                        'avatar' => $googleUser->avatar ?? $user->avatar,
                     ]);
                 }
             }
@@ -93,6 +94,7 @@ class SocialAuthController extends Controller
             $user = User::where('email', $email)->first();
 
             if (!$user) {
+                // New user - use OAuth avatar
                 $user = User::create([
                     'name' => $githubUser->name ?? $githubUser->nickname,
                     'email' => $email,
@@ -102,11 +104,11 @@ class SocialAuthController extends Controller
                     'password' => Hash::make(Str::random(16)),
                 ]);
             } else {
-                // Update GitHub ID if not set
+                // Existing user - only update GitHub ID, DON'T override avatar
+                // Let user keep their custom avatar if they've set one
                 if (!$user->github_id) {
                     $user->update([
                         'github_id' => $githubUser->id,
-                        'avatar' => $githubUser->avatar ?? $user->avatar,
                     ]);
                 }
             }

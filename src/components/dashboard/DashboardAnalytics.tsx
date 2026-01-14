@@ -15,6 +15,8 @@ import {
 } from 'chart.js';
 import { Line, Pie, Bar } from 'react-chartjs-2';
 import { TrendingUp, Users, Eye, MousePointer, FileText } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Badge } from '../ui/badge';
 
 // Register ChartJS components
 ChartJS.register(
@@ -145,81 +147,187 @@ const DashboardAnalytics: React.FC<DashboardAnalyticsProps> = ({ theme }) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+        <div className="relative">
+          <div className="w-16 h-16 border-4 border-primary/20 rounded-full"></div>
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
+      {/* Clean Header */}
+      <div className="space-y-2">
+        <h1 className={`text-3xl font-bold ${
+          isDark ? 'text-white' : 'text-slate-900'
+        }`}>
           Analytics Dashboard
         </h1>
-        <p className={`mt-1 text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+        <p className={`text-sm font-normal flex items-center gap-2 ${
+          isDark ? 'text-slate-400' : 'text-slate-600'
+        }`}>
+          <TrendingUp className={`w-4 h-4 ${
+            isDark ? 'text-slate-500' : 'text-slate-400'
+          }`} />
           Monitor your website performance and user engagement
         </p>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Statistics Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         {stats.map((stat, idx) => {
           const Icon = stat.icon;
           return (
-            <div
-              key={idx}
-              className={`p-6 rounded-xl border ${isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-white border-slate-200'}`}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 rounded-lg bg-blue-500/20">
-                  <Icon className="w-6 h-6 text-blue-500" />
+            <Card key={idx} className={`group relative overflow-hidden border backdrop-blur-sm transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5 ${
+              isDark
+                ? 'border-slate-800/50 bg-slate-900/40 hover:border-slate-700/60'
+                : 'border-slate-200 bg-white hover:border-slate-300'
+            }`}>
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-cyan-500/5 opacity-0 group-hover:opacity-40 transition-opacity duration-300"></div>
+              
+              <CardContent className="p-6 relative">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-cyan-500/20 rounded-xl blur-md opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+                    <div className={`relative p-3 rounded-xl border group-hover:border-primary/30 transition-all duration-300 ${
+                      isDark
+                        ? 'bg-slate-800/60 border-slate-700/50'
+                        : 'bg-slate-100/80 border-slate-200'
+                    }`}>
+                      <Icon className={`w-5 h-5 group-hover:text-primary transition-colors duration-300 ${
+                        isDark ? 'text-slate-300' : 'text-slate-600'
+                      }`} />
+                    </div>
+                  </div>
+                  
+                  <Badge variant="outline" className={`font-semibold px-2.5 py-0.5 text-xs ${
+                    isDark
+                      ? 'border-slate-700/50 bg-slate-800/40 text-slate-400'
+                      : 'border-slate-300 bg-slate-100/80 text-slate-600'
+                  }`}>
+                    <TrendingUp className="w-3 h-3 mr-1 text-green-400" />
+                    +{stat.change.match(/\d+/)?.[0] || 0}
+                  </Badge>
                 </div>
-              </div>
-              <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-                {stat.label}
-              </p>
-              <p className={`text-2xl font-bold mt-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                {stat.value.toLocaleString()}
-              </p>
-              <p className="text-xs text-green-500 mt-2">{stat.change}</p>
-            </div>
+                
+                <div className="space-y-2">
+                  <p className={`text-[10px] font-bold uppercase tracking-widest ${
+                    isDark ? 'text-slate-500' : 'text-slate-400'
+                  }`}>
+                    {stat.label}
+                  </p>
+                  <p className={`text-3xl font-black ${
+                    isDark ? 'text-white' : 'text-slate-900'
+                  }`}>
+                    {stat.value.toLocaleString('id-ID')}
+                  </p>
+                  <p className="text-xs text-slate-400 font-medium">{stat.change}</p>
+                </div>
+              </CardContent>
+            </Card>
           );
         })}
       </div>
 
-      {/* Charts Row 1 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Visitor Trends */}
-        <div className={`p-6 rounded-xl border ${isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-white border-slate-200'}`}>
-          <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-            Visitor Trends (Last 30 Days)
-          </h3>
-          <div className="h-64">
-            <Line data={visitorChartData} options={chartOptions} />
-          </div>
-        </div>
+        <Card className={`border backdrop-blur-sm hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 ${
+          isDark
+            ? 'border-slate-800/50 bg-slate-900/40'
+            : 'border-slate-200 bg-white'
+        }`}>
+          <CardHeader className="pb-4">
+            <CardTitle className={`flex items-center gap-2 text-lg font-bold ${
+              isDark ? 'text-white' : 'text-slate-900'
+            }`}>
+              <div className={`p-1.5 rounded-lg border ${
+                isDark
+                  ? 'bg-slate-800/50 border-slate-700/50'
+                  : 'bg-slate-100/80 border-slate-200'
+              }`}>
+                <Eye className={`w-4 h-4 ${
+                  isDark ? 'text-slate-400' : 'text-slate-600'
+                }`} />
+              </div>
+              Visitor Trends
+            </CardTitle>
+            <CardDescription className={`text-xs ${
+              isDark ? 'text-slate-500' : 'text-slate-400'
+            }`}>Performance metrics over the last 30 days</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-72 p-2">
+              <Line data={visitorChartData} options={chartOptions} />
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Traffic Sources */}
-        <div className={`p-6 rounded-xl border ${isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-white border-slate-200'}`}>
-          <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-            Traffic Sources
-          </h3>
-          <div className="h-64">
-            <Pie data={trafficChartData} options={{ ...chartOptions, scales: undefined }} />
-          </div>
-        </div>
+        <Card className={`border backdrop-blur-sm hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 ${
+          isDark
+            ? 'border-slate-800/50 bg-slate-900/40'
+            : 'border-slate-200 bg-white'
+        }`}>
+          <CardHeader className="pb-4">
+            <CardTitle className={`flex items-center gap-2 text-lg font-bold ${
+              isDark ? 'text-white' : 'text-slate-900'
+            }`}>
+              <div className={`p-1.5 rounded-lg border ${
+                isDark
+                  ? 'bg-slate-800/50 border-slate-700/50'
+                  : 'bg-slate-100/80 border-slate-200'
+              }`}>
+                <MousePointer className={`w-4 h-4 ${
+                  isDark ? 'text-slate-400' : 'text-slate-600'
+                }`} />
+              </div>
+              Traffic Sources
+            </CardTitle>
+            <CardDescription className={`text-xs ${
+              isDark ? 'text-slate-500' : 'text-slate-400'
+            }`}>Where your visitors are coming from</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-72 p-2 flex items-center justify-center">
+              <div className="w-full max-w-sm">
+                <Pie data={trafficChartData} options={{ ...chartOptions, scales: undefined }} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Charts Row 2 */}
-      <div className={`p-6 rounded-xl border ${isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-white border-slate-200'}`}>
-        <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-          Popular Pages
-        </h3>
-        <div className="h-64">
-          <Bar data={pagesChartData} options={chartOptions} />
-        </div>
-      </div>
+      {/* Popular Pages */}
+      <Card className={`border backdrop-blur-sm hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 ${
+        isDark
+          ? 'border-slate-800/50 bg-slate-900/40'
+          : 'border-slate-200 bg-white'
+      }`}>
+        <CardHeader className="pb-4">
+          <CardTitle className={`flex items-center gap-2 text-lg font-bold ${
+            isDark ? 'text-white' : 'text-slate-900'
+          }`}>
+            <div className={`p-1.5 rounded-lg border ${
+              isDark
+                ? 'bg-slate-800/50 border-slate-700/50'
+                : 'bg-slate-100/80 border-slate-200'
+            }`}>
+              <FileText className={`w-4 h-4 ${
+                isDark ? 'text-slate-400' : 'text-slate-600'
+              }`} />
+            </div>
+            Popular Pages
+          </CardTitle>
+          <CardDescription className="text-xs text-slate-500">Most visited pages on your website</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="h-80 p-2">
+            <Bar data={pagesChartData} options={chartOptions} />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

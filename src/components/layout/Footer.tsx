@@ -21,10 +21,10 @@ import CookiePolicyModal from "../modals/CookiePolicyModal";
 
 interface FooterProps {
   theme: Theme;
-  setCurrentPage: (page: string) => void;
+  onNavigate: (page: string) => void;
 }
 
-export default function Footer({ theme, setCurrentPage }: FooterProps) {
+export default function Footer({ theme, onNavigate }: FooterProps) {
   const { t } = useLanguage();
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
@@ -32,9 +32,16 @@ export default function Footer({ theme, setCurrentPage }: FooterProps) {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [isSubscribing, setIsSubscribing] = useState(false);
 
+  const handleNavigate = (page: string) => {
+    onNavigate(page);
+    window.scrollTo(0, 0);
+  };
+
+
+
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!newsletterEmail || !newsletterEmail.includes('@')) {
       showError('Invalid Email', 'Please enter a valid email address');
       return;
@@ -166,16 +173,16 @@ export default function Footer({ theme, setCurrentPage }: FooterProps) {
                 </h3>
                 <ul className="space-y-2.5">
                   {[
-                    { label: t('nav.about'), href: "#", onClick: () => setCurrentPage('about') },
-                    { label: t('nav.team'), href: "#", onClick: () => setCurrentPage('team') },
-                    { label: t('nav.skills'), href: "#", onClick: () => setCurrentPage('skills') },
-                    { label: t('nav.awards'), href: "#", onClick: () => setCurrentPage('awards') },
-                    { label: t('nav.portfolio'), href: "#", onClick: () => setCurrentPage('portfolio') },
-                    { label: t('nav.testimonials'), href: "#", onClick: () => setCurrentPage('testimonials') },
-                  ].map(({ label, href, onClick }) => (
+                    { label: t('nav.about'), onClick: () => handleNavigate('about') },
+                    { label: t('nav.team'), onClick: () => handleNavigate('team') },
+                    { label: 'Skills', onClick: () => handleNavigate('skills') },
+                    { label: t('nav.awards'), onClick: () => handleNavigate('awards') },
+                    { label: t('nav.portfolio'), onClick: () => handleNavigate('projects') },
+                    { label: t('nav.testimonials'), onClick: () => handleNavigate('testimonials') },
+                  ].map(({ label, onClick }) => (
                     <li key={label}>
                       <a
-                        href={href}
+                        href="#"
                         onClick={(e) => { e.preventDefault(); onClick(); }}
                         className="group inline-flex items-center text-sm text-slate-400 hover:text-blue-400 transition-all duration-300 cursor-pointer"
                       >
@@ -195,10 +202,11 @@ export default function Footer({ theme, setCurrentPage }: FooterProps) {
                 </h3>
                 <ul className="space-y-2.5">
                   {[
-                    { label: t('nav.itLearning'), onClick: () => setCurrentPage('it-learning') },
-                    { label: t('nav.itSolutions'), onClick: () => setCurrentPage('it-solutions') },
-                    { label: t('nav.pricing'), onClick: () => setCurrentPage('pricing') },
-                    { label: t('nav.contact'), onClick: () => setCurrentPage('contact') },
+                    { label: t('nav.services'), onClick: () => handleNavigate('services') },
+                    { label: t('nav.itLearning'), onClick: () => handleNavigate('it-learning') },
+                    { label: t('nav.itSolutions'), onClick: () => handleNavigate('it-solutions') },
+                    { label: t('nav.pricing'), onClick: () => handleNavigate('pricing') },
+                    { label: t('nav.contact'), onClick: () => handleNavigate('contact') },
                   ].map(({ label, onClick }) => (
                     <li key={label}>
                       <a

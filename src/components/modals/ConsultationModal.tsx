@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { X, Send, User, Mail, Phone, Building, MessageSquare, Briefcase } from 'lucide-react';
+import { X, Send, User, Mail, Phone, Building, MessageSquare, Briefcase, CheckCircle, Sparkles } from 'lucide-react';
 import type { Theme } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { showSuccess, showError } from '../common/ModernNotification';
+import api from '../../services/apiService';
 
 interface Solution {
   title: string;
@@ -26,6 +28,7 @@ export default function ConsultationModal({ theme, solution, onClose }: Consulta
   const [projectType, setProjectType] = useState('');
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   // Error states
   const [nameError, setNameError] = useState<string | undefined>();
@@ -34,13 +37,31 @@ export default function ConsultationModal({ theme, solution, onClose }: Consulta
 
   // Prevent body scroll when modal is open
   useEffect(() => {
+    // Get current scroll position
+    const scrollY = window.scrollY;
+
+    // Lock scroll and hide scrollbar
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
+
+    // Cleanup function
     return () => {
-      document.body.style.overflow = 'unset';
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
     };
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Reset errors
@@ -74,14 +95,75 @@ export default function ConsultationModal({ theme, solution, onClose }: Consulta
 
     if (hasError) return;
 
-    // Simulate submission
-    console.log({ fullName, email, phone, company, projectType, message, solution: solution.title });
-    setSubmitted(true);
+    // Submit consultation
+    setSubmitting(true);
 
-    // Auto close after 2 seconds
-    setTimeout(() => {
-      onClose();
-    }, 2000);
+    try {
+      const consultationData = {
+        full_name: fullName,
+        email: email,
+        phone: phone,
+        company: company || null,
+        solution_title: solution.title,  // Backend expects 'solution_title'
+        project_type: projectType || null,
+        message: message || null,
+      };
+
+      // Submit consultation
+      await api.post('/consultations', consultationData);
+
+      // Extract price from price string (e.g., "Mulai Rp 1.000.000" -> 1000000)
+      const priceString = solution.price.replace(/[^0-9]/g, '');
+      const amount = parseInt(priceString) * 1000; // Convert "1.000.000" -> 1000000
+
+      // Create transaction in billing
+      try {
+        const transactionResponse = await api.post('/dashboard/transactions', {
+          client_name: fullName,
+          client_email: email,
+          client_phone: phone,
+          product_name: `${solution.title} - Consultation`,
+          description: `Free consultation for ${solution.title}`,
+          amount: amount,
+          status: 'pending',
+          payment_method: null,
+          due_date: null,
+          metadata: {
+            solution_title: solution.title,
+            project_type: projectType,
+            company: company,
+            consultation_source: 'website'
+          }
+        });
+
+        // Dispatch real-time event to update billing dashboard
+        if (transactionResponse.data?.data) {
+          window.dispatchEvent(new CustomEvent('transactionCreated', {
+            detail: transactionResponse.data.data
+          }));
+        }
+
+        console.log('Transaction created successfully');
+      } catch (txError) {
+        console.error('Failed to create transaction:', txError);
+        // Don't fail the whole consultation if transaction creation fails
+      }
+
+      setSubmitted(true);
+      showSuccess(
+        'Consultation Request Received! 🎉',
+        'Our team will contact you within 24 hours. Check your email for confirmation.'
+      );
+
+      // Auto close after 3 seconds
+      setTimeout(() => {
+        onClose();
+      }, 3000);
+    } catch (error: any) {
+      console.error('Consultation submission error:', error);
+      showError('Failed to submit consultation. Please try again.');
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -137,9 +219,8 @@ export default function ConsultationModal({ theme, solution, onClose }: Consulta
                       type="text"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${
-                        nameError ? 'border-red-500/50' : 'border-slate-700/50'
-                      } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
+                      className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${nameError ? 'border-red-500/50' : 'border-slate-700/50'
+                        } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
                       placeholder="Enter your full name"
                     />
                   </div>
@@ -159,9 +240,8 @@ export default function ConsultationModal({ theme, solution, onClose }: Consulta
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${
-                          emailError ? 'border-red-500/50' : 'border-slate-700/50'
-                        } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
+                        className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${emailError ? 'border-red-500/50' : 'border-slate-700/50'
+                          } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
                         placeholder="your@email.com"
                       />
                     </div>
@@ -179,9 +259,8 @@ export default function ConsultationModal({ theme, solution, onClose }: Consulta
                         type="tel"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${
-                          phoneError ? 'border-red-500/50' : 'border-slate-700/50'
-                        } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
+                        className={`w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border ${phoneError ? 'border-red-500/50' : 'border-slate-700/50'
+                          } rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors`}
                         placeholder="+62 xxx-xxxx-xxxx"
                       />
                     </div>
@@ -265,25 +344,59 @@ export default function ConsultationModal({ theme, solution, onClose }: Consulta
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm text-white font-medium transition-colors flex items-center justify-center gap-2"
+                    disabled={submitting}
+                    className={`flex-1 px-4 py-2.5 rounded-lg text-sm text-white font-medium transition-colors flex items-center justify-center gap-2 ${submitting ? 'bg-blue-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500'
+                      }`}
                   >
-                    <Send className="w-4 h-4" />
-                    Request Consultation
+                    {submitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        Request Consultation
+                      </>
+                    )}
                   </button>
                 </div>
               </form>
             </>
           ) : (
-            // Success State
-            <div className="p-12 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center">
-                <svg className="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+            // Success State with Enhanced Animation
+            <div className="p-12 text-center animate-scale-in">
+              {/* Animated Success Icon */}
+              <div className="relative inline-block mb-6">
+                <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/50 animate-bounce-slow">
+                  <CheckCircle className="w-10 h-10 text-white animate-scale-in" />
+                </div>
+                {/* Sparkle Effects */}
+                <Sparkles className="absolute -top-2 -right-2 w-6 h-6 text-yellow-400 animate-pulse" />
+                <Sparkles className="absolute -bottom-2 -left-2 w-5 h-5 text-blue-400 animate-pulse delay-100" />
+
+                {/* Ripple Effect */}
+                <div className="absolute inset-0 rounded-full bg-green-500/20 animate-ping" />
               </div>
-              <h3 className="text-lg font-semibold text-white mb-1">Consultation Request Received!</h3>
-              <p className="text-sm text-slate-400 mb-2">Our team will contact you within 24 hours</p>
-              <p className="text-xs text-slate-500">Check your email for confirmation</p>
+
+              {/* Success Messages */}
+              <h3 className="text-2xl font-bold text-white mb-3 animate-fade-in-up">
+                Consultation Request Received! 🎉
+              </h3>
+              <div className="space-y-2 animate-fade-in-up delay-100">
+                <p className="text-base text-slate-300 font-medium">
+                  Our team will contact you within 24 hours
+                </p>
+                <p className="text-sm text-slate-400">
+                  Check your email for confirmation
+                </p>
+              </div>
+
+              {/* Decorative Elements */}
+              <div className="mt-8 flex items-center justify-center gap-2 text-xs text-slate-500 animate-fade-in delay-200">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <span>Processing your request...</span>
+              </div>
             </div>
           )}
         </div>

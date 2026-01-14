@@ -43,6 +43,28 @@ export default function EditUserModal({ isOpen, onClose, onSuccess, user, theme 
     }
   }, [user]);
 
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+      
+      // Get scrollbar width
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      
+      // Prevent scroll and compensate for scrollbar
+      document.body.style.overflow = 'hidden';
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
+      
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
+      };
+    }
+  }, [isOpen]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -69,10 +91,18 @@ export default function EditUserModal({ isOpen, onClose, onSuccess, user, theme 
   if (!isOpen || !user) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className={`relative w-full max-w-2xl rounded-2xl shadow-2xl ${
-        isDark ? 'bg-gray-900 border border-gray-800' : 'bg-white border border-stone-200'
-      }`}>
+    <>
+      {/* Full Screen Backdrop */}
+      <div className="fixed inset-0 z-[9998] bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      
+      {/* Modal Container */}
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pointer-events-none">
+        <div 
+          className={`relative w-full max-w-2xl rounded-2xl shadow-2xl pointer-events-auto ${
+            isDark ? 'bg-gray-900 border border-gray-800' : 'bg-white border border-stone-200'
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
         {/* Header */}
         <div className={`flex items-center justify-between p-6 border-b ${isDark ? 'border-gray-800' : 'border-stone-200'}`}>
           <div>
@@ -259,5 +289,6 @@ export default function EditUserModal({ isOpen, onClose, onSuccess, user, theme 
         </form>
       </div>
     </div>
+    </>
   );
 }

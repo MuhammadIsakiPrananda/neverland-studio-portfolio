@@ -1,103 +1,461 @@
-# 📚 Documentation
+# 📚 Neverland Studio Portfolio - Documentation Hub
 
-Dokumentasi lengkap untuk Neverland Studio Portfolio Platform.
+<div align="center">
+
+![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
+![Status](https://img.shields.io/badge/status-production-green.svg)
+![Last Updated](https://img.shields.io/badge/updated-January%202026-brightgreen.svg)
+
+**Complete documentation for the Neverland Studio Portfolio platform**
+
+[🚀 Quick Start](#-quick-start) • [📖 Documentation](#-documentation-overview) • [🔧 Technical](#-technical-guides) • [🤝 Help](#-help--support)
+
+</div>
 
 ---
 
-## 📖 Daftar Dokumentasi
+## 📑 Table of Contents
 
-### 🚀 Deployment & Production
+- [Overview](#overview)
+- [Quick Start](#-quick-start)
+- [Documentation Overview](#-documentation-overview)
+- [Technical Guides](#-technical-guides)
+- [Finding What You Need](#-finding-what-you-need)
+- [Help & Support](#-help--support)
 
-- **[CLOUDFLARE_TUNNEL_DEPLOYMENT.md](CLOUDFLARE_TUNNEL_DEPLOYMENT.md)**  
-  Panduan lengkap deployment production menggunakan Cloudflare Tunnel
-  
-- **[PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md)**  
-  Panduan deployment alternatif dengan SSL certificate manual
-  
-- **[PRODUCTION_READY.md](PRODUCTION_READY.md)**  
-  Checklist dan overview kesiapan production
-  
-- **[VERIFICATION_COMPLETE.md](VERIFICATION_COMPLETE.md)**  
-  Hasil verifikasi lengkap semua konfigurasi production
+---
 
-- **[PRODUCTION_READINESS_FINAL.md](PRODUCTION_READINESS_FINAL.md)**  
-  ✨ **FINAL CHECK** - Comprehensive verification 100% ready for production
+## Overview
 
-- **[ORGANIZATION_COMPLETE.md](ORGANIZATION_COMPLETE.md)**  
-  ✨ Dokumentasi hasil organization file & folder structure
+This documentation hub provides comprehensive guides for developers, administrators, and contributors working with the Neverland Studio Portfolio platform. All documentation is organized by topic and difficulty level for easy navigation.
 
-### 🐳 Docker
+---
 
-- **[README.DOCKER.md](README.DOCKER.md)**  
-  Panduan penggunaan Docker untuk development dan production
+## 🚀 Quick Start
 
-### ⚡ Features
+### For First-Time Setup
 
-- **[REALTIME_ANALYTICS.md](REALTIME_ANALYTICS.md)**  
-  Dokumentasi fitur real-time analytics dashboard (English)
-  
-- **[REALTIME_ANALYTICS_ID.md](REALTIME_ANALYTICS_ID.md)**  
-  Dokumentasi fitur real-time analytics dashboard (Bahasa Indonesia)
+```bash
+# 1. Clone repository
+git clone https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio.git
+cd neverland-studio-portfolio
 
-### 🔐 Security & Authentication
+# 2. Setup environment
+cp .env.example .env
+cp backend/.env.example backend/.env
 
-- **[SECURITY.md](SECURITY.md)**  
-  Kebijakan keamanan dan pelaporan vulnerability
-  
-- **[OAUTH_AND_PASSWORD_RESET.md](OAUTH_AND_PASSWORD_RESET.md)**  
-  ✨ **Complete Guide** - OAuth (Google & GitHub) dan Password Reset setup
-  
-- **[OAUTH_SETUP.md](OAUTH_SETUP.md)**  
-  Panduan setup OAuth integration (GitHub, Google, dll)
-  
-- **[OAUTH_QUICKSTART.md](OAUTH_QUICKSTART.md)**  
-  Quick start guide untuk OAuth authentication
+# 3. Start with Docker
+docker compose up -d
+
+# 4. Run migrations
+docker compose exec backend php artisan migrate
+```
+
+📖 **Detailed Guide**: [Deployment Documentation](DEPLOYMENT.md)
+
+---
+
+## 📖 Documentation Overview
+
+### 🎯 Essential Documents
+
+| Document | Description | Audience | Time |
+|----------|-------------|----------|------|
+| **[../README.md](../README.md)** | Project landing page & overview | Everyone | 10 min |
+| **[QUICKSTART.md](QUICKSTART.md)** | ⚡ Fast setup guide (15 minutes) | New Users | 15 min |
+| **[FAQ.md](FAQ.md)** | ❓ Frequently asked questions | Everyone | 20 min |
+| **[DEPLOYMENT.md](DEPLOYMENT.md)** | Production deployment with Docker & Cloudflare | DevOps | 30 min |
+| **[API.md](API.md)** | Complete REST API reference with examples | Developers | 45 min |
+| **[FEATURES_DOCUMENTATION.md](FEATURES_DOCUMENTATION.md)** | All platform features in detail | All | 60 min |
+| **[STRUCTURE.md](STRUCTURE.md)** | Project architecture and file organization | Developers | 30 min |
+| **[ARCHITECTURE.md](ARCHITECTURE.md)** | 📐 System architecture & design | Developers | 40 min |
+| **[USER_GUIDE.md](USER_GUIDE.md)** | 👤 Complete user manual | Users/Admins | 45 min |
+| **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** | 🔧 Common issues & solutions | Everyone | 30 min |
+
+### ✨ Feature Documentation
+
+<details>
+<summary><b>📄 Features Documentation</b> - Complete feature reference</summary>
+
+**File**: [FEATURES_DOCUMENTATION.md](FEATURES_DOCUMENTATION.md)
+
+**What's Included**:
+- ✅ Maintenance Mode System
+- ✅ Real-time Consultation Bookings
+- ✅ Real-time Course Enrollments  
+- ✅ Dynamic Badge System
+- ✅ LIVE Indicators
+
+**When to Read**: Understanding platform capabilities
+
+</details>
+
+<details>
+<summary><b>⚡ Real-time Analytics</b> - Live dashboard analytics</summary>
+
+**File**: [REALTIME_ANALYTICS.md](REALTIME_ANALYTICS.md)
+
+**Features**:
+- Real-time statistics (5s interval)
+- Live connection indicators
+- Chart visualizations
+- Activity timeline
+- Performance optimization
+
+**When to Read**: Working with analytics
+
+</details>
+
+<details>
+<summary><b>👤 Photo Profile System</b> - Avatar management</summary>
+
+**File**: [PHOTO_PROFILE_SYSTEM.md](PHOTO_PROFILE_SYSTEM.md)
+
+**System Features**:
+- OAuth avatar auto-save
+- Default avatar generation
+- Custom photo upload
+- Database persistence
+
+**When to Read**: Implementing profiles
+
+</details>
+
+### 🚀 Deployment Guides
+
+<details>
+<summary><b>🐳 Deployment Guide</b> - Production deployment</summary>
+
+**File**: [DEPLOYMENT.md](DEPLOYMENT.md)
+
+**Complete Process**:
+- Environment configuration
+- Docker production setup
+- Cloudflare Tunnel integration
+- SSL/HTTPS configuration
+- Database migrations
+- Production checklist
+
+**When to Read**: Before deploying
+
+</details>
+
+<details>
+<summary><b>🔧 PHPMyAdmin Setup</b> - Database management</summary>
+
+**File**: [PHPMYADMIN_SETUP.md](PHPMYADMIN_SETUP.md)
+
+**Setup Instructions**:
+- Cloudflare Tunnel config
+- Public hostname setup
+- Security policies
+- Access control
+
+**When to Read**: Database access setup
+
+</details>
+
+<details>
+<summary><b>📧 SMTP Setup</b> - Email configuration for password reset</summary>
+
+**File**: [SMTP_SETUP.md](SMTP_SETUP.md)
+
+**Complete Guide**:
+- Gmail App Password setup
+- SMTP configuration
+- Email template customization
+- Testing & troubleshooting
+- Security best practices
+
+**When to Read**: Setting up email functionality
+
+</details>
+
+<details>
+<summary><b>🔐 OAuth Setup</b> - Social authentication</summary>
+
+**File**: [OAUTH_SETUP.md](OAUTH_SETUP.md)
+
+**OAuth Providers**:
+- Google OAuth configuration
+- GitHub OAuth configuration
+- Redirect URI setup
+- Client credentials
+
+**When to Read**: Implementing social login
+
+</details>
+
+<details>
+<summary><b>⚡ OAuth & SMTP Quick Reference</b> - Quick developer guide</summary>
+
+**File**: [OAUTH_SMTP_QUICK_REF.md](OAUTH_SMTP_QUICK_REF.md)
+
+**Quick Access**:
+- API endpoints
+- Request examples
+- Environment variables
+- Testing checklist
+- Common commands
+- Troubleshooting
+
+**When to Read**: Daily development reference
+
+</details>
+
+---
+
+## 🔧 Technical Guides
 
 ### 🔌 API & Development
 
-- **[API.md](API.md)**  
-  Dokumentasi lengkap REST API endpoints
-  
-- **[CONTRIBUTING.md](CONTRIBUTING.md)**  
-  Panduan kontribusi untuk developers
-  
-- **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)**  
-  Code of conduct untuk komunitas
+<details>
+<summary><b>📡 API Documentation</b> - REST API reference</summary>
 
-### 📝 Changelog & Updates
+**File**: [API.md](API.md)
 
-- **[CHANGELOG.md](CHANGELOG.md)**  
-  Riwayat perubahan dan update platform
+**Comprehensive Coverage**:
+- **Authentication**: Register, Login, OAuth
+- **User Management**: Profile, Avatar, Settings
+- **Content Management**: Contacts, Enrollments, Consultations
+- **Analytics**: Real-time stats, Activity logs
+- **Rate Limiting**: 60-120 requests/minute
+- **Error Handling**: Complete error codes
 
-- **[STRUCTURE.md](STRUCTURE.md)**  
-  Dokumentasi lengkap struktur proyek dan file organization
+**Sections**:
+- Base URL & Authentication
+- All Endpoints (with examples)
+- Request/Response formats
+- Error codes
+- Pagination
+- Rate limiting
+
+**When to Read**: API integration
+
+</details>
+
+<details>
+<summary><b>📁 Project Structure</b> - Architecture documentation</summary>
+
+**File**: [STRUCTURE.md](STRUCTURE.md)
+
+**Architecture Details**:
+- Frontend structure (React/TypeScript)
+- Backend structure (Laravel/PHP)
+- Configuration files
+- Naming conventions
+- Directory organization
+- Quick navigation guide
+
+**When to Read**: Understanding codebase
+
+</details>
+
+### 🔐 Security & Authentication
+
+<details>
+<summary><b>🔒 Security Policy</b> - Security guidelines</summary>
+
+**File**: [SECURITY.md](SECURITY.md)
+
+**Coverage**:
+- Vulnerability reporting
+- Supported versions
+- Security measures
+- Best practices
+- Authentication security
+- Data protection
+
+**When to Read**: Security concerns
+
+</details>
+
+<details>
+<summary><b>🔑 OAuth Setup</b> - Social authentication</summary>
+
+**File**: [OAUTH_SETUP.md](OAUTH_SETUP.md)
+
+**OAuth Integration**:
+- Google OAuth setup (step-by-step)
+- GitHub OAuth setup (step-by-step)
+- Backend configuration
+- Frontend integration
+- Testing procedures
+- Troubleshooting guide
+
+**When to Read**: Setting up social login
+
+</details>
+
+### 📝 Project Management
+
+<details>
+<summary><b>📋 Changelog</b> - Version history</summary>
+
+**File**: [CHANGELOG.md](CHANGELOG.md)
+
+**Release Information**:
+- Version 2.0.0 (Current)
+- New features
+- Bug fixes
+- Breaking changes
+- Migration guides
+
+**When to Read**: Checking updates
+
+</details>
 
 ---
 
-## 🎯 Quick Links
+## 🔍 Finding What You Need
 
-| Kategori | Link |
-|----------|------|
-| 🚀 Production Deploy | [Cloudflare Tunnel Guide](CLOUDFLARE_TUNNEL_DEPLOYMENT.md) |
-| ✅ Production Checklist | [Production Ready](PRODUCTION_READY.md) |
-| ✅ Final Verification | [**Readiness Final Check**](PRODUCTION_READINESS_FINAL.md) |
-| ⚡ Real-time Features | [Analytics Documentation](REALTIME_ANALYTICS.md) |
-| 🔐 Security | [Security Policy](SECURITY.md) |
-| 🐳 Docker Setup | [Docker Guide](README.DOCKER.md) |
-| 🔌 API Reference | [API Documentation](API.md) |
-| 📁 Project Structure | [Structure Guide](STRUCTURE.md) |
+### Common Tasks
 
----
-
-## 📞 Bantuan & Support
-
-Jika mengalami masalah atau punya pertanyaan:
-
-1. Periksa dokumentasi yang relevan di atas
-2. Baca [CONTRIBUTING.md](CONTRIBUTING.md) untuk panduan kontribusi
-3. Buka [GitHub Issues](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/issues) untuk bug reports atau feature requests
-4. Ikuti [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) dalam interaksi
+| I want to... | Read this | Time |
+|--------------|-----------|------|
+| **Get started quickly** | [QUICKSTART](QUICKSTART.md) | 15 min |
+| **Set up for first time** | [../README.md](../README.md) → [DEPLOYMENT](DEPLOYMENT.md) | 30 min |
+| **Deploy to production** | [DEPLOYMENT](DEPLOYMENT.md) → [SECURITY](SECURITY.md) | 45 min |
+| **Understand the API** | [API Documentation](API.md) | 45 min |
+| **Add new features** | [STRUCTURE](STRUCTURE.md) → [API](API.md) | 60 min |
+| **Configure OAuth** | [OAUTH_SETUP](OAUTH_SETUP.md) | 30 min |
+| **Set up maintenance mode** | [FEATURES_DOCUMENTATION](FEATURES_DOCUMENTATION.md) | 20 min |
+| **Enable real-time features** | [REALTIME_ANALYTICS](REALTIME_ANALYTICS.md) | 25 min |
+| **Report security issues** | [SECURITY](SECURITY.md#reporting-a-vulnerability) | 5 min |
+| **Understand project structure** | [STRUCTURE](STRUCTURE.md) | 30 min |
+| **Understand architecture** | [ARCHITECTURE](ARCHITECTURE.md) | 40 min |
+| **Learn how to use platform** | [USER_GUIDE](USER_GUIDE.md) | 45 min |
+| **Fix common problems** | [TROUBLESHOOTING](TROUBLESHOOTING.md) → [FAQ](FAQ.md) | 30 min |
+| **Find answers quickly** | [FAQ](FAQ.md) | 10 min |
 
 ---
 
-**[← Kembali ke README Utama](../README.md)**
+## 📂 Documentation by Category
+
+### By Audience
+
+<table>
+<tr>
+<th width="33%">👨‍💻 Developers</th>
+<th width="33%">⚙️ DevOps</th>
+<th width="33%">🧑‍💼 Administrators</th>
+</tr>
+<tr>
+<td valign="top">
+
+**Essential Reading**:
+- [API Documentation](API.md)
+- [Project Structure](STRUCTURE.md)
+- [Features Docs](FEATURES_DOCUMENTATION.md)
+- [OAuth Setup](OAUTH_SETUP.md)
+
+**Focus**: Implementation & Integration
+
+</td>
+<td valign="top">
+
+**Essential Reading**:
+- [Deployment Guide](DEPLOYMENT.md)
+- [Security Policy](SECURITY.md)
+- [PHPMyAdmin Setup](PHPMYADMIN_SETUP.md)
+- [Structure Guide](STRUCTURE.md)
+
+**Focus**: Infrastructure & Security
+
+</td>
+<td valign="top">
+
+**Essential Reading**:
+- [Features Documentation](FEATURES_DOCUMENTATION.md)
+- [Real-time Analytics](REALTIME_ANALYTICS.md)
+- [Security Policy](SECURITY.md)
+- [Changelog](CHANGELOG.md)
+
+**Focus**: Management & Features
+
+</td>
+</tr>
+</table>
+
+### By Difficulty
+
+| Level | Documents | Estimated Time |
+|-------|-----------|----------------|
+| 🟢 **Beginner** | ../README, QUICKSTART, DEPLOYMENT | 30 minutes |
+| 🟡 **Intermediate** | STRUCTURE, FEATURES_DOCUMENTATION, REALTIME_ANALYTICS | 1 hour |
+| 🔴 **Advanced** | API, SECURITY, OAUTH_SETUP, PHPMYADMIN_SETUP | 2 hours |
+
+---
+
+## 📊 Documentation Statistics
+
+<table>
+<tr>
+<td align="center"><b>12</b><br>Documents</td>
+<td align="center"><b>150+</b><br>Pages</td>
+<td align="center"><b>6</b><br>Categories</td>
+<td align="center"><b>100%</b><br>Coverage</td>
+</tr>
+</table>
+
+**Last Updated**: January 2026 • **Version**: 2.0.0 • **Language**: English/Indonesian
+
+---
+
+## 🛠 Help & Support
+
+### 📖 Before Asking for Help
+
+1. **Search documentation** - Use Ctrl+F to search
+2. **Check the FAQ** - Each guide has troubleshooting
+3. **Review examples** - All docs include code examples
+4. **Check issues** - See if others had same problem
+
+### 💬 Getting Help
+
+| Type | Channel | Response Time |
+|------|---------|---------------|
+| 🐛 **Bug Reports** | [GitHub Issues](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio/issues) | 1-3 days |
+| ✨ **Feature Requests** | GitHub Discussions | 3-7 days |
+| 🔒 **Security Issues** | Email | 24 hours |
+| 💬 **Questions** | GitHub Discussions | 2-5 days |
+
+### 📧 Contact
+
+- **Email**: muhammadisakiprananda88@gmail.com
+- **GitHub**: [@MuhammadIsakiPrananda](https://github.com/MuhammadIsakiPrananda)
+- **Repository**: [neverland-studio-portfolio](https://github.com/MuhammadIsakiPrananda/neverland-studio-portfolio)
+
+---
+
+## 🔄 Contributing to Documentation
+
+Found an error or want to improve docs?
+
+1. **Open an issue** describing the problem
+2. **Submit a pull request** with the fix
+3. Follow [Contributing Guidelines](../CONTRIBUTING.md)
+
+**All contributions welcome!** 🎉
+
+---
+
+## 📚 External Resources
+
+- [React Documentation](https://react.dev/)
+- [Laravel Documentation](https://laravel.com/docs)
+- [Docker Documentation](https://docs.docker.com/)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+
+---
+
+<div align="center">
+
+**[⬆ Back to Top](#-neverland-studio-portfolio---documentation-hub)**
+
+Made with ❤️ by [Neverland Studio](https://github.com/MuhammadIsakiPrananda)
+
+*Last Updated: January 2026* • *Version 2.0.0*
+
+</div>

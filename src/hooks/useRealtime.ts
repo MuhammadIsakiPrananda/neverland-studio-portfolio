@@ -42,7 +42,7 @@ export function useRealtime<T = any>({
     }
 
     setIsLoading(true);
-    
+
     try {
       // Subscribe to data updates
       unsubscribeRef.current = realtimeService.subscribe(
@@ -106,11 +106,12 @@ export function useRealtime<T = any>({
 }
 
 // Specialized hook for dashboard stats
+// AUTO-CONNECT DISABLED to reduce server load - use manual refresh only
 export function useRealtimeStats() {
   return useRealtime({
     resource: 'stats',
-    intervalMs: 3000, // Update every 3 seconds for stats
-    autoConnect: true,
+    intervalMs: 3000, // Update every 3 seconds for stats (when manually connected)
+    autoConnect: false, // DISABLED: Manual refresh only to reduce server load
   });
 }
 

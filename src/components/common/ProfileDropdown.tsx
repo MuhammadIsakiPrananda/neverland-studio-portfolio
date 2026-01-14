@@ -32,6 +32,11 @@ export default function ProfileDropdown({ user, onEditProfile, onLogout }: Profi
     };
   }, [isOpen]);
 
+  // Log avatar untuk debugging
+  useEffect(() => {
+    console.log('ProfileDropdown - User avatar:', user.avatar ? 'Loaded ✅' : 'Not loaded ❌');
+  }, [user.avatar]);
+
   const displayName = user.name || user.username;
   const avatarText = displayName.charAt(0).toUpperCase();
 
@@ -43,16 +48,25 @@ export default function ProfileDropdown({ user, onEditProfile, onLogout }: Profi
         className="flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300 hover:bg-slate-800/50 text-slate-200"
       >
         {/* Avatar */}
-        <div className="w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/30">
-          {user.avatar ? (
-            <img src={user.avatar} alt={displayName} className="w-full h-full rounded-full object-cover" />
+        <div className="w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/30 overflow-hidden">
+          {user.avatar && user.avatar.length > 0 ? (
+            <img 
+              src={user.avatar} 
+              alt={displayName} 
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                console.error('Failed to load avatar image');
+                e.currentTarget.style.display = 'none';
+                e.currentTarget.parentElement!.innerHTML = avatarText;
+              }}
+            />
           ) : (
-            avatarText
+            <span>{avatarText}</span>
           )}
         </div>
 
         {/* Name (hidden on mobile) */}
-        <span className="hidden sm:block text-sm font-medium">
+        <span className="hidden sm:block text-sm font-medium truncate max-w-[120px]">
           {displayName}
         </span>
 
@@ -68,11 +82,20 @@ export default function ProfileDropdown({ user, onEditProfile, onLogout }: Profi
           {/* User Info */}
           <div className="p-4 border-b border-slate-700">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/30">
-                {user.avatar ? (
-                  <img src={user.avatar} alt={displayName} className="w-full h-full rounded-full object-cover" />
+              <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/30 overflow-hidden">
+                {user.avatar && user.avatar.length > 0 ? (
+                  <img 
+                    src={user.avatar} 
+                    alt={displayName} 
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.error('Failed to load avatar image in dropdown');
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.parentElement!.innerHTML = `<span class="font-bold text-lg text-white">${avatarText}</span>`;
+                    }}
+                  />
                 ) : (
-                  avatarText
+                  <span>{avatarText}</span>
                 )}
               </div>
               <div className="flex-1 min-w-0">

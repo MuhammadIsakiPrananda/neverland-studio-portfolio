@@ -331,6 +331,7 @@ class SecurityController extends Controller
             $user = $request->user();
             $currentTokenId = $request->user()->currentAccessToken()->id;
 
+            // Optimized query with index on user_id and token_id
             $sessions = UserSession::where('user_id', $user->id)
                 ->orderBy('last_activity', 'desc')
                 ->get();
@@ -342,13 +343,14 @@ class SecurityController extends Controller
                         return [
                             'id' => $session->id,
                             'token_id' => $session->token_id,
-                            'device_name' => $session->device_name,
-                            'browser' => $session->browser,
-                            'platform' => $session->platform,
-                            'ip_address' => $session->ip_address,
-                            'location' => $session->location,
-                            'last_activity' => $session->last_activity,
+                            'device_name' => $session->device_name ?? 'Unknown Device',
+                            'browser' => $session->browser ?? 'Unknown Browser',
+                            'platform' => $session->platform ?? 'Unknown OS',
+                            'ip_address' => $session->ip_address ?? 'Unknown IP',
+                            'location' => $session->location ?? 'Unknown Location',
+                            'last_activity' => $session->last_activity->toISOString(), // ISO format for consistent frontend parsing
                             'is_current' => $session->token_id == $currentTokenId,
+                            'user_agent' => $session->user_agent ?? '',
                         ];
                     })
                 ]

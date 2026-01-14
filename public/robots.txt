@@ -1,0 +1,31 @@
+# Robots.txt for Neverland Studio
+# https://portfolio.neverlandstudio.my.id
+
+User-agent: *
+Allow: /
+
+# Disallow private/admin sections
+Disallow: /dashboard/
+Disallow: /admin/
+Disallow: /api/
+Disallow: /auth/
+
+# Allow specific files
+Allow: /assets/
+Allow: /src/assets/
+
+# Sitemap location
+Sitemap: https://portfolio.neverlandstudio.my.id/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# Google-specific
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bing-specific
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1

@@ -1,27 +1,70 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ExternalLink, Calendar, User, Code2, Briefcase, TrendingUp, Filter } from 'lucide-react';
 import type { Theme, Project } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
 import ProjectDetailModal from '../modals/ProjectDetailModal';
+import api from '../../services/apiService';
+import { realtimeService } from '../../services/realtimeService';
 
 interface ProjectsPageProps {
   theme: Theme;
-  projects: Project[];
 }
 
-export default function ProjectsPage({ projects }: ProjectsPageProps) {
+export default function ProjectsPage({ theme }: ProjectsPageProps) {
   const { t } = useLanguage();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Fetch projects from API with useCallback to prevent recreating function
+  const fetchProjects = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/projects', { 
+        params: { status: 'published' } // Only show published projects on public site
+      });
+      
+      if (response.data.success) {
+        setProjects(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []); // Empty dependency - function never changes
+
+  // Initial load only once
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
+
+  // Realtime updates - only subscribe once, don't re-subscribe on every render
+  useEffect(() => {
+    const handleProjectUpdate = (data: any) => {
+      // Only refresh if there's actual project change (created, updated, deleted)
+      if (data?.type && ['project.created', 'project.updated', 'project.deleted'].includes(data.type)) {
+        fetchProjects();
+      }
+    };
+
+    // Subscribe with longer interval (10 seconds instead of default 5)
+    const unsubscribe = realtimeService.subscribe('projects', handleProjectUpdate, 10000);
+    
+    return () => {
+      unsubscribe();
+    };
+  }, [fetchProjects]);
   
-  // Get unique categories
-  const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))];
+  // Get unique categories - safety check for empty projects array
+  const categories = ['All', ...Array.from(new Set((projects || []).map(p => p.category)))];
   
-  // Filter projects by category
+  // Filter projects by category - safety check
   const filteredProjects = selectedCategory === 'All' 
-    ? projects 
-    : projects.filter(p => p.category === selectedCategory);
+    ? (projects || []) 
+    : (projects || []).filter(p => p.category === selectedCategory);
 
   const openProjectModal = (project: Project) => {
     setSelectedProject(project);
@@ -132,6 +175,13 @@ export default function ProjectsPage({ projects }: ProjectsPageProps) {
         </div>
 
         {/* Projects Grid */}
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="h-96 rounded-2xl animate-pulse bg-slate-800/50" />
+            ))}
+          </div>
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
           {filteredProjects.map((project, index) => (
             <div
@@ -192,7 +242,7 @@ export default function ProjectsPage({ projects }: ProjectsPageProps) {
 
                 {/* Tech Stack */}
                 <div className="flex flex-wrap gap-2">
-                  {project.techStack.slice(0, 3).map((tech, idx) => (
+                  {Array.isArray(project.technologies) && project.technologies.slice(0, 3).map((tech, idx) => (
                     <span 
                       key={idx} 
                       className="px-2.5 py-1 text-xs font-medium rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20"
@@ -200,9 +250,9 @@ export default function ProjectsPage({ projects }: ProjectsPageProps) {
                       {tech}
                     </span>
                   ))}
-                  {project.techStack.length > 3 && (
+                  {Array.isArray(project.technologies) && project.technologies.length > 3 && (
                     <span className="px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-700/50 text-slate-400">
-                      +{project.techStack.length - 3}
+                      +{project.technologies.length - 3}
                     </span>
                   )}
                 </div>
@@ -213,6 +263,7 @@ export default function ProjectsPage({ projects }: ProjectsPageProps) {
             </div>
           ))}
         </div>
+        )}
 
         {/* Empty State */}
         {filteredProjects.length === 0 && (
